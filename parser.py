@@ -33,50 +33,70 @@ def edit_distance(str1, str2, weight = lambda s1,s2, i, j: 0.75 if s1[i-1] == ' 
 		return dp[m][n]
 
 MONTHS_PREFIXES = {
-    'Ιανουαρίο' : 1,
-    'Φεβρουαρίο' : 2,
-    'Μαρτίο' : 3,
-    'Απριλίο' : 4,
-    'Μαΐο' : 5,
-    'Ιουνίο' : 6,
-    'Ιουλίο' : 7,
-    'Αυγούστο' : 8,
-    'Σεπτέμβριο' : 9,
-    'Οκτωβρίο' : 10,
-    'Νοεμβρίο' : 11,
-    'Δεκεμβρίο' : 12,
+	'Ιανουαρίο' : 1,
+	'Φεβρουαρίο' : 2,
+	'Μαρτίο' : 3,
+	'Απριλίο' : 4,
+	'Μαΐο' : 5,
+	'Ιουνίο' : 6,
+	'Ιουλίο' : 7,
+	'Αυγούστο' : 8,
+	'Σεπτέμβριο' : 9,
+	'Οκτωβρίο' : 10,
+	'Νοεμβρίο' : 11,
+	'Δεκεμβρίο' : 12,
 }
 
 class IssueParser:
 
-    def __init__(self, filename, toTxt = False):
-        self.filename = filename
-        self.lines  = []
-        with open(filename, 'r') as infile:
-            self.lines = infile.read().splitlines()
-        self.dates = []
-        self.find_dates()
+	def __init__(self, filename, toTxt = False):
+		self.filename = filename
+		self.lines  = []
+		with open(filename, 'r') as infile:
+			self.lines = infile.read().splitlines()
+		self.dates = []
+		self.find_dates()
+		self.articles = {}
+		self.find_articles()
 
-    def find_dates(self):
-        for i, line in enumerate(self.lines):
-            result = date_regex.findall(line)
-            if result != []:
-                self.dates.append((i, result))
-        if self.dates == []:
-            raise Exception('Could not find dates!')
 
-        full, day, month, year = self.dates[0][1][0]
-        print(full)
+	def find_dates(self):
+		for i, line in enumerate(self.lines):
+			result = date_regex.findall(line)
+			if result != []:
+				self.dates.append((i, result))
 
-        for m in MONTHS_PREFIXES.keys():
-            if month == m + 'υ':
-                month = MONTHS_PREFIXES[m]
-                break
+		if self.dates == []:
+			raise Exception('Could not find dates!')
 
-        self.issue_date = date(int(year), month, int(day))
-        print(self.issue_date)
+		full, day, month, year = self.dates[0][1][0]
+		print(full)
 
-        return self.dates
+		for m in MONTHS_PREFIXES.keys():
+			if month == m + 'υ':
+				month = MONTHS_PREFIXES[m]
+				break
+
+		self.issue_date = date(int(year), month, int(day))
+		print(self.issue_date)
+
+		return self.dates
+
+	def find_articles(self):
+		article_indices = []
+		for i, line in enumerate(self.lines):
+			if line.startswith('Άρθρο') or line.startswith('Ο Πρόεδρος της Δημοκρατίας'):
+				article_indices.append((i, line))
+				self.articles[line] = ''
+
+
+		for j in range(len(article_indices) - 1):
+			self.articles[article_indices[j][1]] = ''.join(self.lines[article_indices[j][0] + 1 :  article_indices[j+1][0]])
+
+		# TODO fix hyphenation	
+		print(self.articles['Άρθρο 1'])
+
+
 
 
 
