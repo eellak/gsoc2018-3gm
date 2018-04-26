@@ -2,7 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import re
+import multiprocessing
 from datetime import date, datetime, time
+import os
+import gensim
+from gensim.models import KeyedVectors
+import logging
+logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+import itertools
+import glob
+params = {'size': 200, 'iter' : 10,  'window': 10, 'min_count': 10,'workers': max(1, multiprocessing.cpu_count() -1), 'sample': 1E-3,}
 
 date_regex = re.compile('(\
 ([1-9]|0[1-9]|[12][0-9]|3[01])\
@@ -53,12 +62,17 @@ class IssueParser:
 		self.filename = filename
 		self.lines  = []
 		with open(filename, 'r') as infile:
-			self.lines = infile.read().splitlines()
+			tmp_lines = infile.read().splitlines()
+		for line in tmp_lines:
+			if line == '': continue
+			elif line.startswith('Τεύχος'): continue
+			else:  self.lines.append(line)
+
 		self.dates = []
 		self.find_dates()
 		self.articles = {}
+		self.sentences = {}
 		self.find_articles()
-
 
 	def find_dates(self):
 		for i, line in enumerate(self.lines):
@@ -78,7 +92,6 @@ class IssueParser:
 				break
 
 		self.issue_date = date(int(year), month, int(day))
-		print(self.issue_date)
 
 		return self.dates
 
@@ -93,15 +106,50 @@ class IssueParser:
 		for j in range(len(article_indices) - 1):
 			self.articles[article_indices[j][1]] = ''.join(self.lines[article_indices[j][0] + 1 :  article_indices[j+1][0]])
 
-		# TODO fix hyphenation	
-		print(self.articles['Άρθρο 1'])
+		for article in self.articles.keys():
+			tmp = self.articles[article].strip('-').split('.')
+			# remove punctuation
+			tmp = [re.sub(r'[^\w\s]','',s) for s in tmp]
+			tmp = [line.split(' ') for line in tmp]
+			self.sentences[article] = tmp
+
+	def all_sentences(self):
+		for article in self.sentences.keys():
+			for sentence in self.sentences[article]:
+				yield sentence
+
+
+	def detect_signatories(self):
+		pass
+
+	def train_word2vec(self):
+
+		self.all_sentences = [sentence for sentence in self.all_sentences()]
+
+		self.model = gensim.models.Word2Vec(self.all_sentences, **params)
+		print('Model train complete!')
+		self.model.wv.save_word2vec_format('model')
 
 
 
 
+def generate_model_from_government_gazette_issues(directory='data'):
+	cwd = os.getcwd()
+	os.chdir(directory)
+	filelist = glob.glob('*.pdf'.format(directory))
+	issues = []
+	all_sentences = []
+	for filename in filelist:
+		outfile = filename.strip('.pdf') + '.txt'
+		if not os.path.isfile(outfile):
+			os.system('pdf2txt.py {} > {}'.format(filename, outfile))
+		issue = IssueParser(outfile)
+		all_sentences.extend(issue.all_sentences())
+		issues.append(issue)
+	model = gensim.models.Word2Vec(all_sentences, **params)
 
+	os.chdir(cwd)
+	return issues, model
 
-
-
-
-test = IssueParser('test.txt')
+issues, model = generate_model_from_government_gazette_issues()
+print(model.most_similar(issues[0].articles['Άρθρο 2']))
