@@ -19,6 +19,38 @@ date_regex = re.compile('(\
 (1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)\
 (?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)')
 
+class Minister:
+
+	def __init__(self, name, middle, surname, ministry):
+		self.name = name
+		self.surname = surname
+		self.ministry = ministry
+		self.middle = middle
+
+	def is_mentioned(self, s):
+		search_full = re.search(self.name + ' ' + self.surname, s)
+		if search_full != None:
+			return search_full.span()
+		search_sur = re.search(self.surname, s)
+		if search_sur != None:
+			return search_sur.span()
+		search_min = re.search(self.ministry, s)
+		if search_min != None:
+			return search_min.span()
+
+	def __repr__(self):
+		return '{} {}'.format(self.name, self.surname)
+
+
+ministers = [
+Minister('ΠΡΟΚΟΠΙΟΣ', 'Β.', 'ΠΑΥΛΟΠΟΥΛΟΣ', 'ΠΡΟΕΔΡΟΣ ΤΗΣ ΔΗΜΟΚΡΑΤΙΑΣ'),
+Minister('ΔΗΜΟΣ', '', 'ΠΑΠΑΔΗΜΗΤΡΙΟΥ', 'Οικονομίας και Ανάπτυξης'),
+Minister('ΕΛΕΝΑ', '', 'ΚΟΥΝΤΥΡΑ', 'Τουρισμού'),
+Minister('ΣΤΑΥΡΟΣ', '', 'ΚΟΝΤΟΝΗΣ', 'Δικαιοσύνης'),
+Minister('ΚΩΝΣΤΑΝΤΙΝΟΣ', '', 'ΓΑΒΡΟΓΛΟΥ', 'Παιδείας, Έρευνας και Θρησκευμάτων')
+]
+
+
 
 def edit_distance(str1, str2, weight = lambda s1,s2, i, j: 0.75 if s1[i-1] == ' ' or s2[j-1] == ' ' else 1):
 		m, n = len(str1), len(str2)
@@ -56,6 +88,7 @@ MONTHS_PREFIXES = {
 	'Δεκεμβρίο' : 12,
 }
 
+
 class IssueParser:
 
 	def __init__(self, filename, toTxt = False):
@@ -84,7 +117,6 @@ class IssueParser:
 			raise Exception('Could not find dates!')
 
 		full, day, month, year = self.dates[0][1][0]
-		print(full)
 
 		for m in MONTHS_PREFIXES.keys():
 			if month == m + 'υ':
@@ -92,7 +124,7 @@ class IssueParser:
 				break
 
 		self.issue_date = date(int(year), month, int(day))
-
+		self.signed_date = self.dates[-1]
 		return self.dates
 
 	def find_articles(self):
@@ -120,7 +152,23 @@ class IssueParser:
 
 
 	def detect_signatories(self):
-		pass
+		self.signatories = set([])
+		for i, line in enumerate( self.lines ):
+			if line.startswith('Ο Πρόεδρος της Δημοκρατίας'):
+				minister_section = self.lines[i:]
+				break
+
+		for i, line in enumerate(minister_section):
+			for minister in ministers:
+				x = minister.is_mentioned(line)
+				if x != None:
+					self.signatories |= set([minister])
+
+		for signatory in self.signatories:
+			print(signatory)
+
+
+
 
 	def train_word2vec(self):
 
@@ -151,5 +199,5 @@ def generate_model_from_government_gazette_issues(directory='data'):
 	os.chdir(cwd)
 	return issues, model
 
-issues, model = generate_model_from_government_gazette_issues()
-print(model.most_similar(issues[0].articles['Άρθρο 2']))
+issue = IssueParser('data/ocument4.txt')
+issue.detect_signatories()
