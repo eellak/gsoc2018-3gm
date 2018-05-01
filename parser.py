@@ -127,7 +127,7 @@ class IssueParser:
 		self.signed_date = self.dates[-1]
 		return self.dates
 
-	def find_articles(self):
+	def find_articles(self, min_extract_chars = 100):
 		article_indices = []
 		for i, line in enumerate(self.lines):
 			if line.startswith('Άρθρο') or line.startswith('Ο Πρόεδρος της Δημοκρατίας'):
@@ -138,12 +138,43 @@ class IssueParser:
 		for j in range(len(article_indices) - 1):
 			self.articles[article_indices[j][1]] = ''.join(self.lines[article_indices[j][0] + 1 :  article_indices[j+1][0]])
 
+		self.extracts = {}
+
 		for article in self.articles.keys():
+			# find extracts
+			left_quot = [m.start() for m in re.finditer('«', self.articles[article])]
+			right_quot = [m.start() for m in re.finditer('»', self.articles[article])]
+			left_quot.extend(right_quot)
+			temp_extr = sorted ( left_quot )
+			res_extr = []
+			c = '«'
+			for idx in temp_extr:
+				if c == '«' and self.articles[article][idx] == c:
+					res_extr.append(idx)
+					c = '»'
+				elif c == '»' and self.articles[article][idx] == c:
+					res_extr.append(idx)
+					c = '«'
+			self.extracts[article] = list ( zip(res_extr[::2], res_extr[1::2]) )
+
+			# drop extracts with small chars
+			self.extracts[article] = list ( filter(lambda x: x[1] - x[0] + 1 >= min_extract_chars, self.extracts[article] ) )
+
+
+
 			tmp = self.articles[article].strip('-').split('.')
+
 			# remove punctuation
 			tmp = [re.sub(r'[^\w\s]','',s) for s in tmp]
 			tmp = [line.split(' ') for line in tmp]
 			self.sentences[article] = tmp
+
+
+	def get_extracts(self, article):
+		for i, j in self.extracts[article]:
+			yield self.articles[article][i + 1 : j]
+
+
 
 	def all_sentences(self):
 		for article in self.sentences.keys():
@@ -166,6 +197,8 @@ class IssueParser:
 
 		for signatory in self.signatories:
 			print(signatory)
+
+		return self.signatories
 
 
 
@@ -199,5 +232,13 @@ def generate_model_from_government_gazette_issues(directory='data'):
 	os.chdir(cwd)
 	return issues, model
 
-issue = IssueParser('data/ocument4.txt')
-issue.detect_signatories()
+issues, model = generate_model_from_government_gazette_issues()
+
+print(model.most_similar(positive=['Υπουργός', 'Υπουργείο']))
+
+issue = IssueParser('data/ocument1.txt')
+print(issue.extracts['Άρθρο 1'])
+for article in issue.articles.keys():
+	print('Article : ' + article)
+	for e in issue.get_extracts(article):
+		print(e)
