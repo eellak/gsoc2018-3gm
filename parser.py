@@ -3,6 +3,7 @@
 
 import re
 import multiprocessing
+import numpy as np
 from datetime import date, datetime, time
 import os
 import gensim
@@ -138,7 +139,13 @@ class IssueParser:
 		for j in range(len(article_indices) - 1):
 			self.articles[article_indices[j][1]] = ''.join(self.lines[article_indices[j][0] + 1 :  article_indices[j+1][0]])
 
+		try:
+			del self.articles['Ο Πρόεδρος της Δημοκρατίας']
+		except:
+			pass
+
 		self.extracts = {}
+		self.non_extracts = {}
 
 		for article in self.articles.keys():
 			# find extracts
@@ -158,7 +165,25 @@ class IssueParser:
 			self.extracts[article] = list ( zip(res_extr[::2], res_extr[1::2]) )
 
 			# drop extracts with small chars
-			self.extracts[article] = list ( filter(lambda x: x[1] - x[0] + 1 >= min_extract_chars, self.extracts[article] ) )
+			self.extracts[article] =  list ( filter(lambda x: x[1] - x[0] + 1 >= min_extract_chars, self.extracts[article] ) )
+			self.non_extracts[article] = []
+
+
+			try:
+				if self.extracts[article][0][0] != 0:
+					x0, y0 = self.extracts[article][0]
+					self.extracts[article].append ( (0, max([x0 - 1, 0]) ))
+
+				for i in range( len (self.extracts[article]) - 1):
+					x1, y1 = self.extracts[article][i]
+					x2, y2 = self.extracts[article][i + 1]
+
+					self.non_extracts[article].append( (y1 + 1, max([x2 - 1, 0])) )
+
+				xl, yl = self.extracts[article][-1]
+				self.non_extracts[article].append( (yl + 1, len( self.articles[article]) - 1) )
+			except:
+				self.non_extracts[article].append( (0, len( self.articles[article]) - 1) )
 
 
 
@@ -173,6 +198,19 @@ class IssueParser:
 	def get_extracts(self, article):
 		for i, j in self.extracts[article]:
 			yield self.articles[article][i + 1 : j]
+
+	def get_non_extracts(self, article):
+		if len(self.extracts[article]) == 0:
+			yield ''
+			return
+		x0, y0 = self.extracts[article][0]
+		if y0 >= 2:
+			yield self.articles[article][0 : x0]
+
+		for i in range(1,  len(self.extracts) - 1):
+			x1, y1 = self.extracts[article][i]
+			x2, y2 = self.extracts[article][i+1]
+			yield self.extracts.article[y1 + 1: x2]
 
 
 
@@ -240,5 +278,10 @@ issue = IssueParser('data/ocument1.txt')
 print(issue.extracts['Άρθρο 1'])
 for article in issue.articles.keys():
 	print('Article : ' + article)
-	for e in issue.get_extracts(article):
-		print(e)
+	for e in issue.get_non_extracts(article):
+		l = e.split(' ')
+		d = [edit_distance(x, 'προστίθε') for x in l]
+		amin = np.argmin(d)
+		if l[amin] != '':
+			print(l[amin])
+			print(model.most_similar(positive=[l[amin]]))
