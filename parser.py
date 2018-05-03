@@ -5,6 +5,8 @@ import re
 import multiprocessing
 import numpy as np
 from datetime import date, datetime, time
+from entities import *
+from helpers import *
 import os
 import gensim
 from gensim.models import KeyedVectors
@@ -20,59 +22,7 @@ date_regex = re.compile('(\
 (1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)\
 (?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)')
 
-class Minister:
 
-	def __init__(self, name, middle, surname, ministry):
-		self.name = name
-		self.surname = surname
-		self.ministry = ministry
-		self.middle = middle
-
-	def is_mentioned(self, s):
-		search_full = re.search(self.name + ' ' + self.surname, s)
-		if search_full != None:
-			return search_full.span()
-		search_sur = re.search(self.surname, s)
-		if search_sur != None:
-			return search_sur.span()
-		search_min = re.search(self.ministry, s)
-		if search_min != None:
-			return search_min.span()
-
-	def __repr__(self):
-		return '{} {}'.format(self.name, self.surname)
-
-
-ministers = [
-Minister('ΠΡΟΚΟΠΙΟΣ', 'Β.', 'ΠΑΥΛΟΠΟΥΛΟΣ', 'ΠΡΟΕΔΡΟΣ ΤΗΣ ΔΗΜΟΚΡΑΤΙΑΣ'),
-Minister('ΔΗΜΟΣ', '', 'ΠΑΠΑΔΗΜΗΤΡΙΟΥ', 'Οικονομίας και Ανάπτυξης'),
-Minister('ΕΛΕΝΑ', '', 'ΚΟΥΝΤΥΡΑ', 'Τουρισμού'),
-Minister('ΣΤΑΥΡΟΣ', '', 'ΚΟΝΤΟΝΗΣ', 'Δικαιοσύνης'),
-Minister('ΚΩΝΣΤΑΝΤΙΝΟΣ', '', 'ΓΑΒΡΟΓΛΟΥ', 'Παιδείας, Έρευνας και Θρησκευμάτων')
-]
-
-
-
-def edit_distance(str1, str2, weight = lambda s1,s2, i, j: 0.75 if s1[i-1] == ' ' or s2[j-1] == ' ' else 1):
-		m, n = len(str1), len(str2)
-		dp = [[0 for x in range(n+1)] for x in range(m+1)]
-
-		for i in range(m+1):
-			for j in range(n+1):
-
-				if i == 0:
-					dp[i][j] = j
-
-				elif j == 0:
-					dp[i][j] = i
-				elif str1[i-1] == str2[j-1]:
-					dp[i][j] = dp[i-1][j-1]
-
-				else:
-					dp[i][j] = weight(str1,str2,i,j) + min(dp[i][j-1],
-									   dp[i-1][j],
-									   dp[i-1][j-1])
-		return dp[m][n]
 
 MONTHS_PREFIXES = {
 	'Ιανουαρίο' : 1,
@@ -200,17 +150,15 @@ class IssueParser:
 			yield self.articles[article][i + 1 : j]
 
 	def get_non_extracts(self, article):
-		if len(self.extracts[article]) == 0:
-			yield ''
-			return
+		if len(self.extracts[article]) == 0: return
 		x0, y0 = self.extracts[article][0]
 		if y0 >= 2:
 			yield self.articles[article][0 : x0]
 
-		for i in range(1,  len(self.extracts) - 1):
+		for i in range(1,  len(self.extracts[article]) - 1):
 			x1, y1 = self.extracts[article][i]
 			x2, y2 = self.extracts[article][i+1]
-			yield self.extracts.article[y1 + 1: x2]
+			yield self.articles[article][y1 + 1: x2]
 
 
 
@@ -270,18 +218,26 @@ def generate_model_from_government_gazette_issues(directory='data'):
 	os.chdir(cwd)
 	return issues, model
 
-issues, model = generate_model_from_government_gazette_issues()
+def test():
+	issues, model = generate_model_from_government_gazette_issues()
 
-print(model.most_similar(positive=['Υπουργός', 'Υπουργείο']))
 
-issue = IssueParser('data/ocument1.txt')
-print(issue.extracts['Άρθρο 1'])
-for article in issue.articles.keys():
-	print('Article : ' + article)
-	for e in issue.get_non_extracts(article):
-		l = e.split(' ')
-		d = [edit_distance(x, 'προστίθε') for x in l]
-		amin = np.argmin(d)
-		if l[amin] != '':
-			print(l[amin])
-			print(model.most_similar(positive=[l[amin]]))
+	print(model.most_similar(positive=['Υπουργός', 'Υπουργείο']))
+
+	issue = IssueParser('data/ek.txt')
+	for article in issue.articles.keys():
+		print('Article : ' + article)
+		for e in issue.get_non_extracts(article):
+			# print(e)
+			l = e.split(' ')
+			d = [edit_distance(x, 'προστίθεται') for x in l]
+			amin = np.argmin(d)
+			try:
+				if l[amin] != '':
+					print('Smallest hamming = {}, dist = {}'.format(d[amin], l[amin]))
+					print(model.most_similar(positive=[normalize_word( l[amin] ) ]))
+			except KeyError:
+				print('Could not match to word2vec model')
+
+if __name__ == '__main__':
+	test()
