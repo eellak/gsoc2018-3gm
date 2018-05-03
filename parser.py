@@ -8,6 +8,7 @@ from datetime import date, datetime, time
 from entities import *
 from helpers import *
 import os
+import syntax
 import gensim
 from gensim.models import KeyedVectors
 import logging
@@ -115,27 +116,8 @@ class IssueParser:
 			self.extracts[article] = list ( zip(res_extr[::2], res_extr[1::2]) )
 
 			# drop extracts with small chars
-			self.extracts[article] =  list ( filter(lambda x: x[1] - x[0] + 1 >= min_extract_chars, self.extracts[article] ) )
-			self.non_extracts[article] = []
-
-
-			try:
-				if self.extracts[article][0][0] != 0:
-					x0, y0 = self.extracts[article][0]
-					self.extracts[article].append ( (0, max([x0 - 1, 0]) ))
-
-				for i in range( len (self.extracts[article]) - 1):
-					x1, y1 = self.extracts[article][i]
-					x2, y2 = self.extracts[article][i + 1]
-
-					self.non_extracts[article].append( (y1 + 1, max([x2 - 1, 0])) )
-
-				xl, yl = self.extracts[article][-1]
-				self.non_extracts[article].append( (yl + 1, len( self.articles[article]) - 1) )
-			except:
-				self.non_extracts[article].append( (0, len( self.articles[article]) - 1) )
-
-
+			self.extracts[article] =  sorted ( list (
+				filter(lambda x: x[1] - x[0] + 1 >= min_extract_chars, self.extracts[article] )) , key = lambda x : x[0])
 
 			tmp = self.articles[article].strip('-').split('.')
 
@@ -152,14 +134,15 @@ class IssueParser:
 	def get_non_extracts(self, article):
 		if len(self.extracts[article]) == 0: return
 		x0, y0 = self.extracts[article][0]
-		if y0 >= 2:
-			yield self.articles[article][0 : x0]
+		yield self.articles[article][0 : max(0, x0)]
 
 		for i in range(1,  len(self.extracts[article]) - 1):
 			x1, y1 = self.extracts[article][i]
 			x2, y2 = self.extracts[article][i+1]
 			yield self.articles[article][y1 + 1: x2]
+		xl, yl = self.extracts[article][-1]
 
+		yield self.articles[article][yl + 1 :]
 
 
 	def all_sentences(self):
@@ -224,20 +207,16 @@ def test():
 
 	print(model.most_similar(positive=['Υπουργός', 'Υπουργείο']))
 
-	issue = IssueParser('data/ek.txt')
+	issue = IssueParser('data/ocument1.txt')
 	for article in issue.articles.keys():
 		print('Article : ' + article)
+		print(issue.extracts[article])
 		for e in issue.get_non_extracts(article):
-			# print(e)
-			l = e.split(' ')
-			d = [edit_distance(x, 'προστίθεται') for x in l]
-			amin = np.argmin(d)
-			try:
-				if l[amin] != '':
-					print('Smallest hamming = {}, dist = {}'.format(d[amin], l[amin]))
-					print(model.most_similar(positive=[normalize_word( l[amin] ) ]))
-			except KeyError:
-				print('Could not match to word2vec model')
+			print(e)
+			action = syntax.translate_and_analyse(e)
+			if action != None:
+				print(action)
+				print(model.most_similar(positive=[action.name]))
 
 if __name__ == '__main__':
 	test()

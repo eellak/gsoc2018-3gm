@@ -6,18 +6,16 @@ from entities import *
 nlp = spacy.load('en_core_web_lg')
 lemmatizer = spacy.lemmatizer.Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES)
 
-extracts = ['Μετά το άρθρο 9Α του ν. 4170/2013, που προστέθηκε με το άρθρο 3 του ν. 4474/2017, αντικαθίσταται άρθρο 9ΑΑ, ως εξής',
-'''Στο τέλος του άρθρου 5 της από 24.12.1990 Πράξης Νομοθετικού Περιεχομένου «Περί Μουσουλμάνων Θρησκευτικών Λειτουργών» (Α΄182) που κυρώθηκε με το άρθρο μόνο του ν. 1920/1991 (Α΄11) προστίθεται παράγραφος 4 ως εξής''']
 translator = Translator()
 
-for extract in extracts:
+
+def translate_and_analyse(extract):
     result = translator.translate(extract, src='el', dest='en').text
 
     print(extract)
     print(result)
 
     doc = nlp(result)
-
 
     for token in doc:
         if token.dep_ == 'ROOT':
@@ -29,4 +27,4 @@ for extract in extracts:
             for action in actions:
                 if lemma == action.lemma:
                     print(action)
-                    break
+                    return action
