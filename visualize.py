@@ -16,7 +16,6 @@ import gensim
 from sklearn.cluster import KMeans
 
 
-
 def sentence_to_wordlist(raw):
     clean = []
     for words in raw:
@@ -28,8 +27,9 @@ def sentence_to_wordlist(raw):
 def tsne_transform(model, outfile='point.pkl'):
     tsne = sklearn.manifold.TSNE(n_components=2, random_state=0)
     all_word_vectors_matrix = model.wv.syn0
-    all_word_vectors_matrix_2d = tsne.fit_transform(all_word_vectors_matrix)# This may take time, depending on Vocab
-    points = pd.DataFrame([ (word, coords[0], coords[1])
+    all_word_vectors_matrix_2d = tsne.fit_transform(
+        all_word_vectors_matrix)  # This may take time, depending on Vocab
+    points = pd.DataFrame([(word, coords[0], coords[1])
                             for word, coords in [(word, all_word_vectors_matrix_2d[model.wv.vocab[word].index])
                             for word in model.wv.vocab]
                             ],
@@ -37,7 +37,7 @@ def tsne_transform(model, outfile='point.pkl'):
     points.to_pickle(outfile)
 
 
-def plot_points(filename='point.pkl', N = 50):
+def plot_points(filename='point.pkl', N=50):
     points = pd.read_pickle('point.pkl')
     kmeans = KMeans(n_clusters=5)
 
@@ -57,7 +57,10 @@ def plot_points(filename='point.pkl', N = 50):
         plt.scatter(x[:N], y[:N], c=y_kmeans, cmap='viridis')
         for i in range(N):
             plt.annotate(lbl[i], xy=(x[i], y[i]))
-            plt.scatter(centers[:, 0], centers[:, 1], c='black', s=200, alpha=0.5);
+            plt.scatter(centers[:, 0], centers[:, 1],
+                        c='black', s=200, alpha=0.5);
 
             plt.show()
+
+
 ]

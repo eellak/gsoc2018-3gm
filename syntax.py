@@ -20,7 +20,7 @@ def translate_and_analyse(extract):
     for token in doc:
         if token.dep_ == 'ROOT':
             print(token.text, token.dep_, token.head.text, token.head.pos_,
-                [child for child in token.children])
+                  [child for child in token.children])
 
             lemma = token.lemma_
             print(lemma)
