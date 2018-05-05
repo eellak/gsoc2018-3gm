@@ -67,7 +67,7 @@ actions = [
 	Action('αντικαθίσταται','replace', ['αντικαθίσταται', 'αντικατάσταση'])
 ]
 
-# Simple Classifier that uses Levenstein Distance
+# Simple Classifier that uses Levenstein Distance and get a weighted result as outcome
 class EditDistanceClassifier:
 
 	@staticmethod

@@ -10,20 +10,19 @@ from helpers import *
 import os
 import syntax
 import gensim
+import visualize
 from gensim.models import KeyedVectors
 import logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 import itertools
 import glob
-params = {'size': 200, 'iter' : 10,  'window': 10, 'min_count': 10,'workers': max(1, multiprocessing.cpu_count() -1), 'sample': 1E-3,}
+params = {'size': 200, 'iter' : 20,  'window': 2, 'min_count': 15,'workers': max(1, multiprocessing.cpu_count() -1), 'sample': 1E-3,}
 
 date_regex = re.compile('(\
 ([1-9]|0[1-9]|[12][0-9]|3[01])\
 [-/.\s+]\
 (1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)\
 (?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)')
-
-
 
 MONTHS_PREFIXES = {
 	'Ιανουαρίο' : 1,
@@ -201,9 +200,12 @@ def generate_model_from_government_gazette_issues(directory='data'):
 	os.chdir(cwd)
 	return issues, model
 
+def visualise_word2vec():
+	visualize.plot_points()
+
 def test():
 	issues, model = generate_model_from_government_gazette_issues()
-
+	model.wv.save_word2vec_format('fek.model')
 
 	print(model.most_similar(positive=['Υπουργός', 'Υπουργείο']))
 
@@ -219,4 +221,4 @@ def test():
 				print(model.most_similar(positive=[action.name]))
 
 if __name__ == '__main__':
-	test()
+	visualise_word2vec()
