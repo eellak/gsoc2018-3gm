@@ -7,9 +7,9 @@ import numpy as np
 from datetime import date, datetime, time
 from entities import *
 from helpers import *
+from syntax import *
 import os
 import gensim
-import visualize
 from gensim.models import KeyedVectors
 import logging
 logging.basicConfig(
@@ -25,20 +25,6 @@ date_regex = re.compile('(\
 (1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)\
 (?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)')
 
-MONTHS_PREFIXES = {
-	'Ιανουαρίο': 1,
-	'Φεβρουαρίο': 2,
-	'Μαρτίο': 3,
-	'Απριλίο': 4,
-	'Μαΐο': 5,
-	'Ιουνίο': 6,
-	'Ιουλίο': 7,
-	'Αυγούστο': 8,
-	'Σεπτέμβριο': 9,
-	'Οκτωβρίο': 10,
-	'Νοεμβρίο': 11,
-	'Δεκεμβρίο': 12,
-}
 
 
 class IssueParser:
@@ -46,8 +32,18 @@ class IssueParser:
 	def __init__(self, filename, toTxt=False):
 		self.filename = filename
 		self.lines = []
+		tmp_lines = []
 		with open(filename, 'r') as infile:
-			tmp_lines = infile.read().splitlines()
+			# remove ugly hyphenthation
+			while 1 == 1:
+				l = infile.readline()
+				if not l:
+					break
+				l = l.replace('-\n', '')
+				l = l.replace('\n', ' ')
+				tmp_lines.append(l)
+
+
 		for line in tmp_lines:
 			if line == '':
 				continue
@@ -71,15 +67,9 @@ class IssueParser:
 		if self.dates == []:
 			raise Exception('Could not find dates!')
 
-		full, day, month, year = self.dates[0][1][0]
-
-		for m in MONTHS_PREFIXES.keys():
-			if month == m + 'υ':
-				month = MONTHS_PREFIXES[m]
-				break
-
-		self.issue_date = date(int(year), month, int(day))
+		self.issue_date = string_to_date(self.dates[0][1][0])
 		self.signed_date = self.dates[-1]
+
 		return self.dates
 
 	def find_articles(self, min_extract_chars=100):
@@ -181,7 +171,7 @@ class IssueParser:
 		self.model.wv.save_word2vec_format('model')
 
 
-def generate_model_from_government_gazette_issues(directory='data'):
+def generate_model_from_government_gazette_issues(directory='../data'):
 	cwd = os.getcwd()
 	os.chdir(directory)
 	filelist = glob.glob('*.pdf'.format(directory))
@@ -206,11 +196,11 @@ def test():
 
 	print(model.most_similar(positive=['Υπουργός', 'Υπουργείο']))
 
-	issue = IssueParser('data/ocument1.txt')
+	issue = IssueParser('../data/ocument1.txt')
 	for article in issue.articles.keys():
 		for extract in issue.get_non_extracts(article):
 			print(extract)
-			print(EditDistanceClassifier.generate_action_tree(extract))
+			print(ActionTreeGenerator.generate_action_tree(extract))
 
 
 if __name__ == '__main__':

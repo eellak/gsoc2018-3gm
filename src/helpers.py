@@ -1,5 +1,6 @@
 import re
 import numpy as np
+from datetime import date, datetime, time
 
 
 def edit_distance(str1, str2, weight=lambda s1, s2, i, j: 0.75 if s1[i-1] == ' ' or s2[j-1] == ' ' else 1):
@@ -53,3 +54,28 @@ def normalize(x, l=None, r=None):
         return (x - l) / (r - l)
     else:
         return np.zeros(x.shape)
+
+MONTHS_PREFIXES = {
+	'Ιανουαρίο': 1,
+	'Φεβρουαρίο': 2,
+	'Μαρτίο': 3,
+	'Απριλίο': 4,
+	'Μαΐο': 5,
+	'Ιουνίο': 6,
+	'Ιουλίο': 7,
+	'Αυγούστο': 8,
+	'Σεπτέμβριο': 9,
+	'Οκτωβρίο': 10,
+	'Νοεμβρίο': 11,
+	'Δεκεμβρίο': 12,
+}
+
+def string_to_date(d):
+    full, day, month, year = d
+
+    for m in MONTHS_PREFIXES.keys():
+        if month == m + 'υ':
+            month = MONTHS_PREFIXES[m]
+            break
+
+    return date(int(year), month, int(day))

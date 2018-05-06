@@ -1,7 +1,7 @@
 import re
 import numpy as np
 from helpers import *
-
+import string
 
 class Minister:
 
@@ -73,6 +73,8 @@ actions = [
     Action('αντικαθίσταται', 'replace', ['αντικαθίσταται', 'αντικατάσταση'])
 ]
 
+whats = ['φράση', 'παράγραφος', 'άρθρο']
+
 # Simple Classifier that uses Levenstein Distance and get a weighted result as outcome
 
 class EditDistanceClassifier:
@@ -88,20 +90,6 @@ class EditDistanceClassifier:
             return actions[amin], result[amin]
         else:
             return None, -1
-
-    @staticmethod
-    def generate_action_tree(extract):
-        global actions
-        tree = {}
-        tmp = extract.split(' ')
-        for action in actions:
-            for w in tmp:
-                if action == w:
-                    tree['root'] = {
-                        'action' : action,
-                        'children' : []
-                    }
-                    print(action.name)
 
 
     @staticmethod

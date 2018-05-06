@@ -37,27 +37,22 @@ def tsne_transform(model, outfile='point.pkl'):
     points.to_pickle(outfile)
 
 
-def plot_points(filename='point.pkl', N=50):
-    points = pd.read_pickle('point.pkl')
-    kmeans = KMeans(n_clusters=5)
+def plot_points(filename='../models/point.pkl', N=100):
+    points = pd.read_pickle(filename)
+
 
     x = points['x'].as_matrix()
     y = points['y'].as_matrix()
     lbl = points['word'].as_matrix()
     pts = []
+    plt.figure();
+
     for i in range(N):
         pts.append([x[i], y[i]])
-
-        kmeans.fit(pts)
-        y_kmeans = kmeans.predict(pts)
-
-        centers = kmeans.cluster_centers_
-
-    plt.figure();
-    plt.scatter(x[:N], y[:N], c=y_kmeans, cmap='viridis')
-    for i in range(N):
         plt.annotate(lbl[i], xy=(x[i], y[i]))
-        plt.scatter(centers[:, 0], centers[:, 1],
-                    c='black', s=200, alpha=0.5);
 
+    plt.plot(x[:N], y[:N], '-o', linewidth=0.1, color='g')
     plt.show()
+
+if __name__ == '__main__':
+    plot_points()

@@ -1,7 +1,14 @@
+'''
+    Hosts DB related stuff.
+    The database used in this project is MongoDB and it has been chosen
+    to provide flexibility with handling large documents with text.
+'''
+
 import pprint
 from pymongo import MongoClient
+
 client = MongoClient()
 db = client['3gmdb']
-ministers_collection = db['ministers']
-for minister in actions:
-    ministers_collection.insert_one(minister.__dict__)
+
+class DBWrapper:
+    pass
