@@ -201,6 +201,8 @@ def test():
 		for extract in issue.get_non_extracts(article):
 			print(extract)
 			print(ActionTreeGenerator.generate_action_tree(extract))
+			ActionTreeGenerator.translate_and_analyse(extract)
+
 
 
 if __name__ == '__main__':

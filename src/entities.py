@@ -52,7 +52,7 @@ class Action:
         return np.dot(scores, self.weight_vector)
 
     def __eq__(self, w):
-        return w == self.name or w in self.derivatives
+        return w == self.name or w in self.derivatives or w == self.name.capitalize() or w in list(map(lambda s : s.capitalize(), self.derivatives))
 
 
 
@@ -74,6 +74,8 @@ actions = [
 ]
 
 whats = ['φράση', 'παράγραφος', 'άρθρο']
+wheres = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']
+
 
 # Simple Classifier that uses Levenstein Distance and get a weighted result as outcome
 

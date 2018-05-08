@@ -15,7 +15,7 @@ class ActionTreeGenerator:
         3. where to do it (i.e. on which law after which section)
     '''
     @staticmethod
-    def generate_action_tree(extract, max_what_window = 20):
+    def generate_action_tree(extract, max_what_window = 20, max_where_window = 30):
         global actions
         global whats
         trees = []
@@ -69,6 +69,45 @@ class ActionTreeGenerator:
 
                     # TODO find where clause
 
+                    k = tree['what']['id']
+                    found_where = False
+                    for j in range(1, max_where_window + 1):
+                        for where in wheres:
+                            if k + j  <= len(tmp) - 1 and where == tmp[k + j]:
+                                print('found ', where)
+                                tree['root']['children'].append('where')
+                                tree['where'] = {
+                                    'id' : k + j,
+                                    'context' : where,
+                                    'children' : [],
+                                }
+                                found_where == True
+                                break
+
+                        if found_where:
+                            break
+
+                            if k - j >= 0 and where == tmp[k - j]:
+                                tree['root']['children'].append('where')
+                                tree['where'] = {
+                                    'id' : k - j,
+                                    'context' : where,
+                                    'children' : []
+
+                                }
+
+                                found_where = True
+                                break
+
+                        if found_where:
+                            break
+
+                    # EXPERIMENTAL
+
+                    if found_where and tree['where']['id'] <= tree['root']['id']:
+                        tree['where']['contents'] = tmp[ tree['where']['id'] : tree['root']['id'] ]
+
+
                     trees.append(tree)
 
         return trees
@@ -90,15 +129,28 @@ class ActionTreeGenerator:
         print(result)
 
         doc = nlp(result)
-
+        roots = []
         for token in doc:
             if token.dep_ == 'ROOT':
-                print(token.text, token.dep_, token.head.text, token.head.pos_,
-                      [child for child in token.children])
-
                 lemma = token.lemma_
-                print(lemma)
                 for action in actions:
                     if lemma == action.lemma:
-                        print(action)
-                        return action
+                        roots.append(token)
+
+        for root in roots:
+            print ( ActionTreeGenerator.dfs_traversal(root) )
+
+
+    @staticmethod
+    def dfs_traversal(token):
+        tree = {}
+        stack = [token]
+
+
+        while stack != []:
+            tok = stack.pop()
+            tree[tok.text] = tok
+            for child in tok.children:
+                stack.append(child)
+
+        return tree
