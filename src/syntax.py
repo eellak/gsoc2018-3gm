@@ -2,6 +2,7 @@ import spacy
 from googletrans import Translator
 from spacy.lang.en import LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES
 from entities import *
+import re
 
 # Action Tree Generation
 
@@ -108,6 +109,7 @@ class ActionTreeGenerator:
                         tree['where']['contents'] = tmp[ tree['where']['id'] : tree['root']['id'] ]
 
 
+                    print('Found laws', re.search(law_regex, extract))
                     trees.append(tree)
 
         return trees

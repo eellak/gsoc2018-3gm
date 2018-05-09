@@ -75,7 +75,7 @@ actions = [
 
 whats = ['φράση', 'παράγραφος', 'άρθρο']
 wheres = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']
-
+law_regex = r'ν. [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'
 
 # Simple Classifier that uses Levenstein Distance and get a weighted result as outcome
 
