@@ -20,11 +20,18 @@ Through the case of analyzing, categorizing and codifying Government Gazette art
 
 **Keywords:** _text mining, government gazette, machine learning, law codification_
 
+## Google Summer of Code 2018
+
+ * Google Summer of Code participant: Marios Papachristou
+ * Mentor: Diomidis Spinellis
+ * Mentor: Alexios Zavras (zvr)
+ * Mentor: Sarantos Kapidakis
+
 ---
 
 ## Licensing
 
-The project is opensourced as a part of the Google Summer of Code Programme and Vision. Here, the GNU GPLv3 license is adopted. For more information see `LICENSE`. 
+The project is opensourced as a part of the Google Summer of Code Programme and Vision. Here, the GNU GPLv3 license is adopted. For more information see `LICENSE`.
 
 ## Methods & Practices
 

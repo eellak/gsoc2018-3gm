@@ -7,8 +7,27 @@
 import pprint
 from pymongo import MongoClient
 
-client = MongoClient()
-db = client['3gmdb']
+try:
+    client = MongoClient()
+except pymongo.errors.ConnectionFailure, e:
+    print "Could not connect to MongoDB: %s" % e
 
-class DBWrapper:
-    pass
+
+class Database:
+
+    def __init__(self, client):
+        self.db = client['3gmdb']
+        self.issues_collection = self.db.issues
+
+    def insert_issue_to_db(self, issue):
+        issue.detect_signatories()
+        serializable = {
+            'issue_date' : issue.issue_date,
+            'issue_number' : issue.issue_number,
+            'articles' : issue.articles
+            'extracts' : dict([(article, list(issues.get_extracts(article))
+                            for article in issue.articles.keys()])
+            'non_extracts' : dict([(article, list(issues.get_non_extracts(article))
+                            for article in issue.articles.keys()])
+            'signatories' : [signatory.__dict__ for signatory in issue.signatories]                
+        }

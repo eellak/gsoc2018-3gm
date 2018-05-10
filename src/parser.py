@@ -25,9 +25,16 @@ date_regex = re.compile('(\
 (1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)\
 (?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)')
 
-
-
 class IssueParser:
+	"""
+		This is a class for holding information about an issue in
+		computer-friendly form. It is responsible for:
+		1. Detecting Dates
+		2. Split document to articles
+		3. Split articles to extracts and non-extracts for assisting
+		in construction of the parse tree for each ROI.
+		4. Detect Signatories of Given Documents
+		5. Train a word2vec model with gensim for further usage."""
 
 	def __init__(self, filename, toTxt=False):
 		self.filename = filename
@@ -51,6 +58,8 @@ class IssueParser:
 				continue
 			else:
 				self.lines.append(line)
+				if line.startswith('Αρ. Φύλλου'):
+					self.issue_number = int(line.split(' ')[-2])
 
 		self.dates = []
 		self.find_dates()
@@ -59,6 +68,8 @@ class IssueParser:
 		self.find_articles()
 
 	def find_dates(self):
+		"""Detect all dates withing the given document"""
+
 		for i, line in enumerate(self.lines):
 			result = date_regex.findall(line)
 			if result != []:
@@ -73,6 +84,12 @@ class IssueParser:
 		return self.dates
 
 	def find_articles(self, min_extract_chars=100):
+		"""Split the document into articles,
+		Detect Extracts that are more than min_extract_chars.
+		Extracts start with quotation marks	(«, »).
+		Strip punctuation and split document into sentences.
+		"""
+
 		article_indices = []
 		for i, line in enumerate(self.lines):
 			if line.startswith('Άρθρο') or line.startswith('Ο Πρόεδρος της Δημοκρατίας'):
@@ -122,10 +139,14 @@ class IssueParser:
 			self.sentences[article] = tmp
 
 	def get_extracts(self, article):
+		"""Get direct parts that should be added, modified or deleted"""
 		for i, j in self.extracts[article]:
 			yield self.articles[article][i + 1: j]
 
 	def get_non_extracts(self, article):
+		"""Get non-extracts i.e. where the commands for ammendments
+		can be found"""
+
 		if len(self.extracts[article]) == 0:
 			return
 		x0, y0 = self.extracts[article][0]
@@ -138,6 +159,30 @@ class IssueParser:
 		xl, yl = self.extracts[article][-1]
 
 		yield self.articles[article][yl + 1:]
+
+	def get_alternating(self, article):
+		"""Get extracts and non-extracts alternating as a generator"""
+
+		# start with an extract
+		if self.extracts[article][0] == 0:
+			flag = False
+		else:
+			flag = True
+
+		extracts_ = list(self.get_extracts(article))
+		non_extracts_ = list(self.get_non_extracts(article))
+
+		for e, n in itertools.zip_longest(extracts_, non_extracts_):
+			if flag:
+				if n != None:
+					yield n
+				if e != None:
+					yield e
+			else:
+				if e != None:
+					yield e
+				if n != None:
+					yield n
 
 	def all_sentences(self):
 		for article in self.sentences.keys():
@@ -160,6 +205,8 @@ class IssueParser:
 		for signatory in self.signatories:
 			print(signatory)
 
+		self.signatories = list(self.signatories)
+			
 		return self.signatories
 
 	def train_word2vec(self):
@@ -189,21 +236,26 @@ def generate_model_from_government_gazette_issues(directory='../data'):
 	os.chdir(cwd)
 	return issues, model
 
+def generate_model_from_government_gazette_issues(directory='../data'):
+	cwd = os.getcwd()
+	os.chdir(directory)
+	filelist = glob.glob('*.pdf'.format(directory))
+	issues = []
+	for filename in filelist:
+		outfile = filename.strip('.pdf') + '.txt'
+		if not os.path.isfile(outfile):
+			os.system('pdf2txt.py {} > {}'.format(filename, outfile))
+		issue = IssueParser(outfile)
+		issues.append(issue)
 
-def test():
+	os.chdir(cwd)
+	return issues, model
+
+def train_word2vec_on_test_data():
 	issues, model = generate_model_from_government_gazette_issues()
 	model.wv.save_word2vec_format('fek.model')
-
 	print(model.most_similar(positive=['Υπουργός', 'Υπουργείο']))
-
-	issue = IssueParser('../data/ocument1.txt')
-	for article in issue.articles.keys():
-		for extract in issue.get_non_extracts(article):
-			print(extract)
-			print(ActionTreeGenerator.generate_action_tree(extract))
-			ActionTreeGenerator.translate_and_analyse(extract)
-
 
 
 if __name__ == '__main__':
-	test()
+	test_action_tree_generator()

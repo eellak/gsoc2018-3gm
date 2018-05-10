@@ -3,18 +3,19 @@ from googletrans import Translator
 from spacy.lang.en import LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES
 from entities import *
 import re
+import collections
 
 # Action Tree Generation
 
 class ActionTreeGenerator:
-
-    '''
+    """
         Generate the action tree for a given extract.
         The action tree consists of:
         1. action to do (i.e. add, remove, ammend) as the root of the tree
         2. on what to act (i.e. add a paragraph)
         3. where to do it (i.e. on which law after which section)
-    '''
+    """
+
     @staticmethod
     def generate_action_tree(extract, max_what_window = 20, max_where_window = 30):
         global actions
@@ -24,7 +25,7 @@ class ActionTreeGenerator:
         for action in actions:
             for i, w in enumerate(tmp):
                 if action == w:
-                    tree = {}
+                    tree = collections.defaultdict(dict)
                     tree['root'] = {
                         'id' : i,
                         'action' : action,
@@ -94,7 +95,6 @@ class ActionTreeGenerator:
                                     'id' : k - j,
                                     'context' : where,
                                     'children' : []
-
                                 }
 
                                 found_where = True
@@ -105,15 +105,17 @@ class ActionTreeGenerator:
 
                     # EXPERIMENTAL
 
-                    if found_where and tree['where']['id'] <= tree['root']['id']:
-                        tree['where']['contents'] = tmp[ tree['where']['id'] : tree['root']['id'] ]
+                    legislative_acts = list ( filter(lambda x : x != [],  [list(re.finditer(date + ' ' + la, extract)) for la in legislative_act]))
+                    laws =  list(re.finditer(law_regex, extract))
+                    print(laws)
+                    print(legislative_acts)
 
+                    tree['where']['laws'] = laws
+                    tree['where']['legislative_acts'] = legislative_acts
 
-                    print('Found laws', re.search(law_regex, extract))
                     trees.append(tree)
 
         return trees
-
 
     # Here is something really crazy
     # Translate the sentence to english and then process its syntax with spacy

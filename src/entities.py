@@ -65,6 +65,7 @@ ministers = [
              'Παιδείας, Έρευνας και Θρησκευμάτων')
 ]
 
+# Actions
 actions = [
     Action('προστίθεται', 'add', ['προσθέτουμε', 'προσθήκη']),
     Action('διαγράφεται', 'delete', ['διαγράφουμε', 'διαγραφή']),
@@ -73,17 +74,32 @@ actions = [
     Action('αντικαθίσταται', 'replace', ['αντικαθίσταται', 'αντικατάσταση'])
 ]
 
+# Entities
 whats = ['φράση', 'παράγραφος', 'άρθρο']
 wheres = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']
 law_regex = r'ν. [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'
+legislative_act = ['Πράξη Νομοθετικού Περιεχομένου', 'Πράξης Νομοθετικού Περιεχομένου']
+date = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'
 
-# Simple Classifier that uses Levenstein Distance and get a weighted result as outcome
 
 class EditDistanceClassifier:
+    """
+        Classify a word to an action by a scoring a number
+        of keywords. The proceedure is the following:
+        Let w be our word of interest and a be an action.
+        The action is also defined by some "derivatives" such as
+        the same word as a verb or in other forms like genitive,
+        accusative etc. each of which associated by a given weight
+        (refer to Action class for more). Each action has a score
+        which is the dot product of the edit_distances to its of the
+        derivatives with its weight. If a the total score is smaller
+        than a given threshold then we return the closest action (with
+        the minimum score)
+    """
 
     @staticmethod
-    def classify_word(word, threshold=5):
-        global actions
+    def classify_word(word, actions=actions, threshold=5):
+
         result = np.zeros(len(actions))
         for i, action in enumerate(actions):
             result[i] = action.score(word)
@@ -95,10 +111,10 @@ class EditDistanceClassifier:
 
 
     @staticmethod
-    def classify_extract(extract):
+    def classify_extract(extract, actions=actions):
         tmp = extract.split(' ')
         d = list(filter(lambda x: x[0] != None, [
-                 EditDistanceClassifier.classify_word(w) for w in tmp]))
+                 EditDistanceClassifier.classify_word(w, actions) for w in tmp]))
         print(d)
         amin = 0
         for i in range(len(d)):

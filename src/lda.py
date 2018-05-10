@@ -22,6 +22,7 @@ def display_topics(H, W, feature_names, data_samples, no_top_words, no_top_data_
 			print(issues[doc_index].filename)
 			graph[doc_index] = list ( filter( lambda x : x != doc_index,  top_doc_indices ))
 
+	print(graph)		
 	return graph
 
 def bfs(graph, s):
