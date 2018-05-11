@@ -14,9 +14,12 @@ addons:
   apt:
     update: true
 
+virtualenv:
+  system_site_packages: true
+
 # command to install dependencies
 install:
-  - sudo pip install pymongo spacy numpy pytest
+  - pip install pymongo spacy numpy pytest
 
 # command to run tests
 script:
