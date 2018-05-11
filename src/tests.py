@@ -2,7 +2,6 @@ import pytest
 import parser
 import syntax
 
-
 # Parser Unit Tests
 
 

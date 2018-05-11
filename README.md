@@ -50,7 +50,6 @@ which is pretty satisfying. The word vectors are also reduced in dimension using
 
 ![GitHub Logo](/docs/word2vec.png)
 
-
 ### Storing data
 
 This project has to do with a lot of documents so selecting a NoSQL database like MongoDB would be a perfect fit for the project. The articles are organized in collections by paragraphs. It uses the `pymongo` module to communicate with the MongoDB database server. The scripts used for communication with the database as well as query building from syntactic analysis is found in the `src/database.py` module.
