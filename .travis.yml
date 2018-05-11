@@ -1,4 +1,3 @@
-sudo: true
 guage: python
 python:
   - "2.6"
@@ -18,12 +17,12 @@ addons:
       - "python3-pip"
 
 before_install:
-  - chown -R $USER /usr/local/lib/python3.4
-  - apt-get install python3-pip
+  - sudo chown -R $USER /usr/local/lib/python3.4
+  - sudo apt-get install python3-pip
 
 # command to install dependencies
 install:
-  - pip install pymongo spacy numpy pytest
+  - sudo pip install pymongo spacy numpy pytest
 
 # command to run tests
 script:
