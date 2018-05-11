@@ -19,7 +19,7 @@ virtualenv:
 
 # command to install dependencies
 install:
-  - pip install pymongo spacy numpy pytest
+  - pip install spacy numpy pytest
 
 # command to run tests
 script:
