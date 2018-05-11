@@ -17,6 +17,9 @@ addons:
       - "python3"
       - "python3-pip"
 
+before_install:
+  - apt-get install python3-pip
+
 # command to install dependencies
 install:
   - pip install pymongo spacy numpy pytest
