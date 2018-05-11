@@ -19,7 +19,7 @@ addons:
 
 # command to install dependencies
 install:
-  - pip3 install pymongo spacy numpy pytest
+  - pip install pymongo spacy numpy pytest
 
 # command to run tests
 script:
