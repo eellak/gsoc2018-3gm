@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import pytest
 import parser
 import syntax
