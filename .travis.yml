@@ -10,7 +10,7 @@ python:
   - "pypy3.5"
 # command to install dependencies
 install:
-  - pip install pymongo spacy numpy
+  - sudo pip install pymongo spacy numpy
 
 # command to run tests
 script:
