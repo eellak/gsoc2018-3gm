@@ -1,16 +1,13 @@
 guage: python
 python:
-  - "2.6"
-  - "2.7"
   - "3.4"
   - "3.5"
   - "3.6"
   # PyPy versions
-  - "pypy2.7"
   - "pypy3.5"
 # command to install dependencies
 install:
-  - sudo pip3 install pymongo spacy numpy pytest
+  - sudo pip install pymongo spacy numpy pytest
 
 # command to run tests
 script:
