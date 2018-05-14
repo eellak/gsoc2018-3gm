@@ -17,11 +17,12 @@ class ActionTreeGenerator:
     """
 
     @staticmethod
-    def generate_action_tree(extract, max_what_window = 20, max_where_window = 30):
+    def generate_action_tree(extract, issue, article, max_what_window = 20, max_where_window = 30):
         global actions
         global whats
         trees = []
         tmp = list(map(lambda s : s.strip(string.punctuation),  extract.split(' ')))
+
         for action in actions:
             for i, w in enumerate(tmp):
                 if action == w:
@@ -40,7 +41,7 @@ class ActionTreeGenerator:
                         for what in whats:
                             if i + j  <= len(tmp) - 1 and what == tmp[i + j]:
                                 print('found ', what)
-                                tree['root']['children'].append('what')
+                                tree['root']['children'].append('law')
                                 tree['what'] = {
                                     'id' : i + j,
                                     'context' : what,
@@ -69,14 +70,17 @@ class ActionTreeGenerator:
                         if found_what:
                             break
 
-                    # TODO find where clause
-
+                    # If it is a phrase it's located after the word enclosed in quotation marks
                     k = tree['what']['id']
+
+                    print('wut')
+                    if tree['what']['context'] == 'παράγραφος':
+                        tree['what']['content'] = next(issue.get_extracts(article))
+
                     found_where = False
                     for j in range(1, max_where_window + 1):
                         for where in wheres:
                             if k + j  <= len(tmp) - 1 and where == tmp[k + j]:
-                                print('found ', where)
                                 tree['root']['children'].append('where')
                                 tree['where'] = {
                                     'id' : k + j,
@@ -107,8 +111,6 @@ class ActionTreeGenerator:
 
                     legislative_acts = list ( filter(lambda x : x != [],  [list(re.finditer(date + ' ' + la, extract)) for la in legislative_act]))
                     laws =  list(re.finditer(law_regex, extract))
-                    print(laws)
-                    print(legislative_acts)
 
                     tree['where']['laws'] = laws
                     tree['where']['legislative_acts'] = legislative_acts

@@ -3,6 +3,15 @@ import numpy as np
 from helpers import *
 import string
 
+class Law:
+    """Contains information about a Law"""
+    pass
+
+class LegislativeAct(Law):
+    """Contains information about a Legislative Act"""
+    pass
+
+
 class Minister:
 
     def __init__(self, name, middle, surname, ministry):

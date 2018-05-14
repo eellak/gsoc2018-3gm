@@ -54,12 +54,16 @@ class IssueParser:
 		for line in tmp_lines:
 			if line == '':
 				continue
-			elif line.startswith('Τεύχος'):
+			elif line.startswith('Τεύχος') or line.startswith('ΕΦΗΜΕΡΙ∆Α TΗΣ ΚΥΒΕΡΝΗΣΕΩΣ'):
 				continue
 			else:
-				self.lines.append(line)
-				if line.startswith('Αρ. Φύλλου'):
-					self.issue_number = int(line.split(' ')[-2])
+				try:
+					n = int(line)
+					continue
+				except ValueError:
+					self.lines.append(line)
+					if line.startswith('Αρ. Φύλλου'):
+						self.issue_number = int(line.split(' ')[-2])
 
 		self.dates = []
 		self.find_dates()
@@ -206,7 +210,7 @@ class IssueParser:
 			print(signatory)
 
 		self.signatories = list(self.signatories)
-			
+
 		return self.signatories
 
 	def train_word2vec(self):
@@ -254,8 +258,3 @@ def generate_model_from_government_gazette_issues(directory='../data'):
 def train_word2vec_on_test_data():
 	issues, model = generate_model_from_government_gazette_issues()
 	model.wv.save_word2vec_format('fek.model')
-	print(model.most_similar(positive=['Υπουργός', 'Υπουργείο']))
-
-
-if __name__ == '__main__':
-	test_action_tree_generator()

@@ -13,9 +13,14 @@ def test_action_tree_generator():
     for article in issue.articles.keys():
         print(issue.articles[article])
         for i, extract in enumerate(issue.get_non_extracts(article)):
-            print(extract)
-            trees[i] = syntax.ActionTreeGenerator.generate_action_tree(extract)
+            # print(extract)
+            trees[i] = syntax.ActionTreeGenerator.generate_action_tree(extract, issue, article)
             print(trees[i])
+
+    for article in issue.articles.keys():
+        for i, e in enumerate(issue.get_extracts(article)):
+            print(e)
+
 
     test_tree = trees[0][0]
 
