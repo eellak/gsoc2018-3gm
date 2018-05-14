@@ -18,6 +18,7 @@ class Database:
     def __init__(self, client):
         self.db = client['3gmdb']
         self.issues_collection = self.db.issues
+        self.laws = self.db.laws
 
     def insert_issue_to_db(self, issue):
         issue.detect_signatories()
@@ -29,5 +30,19 @@ class Database:
                             for article in issue.articles.keys()])
             'non_extracts' : dict([(article, list(issues.get_non_extracts(article))
                             for article in issue.articles.keys()])
-            'signatories' : [signatory.__dict__ for signatory in issue.signatories]                
+            'signatories' : [signatory.__dict__ for signatory in issue.signatories]
         }
+
+    def traverse_syntax_tree(self, tree):
+        if tree['root']['action'] == 'προστίθεται':
+            insertable = {}
+            s = ['root']
+            while s != []:
+                k = s.pop()
+                print(k)
+                print(tree[k])
+                for c in tree['children']:
+                    s.append(c)
+
+
+            self.laws.insert(insertable)

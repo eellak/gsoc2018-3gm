@@ -8,6 +8,7 @@ import syntax
 # Syntax Tests
 
 def test_action_tree_generator():
+
     trees = {}
     issue = parser.IssueParser('../data/17.txt')
     for article in issue.articles.keys():
