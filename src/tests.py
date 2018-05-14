@@ -15,17 +15,19 @@ def test_action_tree_generator():
         for i, extract in enumerate(issue.get_non_extracts(article)):
             # print(extract)
             trees[i] = syntax.ActionTreeGenerator.generate_action_tree(extract, issue, article)
-            print(trees[i])
-
-    for article in issue.articles.keys():
-        for i, e in enumerate(issue.get_extracts(article)):
-            print(e)
-
+            for t in trees[i]:
+                s = ['root']
+                while s != []:
+                    k = s.pop()
+                    print(k)
+                    print(t[k])
+                    for c in t[k]['children']:
+                        s.append(c)
 
     test_tree = trees[0][0]
 
     assert( test_tree['root']['action'] == 'προστίθεται' )
-    assert( len(test_tree['where']['legislative_acts']) > 0)
+    assert( len(test_tree['law']) > 0)
     assert(2 == 2)
 
 
