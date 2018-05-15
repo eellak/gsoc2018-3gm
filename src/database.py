@@ -40,7 +40,12 @@ class Database:
     def query_from_tree(self, tree):
         if tree['root']['action'] == 'προστίθεται':
             self.laws.insert(tree['law'])
-            print('OK')
+            print('Insertion complete')
+        elif tree['root']['action'] == 'αντικαθίσταται':
+            self.laws.save(tree['law'])
+            print('Update Complete')
+
+
 
     def print_laws(self):
         cursor = self.laws.find({})

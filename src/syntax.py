@@ -28,7 +28,7 @@ class ActionTreeGenerator:
                 if action == w:
                     tree = collections.defaultdict(dict)
                     tree['root'] = {
-                        'id' : i,
+                        '_id' : i,
                         'action' : action.__str__(),
                         'children' : []
                     }
@@ -44,7 +44,7 @@ class ActionTreeGenerator:
                             if i + j  <= len(tmp) - 1 and what == tmp[i + j]:
                                 tree['root']['children'].append('law')
                                 tree['what'] = {
-                                    'id' : i + j,
+                                    '_id' : i + j,
                                     'context' : what,
                                     'children' : [],
                                 }
@@ -59,7 +59,7 @@ class ActionTreeGenerator:
                             if i - j >= 0 and what == tmp[i - j]:
                                 tree['root']['children'].append('law')
                                 tree['what'] = {
-                                    'id' : i - j,
+                                    '_id' : i - j,
                                     'context' : what,
                                     'children' : []
                                 }
@@ -72,7 +72,8 @@ class ActionTreeGenerator:
                             break
 
                     # If it is a phrase it's located after the word enclosed in quotation marks
-                    k = tree['what']['id']
+                    k = tree['what']['_id']
+                    print('tree what', tree['what']['context'])
 
                     if tree['what']['context'] == 'παράγραφος':
                         tree['paragraph'] = {}
@@ -91,7 +92,7 @@ class ActionTreeGenerator:
 
                     # first level are laws
                     tree['law'] = {
-                        'id' : laws[0].group(),
+                        '_id' : laws[0].group(),
                         'children' : ['article']
                     }
 
@@ -99,14 +100,14 @@ class ActionTreeGenerator:
                     if max_depth >= 2:
                         articles = list ( filter(lambda x : x != [],  [list(re.finditer(a, extract)) for a in article_regex]))
 
-                        tree['article']['id'] = int(articles[0][0].group().split(' ')[1])
+                        tree['article']['_id'] = articles[0][0].group().split(' ')[1]
                         tree['article']['children'] = ['paragraph'] if max_depth > 2 else []
 
                     #third level is paragraph
-                    if max_depth >= 3:
+                    if max_depth > 3:
                         paragraph = list ( filter(lambda x : x != [],  [list(re.finditer(a, extract)) for a in paragraph_regex]))
 
-                        tree['paragraph']['id'] = int(paragraph[0][0].group().split(' ')[1])
+                        tree['paragraph']['_id'] = int(paragraph[0][0].group().split(' ')[1])
                         tree['paragraph']['children'] = ['period'] if max_depth > 4 else []
 
 
