@@ -17,7 +17,7 @@ class ActionTreeGenerator:
     """
 
     @staticmethod
-    def generate_action_tree(extract, issue, article, max_what_window = 20, max_where_window = 30):
+    def generate_action_tree(extract, issue, article, nested=True, max_what_window = 20, max_where_window = 30):
         global actions
         global whats
         trees = []
@@ -29,7 +29,7 @@ class ActionTreeGenerator:
                     tree = collections.defaultdict(dict)
                     tree['root'] = {
                         'id' : i,
-                        'action' : action,
+                        'action' : action.__str__(),
                         'children' : []
                     }
                     max_depth = 0
@@ -109,9 +109,9 @@ class ActionTreeGenerator:
                         tree['paragraph']['id'] = int(paragraph[0][0].group().split(' ')[1])
                         tree['paragraph']['children'] = ['period'] if max_depth > 4 else []
 
-                    print('Depth ', max_depth)
 
-
+                    if nested:
+                        ActionTreeGenerator.nest_tree('root', tree)
 
 
                     trees.append(tree)
@@ -144,6 +144,18 @@ class ActionTreeGenerator:
 
         for root in roots:
             print ( ActionTreeGenerator.dfs_traversal(root) )
+
+
+    @staticmethod
+    def nest_tree(vertex, tree):
+        if tree[vertex] == {} or len(tree[vertex]['children']) == 0:
+            return tree
+        if len(tree[vertex]['children']) == 1:
+            c = tree[vertex]['children'][0]
+            del tree[vertex]['children']
+            tree[vertex][c] = tree[c]
+        ActionTreeGenerator.nest_tree(c, tree)
+
 
 
     @staticmethod
