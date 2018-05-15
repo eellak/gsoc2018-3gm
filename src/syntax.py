@@ -148,7 +148,10 @@ class ActionTreeGenerator:
 
     @staticmethod
     def nest_tree(vertex, tree):
-        if tree[vertex] == {} or len(tree[vertex]['children']) == 0:
+        if tree[vertex] == {}:
+            return tree
+        if tree[vertex]['children'] == []:
+            del tree[vertex]['children']
             return tree
         if len(tree[vertex]['children']) == 1:
             c = tree[vertex]['children'][0]
