@@ -258,3 +258,81 @@ def generate_model_from_government_gazette_issues(directory='../data'):
 def train_word2vec_on_test_data():
 	issues, model = generate_model_from_government_gazette_issues()
 	model.wv.save_word2vec_format('fek.model')
+
+class LawParser:
+
+	def __init__(self, filename, identifier):
+		self.filename = filename
+		self.identifier = identifier
+		self.lines = []
+		tmp_lines = []
+		with open(filename, 'r') as infile:
+			# remove ugly hyphenthation
+			while 1 == 1:
+				l = infile.readline()
+				if not l:
+					break
+				l = l.replace('-\n', '')
+				l = l.replace('\n', ' ')
+				tmp_lines.append(l)
+
+
+		for line in tmp_lines:
+			if line == '':
+				continue
+			else:
+				self.lines.append(line)
+		self.thesaurus = {}
+		self.lemmas = {}
+		self.articles = {}
+		self.titles = {}
+		self.corpus = {}
+		self.sentences = {}
+		self.find_corpus()
+
+	def __repr__(self):
+		return self.identifier
+
+	def __str__(self):
+		return self.identifier
+
+	def find_corpus(self):
+		idx = []
+		for i, line in enumerate(self.lines):
+			if line.startswith('Αρθρο:'):
+				idx.append(i)
+				print(i)
+
+		for j in range(len(idx) - 1):
+			x, y = idx[j], idx[j+1]
+			self.lines[x]  = self.lines[x].strip(':')
+			self.corpus[self.lines[x]] = self.lines[x : y]
+
+		for article in self.corpus.keys():
+			for i, line in enumerate(self.corpus[article]):
+				if line.startswith('Κείμενο Αρθρου'):
+					# TODO split to paragraphs
+					self.articles[article] = self.corpus[article][i + 1:]
+					paragraphs = collections.defaultdict(list)
+					for t in self.articles[article]:
+						x = re.search(r'\d+. ', t)
+						if x and x.span() == (0, 3):
+							current = x.group().strip('. ')
+						paragraphs[current].append(t)
+
+					paragraphs_with_ids = []
+
+					for par in paragraphs.keys():
+						paragraphs_with_ids.append({
+							'paragraph' : {
+								'_id' : par,
+								'context' : ''.join(paragraphs[par])
+							}
+						})
+
+					self.articles[article] = paragraphs_with_ids
+
+				elif line.startswith('Λήμματα'):
+					self.lemmas[article] = self.corpus[article][i + 1].split(' - ')
+				elif line.startswith('Τίτλος Αρθρου'):
+					self.titles[article] = self.corpus[article][i + 1]
