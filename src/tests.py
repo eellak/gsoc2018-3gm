@@ -2,6 +2,7 @@ import pytest
 import parser
 import syntax
 import database
+import pprint
 
 # Parser Unit Tests
 
@@ -55,6 +56,25 @@ def test_action_tree_generator_insert_query(filename='../data/inserter.txt'):
 	print('Printing Laws Collection')
 	db.print_laws()
 
+def test_action_tree_generator_delete_query(filename='../data/deleter.txt'):
+	db.drop_laws()
+	trees = {}
+	issue = parser.IssueParser(filename)
+	for article in issue.articles.keys():
+		print(article)
+		for i, extract in enumerate(issue.get_non_extracts(article)):
+			trees[i] = syntax.ActionTreeGenerator.generate_action_tree(extract, issue, article)
+			for t in trees[i]:
+				if t['root']['action'] == 'διαγράφεται':
+
+					print('Deletition of')
+					print(t['law'])
+					db.query_from_tree(t)
+					break
+	print('Printing Laws Collection')
+	db.print_laws()
+
+
 def test_action_tree_generator_replace_query(filename='../data/replacer.txt'):
 
 	trees = {}
@@ -77,13 +97,15 @@ def test_action_tree_generator_insert_and_replace():
 	test_action_tree_generator_insert_query()
 	test_action_tree_generator_replace_query()
 
-
-def test_law_parser(filename='../data/24_12_1990_legislative_act.txt', identifier='ΠΝΠ 24.12.1990'):
+def test_law_parser(filename='../data/24_12_1990_legislative_act.txt', identifier='ν. 1920/1921'):
+	test_action_tree_generator_insert_and_replace()
 	law = parser.LawParser(filename, identifier)
-	for a in law.corpus.keys():
-		print(a)
-		print(law.articles[a])
-
+	db.laws.save(law.__dict__())
+	print('Testing Querying')
+	cursor = db.laws.find({'_id' : 'ν. 1920/1921'})
+	for x in cursor:
+		print(x['sentences']['1']['1'])
+		assert(x['sentences']['1']['1'][0] == 'Εντός τριμήνου αφότου κενωθεί θέση Μουφτή, ο κατά τόπο αρμόδιος Νομάρχης, καλεί σε πράξη του τους ενδιαφερόμενους να την καταλάβουν, να υποβάλουν σχετική αίτηση')
 
 if __name__ == '__main__':
-	test_action_tree_generator_insert_query(filename='../data/17.txt')
+	test_law_parser()

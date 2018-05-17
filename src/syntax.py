@@ -77,18 +77,21 @@ class ActionTreeGenerator:
                     print('tree what', tree['what']['context'])
 
                     if tree['what']['context'] == 'παράγραφος':
-                        tree['paragraph'] = {}
-                        tree['paragraph']['content'] = next(issue.get_extracts(article))
+                        if tree['root']['action'] != 'διαγράφεται':
+                            tree['paragraph']['content'] = next(issue.get_extracts(article))
                         max_depth = 4
 
                     elif tree['what']['context'] == 'άρθρο':
-                        tree['article']['content'] = next(issue.get_extracts(article))
+                        if tree['root']['action'] != 'διαγράφεται':
+                            tree['article']['content'] = next(issue.get_extracts(article))
                         max_depth = 3
 
 
                     legislative_acts = list ( filter(lambda x : x != [],  [list(re.finditer(date + ' ' + la, extract)) for la in legislative_act]))
                     laws =  list(re.finditer(law_regex, extract))
-
+                    presidential_decrees = list(re.finditer(presidential_decree_regex, extract))
+                    laws.extend(presidential_decrees)
+                    laws.extend(legislative_acts)
 
 
                     # first level are laws
@@ -114,7 +117,7 @@ class ActionTreeGenerator:
 
                     if nested:
                         ActionTreeGenerator.nest_tree('root', tree)
-                        
+
 
                     trees.append(tree)
 
@@ -149,7 +152,7 @@ class ActionTreeGenerator:
 
 
     @staticmethod
-    def nest_tree(vertex, tree):
+    def nest_tree_helper(vertex, tree):
         if tree[vertex] == {}:
             return tree
         if tree[vertex]['children'] == []:
@@ -161,6 +164,9 @@ class ActionTreeGenerator:
             tree[vertex][c] = tree[c]
         ActionTreeGenerator.nest_tree(c, tree)
 
+    @staticmethod
+    def nest_tree(vertex, tree):
+        ActionTreeGenerator.nest_tree_helper(vertex, tree)
 
 
     @staticmethod

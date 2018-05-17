@@ -8,6 +8,7 @@ import pprint
 import syntax
 import copy
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 from syntax import *
 
 try:
@@ -38,14 +39,17 @@ class Database:
         seld.issues.insert(serializable)
 
     def query_from_tree(self, tree):
-        if tree['root']['action'] == 'προστίθεται':
-            self.laws.insert(tree['law'])
+        if tree['root']['action'] in 'προστίθεται':
+            self.laws.save(tree['law'])
             print('Insertion complete')
         elif tree['root']['action'] == 'αντικαθίσταται':
             self.laws.save(tree['law'])
             print('Update Complete')
-
-
+        elif tree['root']['action'] == 'διαγράφεται':
+            cursor = self.laws.find({})
+            for x in cursor:
+                pprint.pprint(x)
+            print('Deletition Complete')
 
     def print_laws(self):
         cursor = self.laws.find({})
@@ -54,3 +58,10 @@ class Database:
 
     def drop_laws(self):
         self.db.drop_collection('laws')
+
+    def push_law_to_db(self, law):
+        self.laws.save(law.serialize())
+
+    def parse_and_push_law(self, identifier, fileneme):
+        law = parser.LawParser(filename, identifier)
+        self.push_law_to_db(law.__dict__())

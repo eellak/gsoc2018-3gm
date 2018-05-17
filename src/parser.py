@@ -10,6 +10,7 @@ from helpers import *
 from syntax import *
 import os
 import gensim
+import pprint
 from gensim.models import KeyedVectors
 import logging
 logging.basicConfig(
@@ -301,17 +302,16 @@ class LawParser:
 		for i, line in enumerate(self.lines):
 			if line.startswith('Αρθρο:'):
 				idx.append(i)
-				print(i)
 
 		for j in range(len(idx) - 1):
 			x, y = idx[j], idx[j+1]
-			self.lines[x]  = self.lines[x].strip(':')
-			self.corpus[self.lines[x]] = self.lines[x : y]
+			self.lines[x]  = self.lines[x].strip(':').replace(':\t', ' ')
+			name = self.lines[x].rstrip().strip('Αρθρο: ')
+			self.corpus[name] = self.lines[x : y]
 
 		for article in self.corpus.keys():
 			for i, line in enumerate(self.corpus[article]):
 				if line.startswith('Κείμενο Αρθρου'):
-					# TODO split to paragraphs
 					self.articles[article] = self.corpus[article][i + 1:]
 					paragraphs = collections.defaultdict(list)
 					for t in self.articles[article]:
@@ -320,19 +320,29 @@ class LawParser:
 							current = x.group().strip('. ')
 						paragraphs[current].append(t)
 
-					paragraphs_with_ids = []
+					sentences = {}
 
 					for par in paragraphs.keys():
-						paragraphs_with_ids.append({
-							'paragraph' : {
-								'_id' : par,
-								'context' : ''.join(paragraphs[par])
-							}
-						})
+						val = ''.join(paragraphs[par])[1:]
+						paragraphs[par] = val
+						sentences[par] = list(filter(lambda x: x.rstrip() != '', val.split('. ')))
 
-					self.articles[article] = paragraphs_with_ids
+					self.articles[article] = paragraphs
+					self.sentences[article] = sentences
 
 				elif line.startswith('Λήμματα'):
 					self.lemmas[article] = self.corpus[article][i + 1].split(' - ')
 				elif line.startswith('Τίτλος Αρθρου'):
 					self.titles[article] = self.corpus[article][i + 1]
+
+	def __dict__(self):
+		return self.serialize()
+
+	def serialize(self):
+		return {
+			'_id' : self.identifier,
+			'thesaurus' : self.thesaurus,
+			'lemmas' : self.lemmas,
+			'titles' : self.titles,
+			'sentences' : self.sentences
+		}
