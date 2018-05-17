@@ -86,4 +86,4 @@ def test_law_parser(filename='../data/24_12_1990_legislative_act.txt', identifie
 
 
 if __name__ == '__main__':
-	test_action_tree_generator_insert_and_replace()
+	test_action_tree_generator_insert_query(filename='../data/17.txt')

@@ -35,6 +35,7 @@ class ActionTreeGenerator:
                     max_depth = 0
 
                     # find what will be appended
+                    print('Found', action, 'in ', article )
 
                     w = 1
 
@@ -113,7 +114,7 @@ class ActionTreeGenerator:
 
                     if nested:
                         ActionTreeGenerator.nest_tree('root', tree)
-
+                        
 
                     trees.append(tree)
 
