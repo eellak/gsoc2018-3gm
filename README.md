@@ -20,6 +20,8 @@ Through the case of analyzing, categorizing and codifying Government Gazette art
 
 **Keywords:** _text mining, government gazette, machine learning, law codification_
 
+**Timeline** You can have a look of the current timeline [here](https://docs.google.com/document/d/1AnbAzqE2HCsJy2q2zWHcRBvtmBbimoYIqm8AQ4bQrZA/edit#heading=h.jdgk2e6qwr2v)
+
 ## Google Summer of Code 2018
 
  * Google Summer of Code participant: Marios Papachristou
@@ -38,6 +40,10 @@ The project is opensourced as a part of the Google Summer of Code Programme and 
 
 ## Methods & Practices
 
+### Heuristic methods for detecting ammendments
+
+This project uses heuristics for detecting ammendments. You can have a look at `src/syntax.py` module for more information.  
+
 ### Word2Vec Models
 
 For research purposes and further usage in the codification process a word2vec model with gensim is trained on various GG issues. That is to detect similarities between words in order to be used with syntactic analysis heuristic methods. For example the most similar words to the word "Υπουργός" (Minister) are
@@ -48,8 +54,20 @@ For research purposes and further usage in the codification process a word2vec m
 
 which is pretty satisfying. The word vectors are also reduced in dimension using t-Stochastic Neigbor Embedding into 2D resulting in this plot (for 100 words):
 
-![GitHub Logo](/docs/word2vec.png)
+![w2v](/docs/word2vec.png)
 
 ### Storing data
 
 This project has to do with a lot of documents so selecting a NoSQL database like MongoDB would be a perfect fit for the project. The articles are organized in collections by paragraphs. It uses the `pymongo` module to communicate with the MongoDB database server. The scripts used for communication with the database as well as query building from syntactic analysis is found in the `src/database.py` module.
+
+### Unit testing & Continuous Integration
+
+This project uses the `pytest` module for running unit tests. You can install `pytest` and run the tests via:
+
+```bash
+sudo pip3 install pytest
+cd ./src/
+pytest tests.py
+```
+
+The tests are also run on Travis CI which is used for continuous integration in this project. The configuration file for Travis CI is `.travis.yml`.

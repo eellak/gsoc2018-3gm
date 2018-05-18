@@ -314,6 +314,7 @@ class LawParser:
 				if line.startswith('Κείμενο Αρθρου'):
 					self.articles[article] = self.corpus[article][i + 1:]
 					paragraphs = collections.defaultdict(list)
+					current = '0'
 					for t in self.articles[article]:
 						x = re.search(r'\d+. ', t)
 						if x and x.span() == (0, 3):
@@ -344,5 +345,10 @@ class LawParser:
 			'thesaurus' : self.thesaurus,
 			'lemmas' : self.lemmas,
 			'titles' : self.titles,
-			'sentences' : self.sentences
+			'articles' : self.sentences
 		}
+
+	def query_from_tree(tree):
+		# TODO move here from db
+		assert(tree['law']['_id'] == self.identifier)
+		pass

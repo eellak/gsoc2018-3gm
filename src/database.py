@@ -23,20 +23,20 @@ class Database:
 
     def __init__(self):
         self.db = client['3gmdb']
-        self.issues_collection = self.db.issues
+        self.issues = self.db.issues
         self.laws = self.db.laws
 
     def insert_issue_to_db(self, issue):
         issue.detect_signatories()
         serializable = {
-            'issue_date' : issue.issue_date,
+            'issue_date' : str(issue.issue_date),
             'issue_number' : issue.issue_number,
             'articles' : issue.articles,
-            'extracts' : [(article, list(issues.get_extracts(article))) for article in issue.articles.keys()],
-            'non_extracts' : [(article, list(issues.get_non_extracts(article))) for article in issue.articles.keys()],
+            'extracts' : [(article, list(issue.get_extracts(article))) for article in issue.articles.keys()],
+            'non_extracts' : [(article, list(issue.get_non_extracts(article))) for article in issue.articles.keys()],
             'signatories' : [signatory.__dict__ for signatory in issue.signatories]
         }
-        seld.issues.insert(serializable)
+        self.issues.insert(serializable)
 
     def query_from_tree(self, tree):
         if tree['root']['action'] in 'προστίθεται':
@@ -58,6 +58,9 @@ class Database:
 
     def drop_laws(self):
         self.db.drop_collection('laws')
+
+    def drop_issues(self):
+        self.db.drop_collection('issues')
 
     def push_law_to_db(self, law):
         self.laws.save(law.serialize())
