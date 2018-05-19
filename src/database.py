@@ -38,19 +38,6 @@ class Database:
         }
         self.issues.insert(serializable)
 
-    def query_from_tree(self, tree):
-        if tree['root']['action'] in 'προστίθεται':
-            self.laws.save(tree['law'])
-            print('Insertion complete')
-        elif tree['root']['action'] == 'αντικαθίσταται':
-            self.laws.save(tree['law'])
-            print('Update Complete')
-        elif tree['root']['action'] == 'διαγράφεται':
-            cursor = self.laws.find({})
-            for x in cursor:
-                pprint.pprint(x)
-            print('Deletition Complete')
-
     def print_laws(self):
         cursor = self.laws.find({})
         for x in cursor:
@@ -68,3 +55,7 @@ class Database:
     def parse_and_push_law(self, identifier, fileneme):
         law = parser.LawParser(filename, identifier)
         self.push_law_to_db(law.__dict__())
+
+    def query_from_tree(self, law, tree):
+        result = law.query_from_tree(tree)
+        self.laws.save(result)

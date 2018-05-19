@@ -1,4 +1,4 @@
-content#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re
@@ -262,27 +262,28 @@ def train_word2vec_on_test_data():
 
 class LawParser:
 
-	def __init__(self, filename, identifier):
-		self.filename = filename
-		self.identifier = identifier
+	def __init__(self, identifier, filename=None):
 		self.lines = []
-		tmp_lines = []
-		with open(filename, 'r') as infile:
-			# remove ugly hyphenthation
-			while 1 == 1:
-				l = infile.readline()
-				if not l:
-					break
-				l = l.replace('-\n', '')
-				l = l.replace('\n', ' ')
-				tmp_lines.append(l)
+		self.identifier = identifier
+		if filename:
+			self.filename = filename
+			tmp_lines = []
+			with open(filename, 'r') as infile:
+				# remove ugly hyphenthation
+				while 1 == 1:
+					l = infile.readline()
+					if not l:
+						break
+					l = l.replace('-\n', '')
+					l = l.replace('\n', ' ')
+					tmp_lines.append(l)
 
 
-		for line in tmp_lines:
-			if line == '':
-				continue
-			else:
-				self.lines.append(line)
+			for line in tmp_lines:
+				if line == '':
+					continue
+				else:
+					self.lines.append(line)
 		self.thesaurus = {}
 		self.lemmas = {}
 		self.articles = collections.defaultdict(dict)
@@ -357,11 +358,12 @@ class LawParser:
 		paragraph_corpus = list(filter(lambda x : x.rstrip() != '', re.split(r'\d+. ', content)))
 		paragraph_corpus = [p.rstrip().lstrip() for p in paragraph_corpus]
 
-		assert(len(paragraph_ids) == len(paragraph_corpus))
 
 		sentences = {}
 		paragraphs = {}
-		for key, val in zip(paragraph_ids, paragraph_corpus):
+		for key, val in itertools.zip_longest(paragraph_ids, paragraph_corpus):
+			if key == None or val == None:
+				break
 			sentences[key] = val.split('. ')
 			paragraphs[key] = val
 
@@ -409,22 +411,25 @@ class LawParser:
 
 		return self.serialize()
 
-	def query_from_tree(tree):
+	def query_from_tree(self, tree):
 		# TODO move here from db
 		assert(tree['law']['_id'] == self.identifier)
 		if tree['root']['action'] in ['προστίθεται', 'αντικαθίσταται']:
+			print(tree['what'])
 			try:
 				content = tree['what']['content']
 				context=  tree['what']['context']
 			except KeyError:
 				raise Exception('Unable to find content or context in tree')
 
+
 			if context == 'άρθρο':
 				return self.add_article(tree['law']['article']['_id'], content)
 			elif context == 'παράγραφος':
+				print('Too')
 				return self.add_paragraph(
 					tree['law']['article']['_id'],
-					tree['law']['article']['paragraph'],['id'],
+					tree['law']['article']['paragraph']['_id'],
 					content)
 
 
