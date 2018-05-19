@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+content#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import re
@@ -285,10 +285,10 @@ class LawParser:
 				self.lines.append(line)
 		self.thesaurus = {}
 		self.lemmas = {}
-		self.articles = {}
+		self.articles = collections.defaultdict(dict)
 		self.titles = {}
 		self.corpus = {}
-		self.sentences = {}
+		self.sentences =  collections.defaultdict(dict)
 		self.find_corpus()
 
 	def __repr__(self):
@@ -348,7 +348,84 @@ class LawParser:
 			'articles' : self.sentences
 		}
 
+	def add_article(self, article, content, title=None, lemmas=None):
+		# prepare context
+		article = str(article)
+		paragraphs = collections.defaultdict(list)
+
+		paragraph_ids = [par_id.group().strip('. ') for par_id in re.finditer(r'\d+. ', content)]
+		paragraph_corpus = list(filter(lambda x : x.rstrip() != '', re.split(r'\d+. ', content)))
+		paragraph_corpus = [p.rstrip().lstrip() for p in paragraph_corpus]
+
+		assert(len(paragraph_ids) == len(paragraph_corpus))
+
+		sentences = {}
+		paragraphs = {}
+		for key, val in zip(paragraph_ids, paragraph_corpus):
+			sentences[key] = val.split('. ')
+			paragraphs[key] = val
+
+		self.sentences[article] = sentences
+		self.articles[article] = paragraphs
+
+		if title:
+			self.titles[article] = title
+		if lemmas:
+			self.lemmas[article] = lemmas
+
+		return self.serialize()
+
+	def remove_article(self, article):
+		article = str(article)
+		assert(article in list(self.articles.keys()))
+		del self.sentences[article]
+		del self.articles[article]
+		del self.corpus[article]
+		del self.lemmas[article]
+		del self.titles[article]
+		return self.serialize()
+
+	def add_paragraph(self, article, paragraph, content):
+		article = str(article)
+		paragraph = str(paragraph)
+
+		# prepare content for modification
+		content = re.sub(r'\d+. ', '', content)
+
+		# add in its full form or split into periods
+		self.articles[article][paragraph] = content
+		self.sentences[article][paragraph] = content.split('. ')
+
+		return self.serialize()
+
+	def remove_paragraph(self, article, paragraph, content):
+		article = str(article)
+		paragraph = str(paragraph)
+		assert(article in list(self.articles.keys()))
+		assert(paragraph in list(self.articles[article].keys()))
+
+		del self.articles[article][paragraph]
+		del self.sentences[article][paragraph]
+
+		return self.serialize()
+
 	def query_from_tree(tree):
 		# TODO move here from db
 		assert(tree['law']['_id'] == self.identifier)
-		pass
+		if tree['root']['action'] in ['προστίθεται', 'αντικαθίσταται']:
+			try:
+				content = tree['what']['content']
+				context=  tree['what']['context']
+			except KeyError:
+				raise Exception('Unable to find content or context in tree')
+
+			if context == 'άρθρο':
+				return self.add_article(tree['law']['article']['_id'], content)
+			elif context == 'παράγραφος':
+				return self.add_paragraph(
+					tree['law']['article']['_id'],
+					tree['law']['article']['paragraph'],['id'],
+					content)
+
+
+		return self.serialize()

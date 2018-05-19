@@ -47,7 +47,6 @@ class ActionTreeGenerator:
                                 tree['what'] = {
                                     '_id' : i + j,
                                     'context' : what,
-                                    'children' : [],
                                 }
                                 if i + j + 1 <= len(tmp) - 1 and re.search(r'[0-9]', tmp[i + j + 1]) != None:
                                     tree['what']['number'] = tmp[i + j + 1]
@@ -62,7 +61,6 @@ class ActionTreeGenerator:
                                 tree['what'] = {
                                     '_id' : i - j,
                                     'context' : what,
-                                    'children' : []
                                 }
                                 if i - j >= 0 and re.search(r'[0-9]', tmp[i - j + 1]) != None:
                                     tree['what']['number'] = tmp[i - j + 1]
@@ -76,14 +74,19 @@ class ActionTreeGenerator:
                     k = tree['what']['_id']
                     print('tree what', tree['what']['context'])
 
+
                     if tree['what']['context'] == 'παράγραφος':
                         if tree['root']['action'] != 'διαγράφεται':
-                            tree['paragraph']['content'] = next(issue.get_extracts(article))
+                            content = next(issue.get_extracts(article))
+                            tree['paragraph']['content'] = content
+                            tree['what']['content'] = content
                         max_depth = 4
 
                     elif tree['what']['context'] == 'άρθρο':
                         if tree['root']['action'] != 'διαγράφεται':
-                            tree['article']['content'] = next(issue.get_extracts(article))
+                            content = next(issue.get_extracts(article))
+                            tree['article']['content'] = content
+                            tree['what']['content'] = content
                         max_depth = 3
 
 

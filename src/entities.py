@@ -95,7 +95,6 @@ date = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0[1-9]|[1-9]|Ιανου�
 article_regex = ['άρθρο \d+', 'άρθρου \d+']
 paragraph_regex = ['παράγραφος \d+', 'παραγράφου \d+', 'παρ. \d+']
 
-
 class EditDistanceClassifier:
     """
         Classify a word to an action by a scoring a number

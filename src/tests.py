@@ -101,12 +101,17 @@ def test_law_parser(filename='../data/24_12_1990_legislative_act.txt', identifie
 	db.drop_laws()
 	test_action_tree_generator_insert_and_replace()
 	law = parser.LawParser(filename, identifier)
+	law.add_article('6', '1. Some Example Context. 2. This is the second paragraph. Lorem Ipsum' )
+	law.add_paragraph('6', '3', '3. A paragraph is added here. Enjoy.')
+	law.add_article('6', '1. Some Example Ammended Context. 2. This is the second paragraph. Lorem Ipsum' )
+
 	db.laws.save(law.__dict__())
 	print('Testing Querying')
 	cursor = db.laws.find({'_id' : 'ν. 1920/1921'})
 	for x in cursor:
 		print(x['articles']['1']['1'])
 		assert(x['articles']['1']['1'][0] == 'Εντός τριμήνου αφότου κενωθεί θέση Μουφτή, ο κατά τόπο αρμόδιος Νομάρχης, καλεί σε πράξη του τους ενδιαφερόμενους να την καταλάβουν, να υποβάλουν σχετική αίτηση')
+
 
 def test_issue_serializer_to_db(filename='../data/17.txt'):
 	db.drop_issues()
@@ -115,4 +120,3 @@ def test_issue_serializer_to_db(filename='../data/17.txt'):
 
 if __name__ == '__main__':
 	test_law_parser()
-	test_issue_serializer_to_db()
