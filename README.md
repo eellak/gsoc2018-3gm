@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/papachristoumarios/gsoc2018-3gm.svg?branch=master)](https://travis-ci.org/papachristoumarios/gsoc2018-3gm)
+
 # gsoc2018-3gm
 
 ## Abstract
