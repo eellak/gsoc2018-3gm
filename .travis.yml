@@ -1,6 +1,5 @@
 language: python
 python:
-  - "3.3"
   - "3.4"
   - "3.5"
   - "3.5-dev"  # 3.5 development branch
@@ -12,6 +11,9 @@ install:
   - pip install setuptools --upgrade
   - pip install -r requirements.txt
 # command to run tests
+before_script:
+  - cd src
+
 script:
   - pytest src/tests.py
 
