@@ -411,7 +411,7 @@ class LawParser:
 
 		return self.serialize()
 
-	def replace_phrase(self, old_phrase, new_phrase, article = None, paragraph = None):
+	def replace_phrase(self, old_phrase, new_phrase, article=None, paragraph=None):
 		search_all = (article == None)
 
 		if article:
@@ -434,7 +434,10 @@ class LawParser:
 
 		return self.serialize()
 
-	def insert_phrase(self, position, old_phrase, new_phrase, article = None, paragraph = None):
+	def remove_phrase(self, old_phrase, article=None, paragraph=None):
+		return self.replace_phrase(old_phrase, '', article, paragraph)
+
+	def insert_phrase(self, position, old_phrase, new_phrase, article=None, paragraph=None):
 
 		assert(position in ['start', 'end', 'before', 'after'])
 
@@ -472,6 +475,97 @@ class LawParser:
 					self.sentences[article][paragraph][i] = new_period
 
 		return self.serialize()
+
+	def replace_period(self, old_period, new_period, article=None, paragraph=None):
+		search_all = (article == None)
+
+		if article:
+			delegate_articles = [str(article)]
+
+			if paragraph:
+				delegate_paragraphs = [str(paragraph)]
+			else:
+				delegate_paragraphs = self.sentences[article].keys()
+		else:
+			delegate_articles = self.articles.keys()
+
+		for article in delegate_articles:
+			if search_all:
+				delegate_paragraphs = self.articles[article].keys()
+
+			for paragraph in delegate_paragraphs:
+				for i, period in enumerate(self.sentences[article][paragraph]):
+					if old_period == period:
+						self.sentences[article][paragraph][i] = new_period
+
+		return self.serialize()
+
+	def remove_period(self, old_period, article=None, paragraph=None):
+		search_all = (article == None)
+
+		if article:
+			delegate_articles = [str(article)]
+
+			if paragraph:
+				delegate_paragraphs = [str(paragraph)]
+			else:
+				delegate_paragraphs = self.sentences[article].keys()
+		else:
+			delegate_articles = self.articles.keys()
+
+		for article in delegate_articles:
+			if search_all:
+				delegate_paragraphs = self.articles[article].keys()
+
+			for paragraph in delegate_paragraphs:
+				for i, period in enumerate(self.sentences[article][paragraph]):
+					if old_period == period or old_period == period[:-1]:
+						del self.sentences[article][paragraph][i]
+						return self.serialize()
+
+		return self.serialize()
+
+	def insert_period(self, position, old_period, new_period, article=None, paragraph=None):
+
+		assert(position in ['start', 'end', 'before', 'after'])
+
+		if position in ['start', 'end']:
+			assert(article and paragraph)
+			if position == 'start':
+				self.articles[article][paragraph].insert(0, new_period)
+			else:
+				self.append_period(new_period, article, paragraph)	
+
+		search_all = (article == None)
+
+		if article:
+			delegate_articles = [str(article)]
+
+			if paragraph:
+				delegate_paragraphs = [str(paragraph)]
+			else:
+				delegate_paragraphs = self.sentences[article].keys()
+		else:
+			delegate_articles = self.articles.keys()
+
+		for article in delegate_articles:
+			if search_all:
+				delegate_paragraphs = self.articles[article].keys()
+
+			for paragraph in delegate_paragraphs:
+				for i, period in enumerate(self.sentences[article][paragraph]):
+					if period == old_period or old_period == period[:-1]:
+						if position == 'before':
+							self.articles[article][paragraph].insert(max(0, i-1), new_period)
+						elif position == 'after':
+							self.articles[article][paragraph].insert(i + 1, new_period)
+
+		return self.serialize()
+
+
+	def append_period(context, article, paragraph):
+		assert(article and paragraph)
+		self.sentences[article][paragraph].append(context)
 
 	def query_from_tree(self, tree):
 		assert(tree['law']['_id'] == self.identifier)

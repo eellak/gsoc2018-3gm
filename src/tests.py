@@ -109,6 +109,7 @@ def test_law_parser(filename='../data/24_12_1990_legislative_act.txt', identifie
 	for x in cursor:
 		print(x['articles']['1']['1'])
 		assert(x['articles']['1']['1'][0] == 'Εντός τριμήνου αφότου κενωθεί θέση Μουφτή, ο κατά τόπο αρμόδιος Νομάρχης, καλεί σε πράξη του τους ενδιαφερόμενους να την καταλάβουν, να υποβάλουν σχετική αίτηση')
+		assert(x['articles']['6']['1'][0] == 'Some Replaced Insert before example Example After Ammended Context.')
 
 def test_law_insertion():
 	db.drop_laws()
