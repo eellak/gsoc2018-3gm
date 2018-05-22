@@ -110,14 +110,14 @@ class ActionTreeGenerator:
                         tree['article']['_id'] = articles[0][0].group().split(' ')[1]
                         tree['article']['children'] = ['paragraph'] if max_depth > 2 else []
 
-                    #third level is paragraph
+                    # third level is paragraph
                     if max_depth > 3:
                         paragraph = list ( filter(lambda x : x != [],  [list(re.finditer(a, extract)) for a in paragraph_regex]))
 
                         tree['paragraph']['_id'] = int(paragraph[0][0].group().split(' ')[1])
                         tree['paragraph']['children'] = ['period'] if max_depth > 4 else []
 
-
+                    # nest into dictionary
                     if nested:
                         ActionTreeGenerator.nest_tree('root', tree)
 

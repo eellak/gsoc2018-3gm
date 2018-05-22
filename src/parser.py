@@ -411,17 +411,77 @@ class LawParser:
 
 		return self.serialize()
 
+	def replace_phrase(self, old_phrase, new_phrase, article = None, paragraph = None):
+		search_all = (article == None)
+
+		if article:
+			delegate_articles = [str(article)]
+
+			if paragraph:
+				delegate_paragraphs = [str(paragraph)]
+			else:
+				delegate_paragraphs = self.sentences[article].keys()
+		else:
+			delegate_articles = self.articles.keys()
+
+		for article in delegate_articles:
+			if search_all:
+				delegate_paragraphs = self.articles[article].keys()
+
+			for paragraph in delegate_paragraphs:
+				for i, period in enumerate(self.sentences[article][paragraph]):
+					self.sentences[article][paragraph][i] = period.replace(old_phrase, new_phrase)
+
+		return self.serialize()
+
+	def insert_phrase(self, position, old_phrase, new_phrase, article = None, paragraph = None):
+
+		assert(position in ['start', 'end', 'before', 'after'])
+
+		if position in ['start', 'end']:
+			assert(article and paragraph)
+
+		search_all = (article == None)
+
+		if article:
+			delegate_articles = [str(article)]
+
+			if paragraph:
+				delegate_paragraphs = [str(paragraph)]
+			else:
+				delegate_paragraphs = self.sentences[article].keys()
+		else:
+			delegate_articles = self.articles.keys()
+
+		for article in delegate_articles:
+			if search_all:
+				delegate_paragraphs = self.articles[article].keys()
+
+			for paragraph in delegate_paragraphs:
+				for i, period in enumerate(self.sentences[article][paragraph]):
+					span = re.search(old_phrase, period).span()
+					if not span:
+						continue
+					else:
+						x, y = span
+					if position == 'before':
+						new_period = period[:x]  + new_phrase + ' ' + period[x:]
+					elif position == 'after':
+						new_period = period[:y] + ' ' + new_phrase +  period[y:]
+
+					self.sentences[article][paragraph][i] = new_period
+
+		return self.serialize()
+
 	def query_from_tree(self, tree):
-		# TODO move here from db
 		assert(tree['law']['_id'] == self.identifier)
 		if tree['root']['action'] in ['προστίθεται', 'αντικαθίσταται']:
-			print(tree['what'])
+
 			try:
 				content = tree['what']['content']
-				context=  tree['what']['context']
+				context =  tree['what']['context']
 			except KeyError:
 				raise Exception('Unable to find content or context in tree')
-
 
 			if context == 'άρθρο':
 				return self.add_article(tree['law']['article']['_id'], content)
@@ -431,6 +491,22 @@ class LawParser:
 					tree['law']['article']['_id'],
 					tree['law']['article']['paragraph']['_id'],
 					content)
+
+		elif tree['root']['action'] == 'διαγράφεται':
+
+			try:
+				context = tree['what']['context']
+			except KeyError:
+				raise Exception('Unable to find context in tree')
+
+			if context == 'άρθρο':
+				return self.remove_article(tree['law']['article']['_id'])
+			elif context == 'παράγραφος':
+				print('Too')
+				return self.remove_paragraph(
+					tree['law']['article']['_id'],
+					tree['law']['article']['paragraph']['_id'])
+
 
 
 		return self.serialize()

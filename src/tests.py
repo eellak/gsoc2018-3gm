@@ -50,7 +50,7 @@ def test_action_tree_generator_insert_query(filename='../data/testcases/inserter
 
 def test_action_tree_generator_delete_query(filename='../data/testcases/deleter.txt'):
 	trees = {}
-	law = parser.LawParser('ν. 1234/2018')
+	law = parser.LawParser('ν. 1920/1991', '../data/24_12_1990_legislative_act.txt')
 
 	issue = parser.IssueParser(filename)
 	for article in issue.articles.keys():
@@ -99,7 +99,9 @@ def test_law_parser(filename='../data/24_12_1990_legislative_act.txt', identifie
 	law.add_article('6', '1. Some Example Context. 2. This is the second paragraph. Lorem Ipsum' )
 	law.add_paragraph('6', '3', '3. A paragraph is added here. Enjoy.')
 	law.add_article('6', '1. Some Example Ammended Context. 2. This is the second paragraph. Lorem Ipsum' )
-
+	law.replace_phrase('Example', 'Replaced Example')
+	law.insert_phrase('before', 'Example', 'Insert before example', '6', '1')
+	law.insert_phrase('after', 'Example', 'After', '6', '1')
 	db.laws.save(law.__dict__())
 
 	print('Testing Querying')
@@ -142,5 +144,7 @@ def test_issue_serializer_to_db(filename='../data/17.txt'):
 	db.insert_issue_to_db(issue)
 
 if __name__ == '__main__':
-	test_law_insertion()
-	test_action_tree_generator_insert_query()
+	test_law_parser()
+	# test_law_insertion()
+	# test_action_tree_generator_insert_query()
+	# test_action_tree_generator_delete_query()
