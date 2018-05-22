@@ -261,8 +261,25 @@ def train_word2vec_on_test_data():
 	model.wv.save_word2vec_format('fek.model')
 
 class LawParser:
+	"""
+		This class hosts the law parser.The law is provided
+		in a file (if it exists) and is parsed in order to be
+		split in articles and sentences, ready to be stored in
+		the database. This class supports insertions, replacements
+		and deletions of articles, paragraphs, phrases and periods.
+		It can also provide a serializable object for updating the
+		database with its contents.
+	"""
 
 	def __init__(self, identifier, filename=None):
+		"""The constructor of LawParser is responsible for
+		reading and parsing the file as well as detecting
+		titles, lemmas and articles which are split into sentences
+		by find_corpus()
+
+		:param identifier This is the law identifier (for example ν. 1920/1991)
+		:param filename (optional) the text file
+		"""
 		self.lines = []
 		self.identifier = identifier
 		if filename:
@@ -299,6 +316,9 @@ class LawParser:
 		return self.identifier
 
 	def find_corpus(self):
+		"""Analyzes the corpus to articles, paragraphs and
+		then sentences
+		"""
 		idx = []
 		for i, line in enumerate(self.lines):
 			if line.startswith('Αρθρο:'):
@@ -341,6 +361,9 @@ class LawParser:
 		return self.serialize()
 
 	def serialize(self):
+		"""Returns the object in database-friendly format
+		in a dictionary.
+		"""
 		return {
 			'_id' : self.identifier,
 			'thesaurus' : self.thesaurus,
@@ -350,6 +373,12 @@ class LawParser:
 		}
 
 	def add_article(self, article, content, title=None, lemmas=None):
+		"""Add article from content
+		:param article the article id
+		:param content the content in raw text
+		:title (optional) title of article
+		:lemmas (optional) lemmas for article
+		"""
 		# prepare context
 		article = str(article)
 		paragraphs = collections.defaultdict(list)
@@ -378,6 +407,10 @@ class LawParser:
 		return self.serialize()
 
 	def remove_article(self, article):
+		"""Removal of article based on its id
+		:param artitcle id
+		"""
+
 		article = str(article)
 		assert(article in list(self.articles.keys()))
 		del self.sentences[article]
@@ -388,6 +421,12 @@ class LawParser:
 		return self.serialize()
 
 	def add_paragraph(self, article, paragraph, content):
+		"""Addition of paragraph on article
+		:article article id
+		:paragraph paragraph id
+		:content content in raw text to be split into periods
+		"""
+
 		article = str(article)
 		paragraph = str(paragraph)
 
@@ -401,6 +440,8 @@ class LawParser:
 		return self.serialize()
 
 	def remove_paragraph(self, article, paragraph, content):
+		"""Removal of paragraph"""
+
 		article = str(article)
 		paragraph = str(paragraph)
 		assert(article in list(self.articles.keys()))
@@ -412,6 +453,13 @@ class LawParser:
 		return self.serialize()
 
 	def replace_phrase(self, old_phrase, new_phrase, article=None, paragraph=None):
+		"""Replacement of phrase inside document
+		:old_phrase phrase to be replaced
+		:new_phrase new phrase
+		:article optional detect phrase in certain article
+		:paragraph optional detect phrase in certain paragraph
+		"""
+
 		search_all = (article == None)
 
 		if article:
@@ -435,6 +483,8 @@ class LawParser:
 		return self.serialize()
 
 	def remove_phrase(self, old_phrase, article=None, paragraph=None):
+		"""Removal of certain phrase i.e. replacement with empty string"""
+		
 		return self.replace_phrase(old_phrase, '', article, paragraph)
 
 	def insert_phrase(self, position, old_phrase, new_phrase, article=None, paragraph=None):
@@ -534,7 +584,7 @@ class LawParser:
 			if position == 'start':
 				self.articles[article][paragraph].insert(0, new_period)
 			else:
-				self.append_period(new_period, article, paragraph)	
+				self.append_period(new_period, article, paragraph)
 
 		search_all = (article == None)
 
@@ -561,7 +611,6 @@ class LawParser:
 							self.articles[article][paragraph].insert(i + 1, new_period)
 
 		return self.serialize()
-
 
 	def append_period(context, article, paragraph):
 		assert(article and paragraph)
