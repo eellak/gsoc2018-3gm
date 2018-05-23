@@ -96,20 +96,42 @@ def test_action_tree_generator_insert_and_replace():
 def test_law_parser(filename='../data/24_12_1990_legislative_act.txt', identifier='ν. 1920/1921'):
 	db.drop_laws()
 	law = parser.LawParser(identifier, filename)
+	# add article
 	law.add_article('6', '1. Some Example Context. 2. This is the second paragraph. Lorem Ipsum' )
+
+	# add paragraph
 	law.add_paragraph('6', '3', '3. A paragraph is added here. Enjoy.')
 	law.add_article('6', '1. Some Example Ammended Context. 2. This is the second paragraph. Lorem Ipsum' )
+
+	# replace phrase in entire article
 	law.replace_phrase('Example', 'Replaced Example')
+
+	# insert before and after predefined phrase
 	law.insert_phrase('before', 'Example', 'Insert before example', '6', '1')
 	law.insert_phrase('after', 'Example', 'After', '6', '1')
+	law.append_period('Appended period','6', '1' )
+	law.insert_period('before', 'Appended period', 'Inserted before other period')
+
 	db.laws.save(law.__dict__())
 
-	print('Testing Querying')
+	print('Testing Insertions')
 	cursor = db.laws.find({'_id' : 'ν. 1920/1921'})
 	for x in cursor:
-		print(x['articles']['1']['1'])
 		assert(x['articles']['1']['1'][0] == 'Εντός τριμήνου αφότου κενωθεί θέση Μουφτή, ο κατά τόπο αρμόδιος Νομάρχης, καλεί σε πράξη του τους ενδιαφερόμενους να την καταλάβουν, να υποβάλουν σχετική αίτηση')
-		assert(x['articles']['6']['1'][0] == 'Some Replaced Insert before example Example After Ammended Context.')
+		assert(x['articles']['6']['1'][0] == 'Inserted before other period')
+		assert(x['articles']['6']['1'][1] == 'Some Replaced Insert before example Example After Ammended Context.')
+		assert(x['articles']['6']['2'][0] == 'This is the second paragraph')
+		assert(x['articles']['6']['2'][1] == 'Lorem Ipsum')
+
+	print('Testing Deletions')
+
+	law.remove_period('Inserted before other period', '6', '1')
+	law.remove_phrase('Ipsum', '6', '2')
+	db.laws.save(law.__dict__())
+
+	cursor = db.laws.find({'_id' : 'ν. 1920/1921'})
+	for x in cursor:
+		assert(x['articles']['6']['2'][1] == 'Lorem ')
 
 def test_law_insertion():
 	db.drop_laws()

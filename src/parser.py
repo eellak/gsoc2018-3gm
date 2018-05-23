@@ -484,7 +484,7 @@ class LawParser:
 
 	def remove_phrase(self, old_phrase, article=None, paragraph=None):
 		"""Removal of certain phrase i.e. replacement with empty string"""
-		
+
 		return self.replace_phrase(old_phrase, '', article, paragraph)
 
 	def insert_phrase(self, position, old_phrase, new_phrase, article=None, paragraph=None):
@@ -606,13 +606,16 @@ class LawParser:
 				for i, period in enumerate(self.sentences[article][paragraph]):
 					if period == old_period or old_period == period[:-1]:
 						if position == 'before':
-							self.articles[article][paragraph].insert(max(0, i-1), new_period)
+							self.sentences[article][paragraph].insert(max(0, i-1), new_period)
+							return self.serialize()
+
 						elif position == 'after':
-							self.articles[article][paragraph].insert(i + 1, new_period)
+							self.sentences[article][paragraph].insert(i + 1, new_period)
+							return self.serialize()
 
-		return self.serialize()
+		return self.serialize()					
 
-	def append_period(context, article, paragraph):
+	def append_period(self, context, article, paragraph):
 		assert(article and paragraph)
 		self.sentences[article][paragraph].append(context)
 
