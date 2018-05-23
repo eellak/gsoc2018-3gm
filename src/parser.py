@@ -488,7 +488,8 @@ class LawParser:
 		return self.replace_phrase(old_phrase, '', article, paragraph)
 
 	def insert_phrase(self, position, old_phrase, new_phrase, article=None, paragraph=None):
-
+		"""Phrase insertion with respect to another phrase"""
+		
 		assert(position in ['start', 'end', 'before', 'after'])
 
 		if position in ['start', 'end']:
@@ -527,6 +528,7 @@ class LawParser:
 		return self.serialize()
 
 	def replace_period(self, old_period, new_period, article=None, paragraph=None):
+		"""Replacement of a period with new content"""
 		search_all = (article == None)
 
 		if article:
@@ -551,6 +553,8 @@ class LawParser:
 		return self.serialize()
 
 	def remove_period(self, old_period, article=None, paragraph=None):
+		"""Removal of period"""
+
 		search_all = (article == None)
 
 		if article:
@@ -576,6 +580,7 @@ class LawParser:
 		return self.serialize()
 
 	def insert_period(self, position, old_period, new_period, article=None, paragraph=None):
+		"""Insertion of period relative to another period"""
 
 		assert(position in ['start', 'end', 'before', 'after'])
 
@@ -616,10 +621,12 @@ class LawParser:
 		return self.serialize()
 
 	def append_period(self, context, article, paragraph):
+		"""Append period to article and paragraph"""
 		assert(article and paragraph)
 		self.sentences[article][paragraph].append(context)
 
 	def query_from_tree(self, tree):
+		"""Returns a serizlizable object from a tree in nested form"""
 		assert(tree['law']['_id'] == self.identifier)
 		if tree['root']['action'] in ['προστίθεται', 'αντικαθίσταται']:
 
