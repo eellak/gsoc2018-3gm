@@ -9,27 +9,6 @@ db = database.Database()
 
 # Syntax Tests
 
-def test_action_tree_generator():
-
-	trees = {}
-	issue = parser.IssueParser('../data/17.txt')
-	for article in issue.articles.keys():
-		for i, extract in enumerate(issue.get_non_extracts(article)):
-			trees[i] = syntax.ActionTreeGenerator.generate_action_tree(extract, issue, article, nested=False)
-			for t in trees[i]:
-				s = ['root']
-				while s != []:
-					k = s.pop()
-					if t[k] == {}: continue
-					for c in t[k]['children']:
-						s.append(c)
-
-
-	test_tree = trees[0][0]
-
-	assert(test_tree['root']['action'] == 'προστίθεται')
-	assert(test_tree['law'])
-
 def test_action_tree_generator_insert_query(filename='../data/testcases/inserter.txt'):
 	trees = {}
 	law = parser.LawParser(identifier='ν. 1234/2018')
@@ -167,7 +146,4 @@ def test_issue_serializer_to_db(filename='../data/17.txt'):
 	db.insert_issue_to_db(issue)
 
 if __name__ == '__main__':
-	test_law_parser()
-	# test_law_insertion()
-	# test_action_tree_generator_insert_query()
-	# test_action_tree_generator_delete_query()
+	test_law_insertion()

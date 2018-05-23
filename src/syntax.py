@@ -74,20 +74,65 @@ class ActionTreeGenerator:
                     k = tree['what']['_id']
                     print('tree what', tree['what']['context'])
 
+                    extract_generator = issue.get_extracts(article)
 
                     if tree['what']['context'] == 'παράγραφος':
                         if tree['root']['action'] != 'διαγράφεται':
-                            content = next(issue.get_extracts(article))
+                            content = next(extract_generator)
                             tree['paragraph']['content'] = content
                             tree['what']['content'] = content
                         max_depth = 4
 
                     elif tree['what']['context'] == 'άρθρο':
                         if tree['root']['action'] != 'διαγράφεται':
-                            content = next(issue.get_extracts(article))
+                            content = next(extract_generator)
                             tree['article']['content'] = content
                             tree['what']['content'] = content
                         max_depth = 3
+                    elif tree['what']['context'] == 'εδάφιο':
+                        content = next(extract_generator)
+                        print(content)
+                    elif tree['what']['context'] == 'φράση':
+                        # TODO more epxressions for detection
+                        # TODO separate phrases from paragraphs and articles so they always exist in extracts
+                        
+                        print(issue.extracts[article])
+
+                        location = 'end'
+                        # get old phrase
+                        before_phrase = re.search(' μετά τη φράση «', extract)
+                        after_phrase = re.search(' πριν τη φράση «', extract)
+                        old_phrase = None
+                        if before_phrase or after_phrase:
+                            if before_phrase:
+                                start_of_phrase = before_phrase.span()[1]
+                                print('after')
+                                print(extract[start_of_phrase:])
+                                end_of_phrase = re.search('»', extract[start_of_phrase:]).span()[0] + start_of_phrase
+                                print(end_of_phrase)
+                                location = 'before'
+                                old_phrase = extract[start_of_phrase: end_of_phrase]
+                            elif after_phrase:
+                                start_of_phrase = after_phrase.span()[1]
+                                end_of_phrase = re.search('»', extract[start_of_phrase:]).span()[0]
+                                location = 'after'
+                                old_phrase = extract[start_of_phrase: end_of_phrase]
+
+                        new_phrase = None
+                        phrase_index = re.search(' η φράση «', extract)
+
+                        if phrase_index:
+                            start_of_phrase = phrase_index.span()[1]
+                            end_of_phrase = re.search('»', extract[start_of_phrase:]).span()[0] + start_of_phrase
+                            new_phrase = extract[start_of_phrase + 2: end_of_phrase - 2]
+
+                        if old_phrase and new_phrase:
+                            tree['what']['location'] = location
+                            tree['what']['old_phrase'] = old_phrase
+                            tree['what']['new_phrase'] = new_phrase
+
+
+                        # print('Phrases', old_phrase, new_phrase)
 
 
                     legislative_acts = list ( filter(lambda x : x != [],  [list(re.finditer(date + ' ' + la, extract)) for la in legislative_act]))
@@ -119,11 +164,11 @@ class ActionTreeGenerator:
 
                     # nest into dictionary
                     if nested:
-                        ActionTreeGenerator.nest_tree('root', tree)
-
-
-                    trees.append(tree)
-
+                        try:
+                            ActionTreeGenerator.nest_tree('root', tree)
+                            trees.append(tree)
+                        except:
+                            pass
         return trees
 
     # Here is something really crazy

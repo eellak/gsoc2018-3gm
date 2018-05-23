@@ -613,7 +613,7 @@ class LawParser:
 							self.sentences[article][paragraph].insert(i + 1, new_period)
 							return self.serialize()
 
-		return self.serialize()					
+		return self.serialize()
 
 	def append_period(self, context, article, paragraph):
 		assert(article and paragraph)
@@ -632,11 +632,17 @@ class LawParser:
 			if context == 'άρθρο':
 				return self.add_article(tree['law']['article']['_id'], content)
 			elif context == 'παράγραφος':
-				print('Too')
 				return self.add_paragraph(
 					tree['law']['article']['_id'],
 					tree['law']['article']['paragraph']['_id'],
 					content)
+			elif context == 'φράση' and tree['root']['action'] == 'προστίθεται':
+				return self.insert_phrase(
+					tree['what']['location'],
+					tree['what']['old_phrase'],
+					tree['what']['new_phrase'],
+					tree['law']['article']['_id'],
+					tree['law']['article']['paragraph']['_id'])
 
 		elif tree['root']['action'] == 'διαγράφεται':
 
