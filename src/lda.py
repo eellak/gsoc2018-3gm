@@ -8,7 +8,8 @@ from sklearn.datasets import fetch_20newsgroups
 import parser
 import collections
 import numpy as np
-
+import pprint
+import re
 no_features = 1000
 no_top_words = 5
 
@@ -79,7 +80,7 @@ issues_dict = {}
 data_samples = []
 
 for i, issue in enumerate(issues):
-	data_samples.append(''.join( issue.articles.values() ))
+	data_samples.append(re.sub("\d+", " ", ''.join( issue.articles.values())))
 	issues_dict[i] = issue
 
 n_samples = len(data_samples)
@@ -125,3 +126,7 @@ print(connected_components(graph_nmf))
 
 print('\nBreadth first Search for Connected Components for Latent Dirichlet Allocation')
 print(connected_components(graph_nmf))
+
+print("Log Likelihood: ", lda_model.score(tfidf))
+
+print("Perplexity: ", lda_model.perplexity(tfidf))
