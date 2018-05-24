@@ -39,8 +39,6 @@ def tsne_transform(model, outfile='point.pkl'):
 
 def plot_points(filename='../models/point.pkl', N=100):
     points = pd.read_pickle(filename)
-
-
     x = points['x'].as_matrix()
     y = points['y'].as_matrix()
     lbl = points['word'].as_matrix()

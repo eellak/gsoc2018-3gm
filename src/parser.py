@@ -239,9 +239,10 @@ def generate_model_from_government_gazette_issues(directory='../data'):
 	model = gensim.models.Word2Vec(all_sentences, **params)
 
 	os.chdir(cwd)
+
 	return issues, model
 
-def generate_model_from_government_gazette_issues(directory='../data'):
+def get_issues_from_dataset(directory='../data'):
 	cwd = os.getcwd()
 	os.chdir(directory)
 	filelist = glob.glob('*.pdf'.format(directory))
@@ -254,7 +255,7 @@ def generate_model_from_government_gazette_issues(directory='../data'):
 		issues.append(issue)
 
 	os.chdir(cwd)
-	return issues, model
+	return issues
 
 def train_word2vec_on_test_data():
 	issues, model = generate_model_from_government_gazette_issues()
@@ -489,7 +490,7 @@ class LawParser:
 
 	def insert_phrase(self, position, old_phrase, new_phrase, article=None, paragraph=None):
 		"""Phrase insertion with respect to another phrase"""
-		
+
 		assert(position in ['start', 'end', 'before', 'after'])
 
 		if position in ['start', 'end']:

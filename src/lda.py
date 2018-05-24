@@ -1,6 +1,7 @@
 from __future__ import print_function
 from time import time
 
+import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.decomposition import NMF, LatentDirichletAllocation
 from sklearn.datasets import fetch_20newsgroups
@@ -13,30 +14,52 @@ no_top_words = 5
 
 def display_topics(H, W, feature_names, data_samples, no_top_words, no_top_data_samples):
 	graph = {}
+	topics = {}
 	for topic_idx, topic in enumerate(H):
 		print("Topic %d:" % (topic_idx))
-		print(" ".join([feature_names[i]
-						for i in topic.argsort()[:-no_top_words - 1:-1]]))
+		topics[topic_idx] = [feature_names[i] for i in topic.argsort()[:-no_top_words - 1:-1]]
+
+		print(" ".join(topics[topic_idx]))
 		top_doc_indices = np.argsort( W[:,topic_idx] )[::-1][0:no_top_data_samples]
 		for doc_index in top_doc_indices:
 			print(issues[doc_index].filename)
 			graph[doc_index] = list ( filter( lambda x : x != doc_index,  top_doc_indices ))
 
-	print(graph)		
+	print(graph)
+	print(topics)
 	return graph
 
-def bfs(graph, s):
-	q = collections.deque()
-	visited = collections.defaultdict(bool)
-	q.append(s)
-	print(q)
-	while q:
-		p = q.popleft()
-		print(p)
-		for r in graph[p]:
-			if not visited[r]:
-				q.append(r)
-				visited[r] = True
+def connected_components(graph):
+	visited = {}
+	components = []
+	for u in graph.keys():
+		visited[u] = False
+	for s in visited.keys():
+		if visited[s]:
+			continue
+		else:
+			component = []
+			q = collections.deque()
+			q.append(s)
+			visited[s] = True
+			while q:
+				p = q.popleft()
+				component.append(p)
+				for r in graph[p]:
+					if not visited[r]:
+						q.append(r)
+						visited[r] = True
+			components.append(component)
+
+	return components
+
+def get_edges(graph):
+	E = []
+	for u in graph.keys():
+		for v in graph[u]:
+			E.append([u, v])
+	return E
+
 
 greek_stopwords = []
 cnt_swords = 300
@@ -50,7 +73,7 @@ with open('../data/el.dat') as f:
 		greek_stopwords.append(line[0])
 
 
-issues, mdl = parser.generate_model_from_government_gazette_issues()
+issues = parser.get_issues_from_dataset()
 issues_dict = {}
 
 data_samples = []
@@ -95,5 +118,10 @@ lda_H = lda_model.components_
 
 no_top_words = 5
 no_top_data_samples = 3
-display_topics(nmf_H, nmf_W, tfidf_feature_names, data_samples, no_top_words, no_top_data_samples)
-display_topics(lda_H, lda_W, tf_feature_names, data_samples, no_top_words, no_top_data_samples)
+graph_nmf = display_topics(nmf_H, nmf_W, tfidf_feature_names, data_samples, no_top_words, no_top_data_samples)
+graph_lda_H = display_topics(lda_H, lda_W, tf_feature_names, data_samples, no_top_words, no_top_data_samples)
+print('Breadth first Search for Connected Components for NMF')
+print(connected_components(graph_nmf))
+
+print('\nBreadth first Search for Connected Components for Latent Dirichlet Allocation')
+print(connected_components(graph_nmf))
