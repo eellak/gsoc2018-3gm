@@ -284,7 +284,7 @@ class LawParser:
 		"""
 		self.lines = []
 		self.identifier = identifier
-		if filename:
+		if filename and isinstance(filename, str):
 			self.filename = filename
 			tmp_lines = []
 			with open(filename, 'r') as infile:
@@ -309,6 +309,7 @@ class LawParser:
 		self.titles = {}
 		self.corpus = {}
 		self.sentences =  collections.defaultdict(dict)
+
 		self.find_corpus()
 
 	def __repr__(self):
@@ -374,6 +375,16 @@ class LawParser:
 			'articles' : self.sentences
 		}
 
+	@staticmethod
+	def from_serialized(x):
+		identifier = x['_id']
+		law = LawParser(identifier)
+		law.thesaurus = x['thesaurus']
+		law.lemmas = x['lemmas']
+		law.titles = x['titles']
+		law.sentences = x['articles']
+		return law, identifier 
+
 	def add_article(self, article, content, title=None, lemmas=None):
 		"""Add article from content
 		:param article the article id
@@ -386,7 +397,6 @@ class LawParser:
 		paragraphs = collections.defaultdict(list)
 
 		paragraph_ids = [par_id.group().strip('. ') for par_id in re.finditer(r'\d+. ', content)]
-		print(paragraph_ids)
 		paragraph_corpus = list(filter(lambda x : x.rstrip() != '', re.split(r'\d+. ', content)))
 		paragraph_corpus = [p.rstrip().lstrip() for p in paragraph_corpus]
 
