@@ -114,6 +114,7 @@ class IssueParser:
 		self.non_extracts = {}
 
 		for article in self.articles.keys():
+
 			# find extracts
 			left_quot = [m.start()
 						 for m in re.finditer('«', self.articles[article])]
@@ -385,6 +386,7 @@ class LawParser:
 		paragraphs = collections.defaultdict(list)
 
 		paragraph_ids = [par_id.group().strip('. ') for par_id in re.finditer(r'\d+. ', content)]
+		print(paragraph_ids)
 		paragraph_corpus = list(filter(lambda x : x.rstrip() != '', re.split(r'\d+. ', content)))
 		paragraph_corpus = [p.rstrip().lstrip() for p in paragraph_corpus]
 

@@ -91,7 +91,7 @@ for x in data_samples:
 	words.extend(x.split(' '))
 
 counter = collections.Counter(words)
-gg_most_common = 300
+gg_most_common = 350
 for w in counter.most_common(gg_most_common):
 	greek_stopwords.append(w[0])
 
