@@ -3,15 +3,6 @@ import numpy as np
 from helpers import *
 import string
 
-class Law:
-    pass
-
-
-class LegislativeAct(Law):
-    """Contains information about a Legislative Act"""
-    pass
-
-
 class Minister:
 
     def __init__(self, name, middle, surname, ministry):
@@ -94,6 +85,44 @@ legislative_act = ['Πράξη Νομοθετικού Περιεχομένου',
 date = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'
 article_regex = ['άρθρο \d+', 'άρθρου \d+']
 paragraph_regex = ['παράγραφος \d+', 'παραγράφου \d+', 'παρ. \d+']
+
+def full_number_to_integer(s):
+    units = {
+        'πρώτ' : 1,
+        'δεύτερ' : 2,
+        'τρίτ' : 3,
+        'τέταρτ' : 4,
+        'πέμπτ' : 5,
+        'έκτ' : 6,
+        'έβδομ' : 7,
+        'όγδο' : 8,
+        'ένατ' : 9
+    }
+
+    tens = {
+        'δέκατ' : 10,
+        'εικοστ' : 20,
+        'τριακοστ' : 30,
+        'τεσσαρακοστ' : 40,
+        'πεντηκοστ' : 50,
+        'εξηκοστ' : 60,
+        'εβδομηκοστ' : 70,
+        'ογδοηκοστ' : 80,
+        'ενενηκοστ' : 90
+    }
+
+    result = 0
+
+    for unit, val in units.items():
+        if re.search(unit ,s) != None:
+            result += val
+            break
+    for ten, val in tens.items():
+        if re.search(ten, s) != None:
+            result += val
+            break
+
+    return result
 
 class EditDistanceClassifier:
     """
