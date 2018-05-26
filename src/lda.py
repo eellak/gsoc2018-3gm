@@ -120,12 +120,21 @@ lda_H = lda_model.components_
 no_top_words = 5
 no_top_data_samples = 3
 graph_nmf = display_topics(nmf_H, nmf_W, tfidf_feature_names, data_samples, no_top_words, no_top_data_samples)
-graph_lda_H = display_topics(lda_H, lda_W, tf_feature_names, data_samples, no_top_words, no_top_data_samples)
+graph_lda = display_topics(lda_H, lda_W, tf_feature_names, data_samples, no_top_words, no_top_data_samples)
 print('Breadth first Search for Connected Components for NMF')
-print(connected_components(graph_nmf))
+cc_nmf = connected_components(graph_nmf)
+print(cc_nmf)
+print('Filenames')
+for c in cc_nmf:
+	print([issues[d].filename for d in c])
 
 print('\nBreadth first Search for Connected Components for Latent Dirichlet Allocation')
-print(connected_components(graph_nmf))
+cc_lda = connected_components(graph_lda)
+print(cc_lda)
+print('Filenames')
+for c in cc_lda:
+	print([issues[d].filename for d in c])
+
 
 print("Log Likelihood: ", lda_model.score(tfidf))
 

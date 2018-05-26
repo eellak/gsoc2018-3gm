@@ -50,6 +50,9 @@ class ActionTreeGenerator:
                                 }
                                 if i + j + 1 <= len(tmp) - 1 and re.search(r'[0-9]', tmp[i + j + 1]) != None:
                                     tree['what']['number'] = tmp[i + j + 1]
+                                else:
+                                    tree['what']['number'] = None
+
                                 found_what == True
                                 break
 
@@ -64,15 +67,20 @@ class ActionTreeGenerator:
                                 }
                                 if i - j >= 0 and re.search(r'[0-9]', tmp[i - j + 1]) != None:
                                     tree['what']['number'] = tmp[i - j + 1]
+                                else:
+                                    tree['what']['number'] = None
                                 found_what = True
                                 break
 
                         if found_what:
                             break
 
+                    print(tree['what'])
+
+                    # TODO fix numeral if full
+
                     # If it is a phrase it's located after the word enclosed in quotation marks
                     k = tree['what']['_id']
-                    print('tree what', tree['what']['context'])
 
                     extract_generator = issue.get_extracts(article)
 
@@ -95,7 +103,7 @@ class ActionTreeGenerator:
                     elif tree['what']['context'] == 'φράση':
                         # TODO more epxressions for detection
                         # TODO separate phrases from paragraphs and articles so they always exist in extracts
-                        
+
                         print(issue.extracts[article])
 
                         location = 'end'
@@ -151,7 +159,6 @@ class ActionTreeGenerator:
                     #second level is article
                     if max_depth >= 2:
                         articles = list ( filter(lambda x : x != [],  [list(re.finditer(a, extract)) for a in article_regex]))
-
                         tree['article']['_id'] = articles[0][0].group().split(' ')[1]
                         tree['article']['children'] = ['paragraph'] if max_depth > 2 else []
 

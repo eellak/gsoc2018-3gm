@@ -1,11 +1,18 @@
 import pytest
 import parser
 import syntax
+import entities
 import database
 import pprint
 
 global db
 db = database.Database()
+
+# Entities Tests
+
+def test_full_numbers_to_integer():
+	assert(entities.Numerals.full_number_to_integer('εξακοσιοστό εξηκοστό έκτο') == 666)
+	assert(entities.Numerals.full_number_to_integer('τετρακοσιοστός τέταρτος') == 404)
 
 # Syntax Tests
 
@@ -113,7 +120,6 @@ def test_law_parser(filename='../data/24_12_1990_legislative_act.txt', identifie
 		assert(x['articles']['6']['2'][1] == 'Lorem ')
 
 def test_law_insertion():
-	db.drop_laws()
 
 	law = parser.LawParser('ν. 1920/1991', '../data/24_12_1990_legislative_act.txt')
 	flag = False
@@ -147,3 +153,4 @@ def test_issue_serializer_to_db(filename='../data/17.txt'):
 
 if __name__ == '__main__':
 	test_law_insertion()
+	db.print_laws()

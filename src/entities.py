@@ -84,9 +84,10 @@ presidential_decree_regex = r'π.δ. [0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'
 legislative_act = ['Πράξη Νομοθετικού Περιεχομένου', 'Πράξης Νομοθετικού Περιεχομένου']
 date = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'
 article_regex = ['άρθρο \d+', 'άρθρου \d+']
-paragraph_regex = ['παράγραφος \d+', 'παραγράφου \d+', 'παρ. \d+']
+paragraph_regex = ['παράγραφος \d+', 'παραγράφου \d+', 'παρ. \d+', 'παράγραφος']
 
-def full_number_to_integer(s):
+class Numerals:
+
     units = {
         'πρώτ' : 1,
         'δεύτερ' : 2,
@@ -125,23 +126,41 @@ def full_number_to_integer(s):
         'εννιακοστιοστ' : 900
     }
 
-    result = 0
+    @staticmethod
+    def full_number_to_integer(s):
+        result = 0
 
-    for unit, val in units.items():
-        if re.search(unit ,s) != None:
-            result += val
-            break
-    for ten, val in tens.items():
-        if re.search(ten, s) != None:
-            result += val
-            break
+        for unit, val in Numerals.units.items():
+            if re.search(unit ,s) != None:
+                result += val
+                break
+        for ten, val in Numerals.tens.items():
+            if re.search(ten, s) != None:
+                result += val
+                break
 
-    for hundred, val in hundreds.items():
-        if re.search(hundreds, s) != None:
-            result += val
-            break
+        for hundred, val in Numerals.hundreds.items():
+            if re.search(hundred, s) != None:
+                result += val
+                break
 
-    return result
+        return result
+
+
+    @staticmethod
+    def full_numeral_to_integer_from_list(tmp, index):
+        k = index - 1
+        result = 0
+        while k >= 0:
+            print(tmp[k])
+            number = Numerals.full_number_to_integer(tmp[k])
+            if number == 0:
+                break
+            else:
+                result += number
+                k -= 1
+        result        
+
 
 class EditDistanceClassifier:
     """
@@ -183,6 +202,3 @@ class EditDistanceClassifier:
                 amin = i
 
         print('Smallest hamming = {}, dist = {}'.format(d[amin], tmp[amin]))
-
-if __name__ == '__main__':
-    print(full_number_to_integer('εξακοσιοστή εξηκοτσή έκτη'))
