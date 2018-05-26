@@ -1,7 +1,5 @@
-![Build Status](https://travis-ci.org/papachristoumarios/gsoc2018-3gm.svg?branch=master)](https://travis-ci.org/papachristoumarios/gsoc2018-3gm)
-
-
-![license](image:: https://img.shields.io/badge/license-GPL--3.0--or--later-orange.svg)
+[![Build Status](https://travis-ci.org/papachristoumarios/gsoc2018-3gm.svg?branch=master)](https://travis-ci.org/papachristoumarios/gsoc2018-3gm)
+![license](https://img.shields.io/badge/license-GPL--3.0--or--later-orange.svg)
 ![language](https://img.shields.io/badge/python-3.x-green.svg)
  
 
