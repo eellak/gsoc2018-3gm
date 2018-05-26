@@ -111,6 +111,20 @@ def full_number_to_integer(s):
         'ενενηκοστ' : 90
     }
 
+    hundreds = {
+        'εκατοστ' : 100,
+        'διακοσιοστ' : 200,
+        'τριακοσιοστ' : 300,
+        'τετρακοσιοστ' : 400,
+        'πεντακοσιοστ' : 500,
+        'εξακοσιοστ' : 600,
+        'εφτακοσιοστ' : 700,
+        'επτακοστιοστ' : 700,
+        'οκτακοσιοστ' : 800,
+        'οχτακοσιοστ' : 800,
+        'εννιακοστιοστ' : 900
+    }
+
     result = 0
 
     for unit, val in units.items():
@@ -119,6 +133,11 @@ def full_number_to_integer(s):
             break
     for ten, val in tens.items():
         if re.search(ten, s) != None:
+            result += val
+            break
+
+    for hundred, val in hundreds.items():
+        if re.search(hundreds, s) != None:
             result += val
             break
 
@@ -164,3 +183,6 @@ class EditDistanceClassifier:
                 amin = i
 
         print('Smallest hamming = {}, dist = {}'.format(d[amin], tmp[amin]))
+
+if __name__ == '__main__':
+    print(full_number_to_integer('εξακοσιοστή εξηκοτσή έκτη'))
