@@ -139,7 +139,7 @@ model = GridSearchCV(cv=None, error_score='raise',
 	perp_tol=0.1, random_state=None,
 	topic_word_prior=None, total_samples=1000000.0, verbose=0),
 	fit_params=None, iid=True, n_jobs=1,
-	param_grid={'n_components': [10, 15, 20, 25, 30], 'learning_decay': [0.5, 0.7, 0.9]},
+	param_grid={'n_components': range(10, 31, 5), 'learning_decay': [0.5, 0.7, 0.9]},
 	pre_dispatch='2*n_jobs', refit=True, return_train_score='warn',
 	scoring=None, verbose=0)
 model.fit(tf)
