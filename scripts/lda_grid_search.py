@@ -3,19 +3,13 @@ from time import time
 
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from sklearn.model_selection import GridSearchCV
 from sklearn.decomposition import NMF, LatentDirichletAllocation
 from sklearn.datasets import fetch_20newsgroups
 import parser
 import collections
 import numpy as np
-import sys
 import pprint
 import re
-
-sys.path.insert(0, '../resources')
-import greek_lemmas
-
 no_features = 1000
 no_top_words = 5
 
@@ -89,18 +83,6 @@ for i, issue in enumerate(issues):
 	data_samples.append(re.sub("\d+", " ", ''.join( issue.articles.values())))
 	issues_dict[i] = issue
 
-min_size = 4
-
-for i, sample in enumerate(data_samples):
-	tmp = list(filter(lambda s : len(s) >= min_size,  sample.split(' ')))
-	for j, word in enumerate(tmp):
-		try:
-			tmp[j] = greek_lemmas.lemmas[word]
-		except:
-			continue
-	tmp = ' '.join(tmp)
-	data_samples[i] = tmp
-
 n_samples = len(data_samples)
 n_components = 10
 
@@ -131,27 +113,18 @@ nmf_W = nmf_model.transform(tfidf)
 nmf_H = nmf_model.components_
 
 # Run LDA
-model = GridSearchCV(cv=None, error_score='raise',
+lda_model = GridSearchCV(cv=None, error_score='raise',
 	estimator=LatentDirichletAllocation(batch_size=128, doc_topic_prior=None,
-	evaluate_every=-1, learning_decay=0.7, learning_method='batch',
+	evaluate_every=-1, learning_decay=0.7, learning_method=None,
 	learning_offset=10.0, max_doc_update_iter=100, max_iter=10,
-	mean_change_tol=0.001, n_components=None, n_jobs=1,
-	perp_tol=0.1, random_state=None,
+	mean_change_tol=0.001, n_components=10, n_jobs=1,
+	n_topics=None, perp_tol=0.1, random_state=None,
 	topic_word_prior=None, total_samples=1000000.0, verbose=0),
 	fit_params=None, iid=True, n_jobs=1,
-	param_grid={'n_components': [10, 15, 20, 25, 30], 'learning_decay': [0.5, 0.7, 0.9]},
+	param_grid={'n_topics': [10, 15, 20, 25, 30], 'learning_decay': [0.5, 0.7, 0.9]},
 	pre_dispatch='2*n_jobs', refit=True, return_train_score='warn',
 	scoring=None, verbose=0)
-model.fit(tf)
-
-# Best Model
-lda_model = model.best_estimator_
-
-# Model Parameters
-print("Best Model's Params: ", model.best_params_)
-
-# Log Likelihood Score
-print("Best Log Likelihood Score: ", model.best_score_)
+lda_model.fit(tf)
 
 lda_W = lda_model.transform(tf)
 lda_H = lda_model.components_

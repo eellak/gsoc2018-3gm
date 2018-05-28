@@ -5,8 +5,8 @@ import database
 
 class UnrecognizedCodificationAction(Exception):
 
-    def __init__(self):
-        super().__init__('Unrecognized Codification Action')
+    def __init__(self, extract):
+        super().__init__('Unrecognized Codification Action on \n', extract)
 
 class LawCodifier:
 
