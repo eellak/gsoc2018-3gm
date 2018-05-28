@@ -71,7 +71,7 @@ def get_edges(graph):
 greek_stopwords = []
 cnt_swords = 300
 
-with open('../data/el.dat') as f:
+with open('../resources/greek_stoplist.dat') as f:
 	for i in range(cnt_swords):
 		line = f.readline()
 		if not line:
@@ -97,7 +97,7 @@ for i, sample in enumerate(data_samples):
 		try:
 			tmp[j] = greek_lemmas.lemmas[word]
 		except:
-			continue
+			tmp[j] = word
 	tmp = ' '.join(tmp)
 	data_samples[i] = tmp
 
