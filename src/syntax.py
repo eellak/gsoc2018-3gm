@@ -1,9 +1,8 @@
-import spacy
-from googletrans import Translator
-from spacy.lang.en import LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES
 from entities import *
 import re
 import collections
+import logging
+
 
 # Action Tree Generation
 
@@ -34,8 +33,8 @@ class ActionTreeGenerator:
                     }
                     max_depth = 0
 
-                    # find what will be appended
-                    print('Found', action, 'in ', article )
+
+                    logging.info('Found ' + str(action) + ' in ' + article )
 
                     w = 1
 
@@ -75,7 +74,7 @@ class ActionTreeGenerator:
                         if found_what:
                             break
 
-                    print(tree['what'])
+                    logging.info(what)
 
                     # TODO fix numeral if full
 
@@ -177,34 +176,6 @@ class ActionTreeGenerator:
                         except:
                             pass
         return trees
-
-    # Here is something really crazy
-    # Translate the sentence to english and then process its syntax with spacy
-    @staticmethod
-    def translate_and_analyse(extract):
-
-        nlp = spacy.load('en_core_web_lg')
-        lemmatizer = spacy.lemmatizer.Lemmatizer(LEMMA_INDEX, LEMMA_EXC, LEMMA_RULES)
-
-        translator = Translator()
-        result = translator.translate(extract, src='el', dest='en').text
-
-        print(extract)
-
-        print(result)
-
-        doc = nlp(result)
-        roots = []
-        for token in doc:
-            if token.dep_ == 'ROOT':
-                lemma = token.lemma_
-                for action in actions:
-                    if lemma == action.lemma:
-                        roots.append(token)
-
-        for root in roots:
-            print ( ActionTreeGenerator.dfs_traversal(root) )
-
 
     @staticmethod
     def nest_tree_helper(vertex, tree):
