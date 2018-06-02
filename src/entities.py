@@ -77,30 +77,15 @@ actions = [
 ]
 
 # Entities - Statutes
-whats = ['φράση', 'παράγραφος', 'άρθρο', 'εδάφιο', 'φράσεις', 'άρθρα', 'εδάφια', 'παράγραφοι']
+whats = ['φράση', 'παράγραφος', 'άρθρο', 'εδάφιο', 'φράσεις', 'άρθρα', 'εδάφια', 'παράγραφοι', 'τίτλος']
 wheres = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']
 law_regex = r'ν. [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'
 legislative_decree_regex = r'ν.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'
 presidential_decree_regex = r'π.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'
-legislative_act = ['Πράξη Νομοθετικού Περιεχομένου', 'Πράξης Νομοθετικού Περιεχομένου']
+legislative_act_regex = r'Πράξη(|ς) Νομοθετικού Περιεχομένου'
 date = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'
 article_regex = ['άρθρο \d+', 'άρθρου \d+']
 paragraph_regex = ['παράγραφος \d+', 'παραγράφου \d+', 'παρ. \d+', 'παράγραφος']
-
-def get_latest_statute(statutes):
-    """Returns latest statute in a given list of
-    statutes by first splitting the statutes and then
-    finding the one with the latest year
-    """
-    statutes_ = [re.split(r'[/ .]', statute)[-1] for statute in statutes]
-    latest = None
-    latest_statute = None
-    for i, s in enumerate(statutes_):
-        if s.isdigit():
-            if not latest or latest <= int(s):
-                latest = int(s)
-                latest_statute = statutes[i]
-    return latest_statute
 
 class Numerals:
 

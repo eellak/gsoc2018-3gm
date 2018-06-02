@@ -48,6 +48,7 @@ Through the case of analyzing, categorizing and codifying Government Gazette art
 4. Topic models for finding Government Gazette Issues that have the same topics. We use an unsupervised model to extract the topics and then group Issues by topics for **cross-linking** between Government Gazette Documents. You can then visualize these topic models with `pyLDAvis`. Topic modelling is done with LDA and NMF algorithms as illustrated in the [Wiki Page](https://github.com/eellak/gsoc2018-3gm/wiki/Topic-Modelling). The source code is located at `src/topic_models.py`.
 5. [Project Wiki](https://github.com/eellak/gsoc2018-3gm/wiki)
 6. Optionally trained Word2Vec Model for further usage
+7. MongoDB Integration
 
 ##### In Progress
 

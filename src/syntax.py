@@ -16,11 +16,51 @@ class ActionTreeGenerator:
     """
 
     @staticmethod
+    def get_latest_statute(statutes):
+        """Returns latest statute in a given list of
+        statutes by first splitting the statutes and then
+        finding the one with the latest year
+        """
+        statutes_ = [re.split(r'[/ .]', statute)[-1] for statute in statutes]
+        latest = None
+        latest_statute = None
+        for i, s in enumerate(statutes_):
+            if s.isdigit():
+                if not latest or latest <= int(s):
+                    latest = int(s)
+                    latest_statute = statutes[i]
+        if not latest:
+            return statutes[0]
+
+        return latest_statute
+
+    @staticmethod
+    def detect_latest_statute(extract):
+        legislative_acts = list(re.finditer(legislative_act_regex, extract))
+        laws =  list(re.finditer(law_regex, extract))
+        presidential_decrees = list(re.finditer(presidential_decree_regex, extract))
+        legislative_decrees = list(re.finditer(legislative_decree_regex, extract))
+
+        laws.extend(presidential_decrees)
+        laws.extend(legislative_acts)
+        laws.extend(legislative_decrees)
+
+
+        laws = [law.group() for law in laws]
+
+
+        law = ActionTreeGenerator.get_latest_statute(laws)
+
+
+    @staticmethod
     def generate_action_tree(extract, issue, article, nested=True, max_what_window = 20, max_where_window = 30):
         global actions
         global whats
         trees = []
+        print('Candidate Extract is')
+        print(extract)
         tmp = list(map(lambda s : s.strip(string.punctuation),  extract.split(' ')))
+        print(tmp)
 
         for action in actions:
             for i, w in enumerate(tmp):
@@ -36,15 +76,13 @@ class ActionTreeGenerator:
 
                     logging.info('Found ' + str(action) + ' in ' + article )
 
-                    w = 1
-
                     found_what = False
                     for j in range(1, max_what_window + 1):
                         for what in whats:
                             if i + j  <= len(tmp) - 1 and what == tmp[i + j]:
                                 tree['root']['children'].append('law')
                                 tree['what'] = {
-                                    '_id' : i + j,
+                                    'index' : i + j,
                                     'context' : what,
                                 }
                                 if i + j + 1 <= len(tmp) - 1 and re.search(r'[0-9]', tmp[i + j + 1]) != None:
@@ -74,16 +112,19 @@ class ActionTreeGenerator:
                         if found_what:
                             break
 
-                    logging.info(what)
+                    if found_what:
+                        print('What')
+                        print('Subject is', tree['what'])
+
 
                     # TODO fix numeral if full
 
                     # If it is a phrase it's located after the word enclosed in quotation marks
-                    k = tree['what']['_id']
+                    k = tree['what']['index']
 
                     extract_generator = issue.get_extracts(article)
 
-                    if tree['what']['context'] == 'παράγραφος':
+                    if tree['what']['context'] in ['παράγραφος', 'παράγραφοι']:
                         if tree['root']['action'] != 'διαγράφεται':
                             content = next(extract_generator)
                             tree['paragraph']['content'] = content
@@ -98,12 +139,13 @@ class ActionTreeGenerator:
                         max_depth = 3
                     elif tree['what']['context'] == 'εδάφιο':
                         content = next(extract_generator)
-                        print(content)
+
+                        tree['what']['content'] = content
                     elif tree['what']['context'] == 'φράση':
                         # TODO more epxressions for detection
                         # TODO separate phrases from paragraphs and articles so they always exist in extracts
 
-                        print(issue.extracts[article])
+
 
                         location = 'end'
                         # get old phrase
@@ -113,10 +155,7 @@ class ActionTreeGenerator:
                         if before_phrase or after_phrase:
                             if before_phrase:
                                 start_of_phrase = before_phrase.span()[1]
-                                print('after')
-                                print(extract[start_of_phrase:])
                                 end_of_phrase = re.search('»', extract[start_of_phrase:]).span()[0] + start_of_phrase
-                                print(end_of_phrase)
                                 location = 'before'
                                 old_phrase = extract[start_of_phrase: end_of_phrase]
                             elif after_phrase:
@@ -126,7 +165,7 @@ class ActionTreeGenerator:
                                 old_phrase = extract[start_of_phrase: end_of_phrase]
 
                         new_phrase = None
-                        phrase_index = re.search(' η φράση «', extract)
+                        phrase_index = re.search(' η φράση(|,) «', extract)
 
                         if phrase_index:
                             start_of_phrase = phrase_index.span()[1]
@@ -137,21 +176,15 @@ class ActionTreeGenerator:
                             tree['what']['location'] = location
                             tree['what']['old_phrase'] = old_phrase
                             tree['what']['new_phrase'] = new_phrase
+                            tree['what']['content'] = new_phrase
 
 
-                        # print('Phrases', old_phrase, new_phrase)
 
-
-                    legislative_acts = list ( filter(lambda x : x != [],  [list(re.finditer(date + ' ' + la, extract)) for la in legislative_act]))
-                    laws =  list(re.finditer(law_regex, extract))
-                    presidential_decrees = list(re.finditer(presidential_decree_regex, extract))
-                    laws.extend(presidential_decrees)
-                    laws.extend(legislative_acts)
-
+                    law = ActionTreeGenerator.detect_latest_statute(extract)
 
                     # first level are laws
                     tree['law'] = {
-                        '_id' : laws[0].group(),
+                        '_id' : law,
                         'children' : ['article']
                     }
 
@@ -175,6 +208,8 @@ class ActionTreeGenerator:
                             trees.append(tree)
                         except:
                             pass
+
+
         return trees
 
     @staticmethod

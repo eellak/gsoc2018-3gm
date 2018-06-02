@@ -26,17 +26,31 @@ class LawCodifier:
 	def codify(self, filename):
 		trees = {}
 		issue = parser.IssueParser(filename)
-		for article in issue.articles.keys():
+		sorted_articles = sorted(issue.articles.keys())
+
+		for article in sorted_articles:
+
 			for i, extract in enumerate(issue.get_non_extracts(article)):
 				trees[i] = syntax.ActionTreeGenerator.generate_action_tree(extract, issue, article)
 				for j, t in enumerate(trees[i]):
-					try:
-						print(j)
-						print(t['root'])
+					print(t['root'])
+					print(t['what'])
+					law_id = t['law']['_id']
+					print('Law id is ', law_id)
 
-						
-					except:
+					try:
+
+						if law_id not in self.laws.keys():
+							print('Not in keys')
+							self.laws[law_id] = parser.LawParser(law_id)
+
+						self.db.query_from_tree(self.laws[law_id], t)
+
+						print('Pushed to Database')
+					except Exception as e:
+						print(str(e))
 						continue
+
 					print('\nPress any key to continue')
 					input()
 
@@ -45,4 +59,10 @@ class LawCodifier:
 
 if __name__ == '__main__':
 	codifier = LawCodifier()
+
+	argc = len(sys.argv)
+
+
+
+
 	codifier.codify(sys.argv[1])

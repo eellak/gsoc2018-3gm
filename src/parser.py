@@ -10,13 +10,18 @@ from helpers import *
 from syntax import *
 import os
 import gensim
+import mimetypes
 import pprint
 from gensim.models import KeyedVectors
 import logging
-logging.basicConfig(
-	format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 import itertools
 import glob
+
+# configuration and parameters
+
+logging.basicConfig(
+	format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
 params = {'size': 200, 'iter': 20,  'window': 2, 'min_count': 15,
 		  'workers': max(1, multiprocessing.cpu_count() - 1), 'sample': 1E-3, }
 
@@ -41,6 +46,18 @@ class IssueParser:
 		self.filename = filename
 		self.lines = []
 		tmp_lines = []
+
+		filetype = mimetypes.guess_type(filename)[0]
+
+		# if it is in PDF format convert it to txt
+		if filetype == 'application/pdf':
+			outfile = filename.replace('.pdf', '.txt')
+			if not os.path.isfile(outfile):
+				os.system('pdf2txt.py {} > {}'.format(filename, outfile))
+			filename = outfile
+		elif filetype != 'text/plain':
+			raise UnrecognizedFileException(filename)
+
 		with open(filename, 'r') as infile:
 			# remove ugly hyphenthation
 			while 1 == 1:
@@ -49,8 +66,8 @@ class IssueParser:
 					break
 				l = l.replace('-\n', '')
 				l = l.replace('\n', ' ')
+				l = re.sub(' +',' ', l)
 				tmp_lines.append(l)
-
 
 		for line in tmp_lines:
 			if line == '':
@@ -224,6 +241,12 @@ class IssueParser:
 		self.model.wv.save_word2vec_format('model')
 
 
+class UnrecognizedFileException(Exception):
+
+	def __init__(self, filename):
+		super().__init__('Unrecognized filetype ' + str(filename))
+
+
 def generate_model_from_government_gazette_issues(directory='../data'):
 	cwd = os.getcwd()
 	os.chdir(directory)
@@ -383,7 +406,7 @@ class LawParser:
 		law.lemmas = x['lemmas']
 		law.titles = x['titles']
 		law.sentences = x['articles']
-		return law, identifier 
+		return law, identifier
 
 	def add_article(self, article, content, title=None, lemmas=None):
 		"""Add article from content
@@ -638,10 +661,15 @@ class LawParser:
 		assert(article and paragraph)
 		self.sentences[article][paragraph].append(context)
 
+	def set_title(self, content, article_id):
+		assert(article_id)
+		self.titles[article_id] = content
+		return self.serialize()
+
 	def query_from_tree(self, tree):
 		"""Returns a serizlizable object from a tree in nested form"""
 		assert(tree['law']['_id'] == self.identifier)
-		if tree['root']['action'] in ['προστίθεται', 'αντικαθίσταται']:
+		if tree['root']['action'] in ['προστίθεται', 'αντικαθίσταται', 'τροποποιείται']:
 
 			try:
 				content = tree['what']['content']
@@ -656,13 +684,17 @@ class LawParser:
 					tree['law']['article']['_id'],
 					tree['law']['article']['paragraph']['_id'],
 					content)
-			elif context == 'φράση' and tree['root']['action'] == 'προστίθεται':
+			if context == 'φράση' and tree['root']['action'] == 'προστίθεται':
+				print('Phrase is found!')
 				return self.insert_phrase(
 					tree['what']['location'],
 					tree['what']['old_phrase'],
 					tree['what']['new_phrase'],
 					tree['law']['article']['_id'],
 					tree['law']['article']['paragraph']['_id'])
+
+			if context == 'τίτλος':
+				return self.set_title(tree['law']['article']['_id'], content)
 
 		elif tree['root']['action'] == 'διαγράφεται':
 
