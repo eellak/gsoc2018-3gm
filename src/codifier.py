@@ -61,8 +61,7 @@ if __name__ == '__main__':
 	codifier = LawCodifier()
 
 	argc = len(sys.argv)
+	print(argc)
 
-
-
-
-	codifier.codify(sys.argv[1])
+	for i in range(1, argc):
+		codifier.codify(sys.argv[i])
