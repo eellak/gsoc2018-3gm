@@ -17,22 +17,34 @@ sys.path.insert(0, '../resources')
 import greek_lemmas
 
 
-def display_topics(H, W, feature_names, data_samples, no_top_words, no_top_data_samples):
+def display_topics(
+		H,
+		W,
+		feature_names,
+		data_samples,
+		no_top_words,
+		no_top_data_samples):
 	graph = {}
 	topics = {}
 	for topic_idx, topic in enumerate(H):
 		print("Topic %d:" % (topic_idx))
-		topics[topic_idx] = [feature_names[i] for i in topic.argsort()[:-no_top_words - 1:-1]]
+		topics[topic_idx] = [feature_names[i]
+							 for i in topic.argsort()[:-no_top_words - 1:-1]]
 
 		print(" ".join(topics[topic_idx]))
-		top_doc_indices = np.argsort( W[:,topic_idx] )[::-1][0:no_top_data_samples]
+		top_doc_indices = np.argsort(W[:, topic_idx])[
+			::-1][0:no_top_data_samples]
 		for doc_index in top_doc_indices:
 			print(issues[doc_index].filename)
-			graph[doc_index] = list ( filter( lambda x : x != doc_index,  top_doc_indices ))
+			graph[doc_index] = list(
+				filter(
+					lambda x: x != doc_index,
+					top_doc_indices))
 
 	print(graph)
 	print(topics)
 	return graph
+
 
 def connected_components(graph):
 	visited = {}
@@ -57,6 +69,7 @@ def connected_components(graph):
 			components.append(component)
 
 	return components
+
 
 def get_edges(graph):
 	E = []
@@ -89,17 +102,17 @@ issues_dict = {}
 data_samples = []
 
 for i, issue in enumerate(issues):
-	data_samples.append(re.sub("\d+", " ", ''.join( issue.articles.values())))
+	data_samples.append(re.sub("\d+", " ", ''.join(issue.articles.values())))
 	issues_dict[i] = issue
 
 min_size = 4
 
 for i, sample in enumerate(data_samples):
-	tmp = list(filter(lambda s : len(s) >= min_size,  sample.split(' ')))
+	tmp = list(filter(lambda s: len(s) >= min_size, sample.split(' ')))
 	for j, word in enumerate(tmp):
 		try:
 			tmp[j] = greek_lemmas.lemmas[word]
-		except:
+		except BaseException:
 			tmp[j] = word
 	tmp = ' '.join(tmp)
 	data_samples[i] = tmp
@@ -120,34 +133,74 @@ no_top_words = 5
 n_samples = len(data_samples)
 
 # NMF is able to use tf-idf
-tfidf_vectorizer = TfidfVectorizer(max_df=0.95, min_df=2, max_features=no_features, stop_words=greek_stopwords)
+tfidf_vectorizer = TfidfVectorizer(
+	max_df=0.95,
+	min_df=2,
+	max_features=no_features,
+	stop_words=greek_stopwords)
 tfidf = tfidf_vectorizer.fit_transform(data_samples)
 tfidf_feature_names = tfidf_vectorizer.get_feature_names()
 
-# LDA can only use raw term counts for LDA because it is a probabilistic graphical model
-tf_vectorizer = CountVectorizer(max_df=0.95, min_df=2, max_features=no_features, stop_words=greek_stopwords)
+# LDA can only use raw term counts for LDA because it is a probabilistic
+# graphical model
+tf_vectorizer = CountVectorizer(
+	max_df=0.95,
+	min_df=2,
+	max_features=no_features,
+	stop_words=greek_stopwords)
 tf = tf_vectorizer.fit_transform(data_samples)
 tf_feature_names = tf_vectorizer.get_feature_names()
 
 no_topics = 10
 
 # Run NMF
-nmf_model = NMF(n_components=no_topics, random_state=1, alpha=.1, l1_ratio=.5, init='nndsvd').fit(tfidf)
+nmf_model = NMF(
+	n_components=no_topics,
+	random_state=1,
+	alpha=.1,
+	l1_ratio=.5,
+	init='nndsvd').fit(tfidf)
 nmf_W = nmf_model.transform(tfidf)
 nmf_H = nmf_model.components_
 
 # Run LDA after finding optimal parameters
-model = GridSearchCV(cv=None, error_score='raise',
-	estimator=LatentDirichletAllocation(batch_size=128, doc_topic_prior=None,
-	evaluate_every=-1, learning_decay=0.7, learning_method='batch',
-	learning_offset=10.0, max_doc_update_iter=100, max_iter=10,
-	mean_change_tol=0.001, n_components=None, n_jobs=1,
-	perp_tol=0.1, random_state=None,
-	topic_word_prior=None, total_samples=1000000.0, verbose=0),
-	fit_params=None, iid=True, n_jobs=1,
-	param_grid={'n_components': range(10, 31, 5), 'learning_decay': [0.5, 0.7, 0.9]},
-	pre_dispatch='2*n_jobs', refit=True, return_train_score='warn',
-	scoring=None, verbose=0)
+model = GridSearchCV(
+	cv=None,
+	error_score='raise',
+	estimator=LatentDirichletAllocation(
+		batch_size=128,
+		doc_topic_prior=None,
+		evaluate_every=-1,
+		learning_decay=0.7,
+		learning_method='batch',
+		learning_offset=10.0,
+		max_doc_update_iter=100,
+		max_iter=10,
+		mean_change_tol=0.001,
+		n_components=None,
+		n_jobs=1,
+		perp_tol=0.1,
+		random_state=None,
+		topic_word_prior=None,
+		total_samples=1000000.0,
+		verbose=0),
+	fit_params=None,
+	iid=True,
+	n_jobs=1,
+	param_grid={
+		'n_components': range(
+			10,
+			31,
+			5),
+		'learning_decay': [
+			0.5,
+			0.7,
+			0.9]},
+	pre_dispatch='2*n_jobs',
+	refit=True,
+	return_train_score='warn',
+	scoring=None,
+	verbose=0)
 model.fit(tfidf)
 
 # Best Model
@@ -167,8 +220,20 @@ lda_H = lda_model.components_
 
 no_top_words = 5
 no_top_data_samples = 3
-graph_nmf = display_topics(nmf_H, nmf_W, tfidf_feature_names, data_samples, no_top_words, no_top_data_samples)
-graph_lda = display_topics(lda_H, lda_W, tf_feature_names, data_samples, no_top_words, no_top_data_samples)
+graph_nmf = display_topics(
+	nmf_H,
+	nmf_W,
+	tfidf_feature_names,
+	data_samples,
+	no_top_words,
+	no_top_data_samples)
+graph_lda = display_topics(
+	lda_H,
+	lda_W,
+	tf_feature_names,
+	data_samples,
+	no_top_words,
+	no_top_data_samples)
 
 print('Breadth first Search for Connected Components for NMF')
 cc_nmf = connected_components(graph_nmf)
