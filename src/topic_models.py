@@ -16,8 +16,6 @@ import re
 sys.path.insert(0, '../resources')
 import greek_lemmas
 
-no_features = 1000
-no_top_words = 5
 
 def display_topics(H, W, feature_names, data_samples, no_top_words, no_top_data_samples):
 	graph = {}
@@ -79,8 +77,13 @@ with open('../resources/greek_stoplist.dat') as f:
 		line = line.split(' ')
 		greek_stopwords.append(line[0])
 
+try:
+	issues = parser.get_issues_from_dataset(sys.argv[1])
 
-issues = parser.get_issues_from_dataset()
+except IndexError:
+	print('Using default directory ../data')
+	issues = parser.get_issues_from_dataset()
+
 issues_dict = {}
 
 data_samples = []
@@ -101,8 +104,6 @@ for i, sample in enumerate(data_samples):
 	tmp = ' '.join(tmp)
 	data_samples[i] = tmp
 
-n_samples = len(data_samples)
-n_components = 10
 
 words = []
 for x in data_samples:
@@ -112,6 +113,11 @@ counter = collections.Counter(words)
 gg_most_common = 350
 for w in counter.most_common(gg_most_common):
 	greek_stopwords.append(w[0])
+
+# Initial Parameters
+no_features = 1000
+no_top_words = 5
+n_samples = len(data_samples)
 
 # NMF is able to use tf-idf
 tfidf_vectorizer = TfidfVectorizer(max_df=0.95, min_df=2, max_features=no_features, stop_words=greek_stopwords)
@@ -130,7 +136,7 @@ nmf_model = NMF(n_components=no_topics, random_state=1, alpha=.1, l1_ratio=.5, i
 nmf_W = nmf_model.transform(tfidf)
 nmf_H = nmf_model.components_
 
-# Run LDA
+# Run LDA after finding optimal parameters
 model = GridSearchCV(cv=None, error_score='raise',
 	estimator=LatentDirichletAllocation(batch_size=128, doc_topic_prior=None,
 	evaluate_every=-1, learning_decay=0.7, learning_method='batch',
@@ -142,16 +148,19 @@ model = GridSearchCV(cv=None, error_score='raise',
 	param_grid={'n_components': range(10, 31, 5), 'learning_decay': [0.5, 0.7, 0.9]},
 	pre_dispatch='2*n_jobs', refit=True, return_train_score='warn',
 	scoring=None, verbose=0)
-model.fit(tf)
+model.fit(tfidf)
 
 # Best Model
 lda_model = model.best_estimator_
 
 # Model Parameters
+print('LDA Model')
 print("Best Model's Params: ", model.best_params_)
 
-# Log Likelihood Score
+# Log Likelihood Score from grid search
 print("Best Log Likelihood Score: ", model.best_score_)
+print("Best Perplexity Score: ", lda_model.perplexity(tfidf))
+
 
 lda_W = lda_model.transform(tf)
 lda_H = lda_model.components_
@@ -160,6 +169,7 @@ no_top_words = 5
 no_top_data_samples = 3
 graph_nmf = display_topics(nmf_H, nmf_W, tfidf_feature_names, data_samples, no_top_words, no_top_data_samples)
 graph_lda = display_topics(lda_H, lda_W, tf_feature_names, data_samples, no_top_words, no_top_data_samples)
+
 print('Breadth first Search for Connected Components for NMF')
 cc_nmf = connected_components(graph_nmf)
 print(cc_nmf)
@@ -173,8 +183,3 @@ print(cc_lda)
 print('Filenames')
 for c in cc_lda:
 	print([issues[d].filename for d in c])
-
-
-print("Log Likelihood: ", lda_model.score(tfidf))
-
-print("Perplexity: ", lda_model.perplexity(tfidf))
