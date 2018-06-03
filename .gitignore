@@ -12,6 +12,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+src/chromedriver
 data/*.pdf
 build/
 develop-eggs/
