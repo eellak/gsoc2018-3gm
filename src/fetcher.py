@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Document Fetcher Module
 The original code is taken from
