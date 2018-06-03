@@ -18,7 +18,6 @@ except pymongo.errors.ConnectionFailure as e:
     print("Could not connect to MongoDB: %s" % e)
 
 
-
 class Database:
 
     def __init__(self):
@@ -29,13 +28,20 @@ class Database:
     def insert_issue_to_db(self, issue):
         issue.detect_signatories()
         serializable = {
-            'issue_date' : str(issue.issue_date),
-            'issue_number' : issue.issue_number,
-            'articles' : issue.articles,
-            'extracts' : [(article, list(issue.get_extracts(article))) for article in issue.articles.keys()],
-            'non_extracts' : [(article, list(issue.get_non_extracts(article))) for article in issue.articles.keys()],
-            'signatories' : [signatory.__dict__ for signatory in issue.signatories]
-        }
+            'issue_date': str(
+                issue.issue_date),
+            'issue_number': issue.issue_number,
+            'articles': issue.articles,
+            'extracts': [
+                (article,
+                 list(
+                     issue.get_extracts(article))) for article in issue.articles.keys()],
+            'non_extracts': [
+                (article,
+                 list(
+                     issue.get_non_extracts(article))) for article in issue.articles.keys()],
+            'signatories': [
+                signatory.__dict__ for signatory in issue.signatories]}
         self.issues.insert(serializable)
 
     def print_laws(self):

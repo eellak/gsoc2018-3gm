@@ -3,6 +3,7 @@ import numpy as np
 from helpers import *
 import string
 
+
 class Minister:
 
     def __init__(self, name, middle, surname, ministry):
@@ -13,13 +14,13 @@ class Minister:
 
     def is_mentioned(self, s):
         search_full = re.search(self.name + ' ' + self.surname, s)
-        if search_full != None:
+        if search_full is not None:
             return search_full.span()
         search_sur = re.search(self.surname, s)
-        if search_sur != None:
+        if search_sur is not None:
             return search_sur.span()
         search_min = re.search(self.ministry, s)
-        if search_min != None:
+        if search_min is not None:
             return search_min.span()
 
     def __repr__(self):
@@ -33,7 +34,7 @@ class Action:
         self.lemma = lemma
         self.derivatives = derivatives
         self.derivatives.append(name)
-        if weight_vector == None:
+        if weight_vector is None:
             self.weight_vector = (1 / (len(self.derivatives))) * \
                 np.ones(len(self.derivatives))
         else:
@@ -48,14 +49,13 @@ class Action:
     def score(self, word, _normalize_word=True):
         scores = np.zeros(len(self.derivatives))
         for i, derivative in enumerate(self.derivatives):
-            scores[i] = edit_distance(word if not _normalize_word else normalize_word(word) , derivative)
+            scores[i] = edit_distance(
+                word if not _normalize_word else normalize_word(word), derivative)
         return np.dot(scores, self.weight_vector)
 
-
-
     def __eq__(self, w):
-        return w == self.name or w in self.derivatives or w == self.name.capitalize() or w in list(map(lambda s : s.capitalize(), self.derivatives))
-
+        return w == self.name or w in self.derivatives or w == self.name.capitalize(
+        ) or w in list(map(lambda s: s.capitalize(), self.derivatives))
 
 
 ministers = [
@@ -69,15 +69,24 @@ ministers = [
 
 # Actions
 actions = [
-    Action('προστίθεται', 'add', ['προσθέτουμε', 'προσθήκη','προστίθενται']),
-    Action('διαγράφεται', 'delete', ['διαγράφουμε', 'διαγραφή','διαγράφονται']),
+    Action('προστίθεται', 'add', ['προσθέτουμε', 'προσθήκη', 'προστίθενται']),
+    Action('διαγράφεται', 'delete', ['διαγράφουμε', 'διαγραφή', 'διαγράφονται']),
     Action('παύεται', 'terminate', ['παύση', 'παύουμε', 'παύονται']),
     Action('τροποποιείται', 'amend', ['τροποποίηση', 'τροποποιούμε', 'τροποποιούνται']),
     Action('αντικαθίσταται', 'replace', ['αντικαθίσταται', 'αντικατάσταση', 'αντικαθίστανται'])
 ]
 
 # Entities - Statutes
-whats = ['φράση', 'παράγραφος', 'άρθρο', 'εδάφιο', 'φράσεις', 'άρθρα', 'εδάφια', 'παράγραφοι', 'τίτλος']
+whats = [
+    'φράση',
+    'παράγραφος',
+    'άρθρο',
+    'εδάφιο',
+    'φράσεις',
+    'άρθρα',
+    'εδάφια',
+    'παράγραφοι',
+    'τίτλος']
 wheres = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']
 law_regex = r'ν. [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'
 legislative_decree_regex = r'ν.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'
@@ -85,20 +94,25 @@ presidential_decree_regex = r'π.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-
 legislative_act_regex = r'Πράξη(|ς) Νομοθετικού Περιεχομένου'
 date = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'
 article_regex = ['άρθρο \d+', 'άρθρου \d+']
-paragraph_regex = ['παράγραφος \d+', 'παραγράφου \d+', 'παρ. \d+', 'παράγραφος']
+paragraph_regex = [
+    'παράγραφος \d+',
+    'παραγράφου \d+',
+    'παρ. \d+',
+    'παράγραφος']
+
 
 class Numerals:
 
     units = {
-        'πρώτ' : 1,
-        'δεύτερ' : 2,
-        'τρίτ' : 3,
-        'τέταρτ' : 4,
-        'πέμπτ' : 5,
-        'έκτ' : 6,
-        'έβδομ' : 7,
-        'όγδο' : 8,
-        'ένατ' : 9
+        'πρώτ': 1,
+        'δεύτερ': 2,
+        'τρίτ': 3,
+        'τέταρτ': 4,
+        'πέμπτ': 5,
+        'έκτ': 6,
+        'έβδομ': 7,
+        'όγδο': 8,
+        'ένατ': 9
     }
 
     inv_units = {
@@ -114,15 +128,15 @@ class Numerals:
     }
 
     tens = {
-        'δέκατ' : 10,
-        'εικοστ' : 20,
-        'τριακοστ' : 30,
-        'τεσσαρακοστ' : 40,
-        'πεντηκοστ' : 50,
-        'εξηκοστ' : 60,
-        'εβδομηκοστ' : 70,
-        'ογδοηκοστ' : 80,
-        'ενενηκοστ' : 90
+        'δέκατ': 10,
+        'εικοστ': 20,
+        'τριακοστ': 30,
+        'τεσσαρακοστ': 40,
+        'πεντηκοστ': 50,
+        'εξηκοστ': 60,
+        'εβδομηκοστ': 70,
+        'ογδοηκοστ': 80,
+        'ενενηκοστ': 90
     }
 
     inv_tens = {
@@ -138,51 +152,50 @@ class Numerals:
     }
 
     hundreds = {
-        'εκατοστ' : 100,
-        'διακοσιοστ' : 200,
-        'τριακοσιοστ' : 300,
-        'τετρακοσιοστ' : 400,
-        'πεντακοσιοστ' : 500,
-        'εξακοσιοστ' : 600,
-        'εφτακοσιοστ' : 700,
-        'επτακοστιοστ' : 700,
-        'οκτακοσιοστ' : 800,
-        'οχτακοσιοστ' : 800,
-        'εννιακοστιοστ' : 900
+        'εκατοστ': 100,
+        'διακοσιοστ': 200,
+        'τριακοσιοστ': 300,
+        'τετρακοσιοστ': 400,
+        'πεντακοσιοστ': 500,
+        'εξακοσιοστ': 600,
+        'εφτακοσιοστ': 700,
+        'επτακοστιοστ': 700,
+        'οκτακοσιοστ': 800,
+        'οχτακοσιοστ': 800,
+        'εννιακοστιοστ': 900
     }
 
     inv_hundreds = {
-         100: 'εκατοστ',
-         200: 'διακοσιοστ',
-         300: 'τριακοσιοστ',
-         400: 'τετρακοσιοστ',
-         500: 'πεντακοσιοστ',
-         600: 'εξακοσιοστ',
-         700: 'επτακοστιοστ',
-         800: 'οχτακοσιοστ',
-         900: 'εννιακοστιοστ'
-     }
+        100: 'εκατοστ',
+        200: 'διακοσιοστ',
+        300: 'τριακοσιοστ',
+        400: 'τετρακοσιοστ',
+        500: 'πεντακοσιοστ',
+        600: 'εξακοσιοστ',
+        700: 'επτακοστιοστ',
+        800: 'οχτακοσιοστ',
+        900: 'εννιακοστιοστ'
+    }
 
     @staticmethod
     def full_number_to_integer(s):
         result = 0
 
         for unit, val in Numerals.units.items():
-            if re.search(unit ,s) != None:
+            if re.search(unit, s) is not None:
                 result += val
                 break
         for ten, val in Numerals.tens.items():
-            if re.search(ten, s) != None:
+            if re.search(ten, s) is not None:
                 result += val
                 break
 
         for hundred, val in Numerals.hundreds.items():
-            if re.search(hundred, s) != None:
+            if re.search(hundred, s) is not None:
                 result += val
                 break
 
         return result
-
 
     @staticmethod
     def full_numeral_to_integer_from_list(tmp, index):
@@ -197,6 +210,7 @@ class Numerals:
                 result += number
                 k -= 1
         result
+
 
 class EditDistanceClassifier:
     """
@@ -225,12 +239,14 @@ class EditDistanceClassifier:
         else:
             return None, -1
 
-
     @staticmethod
     def classify_extract(extract, actions=actions):
         tmp = extract.split(' ')
-        d = list(filter(lambda x: x[0] != None, [
-                 EditDistanceClassifier.classify_word(w, actions) for w in tmp]))
+        d = list(
+            filter(
+                lambda x: x[0] is not None, [
+                    EditDistanceClassifier.classify_word(
+                        w, actions) for w in tmp]))
         print(d)
         amin = 0
         for i in range(len(d)):

@@ -30,10 +30,10 @@ def tsne_transform(model, outfile='point.pkl'):
     all_word_vectors_matrix_2d = tsne.fit_transform(
         all_word_vectors_matrix)  # This may take time, depending on Vocab
     points = pd.DataFrame([(word, coords[0], coords[1])
-                            for word, coords in [(word, all_word_vectors_matrix_2d[model.wv.vocab[word].index])
-                            for word in model.wv.vocab]
-                            ],
-                                columns=["word", "x", "y"])
+                           for word, coords in [(word, all_word_vectors_matrix_2d[model.wv.vocab[word].index])
+                                                for word in model.wv.vocab]
+                           ],
+                          columns=["word", "x", "y"])
     points.to_pickle(outfile)
 
 
@@ -43,7 +43,7 @@ def plot_points(filename='../models/point.pkl', N=100):
     y = points['y'].as_matrix()
     lbl = points['word'].as_matrix()
     pts = []
-    plt.figure();
+    plt.figure()
 
     for i in range(N):
         pts.append([x[i], y[i]])
@@ -51,6 +51,7 @@ def plot_points(filename='../models/point.pkl', N=100):
 
     plt.plot(x[:N], y[:N], '-o', linewidth=0.1, color='g')
     plt.show()
+
 
 if __name__ == '__main__':
     plot_points()
