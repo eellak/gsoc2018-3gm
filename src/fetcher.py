@@ -24,6 +24,7 @@ from http.client import RemoteDisconnected
 import platform
 from helpers import Helper
 
+
 def handle_download(download_page, params):
     """Original function"""
 
@@ -42,15 +43,16 @@ def handle_download(download_page, params):
         download_link = meta['content'].replace("0;url=", "")
 
         # We do the same process twice because it involves 2 redirects.
-        beautiful_soup = BeautifulSoup(Helper.get_url_contents(download_link), "html.parser")
+        beautiful_soup = BeautifulSoup(
+            Helper.get_url_contents(download_link), "html.parser")
         meta = beautiful_soup.find("meta", {"http-equiv": "REFRESH"})
         download_link = meta['content'].replace("0;url=", "")
     except RemoteDisconnected as e:
         print(e)
         return
 
+    Helper.download(download_link, filename, output_dir)
 
-    Helper.download(download_link, filename , output_dir)
 
 def extract_download_links(html, issue_type):
     """Original Function"""
@@ -66,7 +68,8 @@ def extract_download_links(html, issue_type):
         start_row = 1
         end_row = len(rows)
 
-    # We ignore the first 2 rows if there's pagination or the first row if there's not and the last one
+    # We ignore the first 2 rows if there's pagination or the first row if
+    # there's not and the last one
     for row in rows[start_row:end_row]:
         cells = row.find_all("td")
         info_cell = cells[1].find("b")
@@ -79,19 +82,29 @@ def extract_download_links(html, issue_type):
         issue_title = info_cell_text
         issue_date = info_cell_parts[1]
         issue_title_first = issue_title.split("-")[0]
-        issue_number = re.search(pattern=r'\d+', string=issue_title_first).group(0)
+        issue_number = re.search(
+            pattern=r'\d+',
+            string=issue_title_first).group(0)
 
         date_parts = issue_date.split(".")
-        issue_unix_date = datetime.datetime(day=int(date_parts[0]), month=int(date_parts[1]),
-                                            year=int(date_parts[2]))
+        issue_unix_date = datetime.datetime(
+            day=int(
+                date_parts[0]), month=int(
+                date_parts[1]), year=int(
+                date_parts[2]))
 
-        download_path = download_cell[1]['href'] if len(download_cell) > 1 else download_cell[0]['href']
+        download_path = download_cell[1]['href'] if len(
+            download_cell) > 1 else download_cell[0]['href']
         download_link = "http://www.et.gr" + download_path
-        params = {"issue_title": issue_title, "issue_date": issue_unix_date, "issue_number": issue_number,
-                  "issue_type": issue_type}
+        params = {
+            "issue_title": issue_title,
+            "issue_date": issue_unix_date,
+            "issue_number": issue_number,
+            "issue_type": issue_type}
         print('Download Link')
         print(download_link)
         handle_download(download_link, params)
+
 
 if __name__ == '__main__':
 
@@ -109,12 +122,15 @@ if __name__ == '__main__':
     global output_dir
     output_dir = args.output_dir
 
-    print('Fetching Government Gazette Issues from {} to {}'.format(date_from, date_to))
+    print(
+        'Fetching Government Gazette Issues from {} to {}'.format(
+            date_from,
+            date_to))
 
     # Initialize Driver
     driver = webdriver.Chrome('./chromedriver')
 
-    driver.get('http://www.et.gr/idocs-nph/search/fekForm.html');
+    driver.get('http://www.et.gr/idocs-nph/search/fekForm.html')
 
     driver.find_element_by_name("showhide").click()
 
@@ -128,7 +144,6 @@ if __name__ == '__main__':
     driver.find_element_by_name("fekEffectiveDateTo").send_keys(date_to)
     driver.find_element_by_name("fekEffectiveDateFrom").clear()
     driver.find_element_by_name("fekEffectiveDateFrom").send_keys(date_from)
-
 
     driver.find_element_by_name("chbIssue_1").click()
     driver.find_element_by_id("search").click()
@@ -147,7 +162,8 @@ if __name__ == '__main__':
             # Extract and handle download links.
             extract_download_links(driver.page_source, 'Α')
 
-            # We have to re-find the pagination list because the DOM has been rebuilt.
+            # We have to re-find the pagination list because the DOM has been
+            # rebuilt.
             pages = driver.find_elements_by_class_name("pagination_field")
             # Loads the next page of results
             if current_page + 1 < len(pages):
