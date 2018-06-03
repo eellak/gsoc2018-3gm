@@ -65,7 +65,11 @@ if __name__ == '__main__':
     codifier = LawCodifier()
 
     argc = len(sys.argv)
-    print(argc)
+
+	if argc > 1:
+		print('Please use one or more files as arguments')
+		sys.exit(0)
+
 
     for i in range(1, argc):
         codifier.codify(sys.argv[i])
