@@ -668,7 +668,6 @@ class LawParser:
 
 	def query_from_tree(self, tree):
 		"""Returns a serizlizable object from a tree in nested form"""
-		assert(tree['law']['_id'] == self.identifier)
 		if tree['root']['action'] in ['προστίθεται', 'αντικαθίσταται', 'τροποποιείται']:
 
 			try:
