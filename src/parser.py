@@ -91,6 +91,7 @@ class IssueParser:
         self.articles_as_paragraphs = {}
         self.sentences = {}
         self.find_articles()
+        self.detect_statutes()
 
     def split_article(self, article):
         paragraphs = collections.defaultdict(list)
@@ -107,7 +108,39 @@ class IssueParser:
         print(paragraph_ids)
         return paragraph_corpus
 
+    def detect_statutes(self):
+        """Detect all statutes within the issue
+        such as Laws, Decrees and Acts"""
 
+        self.statutes = []
+        self.laws = []
+        self.legislative_acts = []
+        self.legislative_decrees = []
+        self.presidential_decrees = []
+
+        for article in self.articles.keys():
+            for extract in self.get_non_extracts(article):
+
+                self.legislative_acts.extend(list(re.finditer(legislative_act_regex, extract)))
+                self.laws.extend(list(re.finditer(law_regex, extract)))
+                self.presidential_decrees.extend(list(re.finditer(presidential_decree_regex, extract)))
+                self.legislative_decrees.extend(list(re.finditer(legislative_decree_regex, extract)))
+
+
+        self.laws = [statute.group() for statute in self.laws]
+        self.legislative_acts = [statute.group() for statute in self.legislative_acts]
+        self.legislative_decrees = [statute.group() for statute in self.legislative_decrees]
+        self.presidential_decrees = [statute.group() for statute in self.presidential_decrees]
+
+        self.statutes.extend(self.laws)
+        self.statutes.extend(self.presidential_decrees)
+        self.statutes.extend(self.legislative_acts)
+        self.statutes.extend(self.legislative_decrees)
+
+        return self.statutes
+
+    def __contains__(self, key):
+        return key in self.statutes    
 
     def find_dates(self):
         """Detect all dates withing the given document"""
@@ -220,7 +253,6 @@ class IssueParser:
         can be found"""
 
         if len(self.extracts[article]) == 0:
-            print('No')
             yield self.articles[article]
             return
         x0, y0 = self.extracts[article][0]
