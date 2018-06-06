@@ -183,6 +183,8 @@ class IssueParser:
         can be found"""
 
         if len(self.extracts[article]) == 0:
+            print('No')
+            yield self.articles[article]
             return
         x0, y0 = self.extracts[article][0]
         yield self.articles[article][0: max(0, x0)]
@@ -500,7 +502,7 @@ class LawParser:
 
         return self.serialize()
 
-    def remove_paragraph(self, article, paragraph, content):
+    def remove_paragraph(self, article, paragraph):
         """Removal of paragraph"""
 
         article = str(article)
