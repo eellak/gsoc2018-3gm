@@ -125,7 +125,7 @@ def test_law_insertion():
 	flag = False
 
 	trees = {}
-	issue = parser.IssueParser('../data/testcases/testcase_1920_1991.txt')
+	issue = parser.IssueParser('../data/testcases/custom.txt')
 	for article in issue.articles.keys():
 		for i, extract in enumerate(issue.get_non_extracts(article)):
 			trees[i] = syntax.ActionTreeGenerator.generate_action_tree(extract, issue, article)
@@ -144,7 +144,7 @@ def test_law_insertion():
 	for x in cursor:
 		assert(x['articles']['1']['1'][0] == 'Εντός τριμήνου αφότου κενωθεί θέση Μουφτή, ο κατά τόπο αρμόδιος Νομάρχης, καλεί σε πράξη του τους ενδιαφερόμενους να την καταλάβουν, να υποβάλουν σχετική αίτηση')
 		assert(x['articles']['5']['6'][0] == 'Στη νέα παράγραφο έχουμε ότι με προεδρικό διάταγμα που εκδίδεται με πρόταση των Υπουργών Παιδείας, Έρευνας και Θρησκευμάτων και Δικαιοσύνης, Διαφάνειας και Ανθρωπίνων Δικαιωμάτων καθορίζονται όλοι οι αναγκαίοι δικονομικοί κανόνες για τη συζήτηση της υπόθεσης ενώπιον του Μουφτή και την έκδοση των αποφάσεών του και ιδίως η διαδικασία υποβολής αιτήσεως των μερών, η οποία πρέπει να περιέχει τα στοιχεία των εισαγωγικών δικογράφων κατά τον Κώδικα Πολιτικής Δικονομίας και, επί ποινή ακυρότητας, ρητή ανέκκλητη δήλωση κάθε διαδίκου περί')
-		
+
 def test_issue_serializer_to_db(filename='../data/17.txt'):
 	db.drop_issues()
 	issue = parser.IssueParser(filename)
