@@ -10,7 +10,7 @@
 
 1. [Installation Instructions](https://github.com/eellak/gsoc2018-3gm/wiki/Installation)
 2. [Fetching Documents](https://github.com/eellak/gsoc2018-3gm/wiki/Fetching-Documents)
-3. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier) (Work in phttps://github.com/eellak/gsoc2018-3gm/wiki/Fetching-Documentsrogress)
+3. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier) (Work in progress) 
 
 
 
