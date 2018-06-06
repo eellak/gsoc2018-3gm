@@ -93,9 +93,9 @@ with open('../resources/greek_stoplist.dat') as f:
 try:
 	issues = parser.get_issues_from_dataset(sys.argv[1])
 
-except IndexError:
+except:
 	print('Using default directory ../data')
-	issues = parser.get_issues_from_dataset()
+	issues = parser.get_issues_from_dataset('../data/new')
 
 issues_dict = {}
 

@@ -11,6 +11,7 @@ from syntax import *
 import os
 import gensim
 import mimetypes
+import logging
 import pprint
 from gensim.models import KeyedVectors
 import logging
@@ -99,12 +100,15 @@ class IssueParser:
                 self.dates.append((i, result))
 
         if self.dates == []:
-            raise Exception('Could not find dates!')
-
-        self.issue_date = string_to_date(self.dates[0][1][0])
-        self.signed_date = self.dates[-1]
-
-        return self.dates
+            logging.warning('Could not find dates!')
+            return []
+        try:
+            self.issue_date = string_to_date(self.dates[0][1][0])
+            self.signed_date = self.dates[-1]
+        except IndexError:
+            logging.warning('Could not find dates!')
+        finally:
+            return self.dates
 
     def find_articles(self, min_extract_chars=100):
         """Split the document into articles,
@@ -263,6 +267,7 @@ def generate_model_from_government_gazette_issues(directory='../data'):
     all_sentences = []
     for filename in filelist:
         outfile = filename.strip('.pdf') + '.txt'
+        print(outfile)
         if not os.path.isfile(outfile):
             os.system('pdf2txt.py {} > {}'.format(filename, outfile))
         issue = IssueParser(outfile)
@@ -282,6 +287,7 @@ def get_issues_from_dataset(directory='../data'):
     issues = []
     for filename in filelist:
         outfile = filename.strip('.pdf') + '.txt'
+        print(outfile)
         if not os.path.isfile(outfile):
             os.system('pdf2txt.py {} > {}'.format(filename, outfile))
         issue = IssueParser(outfile)
