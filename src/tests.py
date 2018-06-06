@@ -108,7 +108,6 @@ def test_law_parser(filename='../data/24_12_1990_legislative_act.txt', identifie
 		assert(x['articles']['6']['1'][1] == 'Some Replaced Insert before example Example After Ammended Context.')
 		assert(x['articles']['6']['2'][0] == 'This is the second paragraph')
 		assert(x['articles']['6']['2'][1] == 'Lorem Ipsum')
-testcase_1920_1991
 	print('Testing Deletions')
 
 	law.remove_period('Inserted before other period', '6', '1')
