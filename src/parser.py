@@ -88,8 +88,26 @@ class IssueParser:
         self.dates = []
         self.find_dates()
         self.articles = {}
+        self.articles_as_paragraphs = {}
         self.sentences = {}
         self.find_articles()
+
+    def split_article(self, article):
+        paragraphs = collections.defaultdict(list)
+
+        paragraph_ids = [par_id.group().strip('. ')
+                         for par_id in re.finditer(r'\d+. ', self.articles[article])]
+        paragraph_corpus = list(
+            filter(
+                lambda x: x.rstrip() != '',
+                re.split(
+                    r'\d+. ',
+                    self.articles[article])))
+        paragraph_corpus = [p.rstrip().lstrip() for p in paragraph_corpus]
+        print(paragraph_ids)
+        return paragraph_corpus
+
+
 
     def find_dates(self):
         """Detect all dates withing the given document"""
@@ -125,9 +143,28 @@ class IssueParser:
                 self.articles[line] = ''
 
         for j in range(len(article_indices) - 1):
-            self.articles[article_indices[j][1]] = ''.join(
-                self.lines[article_indices[j][0] + 1: article_indices[j + 1][0]])
 
+            content = self.lines[article_indices[j][0] + 1: article_indices[j + 1][0]]
+            paragraphs = collections.defaultdict(list)
+            current = '0'
+            for t in content:
+                x = re.search(r'\d+. ', t)
+                if x and x.span() in [(0, 3), (0,4)]:
+                    current = x.group().strip('. ')
+                paragraphs[current].append(t)
+
+            sentences = {}
+
+            for par in paragraphs.keys():
+                val = ''.join(paragraphs[par])[1:]
+                paragraphs[par] = val
+                sentences[par] = list(
+                    filter(
+                        lambda x: x.rstrip() != '',
+                        val.split('. ')))
+
+            self.articles[article_indices[j][1]] = ''.join(content)
+            self.articles_as_paragraphs[article_indices[j][1]] = paragraphs
         try:
             del self.articles['Ο Πρόεδρος της Δημοκρατίας']
         except BaseException:
