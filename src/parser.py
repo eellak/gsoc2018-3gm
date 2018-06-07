@@ -89,9 +89,13 @@ class IssueParser:
         self.find_dates()
         self.articles = {}
         self.articles_as_paragraphs = {}
+        self.name = filename.replace('.pdf', '')
         self.sentences = {}
         self.find_articles()
         self.detect_statutes()
+
+    def __str__(self):
+        return self.name
 
     def split_article(self, article):
         paragraphs = collections.defaultdict(list)
@@ -139,10 +143,9 @@ class IssueParser:
         return False
 
     def find_statute(self, key):
-        for article in self.articles.keys():
+        for article in sorted(self.articles.keys()):
             if key in self.statutes[article]:
                 yield article
-        return
 
     def find_dates(self):
         """Detect all dates withing the given document"""
