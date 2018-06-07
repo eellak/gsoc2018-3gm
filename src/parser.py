@@ -112,35 +112,37 @@ class IssueParser:
         """Detect all statutes within the issue
         such as Laws, Decrees and Acts"""
 
-        self.statutes = []
-        self.laws = []
-        self.legislative_acts = []
-        self.legislative_decrees = []
-        self.presidential_decrees = []
+        self.statutes = {}
 
         for article in self.articles.keys():
             for extract in self.get_non_extracts(article):
 
-                self.legislative_acts.extend(list(re.finditer(legislative_act_regex, extract)))
-                self.laws.extend(list(re.finditer(law_regex, extract)))
-                self.presidential_decrees.extend(list(re.finditer(presidential_decree_regex, extract)))
-                self.legislative_decrees.extend(list(re.finditer(legislative_decree_regex, extract)))
+                legislative_acts = list(re.finditer(legislative_act_regex, extract))
+                laws = list(re.finditer(law_regex, extract))
+                presidential_decrees = list(re.finditer(presidential_decree_regex, extract))
+                legislative_decrees = list(re.finditer(legislative_decree_regex, extract))
 
+                self.statutes[article] = []
+                self.statutes[article].extend(laws)
+                self.statutes[article].extend(legislative_acts)
+                self.statutes[article].extend(presidential_decrees)
+                self.statutes[article].extend(legislative_decrees)
 
-        self.laws = [statute.group() for statute in self.laws]
-        self.legislative_acts = [statute.group() for statute in self.legislative_acts]
-        self.legislative_decrees = [statute.group() for statute in self.legislative_decrees]
-        self.presidential_decrees = [statute.group() for statute in self.presidential_decrees]
-
-        self.statutes.extend(self.laws)
-        self.statutes.extend(self.presidential_decrees)
-        self.statutes.extend(self.legislative_acts)
-        self.statutes.extend(self.legislative_decrees)
+                self.statutes[article] = [statute.group() for statute in self.statutes[article]]
 
         return self.statutes
 
     def __contains__(self, key):
-        return key in self.statutes    
+        for article in self.articles.keys():
+            if key in self.statutes[article]:
+                return True
+        return False
+
+    def find_statute(self, key):
+        for article in self.articles.keys():
+            if key in self.statutes[article]:
+                yield article
+        return
 
     def find_dates(self):
         """Detect all dates withing the given document"""
