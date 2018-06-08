@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/papachristoumarios/gsoc2018-3gm.svg?branch=master)](https://travis-ci.org/papachristoumarios/gsoc2018-3gm)
 ![license](https://img.shields.io/badge/license-GPL--3.0--or--later-orange.svg)
 ![language](https://img.shields.io/badge/python-3.x-green.svg)
-
+[![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
 
 # gsoc2018-3gm

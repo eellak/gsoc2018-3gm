@@ -8,6 +8,8 @@ import pprint
 global db
 db = database.Database()
 
+# TODO New tests
+
 # Entities Tests
 
 def test_full_numbers_to_integer():
