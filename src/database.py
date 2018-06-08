@@ -65,13 +65,19 @@ class Database:
     def query_from_tree(self, law, tree, issue_name=None):
         print('Querying from tree')
         result = law.query_from_tree(tree)
+        result['_version'] = law.version_index
 
         if issue_name:
             result['amendee'] = issue_name
 
-        # TODO Insert instead of $set
-            
-        self.laws.update({"_id" : law.identifier },{'$set' :
-            {"versions": { str(law.version_index) : result } }},
-            upsert=True
-        )
+        cur = self.laws.find({"_id" : law.identifier, "versions.amendee": { "$ne" : issue_name} } )
+        temp = next(cur)
+
+        if 'versions' in temp.keys():
+            temp['versions'].append(result)
+        else:
+            temp['versions'] = [result]
+
+        print(temp)
+
+        self.laws.save(temp)

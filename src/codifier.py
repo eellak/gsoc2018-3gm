@@ -3,7 +3,7 @@ import syntax
 import entities
 import parser
 import database
-
+import pprint
 
 class UnrecognizedCodificationAction(Exception):
 
@@ -22,13 +22,19 @@ class LawCodifier:
 			self.populate_issues(issues_directory)
 
 	def populate_laws(self):
-		cursor = self.db.laws.find({})
+		cursor = self.db.laws.find({"versions":{ "$ne" : None}})
 		for x in cursor:
 			print(x)
-			versions = [int(v) for v in x['versions'].keys()]
-			current_version = str(max(versions))
-			law, identifier = parser.LawParser.from_serialized(x['versions'][current_version])
-			law.version_index = int(current_version)
+			current_version = 0
+			current_instance = None
+			for v in x['versions']:
+				if int(v['_version']) >= current_version:
+					current_version = int(v['_version'])
+					current_instance = v
+
+
+			law, identifier = parser.LawParser.from_serialized(v)
+			law.version_index = current_version
 			self.laws[identifier] = law
 
 	def populate_issues(self, directory):
@@ -100,11 +106,12 @@ class LawCodifier:
 						print('\nPress any key to continue')
 						input()
 
+	def get_law(self, identifier):
+		cur = self.db.laws.find({'_id' : identifier})
 
-
-
-
-
+		for x in cur:
+			for y in x['versions']:
+				pprint.pprint(y)
 
 if __name__ == '__main__':
 	codifier = LawCodifier()
