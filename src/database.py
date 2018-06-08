@@ -71,7 +71,12 @@ class Database:
             result['amendee'] = issue_name
 
         cur = self.laws.find({"_id" : law.identifier, "versions.amendee": { "$ne" : issue_name} } )
-        temp = next(cur)
+        cur = list(cur)
+        if cur == []:
+            self.laws.save({'_id': law.identifier})
+            temp = {'_id' : law.identifier}
+        else:
+            temp = cur[0]
 
         if 'versions' in temp.keys():
             temp['versions'].append(result)
