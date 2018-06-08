@@ -48,8 +48,12 @@ class ActionTreeGenerator:
 
         laws = [law.group() for law in laws]
 
+        print('Laws are', laws)
+
 
         law = ActionTreeGenerator.get_latest_statute(laws)
+
+        return law
 
 
     @staticmethod

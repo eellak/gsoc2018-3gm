@@ -62,6 +62,16 @@ class Database:
         law = parser.LawParser(filename, identifier)
         self.push_law_to_db(law.__dict__())
 
-    def query_from_tree(self, law, tree):
+    def query_from_tree(self, law, tree, issue_name=None):
+        print('Querying from tree')
         result = law.query_from_tree(tree)
-        self.laws.save(result)
+
+        if issue_name:
+            result['amendee'] = issue_name
+
+        # TODO Insert instead of $set
+            
+        self.laws.update({"_id" : law.identifier },{'$set' :
+            {"versions": { str(law.version_index) : result } }},
+            upsert=True
+        )

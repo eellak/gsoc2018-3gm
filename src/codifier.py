@@ -25,7 +25,10 @@ class LawCodifier:
 		cursor = self.db.laws.find({})
 		for x in cursor:
 			print(x)
-			law, identifier = parser.LawParser.from_serialized(x)
+			versions = [int(v) for v in x['versions'].keys()]
+			current_version = str(max(versions))
+			law, identifier = parser.LawParser.from_serialized(x['versions'][current_version])
+			law.version_index = int(current_version)
 			self.laws[identifier] = law
 
 	def populate_issues(self, directory):
@@ -86,7 +89,8 @@ class LawCodifier:
 								print('Not in keys')
 								self.laws[law_id] = parser.LawParser(law_id)
 
-							self.db.query_from_tree(self.laws[law_id], t)
+							print('Ammendee, ', issue.name)
+							self.db.query_from_tree(self.laws[law_id], t, issue.name)
 
 							print('Pushed to Database')
 						except Exception as e:

@@ -400,6 +400,7 @@ class LawParser:
         """
         self.lines = []
         self.identifier = identifier
+        self.version_index = 0
         if filename and isinstance(filename, str):
             self.filename = filename
             tmp_lines = []
@@ -486,6 +487,8 @@ class LawParser:
         """Returns the object in database-friendly format
         in a dictionary.
         """
+        self.version_index += 1
+
         return {
             '_id': self.identifier,
             'thesaurus': self.thesaurus,
@@ -838,5 +841,6 @@ class LawParser:
                 return self.remove_paragraph(
                     tree['law']['article']['_id'],
                     tree['law']['article']['paragraph']['_id'])
+
 
         return self.serialize()
