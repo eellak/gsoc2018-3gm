@@ -469,6 +469,12 @@ class LawParser:
         return self.identifier
 
     def fix_paragraphs(self, lines, get_title=True):
+        """Fix paragraphs in a text. That means that
+        a corpus of lines enumerated with natural numbers
+        1., 2., etc. would be groupped into respective
+        paragraps
+
+        """
         result = []
 
         if lines[0].startswith('Άρθρο'):
@@ -505,8 +511,24 @@ class LawParser:
 
             return result, title
         else:
-            result = [''.join(lines) for line in lines]
-            return result, None
+            splitter = -1
+            for i, line in enumerate(lines):
+                if line.rstrip() == '':
+                    splitter = i
+                    break
+
+            # Split in first ' ' character
+            # The article title is before the space character(s)
+            # The rest is after the space character(s)
+            if splitter != -1:
+                print('hohoho')
+                title = ''.join(lines[:splitter])
+                result = '1. ' + ''.join(lines[splitter:])
+            else:
+                print('thiago splitter')
+                result = ''.join(lines)
+                title = ''
+            return result, title
 
 
     def find_corpus(self, fix_paragraphs=True):
@@ -531,7 +553,7 @@ class LawParser:
                 self.corpus[article] = fixed_lines
                 print(article, title)
 
-        # TODO continue from here         
+        # TODO continue from here
 
         for article in self.corpus.keys():
             for i, line in enumerate(self.corpus[article]):
@@ -935,4 +957,6 @@ if __name__ == '__main__':
     for k in new_laws.keys():
         new_laws[k].lines = issue.lines
         new_laws[k].find_corpus()
-        print(new_laws[k].articles.keys())
+        while 42:
+            x = input()
+            print(new_laws[k].corpus[x])
