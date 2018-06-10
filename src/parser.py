@@ -473,7 +473,6 @@ class LawParser:
         a corpus of lines enumerated with natural numbers
         1., 2., etc. would be groupped into respective
         paragraps
-
         """
         result = []
 
@@ -950,13 +949,3 @@ class LawParser:
 
 
         return self.serialize()
-
-if __name__ == '__main__':
-    issue = IssueParser('../data/15.txt')
-    new_laws = issue.detect_new_laws()
-    for k in new_laws.keys():
-        new_laws[k].lines = issue.lines
-        new_laws[k].find_corpus()
-        while 42:
-            x = input()
-            print(new_laws[k].corpus[x])

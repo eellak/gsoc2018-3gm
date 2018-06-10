@@ -8,7 +8,16 @@ import pprint
 global db
 db = database.Database()
 
-# TODO New tests
+# Law Parsing Tests
+
+def test_law_parsing_from_government_gazette_issue():
+	issue = parser.IssueParser('../data/15.txt')
+	new_laws = issue.detect_new_laws()
+	for k in new_laws.keys():
+		new_laws[k].lines = issue.lines
+		new_laws[k].find_corpus()
+		assert(new_laws[k].corpus['15'] == '1.  Η Επιτροπή Κεφαλαιαγοράς χορηγεί άδεια λειτουργίας Α.Ε.Π.Ε.Υ. μόνον εφόσον η αιτούσα εταιρεία έχει επαρκές  αρχικό κεφάλαιο, σύμφωνα με τις απαιτήσεις του Κανονισμού (ΕΕ) 575/2013, λαμβανομένης υπόψη της φύσης της σχετικής επενδυτικής υπηρεσίας ή δραστηριότητας. ')
+
 
 # Entities Tests
 
