@@ -468,6 +468,42 @@ class LawParser:
     def __str__(self):
         return self.identifier
 
+    def fix_paragraphs(self, lines, get_title=True):
+        result = []
+
+        if lines[0].startswith('Άρθρο'):
+            lines.pop()
+
+        indices = []
+        start = 0
+
+        for i, t in enumerate(lines):
+            x = re.search(r'\d+. ', t)
+            if x and x.span() in [(0, 3), (0, 4)]:
+                number = int(x.group().split('.')[0])
+                if number == start + 1:
+                    print(i)
+                    indices.append(i)
+                    start += 1
+
+
+        for j in range(len(indices) - 1):
+
+            content = lines[indices[j] : indices[j + 1]]
+            result.append(content)
+
+        result.append(lines[indices[-1]:])
+
+        result = [''.join(r) for r in result]
+
+        if get_title:
+            title = ''.join(lines[:indices[0]])
+        else:
+            title = None
+
+        return lines, title
+
+
     def find_corpus(self):
         """Analyzes the corpus to articles, paragraphs and
         then sentences
@@ -483,11 +519,12 @@ class LawParser:
             name = self.lines[x].rstrip().strip('Αρθρο: ').strip('Άρθρο ')
             self.corpus[name] = self.lines[x: y]
 
-        # TODO remove after dev
-        # try:
-        #     print(self.corpus['2'])
-        # except:
-        #     pass
+        #TODO remove after dev
+        try:
+            print(self.corpus['2'])
+            print(self.fix_paragraphs(self.corpus['2']))
+        except:
+            pass
 
         for article in self.corpus.keys():
             for i, line in enumerate(self.corpus[article]):
