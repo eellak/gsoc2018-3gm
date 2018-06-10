@@ -12,11 +12,12 @@ db = database.Database()
 
 def test_law_parsing_from_government_gazette_issue():
 	issue = parser.IssueParser('../data/15.txt')
+	db.issues.save(issue.__dict__())
 	new_laws = issue.detect_new_laws()
 	for k in new_laws.keys():
-		new_laws[k].lines = issue.lines
-		new_laws[k].find_corpus()
 		assert(new_laws[k].corpus['15'] == '1.  Η Επιτροπή Κεφαλαιαγοράς χορηγεί άδεια λειτουργίας Α.Ε.Π.Ε.Υ. μόνον εφόσον η αιτούσα εταιρεία έχει επαρκές  αρχικό κεφάλαιο, σύμφωνα με τις απαιτήσεις του Κανονισμού (ΕΕ) 575/2013, λαμβανομένης υπόψη της φύσης της σχετικής επενδυτικής υπηρεσίας ή δραστηριότητας. ')
+		db.laws.save(new_laws[k].__dict__())
+
 
 
 # Entities Tests
@@ -161,5 +162,4 @@ def test_issue_serializer_to_db(filename='../data/17.txt'):
 	db.insert_issue_to_db(issue)
 
 if __name__ == '__main__':
-	test_law_insertion()
-	db.print_laws()
+	test_law_parsing_from_government_gazette_issue()
