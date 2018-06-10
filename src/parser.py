@@ -329,6 +329,40 @@ class IssueParser:
         self.model.wv.save_word2vec_format('model')
 
 
+    def detect_new_laws(self):
+        new_law_regex = r'NOMOΣ ΥΠ’ ΑΡΙΘΜ. [0-9][0-9][0-9][0-9]'
+        new_law_phrase = 'Εκδίδομε τον ακόλουθο νόμο που ψήφισε η Βουλή'
+        self.new_laws = {}
+
+        for i, line in enumerate(self.lines):
+
+
+            result = re.search(new_law_regex, line)
+            if result:
+                result = result.group().rstrip().split(' ')
+                try:
+                    year, month, day = self.issue_date.split('-')
+                except:
+                    year = datetime.date.today().year
+
+                identifier = 'ν. {}/{}'.format(result[-1], year)
+                print(identifier)
+
+                ignore = True
+
+                for new_line in self.lines[i:]:
+                    if re.search(new_law_phrase, new_line):
+                        ignore = False
+                        break
+
+                if ignore:
+                    continue
+                else:
+                    self.new_laws[identifier] = LawParser(identifier)
+
+        return self.new_laws
+
+
 class UnrecognizedFileException(Exception):
 
     def __init__(self, filename):
@@ -440,14 +474,20 @@ class LawParser:
         """
         idx = []
         for i, line in enumerate(self.lines):
-            if line.startswith('Αρθρο:'):
+            if line.startswith('Αρθρο:') or line.startswith('Άρθρο'):
                 idx.append(i)
 
         for j in range(len(idx) - 1):
             x, y = idx[j], idx[j + 1]
             self.lines[x] = self.lines[x].strip(':').replace(':\t', ' ')
-            name = self.lines[x].rstrip().strip('Αρθρο: ')
+            name = self.lines[x].rstrip().strip('Αρθρο: ').strip('Άρθρο ')
             self.corpus[name] = self.lines[x: y]
+
+        # TODO remove after dev
+        # try:
+        #     print(self.corpus['2'])
+        # except:
+        #     pass
 
         for article in self.corpus.keys():
             for i, line in enumerate(self.corpus[article]):
@@ -457,7 +497,7 @@ class LawParser:
                     current = '0'
                     for t in self.articles[article]:
                         x = re.search(r'\d+. ', t)
-                        if x and x.span() == (0, 3):
+                        if x and x.span() in [(0, 3), (0, 4)]:
                             current = x.group().strip('. ')
                         paragraphs[current].append(t)
 
@@ -844,3 +884,11 @@ class LawParser:
 
 
         return self.serialize()
+
+if __name__ == '__main__':
+    issue = IssueParser('../data/15.txt')
+    new_laws = issue.detect_new_laws()
+    for k in new_laws.keys():
+        new_laws[k].lines = issue.lines
+        new_laws[k].find_corpus()
+        print(new_laws[k].articles.keys())
