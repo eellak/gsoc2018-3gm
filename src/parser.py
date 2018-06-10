@@ -460,7 +460,7 @@ class LawParser:
         self.corpus = {}
         self.sentences = collections.defaultdict(dict)
 
-        self.find_corpus()
+        self.find_corpus(fix_paragraphs=False)
 
     def __repr__(self):
         return self.identifier
@@ -480,9 +480,11 @@ class LawParser:
         for i, t in enumerate(lines):
             x = re.search(r'\d+. ', t)
             if x and x.span() in [(0, 3), (0, 4)]:
-                number = int(x.group().split('.')[0])
+                try:
+                    number = int(x.group().split('.')[0])
+                except:
+                    continue
                 if number == start + 1:
-                    print(i)
                     indices.append(i)
                     start += 1
 
@@ -492,19 +494,22 @@ class LawParser:
             content = lines[indices[j] : indices[j + 1]]
             result.append(content)
 
-        result.append(lines[indices[-1]:])
+        if result != []:
+            result.append(lines[indices[-1]:])
+            result = [''.join(r) for r in result]
 
-        result = [''.join(r) for r in result]
+            if get_title:
+                title = ''.join(lines[:indices[0]])
+            else:
+                title = None
 
-        if get_title:
-            title = ''.join(lines[:indices[0]])
+            return result, title
         else:
-            title = None
+            result = [''.join(lines) for line in lines]
+            return result, None
 
-        return lines, title
 
-
-    def find_corpus(self):
+    def find_corpus(self, fix_paragraphs=True):
         """Analyzes the corpus to articles, paragraphs and
         then sentences
         """
@@ -519,12 +524,14 @@ class LawParser:
             name = self.lines[x].rstrip().strip('Αρθρο: ').strip('Άρθρο ')
             self.corpus[name] = self.lines[x: y]
 
-        #TODO remove after dev
-        try:
-            print(self.corpus['2'])
-            print(self.fix_paragraphs(self.corpus['2']))
-        except:
-            pass
+        if fix_paragraphs:
+            for article in self.corpus.keys():
+                fixed_lines, title = self.fix_paragraphs(self.corpus[article])
+                self.titles[article] = title
+                self.corpus[article] = fixed_lines
+                print(article, title)
+
+        # TODO continue from here         
 
         for article in self.corpus.keys():
             for i, line in enumerate(self.corpus[article]):
