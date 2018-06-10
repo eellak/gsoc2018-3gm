@@ -105,7 +105,7 @@ def test_action_tree_generator_insert_and_replace():
 # Parser Unit Tests
 
 
-def test_law_parser(
+def _test_law_parser(
         filename='../data/24_12_1990_legislative_act.txt',
         identifier='ν. 1920/1921'):
     db.drop_laws()
@@ -154,8 +154,8 @@ def test_law_parser(
     for x in cursor:
         assert(x['articles']['6']['2'][1] == 'Lorem ')
 
-
-def test_law_insertion():
+# OBSOLETE
+def _test_law_insertion():
 
     law = parser.LawParser(
         'ν. 1920/1991',
@@ -192,4 +192,4 @@ def test_issue_serializer_to_db(filename='../data/17.txt'):
 
 
 if __name__ == '__main__':
-    test_law_parsing_from_government_gazette_issue()
+	test_law_parsing_from_government_gazette_issue()
