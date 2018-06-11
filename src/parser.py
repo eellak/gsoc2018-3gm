@@ -81,7 +81,7 @@ class IssueParser:
 					n = int(line)
 					continue
 				except ValueError:
-					self.lines.append(line)
+					self.lines.append(line.lstrip().rstrip())
 					if line.startswith('Αρ. Φύλλου'):
 						self.issue_number = int(line.split(' ')[-2])
 
@@ -358,7 +358,6 @@ class IssueParser:
 		4. Keep the new laws in a dictionary"""
 
 		new_law_regex = r'(NOMOΣ|ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ|ΚΟΙΝΗ ΥΠΟΥΡΓΙΚΗ ΑΠΟΦΑΣΗ|ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ) ΥΠ’ ΑΡΙΘΜ. [0-9][0-9][0-9][0-9]'
-		new_law_phrase = 'Εκδίδομε τον ακόλουθο νόμο που ψήφισε η Βουλή'
 		self.new_laws = {}
 
 		for i, line in enumerate(self.lines):
@@ -372,22 +371,14 @@ class IssueParser:
 					year = datetime.date.today().year
 
 				identifier = 'ν. {}/{}'.format(result[-1], year)
-				print(identifier)
+				print('Issue: ', self.name, 'Identifier: ', identifier)
 
 				ignore = True
 
-				for new_line in self.lines[i:]:
-					if re.search(new_law_phrase, new_line):
-						ignore = False
-						break
-
-				if ignore:
-					continue
-				else:
-					self.new_laws[identifier] = LawParser(identifier)
-					self.new_laws[identifier].lines = self.lines
-					self.new_laws[identifier].find_corpus(
-						government_gazette_issue=True)
+				self.new_laws[identifier] = LawParser(identifier)
+				self.new_laws[identifier].lines = self.lines
+				self.new_laws[identifier].find_corpus(
+					government_gazette_issue=True)
 
 		return self.new_laws
 
@@ -555,6 +546,15 @@ class LawParser:
 				title = ''
 			return result, title
 
+	def fix_name(self, name):
+		if name.isdigit():
+			return name
+		else:
+			try:
+				return str(Numerals.full_number_to_integer(name))
+			except:
+				return name
+
 	def find_corpus(self, government_gazette_issue=False, fix_paragraphs=True):
 		"""Analyzes the corpus to articles, paragraphs and
 		then sentences
@@ -564,14 +564,13 @@ class LawParser:
 			if line.startswith('Αρθρο:') or line.startswith('Άρθρο '):
 				idx.append(i)
 
-		print(idx)
 		for j in range(len(idx) - 1):
 			x, y = idx[j], idx[j + 1]
 			self.lines[x] = self.lines[x].strip(':').replace(':\t', ' ')
-			name = self.lines[x].rstrip().strip('Αρθρο: ').strip('Άρθρο ')
+			name = self.lines[x].rstrip().replace('Αρθρο: ', '').replace('Άρθρο ', '')
+			name = self.fix_name(name)
 			self.corpus[name] = self.lines[x: y]
 
-		print(self.corpus)
 
 		if fix_paragraphs:
 

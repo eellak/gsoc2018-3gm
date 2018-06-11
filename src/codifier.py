@@ -106,6 +106,23 @@ class LawCodifier:
 						print('\nPress any key to continue')
 						input()
 
+	def detect_new_laws(self):
+		for issue in self.issues:
+			new_laws = issue.detect_new_laws()
+			for k in new_laws.keys():
+				try:
+					serializable = new_laws[k].__dict__()
+					serializable['_version'] = 0
+					serializable['amendee'] = issue.name
+					self.db.laws.save({
+						'_id' : new_laws[k].identifier,
+						'versions' : [
+							serializable
+						]
+					})
+				except:
+					pass
+
 	def get_law(self, identifier):
 		cur = self.db.laws.find({'_id' : identifier})
 
