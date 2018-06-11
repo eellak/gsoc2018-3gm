@@ -11,7 +11,7 @@ db = database.Database()
 # Law Parsing Tests
 
 
-def test_law_parsing_from_government_gazette_issue():
+def _test_law_parsing_from_government_gazette_issue():
     issue = parser.IssueParser('../data/15.txt')
     db.issues.save(issue.__dict__())
     new_laws = issue.detect_new_laws()
@@ -52,7 +52,7 @@ def test_action_tree_generator_insert_query(
     db.print_laws()
 
 
-def test_action_tree_generator_delete_query(
+def _test_action_tree_generator_delete_query(
         filename='../data/testcases/deleter.txt'):
     trees = {}
     law = parser.LawParser(
