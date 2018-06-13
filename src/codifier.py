@@ -2,6 +2,7 @@ import sys
 import syntax
 import entities
 import parser
+import helpers
 import database
 import pprint
 
@@ -24,7 +25,7 @@ class LawCodifier:
 	def populate_laws(self):
 		cursor = self.db.laws.find({"versions":{ "$ne" : None}})
 		for x in cursor:
-			print(x)
+
 			current_version = 0
 			current_instance = None
 			for v in x['versions']:
@@ -106,7 +107,7 @@ class LawCodifier:
 						print('\nPress any key to continue')
 						input()
 
-	def detect_new_laws(self):
+	def codify_new_laws(self):
 		for issue in self.issues:
 			new_laws = issue.detect_new_laws()
 			for k in new_laws.keys():
@@ -125,10 +126,26 @@ class LawCodifier:
 
 	def get_law(self, identifier):
 		cur = self.db.laws.find({'_id' : identifier})
-
+		result = ''
 		for x in cur:
 			for y in x['versions']:
-				pprint.pprint(y)
+				result = result + '\section* {{ Version  {} }} \n'.format(y['_version'])
+				for article in sorted(y['articles'].keys()):
+					result = result + '\subsection*{{ Άρθρο {} }}\n'.format(article)
+					for paragraph in sorted(y['articles'][article].keys()):
+						result = result + '\paragraph {{ {}. }} {}\n'.format(paragraph, '. '.join(y['articles'][article][paragraph]))
+
+		return result
+
+def test():
+
+	cod = LawCodifier('../data/new')
+	cod.codify_new_laws()
+	print('Enter a law you wish to texify')
+	ans = input()
+
+	result = cod.get_law(ans)
+	helpers.texify(s, ans + '.tex')
 
 if __name__ == '__main__':
 	codifier = LawCodifier()

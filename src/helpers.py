@@ -294,3 +294,10 @@ def string_to_date(d):
             break
 
     return date(int(year), month, int(day))
+
+def texify(s, outfile):
+    # TODO complete texifier
+    with open(outfile, 'w') as f:
+        f.write(result)
+
+    return result
