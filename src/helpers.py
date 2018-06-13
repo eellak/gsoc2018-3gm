@@ -298,7 +298,13 @@ def string_to_date(d):
 def texify(s, outfile):
     # TODO complete texifier
     f =  open(outfile, 'w+')
+    with open('../resources/greek_template.tex') as tmp:
+        lines = tmp.readlines()
+    for line in lines:
+        f.write(line)
     f.write(s)
+    f.write('\end{document}')
     f.close()
 
+    os.system('xelatex {}'.format(outfile))
     return s
