@@ -297,7 +297,8 @@ def string_to_date(d):
 
 def texify(s, outfile):
     # TODO complete texifier
-    with open(outfile, 'w') as f:
-        f.write(result)
+    f =  open(outfile, 'w+')
+    f.write(s)
+    f.close()
 
-    return result
+    return s

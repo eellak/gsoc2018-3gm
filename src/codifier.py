@@ -145,7 +145,7 @@ def test():
 	ans = input()
 
 	result = cod.get_law(ans)
-	helpers.texify(s, ans + '.tex')
+	helpers.texify(result, 'foo.tex')
 
 if __name__ == '__main__':
 	codifier = LawCodifier()
