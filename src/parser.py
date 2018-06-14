@@ -357,28 +357,49 @@ class IssueParser:
 		3. Construction of LawParser Objects and parse the law corpus
 		4. Keep the new laws in a dictionary"""
 
-		new_law_regex = r'(NOMOΣ|ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ|ΚΟΙΝΗ ΥΠΟΥΡΓΙΚΗ ΑΠΟΦΑΣΗ|ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ) ΥΠ’ ΑΡΙΘΜ. [0-9][0-9][0-9][0-9]'
+
+		new_law_regex = r'(NOMOΣ|ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ|ΚΟΙΝΗ ΥΠΟΥΡΓΙΚΗ ΑΠΟΦΑΣΗ|ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ) ΥΠ’ ΑΡΙΘΜ. (\d+)'
 		self.new_laws = {}
+		regions_of_interest = []
 
 		for i, line in enumerate(self.lines):
+			if re.search(new_law_regex, line):
+				regions_of_interest.append(i)
 
-			result = re.search(new_law_regex, line)
-			if result:
-				result = result.group().rstrip().split(' ')
-				try:
-					year, month, day = self.issue_date.split('-')
-				except BaseException:
-					year = datetime.date.today().year
+		if regions_of_interest == []:
+			return self.new_laws
+		else:
+			regions_of_interest.append(len(self.lines) - 1)
 
-				identifier = 'ν. {}/{}'.format(result[-1], year)
-				print('Issue: ', self.name, 'Identifier: ', identifier)
+		for start, end in zip(regions_of_interest, regions_of_interest[1:]):
 
-				ignore = True
+			for j, line in enumerate(self.lines[start:end]):
+				i = j + start
+				result = re.search(new_law_regex, line + self.lines[i + 1])
+				if result:
+					result = result.group().rstrip().split(' ')
+					try:
+						year, month, day = str(self.issue_date).split('-')
+					except BaseException:
+						year = datetime.date.today().year
 
-				self.new_laws[identifier] = LawParser(identifier)
-				self.new_laws[identifier].lines = self.lines
-				self.new_laws[identifier].find_corpus(
-					government_gazette_issue=True)
+					abbreviation = 'ν.'
+					if result[0] == 'ΠΡΟΕΔΡΙΚΟ':
+						abbreviation = 'π.δ.'
+					elif result[0] == 'ΚΟΙΝΗ':
+						abbreviation = 'ΚΥΑ'
+					elif result[0] == 'ΝΟΜΟΘΕΤΙΚΟ':
+						abbreviation = 'ν.δ.'
+
+					identifier = '{} {}/{}'.format(abbreviation, result[-1], year)
+					print('Issue: ', self.name, 'Identifier: ', identifier)
+
+					ignore = True
+
+					self.new_laws[identifier] = LawParser(identifier)
+					self.new_laws[identifier].lines = self.lines
+					self.new_laws[identifier].find_corpus(
+						government_gazette_issue=True)
 
 		return self.new_laws
 
@@ -612,8 +633,7 @@ class LawParser:
 						break
 
 				elif line.startswith('Λήμματα'):
-					self.lemmas[article] = self.corpus[article][i +
-																1].split(' - ')
+					self.lemmas[article] = self.corpus[article][i + 1].split(' - ')
 				elif line.startswith('Τίτλος Αρθρου'):
 					self.titles[article] = self.corpus[article][i + 1]
 
