@@ -5,7 +5,10 @@
 
 import os
 import multiprocessing
+import ocr
 import argparse
+
+MIN_BYTES = 200
 
 def job(x):
 		global pdf2txt
@@ -14,6 +17,13 @@ def job(x):
 		y = output_dir  + y.split('/')[-1]
 		if not os.path.isfile(y):
 				os.system('{} {} > {}'.format(pdf2txt, x, y))
+				if os.stat(y).st_size <= MIN_BYTES:
+					print('File Size unsatisfactory. Performing OCR')
+					try:
+						ocr.pdfocr2txt(x, y)
+					except:
+						print('OCR Failed')	
+
 				print('Done')
 		else:
 				print('already a file')
