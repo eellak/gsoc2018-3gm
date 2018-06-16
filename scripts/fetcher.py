@@ -24,6 +24,8 @@ import os.path
 import datetime
 from http.client import RemoteDisconnected
 import platform
+import sys
+sys.path.append('../src')
 from helpers import Helper
 
 

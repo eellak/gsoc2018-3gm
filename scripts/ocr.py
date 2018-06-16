@@ -14,18 +14,19 @@ from PIL import Image as PI
 
 def pdfocr2txt(data, outfile):
     tool = pyocr.get_available_tools()[0]
-    lang = None
+    lang = []
 
     for l in tool.get_available_languages():
-        if str(l) == 'ell':
-            lang = l
-            print('Found Greek!')
+        if l in ['eng', 'grc', 'ell']:
+            lang.append(l)
+            print('Found ', l)
             break
 
-    if not lang:
+    if lang == []:
         raise Exception(
             'Greek Language not found for Tesseract. Please install it')
 
+    lang = '+'.join(lang)
     req_image = []
     final_text = []
     words = []
