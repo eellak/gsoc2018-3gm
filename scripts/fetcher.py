@@ -132,7 +132,11 @@ if __name__ == '__main__':
             date_to))
 
     # Initialize Driver
-    driver = webdriver.Chrome('./chromedriver')
+    options = webdriver.ChromeOptions()
+    options.add_argument('headless')
+    driver = webdriver.Chrome('./chromedriver', chrome_options=options)
+
+
 
     driver.get('http://www.et.gr/idocs-nph/search/fekForm.html')
 
