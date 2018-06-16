@@ -31,7 +31,7 @@ def pdfocr2txt(data, outfile):
     final_text = []
     words = []
 
-    image_pdf = Image(filename=data, resolution=600)
+    image_pdf = Image(filename=data, resolution=150)
     image_jpeg = image_pdf.convert('jpeg')
     print('Converted image')
 
