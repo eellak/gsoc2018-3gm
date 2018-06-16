@@ -16,3 +16,7 @@ script:
   - pytest tests.py
 
 services: mongodb
+
+branches:
+   only:
+   - master
