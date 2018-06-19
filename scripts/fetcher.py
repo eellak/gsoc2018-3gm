@@ -117,11 +117,18 @@ if __name__ == '__main__':
     parser.add_argument('-date_from', help='Date from in DD.MM.YYYY format')
     parser.add_argument('-date_to', help='Date to in DD.MM.YYYY format')
     parser.add_argument('-output_dir', help='Output Directory')
+    parser.add_argument('--chromedriver', help='Chrome driver executable')
 
     args = parser.parse_args()
 
     date_from = args.date_from
     date_to = args.date_to
+    chromedriver_executable = args.chromedriver
+
+    if not chromedriver_executable:
+        print('Chrome driver not specified. Trying ./chromedriver')
+        chromedriver_executable = './chromedriver'
+
 
     global output_dir
     output_dir = args.output_dir
@@ -134,7 +141,11 @@ if __name__ == '__main__':
     # Initialize Driver
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
-    driver = webdriver.Chrome('./chromedriver', chrome_options=options)
+    try:
+        driver = webdriver.Chrome(chromedriver_executable, chrome_options=options)
+    except:
+        print('Could not find chromedriver')
+
 
 
 
