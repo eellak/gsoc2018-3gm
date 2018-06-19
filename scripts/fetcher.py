@@ -113,11 +113,28 @@ def extract_download_links(html, issue_type):
 if __name__ == '__main__':
 
     # Parse Command Line Arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-date_from', help='Date from in DD.MM.YYYY format')
-    parser.add_argument('-date_to', help='Date to in DD.MM.YYYY format')
-    parser.add_argument('-output_dir', help='Output Directory')
-    parser.add_argument('--chromedriver', help='Chrome driver executable')
+    parser = argparse.ArgumentParser(
+        description='''This is the fetching tool for downloading Government Gazette Issues from the ET.
+        For more information visit https://github.com/eellak/gsoc2018-3gm/wiki/Fetching-Documents''')
+    required = parser.add_argument_group('required arguments')
+    optional = parser.add_argument_group('optional arguments')
+
+    required.add_argument(
+        '-date_from',
+        help='Date from in DD.MM.YYYY format',
+        required=True)
+    required.add_argument(
+        '-date_to',
+        help='Date to in DD.MM.YYYY format',
+        required=True)
+    required.add_argument(
+        '-output_dir',
+        help='Output Directory',
+        required=True)
+    optional.add_argument(
+        '--chromedriver',
+        help='Chrome driver executable',
+        required=True)
 
     args = parser.parse_args()
 
@@ -128,7 +145,6 @@ if __name__ == '__main__':
     if not chromedriver_executable:
         print('Chrome driver not specified. Trying ./chromedriver')
         chromedriver_executable = './chromedriver'
-
 
     global output_dir
     output_dir = args.output_dir
@@ -142,12 +158,11 @@ if __name__ == '__main__':
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     try:
-        driver = webdriver.Chrome(chromedriver_executable, chrome_options=options)
-    except:
+        driver = webdriver.Chrome(
+            chromedriver_executable,
+            chrome_options=options)
+    except BaseException:
         print('Could not find chromedriver')
-
-
-
 
     driver.get('http://www.et.gr/idocs-nph/search/fekForm.html')
 
