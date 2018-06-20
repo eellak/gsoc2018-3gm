@@ -12,7 +12,7 @@
 2. [Fetching Documents](https://github.com/eellak/gsoc2018-3gm/wiki/Fetching-Documents)
 3. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier) (Work in progress) 
 
-
+For a tutorial on getting started click [here](https://github.com/eellak/gsoc2018-3gm/wiki/Tutorial)
 
 ## Google Summer of Code 2018
 
