@@ -12,13 +12,14 @@ import glob
 from io import StringIO
 from wand.image import Image
 from PIL import Image as PI
+import subprocess
 
 logging.basicConfig(
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 
-def rmdir(d): return os.system('rm -rf ' + d)
-
+def rmdir(d):
+    return os.system('rm -rf ' + d)
 
 def pdfocr2txt(data, outfile, resolution=300):
     tool = pyocr.get_available_tools()[0]
@@ -40,7 +41,8 @@ def pdfocr2txt(data, outfile, resolution=300):
 
     # make temporary directory
     name = data.replace('.pdf', '')
-    dir_name = name + '_images'
+    name = name.split('/')[-1]
+    dir_name = '/tmp/' + name + '_images'
 
     try:
         rmdir(dir_name)
@@ -77,7 +79,7 @@ def pdfocr2txt(data, outfile, resolution=300):
         )
         final_text.append(txt)
 
-    logging.info('Writing {} to file'.format(data))
+    logging.info('Writing {} to file {}'.format(data, outfile))
 
     with open(outfile, 'w+') as f:
         for txt in final_text:

@@ -137,6 +137,11 @@ class LawCodifier:
 
 		return result
 
+	def texify_law(self, identifier, outfile):
+		result = self.get_law(identifier)
+		helpers.texify(result, outfile)
+			
+
 def test():
 
 	cod = LawCodifier('../data/new')
