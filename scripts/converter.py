@@ -24,7 +24,7 @@ def job(x):
         os.system('{} {} > {}'.format(pdf2txt, x, y))
         if os.stat(y).st_size <= MIN_BYTES:
             logging.info('{}: File Size unsatisfactory. Performing OCR'.format(x))
-            ocr.pdfocr2txt(x, y)
+            ocr.pdfocr2txt(x, y, resolution=resolution, tmp=tmp)
 
         logging.info('{} Done'.format(x))
     else:
@@ -47,15 +47,28 @@ optional.add_argument(
     help='Number of parallel jobs (default = 1)',
     type=int,
     default=1)
+optional.add_argument(
+    '--tmp',
+    help='Temporary files directory (default /var/tmp)',
+    default='/var/tmp/')
+optional.add_argument(
+    '--resolution',
+    help='Resolution of Images in DPI (default 300 dpi)',
+    type=int,
+    default=300)
 
 args = parser.parse_args()
 
 global input_dir
 global output_dir
 global pdf2txt
+global tmp
+global resolution
 input_dir = args.input_dir
 output_dir = args.output_dir
 pdf2txt = args.pdf2txt
+tmp = args.tmp
+resolution = args.resolution
 
 njobs = args.njobs
 if not njobs:

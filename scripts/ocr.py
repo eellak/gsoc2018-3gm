@@ -21,7 +21,7 @@ logging.basicConfig(
 def rmdir(d):
     return os.system('rm -rf ' + d)
 
-def pdfocr2txt(data, outfile, resolution=300):
+def pdfocr2txt(data, outfile, resolution=300, tmp='/tmp/'):
     tool = pyocr.get_available_tools()[0]
     lang = []
 
@@ -42,7 +42,7 @@ def pdfocr2txt(data, outfile, resolution=300):
     # make temporary directory
     name = data.replace('.pdf', '')
     name = name.split('/')[-1]
-    dir_name = '/tmp/' + name + '_images'
+    dir_name = tmp + name + '_images'
 
     try:
         rmdir(dir_name)
