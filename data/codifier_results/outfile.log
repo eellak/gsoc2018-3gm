@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.12.29)  21 JUN 2018 21:22
+This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.12.29)  21 JUN 2018 21:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -710,93 +710,26 @@ File: se-ascii-print.def 2011/12/02 v1.10 stringenc: Printable ASCII characters
 
 
 ]
-Overfull \hbox (12.66003pt too wide) in paragraph at lines 26--27
-\EU1/CMUSerif(0)/m/n/10 σηεργασίας δημοσίου δικαίου και αμείβονται σύμφωναμε τι
-ς διατάξεις του ν. 4472/2017
- []
-
-
-Overfull \hbox (22.29005pt too wide) in paragraph at lines 26--27
-\EU1/CMUSerif(0)/m/n/10 (Α΄ 74), είναι οι μηνιαίες τακτικές αποδοχές της παρ. 1
-0 του άρθρου 153 τουν. 4472/2017,
- []
-
 LaTeX Font Info:    Font shape `EU1/CMUSerif(0)/m/sl' in size <10> not availabl
 e
 (Font)              Font shape `EU1/CMUSerif(0)/m/it' tried instead on input li
-ne 30.
-[2] [3]
-Overfull \hbox (2.27002pt too wide) in paragraph at lines 44--45
-\EU1/CMUSerif(0)/m/n/10 31.12.2016 εφαρμόζεται ως προς την εργοδοτικήεισφορά η 
-111482/0092/30.11.2016
- []
-
-[4] [5]
-Overfull \hbox (17.19003pt too wide) in paragraph at lines 59--60
-\EU1/CMUSerif(0)/m/n/10 ριση των οφειλόμενων ασφαλιστικών εισφορών,σύμφωνα με τ
-ις 61501/3398/30.12.2016
- []
-
-[6]
-Overfull \hbox (4.80003pt too wide) in paragraph at lines 70--71
-\EU1/CMUSerif(0)/m/n/10 422/1981 (Α΄ 114) και ο τίτλος αυτούαντικαθίστανται, απ
-ό 1.1.2017, ως εξής:«Άρθρο
- []
-
-[7] [8] [9] [10] [11] [12] [13]
-Overfull \hbox (20.18002pt too wide) in paragraph at lines 105--106
-\EU1/CMUSerif(0)/m/n/10 Κοινωνικής Ασφάλισης και Κοινωνικής Αλληλεγγύης, Εσωτερ
-ικών και Υγείας.ΜΕΡΟΣ
- []
-
-[14] [15] [16] [17] [18] [19] [20]
-Overfull \hbox (12.40004pt too wide) in paragraph at lines 154--155
-\EU1/CMUSerif(0)/m/n/10 31.12.2016, προέκυπτευποχρέωση υπαγωγής στον τέως ΟΑΕΕ,
- στο τέως ΕΤΑΠΜΜΕ
- []
-
-[21] [22]
-Overfull \hbox (0.73003pt too wide) in paragraph at lines 166--167
-\EU1/CMUSerif(0)/m/n/10 εμπράγματων δικαιωμάτων επί των πάσης φύσεωςακινήτων το
-υ καταργηθέντος ΟΕΚ
- []
-
-[23]
-Overfull \hbox (11.51892pt too wide) in paragraph at lines 175--176
-\EU1/CMUSerif(0)/m/n/10 δέκα (10) οργανικές θέσεις μόνιμουπροσωπικού, κλάδου ΠΕ
- Πληροφορικής.Προσόντα
- []
-
-[24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35] [36] [37] [38]
-[39] [40] [41] [42] [43] [44] [45] [46] [47] [48] [49] [50] [51] [52] [53]
-[54]
-Overfull \hbox (4.97672pt too wide) in paragraph at lines 432--433
-\EU1/CMUSerif(0)/m/n/10 ται.Τεύχος Α’ 137/13.09.2017Τεύχος Α’ 137/13.09.2017Τεύ
-χος Α’ 137/13.09.2017 
- []
-
-
-Overfull \hbox (5.49672pt too wide) in paragraph at lines 434--435
- [] \EU1/CMUSerif(0)/bx/n/10 1. [] \EU1/CMUSerif(0)/m/n/10 Δημιουργούνται Ηλεκτ
-ρονικές Βάσεις καταχώρισηςδεδομένων τεχνικών ασφα-
- []
-
-[55]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 443.
- [56]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 443.
+ne 19.
+ [2] [3] [4]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 28.
+ [5]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 28.
  (./outfile.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 443.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 443.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 443.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 28.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 28.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 28.
  ) 
 Here is how much of TeX's memory you used:
  20462 strings out of 495547
  371597 string characters out of 6185896
- 416132 words of memory out of 5000000
+ 407132 words of memory out of 5000000
  23637 multiletter control sequences out of 15000+600000
  4152 words of font info for 34 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  48i,4n,61p,10368b,326s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on outfile.pdf (56 pages).
+Output written on outfile.pdf (5 pages).

@@ -110,6 +110,7 @@ class LawCodifier:
 	def codify_new_laws(self):
 		for issue in self.issues:
 			new_laws = issue.detect_new_laws()
+			print(new_laws)
 			for k in new_laws.keys():
 				try:
 					serializable = new_laws[k].__dict__()
