@@ -125,33 +125,51 @@ class LawCodifier:
 				except:
 					pass
 
-	def get_law(self, identifier):
-		cur = self.db.laws.find({'_id' : identifier})
-		result = '\chapter*{{ {} }}'.format(identifier)
-		for x in cur:
-			for y in x['versions']:
-				result = result + '\section* {{ Version  {} }} \n'.format(y['_version'])
-				for article in sorted(y['articles'].keys(), key=lambda x: int(x)):
-					result = result + '\subsection*{{ Άρθρο {} }}\n'.format(article)
-					for paragraph in sorted(y['articles'][article].keys()):
-						result = result + '\paragraph {{ {}. }} {}\n'.format(paragraph, '. '.join(y['articles'][article][paragraph]))
+	def get_law(self, identifier, export_type='latex'):
+		if export_type not in ['latex', 'markdown']:
+			raise Exception('Unrecognized export type')
+
+		if export_type == 'latex':
+			cur = self.db.laws.find({'_id' : identifier})
+			result = '\chapter*{{ {} }}'.format(identifier)
+			for x in cur:
+				for y in x['versions']:
+					result = result + '\section* {{ Version  {} }} \n'.format(y['_version'])
+					for article in sorted(y['articles'].keys(), key=lambda x: int(x)):
+						result = result + '\subsection*{{ Άρθρο {} }}\n'.format(article)
+						for paragraph in sorted(y['articles'][article].keys()):
+							result = result + '\paragraph {{ {}. }} {}\n'.format(paragraph, '. '.join(y['articles'][article][paragraph]))
+		elif export_type == 'markdown':
+			cur = self.db.laws.find({'_id' : identifier})
+			result = '# {}\n'.format(identifier)
+			for x in cur:
+				for y in x['versions']:
+					result = result + '## Version  {} \n'.format(y['_version'])
+					for article in sorted(y['articles'].keys(), key=lambda x: int(x)):
+						result = result + '### Άρθρο {} \n'.format(article)
+						for paragraph in sorted(y['articles'][article].keys()):
+							result = result + ' {}. {}\n'.format(paragraph, '. '.join(y['articles'][article][paragraph]))
+
 
 		return result
 
-	def texify_law(self, identifier, outfile):
-		result = self.get_law(identifier)
-		helpers.texify(result, outfile)
+	def export_law(self, identifier, outfile, export_type='markdown'):
+		if export_type not in ['latex', 'markdown']:
+			raise Exception('Unrecognized export type')
 
+		result = self.get_law(identifier, export_type=export_type)
+		if export_type == 'latex':
+			helpers.texify(result, outfile)
+		elif export_type == 'markdown':
+			with open(outfile, 'w+') as f:
+				f.write(result)
 
 def test():
-
 	cod = LawCodifier('../data/new')
 	cod.codify_new_laws()
 	print('Enter a law you wish to texify')
 	ans = input()
-
-	result = cod.get_law(ans)
-	helpers.texify(result, 'foo.tex')
+	cod.export_law(result, 'foo.md')
 
 if __name__ == '__main__':
 	codifier = LawCodifier()
