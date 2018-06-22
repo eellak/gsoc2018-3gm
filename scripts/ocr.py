@@ -52,7 +52,7 @@ def pdfocr2txt(data, outfile, resolution=300, tmp='/tmp/'):
 
     os.mkdir(dir_name)
     os.system(
-        'convert -density {} -trim -quality 100 -sharpen 0x1.0 {} {}/{}.jpg'.format(
+        'convert -limit memory 1GiB -limit disk 1gb -density {} -trim -quality 100 -sharpen 0x1.0 {} {}/{}.jpg'.format(
             resolution,
             data,
             dir_name,
@@ -62,10 +62,14 @@ def pdfocr2txt(data, outfile, resolution=300, tmp='/tmp/'):
     image_filelist = glob.glob(dir_name + '/*.jpg')
 
     for imgfile in sorted(image_filelist, key=os.path.getmtime):
-        img_page = Image(
-            filename=imgfile,
-            resolution=resolution).make_blob('jpg')
-        req_image.append(img_page)
+        try:
+            img_page = Image(
+                filename=imgfile,
+                resolution=resolution).make_blob('jpg')
+            req_image.append(img_page)
+        except:
+            logging.error('Bad Image. Exiting')
+            return
 
     total = len(req_image)
 
