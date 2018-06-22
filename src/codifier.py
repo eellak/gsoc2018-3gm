@@ -110,6 +110,7 @@ class LawCodifier:
 	def codify_new_laws(self):
 		for issue in self.issues:
 			new_laws = issue.detect_new_laws()
+			print(new_laws)
 			for k in new_laws.keys():
 				try:
 					serializable = new_laws[k].__dict__()
@@ -126,11 +127,11 @@ class LawCodifier:
 
 	def get_law(self, identifier):
 		cur = self.db.laws.find({'_id' : identifier})
-		result = ''
+		result = '\chapter*{{ {} }}'.format(identifier)
 		for x in cur:
 			for y in x['versions']:
 				result = result + '\section* {{ Version  {} }} \n'.format(y['_version'])
-				for article in sorted(y['articles'].keys()):
+				for article in sorted(y['articles'].keys(), key=lambda x: int(x)):
 					result = result + '\subsection*{{ Άρθρο {} }}\n'.format(article)
 					for paragraph in sorted(y['articles'][article].keys()):
 						result = result + '\paragraph {{ {}. }} {}\n'.format(paragraph, '. '.join(y['articles'][article][paragraph]))
@@ -140,7 +141,7 @@ class LawCodifier:
 	def texify_law(self, identifier, outfile):
 		result = self.get_law(identifier)
 		helpers.texify(result, outfile)
-			
+
 
 def test():
 

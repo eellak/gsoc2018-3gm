@@ -81,7 +81,7 @@ class IssueParser:
 					n = int(line)
 					continue
 				except ValueError:
-					self.lines.append(line.lstrip().rstrip())
+					self.lines.append(line)
 					if line.startswith('Αρ. Φύλλου'):
 						self.issue_number = int(line.split(' ')[-2])
 
@@ -358,7 +358,7 @@ class IssueParser:
 		4. Keep the new laws in a dictionary"""
 
 
-		new_law_regex = r'(NOMOΣ|ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ|ΚΟΙΝΗ ΥΠΟΥΡΓΙΚΗ ΑΠΟΦΑΣΗ|ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ) ΥΠ’ ΑΡΙΘ(M|). (\d+)'
+		new_law_regex = r'(NOMOΣ|ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ|ΚΟΙΝΗ ΥΠΟΥΡΓΙΚΗ ΑΠΟΦΑΣΗ|ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ) ΥΠ’ ΑΡΙΘΜ. (\d+)'
 		self.new_laws = {}
 		regions_of_interest = []
 
@@ -384,6 +384,7 @@ class IssueParser:
 						year = datetime.date.today().year
 
 					abbreviation = 'ν.'
+					
 					if result[0] == 'ΠΡΟΕΔΡΙΚΟ':
 						abbreviation = 'π.δ.'
 					elif result[0] == 'ΚΟΙΝΗ':
