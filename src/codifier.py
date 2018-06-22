@@ -7,14 +7,29 @@ import database
 import pprint
 
 class UnrecognizedCodificationAction(Exception):
+	"""Exception class which is raised when the
+	codification action is not well-formed.
+	"""
 
 	def __init__(self, extract):
 		super().__init__('Unrecognized Codification Action on \n', extract)
 
 
 class LawCodifier:
+	"""This class is responsible for binding the different
+	modules of the project into the codifier module.
+	Functionality:
+	1. Construct the database from Government Gazette issues
+	2. Parsing New Laws and Fetching Last Versions from database
+	3. Invoke Codification tool that recognizes actions and
+	builds queries
+	4. Interfacing with MongoDB
+	"""
 
 	def __init__(self, issues_directory=None):
+		"""Constructor for LawCodifier class
+		:param issues_directory : Issues directory
+		"""
 		self.laws = {}
 		self.db = database.Database()
 		self.populate_laws()
@@ -22,7 +37,14 @@ class LawCodifier:
 		if issues_directory:
 			self.populate_issues(issues_directory)
 
+	def add_directory(issues_directory):
+		"""Add additional Directories"""
+
+		self.issues.extend(parser.get_issues_from_dataset(issues_directory))
+
 	def populate_laws(self):
+		"""Populate laws from database and fetch latest versions"""
+
 		cursor = self.db.laws.find({"versions":{ "$ne" : None}})
 		for x in cursor:
 
@@ -39,9 +61,15 @@ class LawCodifier:
 			self.laws[identifier] = law
 
 	def populate_issues(self, directory):
+		"""Populate issues from directory"""
+
 		self.issues = parser.get_issues_from_dataset(directory)
 
 	def codify_issue(self, filename):
+		"""Codify certain issue (legacy)
+		:param filename : Issue filename
+		"""
+
 		trees = {}
 		issue = parser.IssueParser(filename)
 		sorted_articles = sorted(issue.articles.keys())
@@ -74,6 +102,11 @@ class LawCodifier:
 					input()
 
 	def codify_law(self, identifier):
+		"""
+		Codify certain law. Search all issues within self.issues
+
+		:param identifier : The law identifier e.g. ν. 1234/5678
+		"""
 		trees = {}
 
 		for issue in self.issues:
@@ -108,6 +141,8 @@ class LawCodifier:
 						input()
 
 	def codify_new_laws(self):
+		"""Append new laws found in self.issues"""
+
 		for issue in self.issues:
 			new_laws = issue.detect_new_laws()
 			print(new_laws)
@@ -126,6 +161,10 @@ class LawCodifier:
 					pass
 
 	def get_law(self, identifier, export_type='latex'):
+		"""Get law string in LaTeX or Markdown string
+
+		:param identifier : Law identifier
+		"""
 		if export_type not in ['latex', 'markdown']:
 			raise Exception('Unrecognized export type')
 
