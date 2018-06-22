@@ -24,7 +24,7 @@ def job(x):
     y = x.replace('.pdf', '.txt')
     y = output_dir + y.split('/')[-1]
     if not os.path.isfile(y):
-        os.system('{} {} > {}'.format(pdf2txt, x, y))
+        os.system('python3 {} {} > {}'.format(pdf2txt, x, y))
         if os.stat(y).st_size <= MIN_BYTES:
             logging.info('{}: File Size unsatisfactory. Performing OCR'.format(x))
             ocr.pdfocr2txt(x, y, resolution=resolution, tmp=tmp)
