@@ -208,7 +208,7 @@ def test():
 	cod.codify_new_laws()
 	print('Enter a law you wish to texify')
 	ans = input()
-	cod.export_law(result, 'foo.md')
+	cod.export_law(ans, 'foo.md')
 
 if __name__ == '__main__':
 	codifier = LawCodifier()

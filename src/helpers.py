@@ -433,7 +433,7 @@ def find_brackets(s, remove_sub=True):
         return brackets_locs
 
 
-def get_extracts(s, min_words=4):
+def get_extracts(s, min_words=5):
 
     if not check_brackets(s):
         raise Exception('Unmatched Brackets')
