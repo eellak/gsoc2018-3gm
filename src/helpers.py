@@ -308,3 +308,107 @@ def texify(s, outfile):
 
     os.system('xelatex {}'.format(outfile))
     return s
+
+def is_subset(A, B):
+    # returns true iff A subset of B
+    x, y = A
+    z, w = B
+    return z <= x and y <= w
+
+def remove_subsets(l):
+    result = []
+    for x in l:
+        flag = True
+        for y in l:
+            if is_subset(x, y) and x != y:
+                flag = False
+                break
+        if flag:
+            result.append(x)
+
+    return result
+
+def check_brackets(s):
+    """ Return True if the brackets in string s match, otherwise False. """
+    j = 0
+    for c in s:
+        if c == '»':
+            j -= 1
+            if j < 0:
+                return False
+        elif c == '«':
+            j += 1
+    return j == 0
+
+def find_brackets(s, remove_sub=True):
+    """ Find and return the location of the matching brackets pairs in s.
+    Given a string, s, return a dictionary of start: end pairs giving the
+    indexes of the matching brackets in s. Suitable exceptions are
+    raised if s contains unbalanced brackets.
+    """
+
+    # The indexes of the open brackets are stored in a stack, implemented
+    # as a list
+
+    stack = []
+    brackets_locs = {}
+    for i, c in enumerate(s):
+        if c == '«':
+            stack.append(i)
+        elif c == '»':
+            try:
+                brackets_locs[stack.pop()] = i
+            except IndexError:
+                raise IndexError('Too many close brackets at index {}'.format(i))
+    if stack:
+        raise IndexError('No matching close bracket to open bracket '
+                         'at index {}'.format(stack.pop()))
+
+    brackets_locs = sorted([(k,v) for k, v in brackets_locs.items()])
+
+    if remove_subsets:
+        return remove_subsets(brackets_locs)
+    else:
+        return brackets_locs
+
+def get_extracts(s, min_words=4):
+
+    if not check_brackets(s):
+        raise Exception('Unmatched Brackets')
+
+    brackets_locs = find_brackets(s)
+    extracts_idx = []
+
+    for l, r in brackets_locs:
+        q = s[l + 1: r]
+
+        # FUTURE WORK: Check if Named Entity
+
+        if len(q.split(' ')) >= min_words:
+            extracts_idx.append((l, r))
+
+    extracts = []
+
+    for l, r in extracts_idx:
+        extracts.append(s[l + 1: r])
+
+    non_extracts_idx = [0]
+    non_extracts = []
+
+    for l, r in extracts_idx:
+        non_extracts_idx.append(l + 1)
+        non_extracts_idx.append(min(r, len(s)))
+
+    non_extracts_idx.append(len(s))
+
+    non_extracts_idx = sorted(non_extracts_idx)
+
+
+    for i in range(len(non_extracts_idx) - 1):
+        l = non_extracts_idx[i]
+        r = non_extracts_idx[i+1]
+        q = s[l:r - 1]
+        if i % 2 == 0:
+            non_extracts.append(q)
+
+    return extracts, non_extracts

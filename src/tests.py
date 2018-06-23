@@ -4,6 +4,7 @@ import syntax
 import entities
 import database
 import pprint
+import helpers
 
 global db
 db = database.Database()
@@ -190,6 +191,12 @@ def test_issue_serializer_to_db(filename='../data/17.txt'):
     issue = parser.IssueParser(filename)
     db.insert_issue_to_db(issue)
 
+# Helpers test
+def test_splitting_extracts():
+    s = '1. Στο τέλος του άρθρου 5 της από 24.12.1990 Πράξης Νομοθετικού Περιεχομένου «Περί Μουσουλμάνων Θρησκευτικών Λειτουργών» (Α΄182) που κυρώθηκε με το άρθρο μόνο του ν. 1920/1991 (Α΄11) προστίθεται παράγραφος 4 ως εξής: «4. α. «Οι» υποθέσεις της παραγράφου 2 ρυθμίζονται από τις κοινές διατάξεις» και μόνο κατ’ εξαίρεση υπάγονται'
+    e, n = helpers.get_extracts(s)
+    assert(e == ['Περί Μουσουλμάνων Θρησκευτικών Λειτουργών', '4. α. «Οι» υποθέσεις της παραγράφου 2 ρυθμίζονται από τις κοινές διατάξεις'])
+    assert(n == ['1. Στο τέλος του άρθρου 5 της από 24.12.1990 Πράξης Νομοθετικού Περιεχομένου ', '» (Α΄182) που κυρώθηκε με το άρθρο μόνο του ν. 1920/1991 (Α΄11) προστίθεται παράγραφος 4 ως εξής: ', '» και μόνο κατ’ εξαίρεση υπάγοντα'])
 
 if __name__ == '__main__':
 	test_law_parsing_from_government_gazette_issue()
