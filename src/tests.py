@@ -5,6 +5,7 @@ import entities
 import database
 import pprint
 import helpers
+import tokenizer
 
 global db
 db = database.Database()
@@ -197,6 +198,10 @@ def test_splitting_extracts():
     e, n = helpers.get_extracts(s)
     assert(e == ['Περί Μουσουλμάνων Θρησκευτικών Λειτουργών', '4. α. «Οι» υποθέσεις της παραγράφου 2 ρυθμίζονται από τις κοινές διατάξεις'])
     assert(n == ['1. Στο τέλος του άρθρου 5 της από 24.12.1990 Πράξης Νομοθετικού Περιεχομένου ', '» (Α΄182) που κυρώθηκε με το άρθρο μόνο του ν. 1920/1991 (Α΄11) προστίθεται παράγραφος 4 ως εξής: ', '» και μόνο κατ’ εξαίρεση υπάγοντα'])
+
+def test_tokenizer():
+    assert(tokenizer.tokenizer.split('Έλα στις 6 π.μ. και μην αργήσεις. Η μαμά σου') == ['Έλα στις 6 π.μ. και μην αργήσεις', ' Η μαμά σου'])
+
 
 if __name__ == '__main__':
 	test_law_parsing_from_government_gazette_issue()
