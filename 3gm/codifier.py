@@ -204,7 +204,7 @@ class LawCodifier:
 				f.write(result)
 
 def test():
-	cod = LawCodifier('../data/new')
+	cod = LawCodifier('../data/2018')
 	cod.codify_new_laws()
 	print('Enter a law you wish to texify')
 	ans = input()
