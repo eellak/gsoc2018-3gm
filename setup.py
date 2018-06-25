@@ -6,7 +6,7 @@ def parse_requirements(filename):
     return [line for line in lineiter if line and not line.startswith("#")]
 
 install_reqs = parse_requirements('./requirements.txt')
-files = ["src/*"]
+files = ["3gm/*"]
 
 setup(name = "3gm",
     version = "1.0",
@@ -15,7 +15,7 @@ setup(name = "3gm",
     author_email = "papachristoumarios@gmail.com",
     url = "https://github.com/eellak/gsoc2018-3gm",
     instal_requires=install_reqs,
-    packages = ['core'],
-    package_data = {'core' : files },
+    packages = ['3gm'],
+    package_data = {'3gm' : files },
     scripts = [],
     )
