@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import tokenizer
 import re
 import multiprocessing
 import numpy as np
@@ -625,7 +626,10 @@ class LawParser:
 						sentences[par] = list(
 							filter(
 								lambda x: x.rstrip() != '',
-								val.split('. ')))
+								tokenizer.tokenizer.split(
+									val, delimiter='. ')
+									)
+								)
 
 					self.articles[article] = paragraphs
 					self.sentences[article] = sentences
@@ -1003,4 +1007,12 @@ class LawParser:
 		return self.serialize()
 
 	def get_paragraph(self, article, paragraph_id):
+		"""Join sentences to paragraph"""
 		return '. '.join(self.sentences[article][paragraph_id])
+
+	def get_paragraphs(self, article):
+		"""Return Paragraphs via a generator"""
+
+		print(self.sentences[article].keys())
+		for paragraph_id in self.sentences[article].keys():
+			yield self.get_paragraph(article, paragraph_id)
