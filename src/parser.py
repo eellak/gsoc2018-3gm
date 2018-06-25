@@ -384,7 +384,7 @@ class IssueParser:
 						year = datetime.date.today().year
 
 					abbreviation = 'ν.'
-					
+
 					if result[0] == 'ΠΡΟΕΔΡΙΚΟ':
 						abbreviation = 'π.δ.'
 					elif result[0] == 'ΚΟΙΝΗ':
@@ -1001,3 +1001,6 @@ class LawParser:
 					tree['law']['article']['paragraph']['_id'])
 
 		return self.serialize()
+
+	def get_paragraph(self, article, paragraph_id):
+		return '. '.join(self.sentences[article][paragraph_id])
