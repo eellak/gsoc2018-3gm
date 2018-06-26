@@ -422,8 +422,9 @@ def find_brackets(s, remove_sub=True):
                 raise IndexError(
                     'Too many close brackets at index {}'.format(i))
     if stack:
-        raise IndexError('No matching close bracket to open bracket '
-                         'at index {}'.format(stack.pop()))
+        # raise IndexError('No matching close bracket to open bracket '
+        #                  'at index {}'.format(stack.pop()))
+        brackets_locs[stack.pop()] = len(s) - 1
 
     brackets_locs = sorted([(k, v) for k, v in brackets_locs.items()])
 
@@ -435,8 +436,8 @@ def find_brackets(s, remove_sub=True):
 
 def get_extracts(s, min_words=5):
 
-    if not check_brackets(s):
-        raise Exception('Unmatched Brackets')
+    # if not check_brackets(s):
+    #     raise Exception('Unmatched Brackets')
 
     brackets_locs = find_brackets(s)
     extracts_idx = []
