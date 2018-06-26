@@ -1,0 +1,54 @@
+<!doctype html>
+<title>3gm Demonstration</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+  ul { margin: 0; padding: 0; display: flex; list-style-type: none; }
+  li > * { padding: 1em; }
+  li.active > a { color: #5e5e5e; border-bottom: 2px solid #4a4a4a; }
+  form > * { padding-right: 1em; }
+  #result { font-weight: bold; }
+  textarea, label, input {
+    width: 100%;
+  }
+  textarea {
+    text-align: justify;
+   }
+
+
+</style>
+<body>
+<ul>
+  <li class="{% if js == 'plain' %}active{% endif %}">
+    <a href="{{ url_for('index', js='plain') }}">Demonstration</a>
+  </li>
+  <li class="{% if js != 'plain' %}active{% endif %}">
+    <a href="https://github.com/eellak/gsoc2018-3gm">Project Homepage</a>
+  </li>
+</ul>
+<br>
+
+<h1>Syntactic Analysis</h1>
+
+<p>Enter a paragraph from Government Gazette Article (in Greek). Avoid newlines.</p>
+<form id="calc">
+  <label>Input Text<textarea name="a" rows="20">{{ example }}</textarea><br></label>
+
+  <input type="submit" value="Analyze">
+</form>
+<label>Result
+<textarea id="result" rows="20" cold="100%">
+
+</textarea></label>
+{% block script %}{% endblock %}
+
+<h1>More Examples</h1>
+
+<ol>
+  <li>To be added soon</li>
+
+</ol>
+
+</body>
