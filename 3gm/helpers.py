@@ -469,7 +469,7 @@ def get_extracts(s, min_words=5):
     for i in range(len(non_extracts_idx) - 1):
         l = non_extracts_idx[i]
         r = non_extracts_idx[i + 1]
-        q = s[l:r - 1]
+        q = s[l:r]
         if i % 2 == 0:
             non_extracts.append(q)
 

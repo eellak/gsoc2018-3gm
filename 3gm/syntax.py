@@ -4,6 +4,15 @@ import collections
 import logging
 import helpers
 import tokenizer
+import itertools
+
+try:
+    import spacy
+    from spacy import displacy
+    import el_unnamed
+    nlp = el_unnamed.load()
+except ImportError:
+    pass
 
 # Action Tree Generation
 
@@ -221,6 +230,7 @@ class ActionTreeGenerator:
     def generate_action_tree_from_string(s, nested=True, max_what_window = 20, max_where_window = 30):
         global actions
         global whats
+
         trees = []
         print('Candidate String is')
         print(s)
@@ -248,17 +258,16 @@ class ActionTreeGenerator:
 
 
 
-        for extract, non_extract in zip(extracts, non_extracts):
-            print('Foo')
+        for extract, non_extract in itertools.zip_longest(extracts, non_extracts):
 
-
+            doc = nlp(non_extract)
 
             tmp = list(map(lambda s : s.strip(string.punctuation),  non_extract.split(' ')))
             print(tmp)
 
             for action in actions:
-                for i, w in enumerate(tmp):
-                    if action == w:
+                for i, w in enumerate(doc):
+                    if action == w.text:
                         tree = collections.defaultdict(dict)
                         tree['root'] = {
                             '_id' : i,
@@ -271,44 +280,68 @@ class ActionTreeGenerator:
                         logging.info('Found ' + str(action))
 
                         found_what = False
-                        for j in range(1, max_what_window + 1):
-                            for what in whats:
-                                if i + j  <= len(tmp) - 1 and what == tmp[i + j]:
-                                    tree['root']['children'].append('law')
-                                    tree['what'] = {
-                                        'index' : i + j,
-                                        'context' : what,
-                                    }
-                                    if i + j + 1 <= len(tmp) - 1 and re.search(r'[0-9]', tmp[i + j + 1]) != None:
-                                        tree['what']['number'] = tmp[i + j + 1]
-                                    else:
-                                        tree['what']['number'] = None
 
-                                    found_what == True
+                        root_token = doc[i]
+                        print(doc[i])
+
+                        for child in root_token.children:
+
+                            if child.dep_ in ['nsubj', 'obl']:
+                                for what in whats:
+                                    if child.text == what:
+                                        tree['root']['children'].append('law')
+                                        tree['what'] = {
+                                            'index' : child.idx,
+                                            'context' : what,
+                                        }
+                                        found_what = True
+                                        print('nlp ok')
+                                        print(tree)
+                                        break
+
+                        if not found_what:
+                            # fallback mode
+
+                            print('Exiting')
+
+                            for j in range(1, max_what_window + 1):
+                                for what in whats:
+                                    if i + j  <= len(tmp) - 1 and what == tmp[i + j]:
+                                        tree['root']['children'].append('law')
+                                        tree['what'] = {
+                                            'index' : i + j,
+                                            'context' : what,
+                                        }
+                                        if i + j + 1 <= len(tmp) - 1 and re.search(r'[0-9]', tmp[i + j + 1]) != None:
+                                            tree['what']['number'] = tmp[i + j + 1]
+                                        else:
+                                            tree['what']['number'] = None
+
+                                        found_what == True
+                                        break
+
+                                if found_what:
+                                    break
+
+                                    if i - j >= 0 and what == tmp[i - j]:
+                                        tree['root']['children'].append('law')
+                                        tree['what'] = {
+                                            'index' : i - j,
+                                            'context' : what,
+                                        }
+                                        if i - j >= 0 and re.search(r'[0-9]', tmp[i - j + 1]) != None:
+                                            tree['what']['number'] = tmp[i - j + 1]
+                                        else:
+                                            tree['what']['number'] = None
+                                        found_what = True
+                                        break
+
+                                if found_what:
                                     break
 
                             if found_what:
-                                break
-
-                                if i - j >= 0 and what == tmp[i - j]:
-                                    tree['root']['children'].append('law')
-                                    tree['what'] = {
-                                        '_id' : i - j,
-                                        'context' : what,
-                                    }
-                                    if i - j >= 0 and re.search(r'[0-9]', tmp[i - j + 1]) != None:
-                                        tree['what']['number'] = tmp[i - j + 1]
-                                    else:
-                                        tree['what']['number'] = None
-                                    found_what = True
-                                    break
-
-                            if found_what:
-                                break
-
-                        if found_what:
-                            print('What')
-                            print('Subject is', tree['what'])
+                                print('What')
+                                print('Subject is', tree['what'])
 
 
                         # TODO fix numeral if full

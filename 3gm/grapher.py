@@ -1,11 +1,13 @@
 import os
 import re
 import sys
+import json
 from entities import LegalEntities
 from collections import defaultdict
 from helpers import connected_components, get_edges
 from matplotlib import pyplot as plt
 import networkx
+from networkx.readwrite import json_graph
 from networkx import (
     draw,
     DiGraph,
@@ -14,8 +16,10 @@ from networkx import (
 
 graph = defaultdict(set)
 
+
 txts = []
 input_dir = sys.argv[1]
+
 
 for root, dirs, files in os.walk(input_dir):
     for file in files:
@@ -67,7 +71,12 @@ avg_degree /= len(graph)
 
 print('Average Vertex Degree: ', avg_degree)
 
+
+
 G = Graph()
 G.add_edges_from(get_edges(graph))
-draw(G, with_labels=True, edge_color='g', width=0.1, node_color='g')
-plt.show()
+d = json_graph.node_link_data(G)
+
+outfile = sys.argv[2]
+
+json.dump(d, open(outfile, 'w'))

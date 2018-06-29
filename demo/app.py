@@ -26,12 +26,16 @@ def index(js):
 @app.route('/analyze', methods=['POST'])
 def analyze():
     a = request.form.get('a', '', type=str)
-    result = syntax.ActionTreeGenerator.generate_action_tree_from_string(a))
+    result = syntax.ActionTreeGenerator.generate_action_tree_from_string(a)
     print(result)
     json_string = json.dumps(result, ensure_ascii=False)
     print(json_string)
 
     return jsonify(result=json_string)
+
+@app.route('/visualize')
+def visualize():
+    return app.send_static_file('templates/graph.html')
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True, ssl_context='adhoc')
