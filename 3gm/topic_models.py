@@ -1,11 +1,14 @@
 from __future__ import print_function
 from time import time
 
+# Matplotlib and scikit
 import matplotlib.pyplot as plt
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.model_selection import GridSearchCV
 from sklearn.decomposition import NMF, LatentDirichletAllocation
-from sklearn.datasets import fetch_20newsgroups
+
+# Helper Functions
+from helpers import connected_components, get_edges
 import parser
 import collections
 import numpy as np
@@ -44,40 +47,6 @@ def display_topics(
 	print(graph)
 	print(topics)
 	return graph
-
-
-def connected_components(graph):
-	visited = {}
-	components = []
-	for u in graph.keys():
-		visited[u] = False
-	for s in visited.keys():
-		if visited[s]:
-			continue
-		else:
-			component = []
-			q = collections.deque()
-			q.append(s)
-			visited[s] = True
-			while q:
-				p = q.popleft()
-				component.append(p)
-				for r in graph[p]:
-					if not visited[r]:
-						q.append(r)
-						visited[r] = True
-			components.append(component)
-
-	return components
-
-
-def get_edges(graph):
-	E = []
-	for u in graph.keys():
-		for v in graph[u]:
-			E.append([u, v])
-	return E
-
 
 greek_stopwords = []
 cnt_swords = 300

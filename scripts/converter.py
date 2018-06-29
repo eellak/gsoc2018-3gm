@@ -19,8 +19,6 @@ def job(x):
     global pdf2txt
     global output_dir
     global count
-    global total
-    global percentage
     y = x.replace('.pdf', '.txt')
     y = output_dir + y.split('/')[-1]
     if not os.path.isfile(y):
@@ -29,12 +27,11 @@ def job(x):
             logging.info('{}: File Size unsatisfactory. Performing OCR'.format(x))
             ocr.pdfocr2txt(x, y, resolution=resolution, tmp=tmp)
 
-        logging.info('[{}/100 complete] {} Done'.format(percentage, x))
+        logging.info('[{}/100 complete] {} Done'.format(x))
     else:
-        logging.info('[{}/100 complete] {} already a converted file'.format(percentage, x))
+        logging.info('[{}/100 complete] {} already a converted file'.format(x))
 
-    count += 1
-    percentage = int(count / total * 100)
+
 
 
 parser = argparse.ArgumentParser(description='''

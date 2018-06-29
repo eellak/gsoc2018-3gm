@@ -474,3 +474,35 @@ def get_extracts(s, min_words=5):
             non_extracts.append(q)
 
     return extracts, non_extracts
+
+def connected_components(graph):
+	visited = {}
+	components = []
+	for u in graph.keys():
+		visited[u] = False
+	for s in visited.keys():
+		if visited[s]:
+			continue
+		else:
+			component = []
+			q = collections.deque()
+			q.append(s)
+			visited[s] = True
+			while q:
+				p = q.popleft()
+				component.append(p)
+				for r in graph[p]:
+					if not visited[r]:
+						q.append(r)
+						visited[r] = True
+			components.append(component)
+
+	return components
+
+
+def get_edges(graph):
+	E = set([])
+	for u in graph.keys():
+		for v in graph[u]:
+			E |= {(u, v)}
+	return list(E)

@@ -4,6 +4,14 @@ import json
 import sys
 sys.path.append('../3gm')
 
+try:
+    import spacy
+    from spacy import displacy
+    import el_unnamed
+    nlp = el_unnamed.load()
+except ImportError:
+    pass
+
 import syntax
 
 app = Flask(__name__)
@@ -18,10 +26,11 @@ def index(js):
 @app.route('/analyze', methods=['POST'])
 def analyze():
     a = request.form.get('a', '', type=str)
-    result = syntax.ActionTreeGenerator.generate_action_tree_from_string(a)
+    result = syntax.ActionTreeGenerator.generate_action_tree_from_string(a))
     print(result)
     json_string = json.dumps(result, ensure_ascii=False)
     print(json_string)
+
     return jsonify(result=json_string)
 
 if __name__ == '__main__':

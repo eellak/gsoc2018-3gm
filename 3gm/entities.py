@@ -100,6 +100,18 @@ paragraph_regex = [
     'παρ. \d+',
     'παράγραφος']
 
+class LegalEntities:
+    entities = [
+        law_regex,
+        legislative_act_regex,
+        presidential_decree_regex
+    ]
+
+    ratifications = [
+        r'(NOMOΣ|ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ|ΚΟΙΝΗ ΥΠΟΥΡΓΙΚΗ ΑΠΟΦΑΣΗ|ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ) ΥΠ’ ΑΡΙΘΜ. (\d+)'
+    ]
+
+
 
 class Numerals:
 
