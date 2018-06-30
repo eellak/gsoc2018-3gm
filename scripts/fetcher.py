@@ -25,7 +25,7 @@ import datetime
 from http.client import RemoteDisconnected
 import platform
 import sys
-sys.path.append('../src')
+sys.path.append('../3gm')
 from helpers import Helper
 
 
@@ -133,8 +133,7 @@ if __name__ == '__main__':
         required=True)
     optional.add_argument(
         '--chromedriver',
-        help='Chrome driver executable',
-        required=True)
+        help='Chrome driver executable')
 
     args = parser.parse_args()
 
@@ -156,13 +155,18 @@ if __name__ == '__main__':
 
     # Initialize Driver
     options = webdriver.ChromeOptions()
-    options.add_argument('headless')
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
     try:
         driver = webdriver.Chrome(
             chromedriver_executable,
             chrome_options=options)
-    except BaseException:
-        print('Could not find chromedriver')
+    except BaseException as e:
+        print('Could not find chromedriver. Exiting')
+        print(e)
+        exit()
 
     driver.get('http://www.et.gr/idocs-nph/search/fekForm.html')
 

@@ -10,6 +10,7 @@ import json
 import collections
 import datetime
 import re
+import entities
 
 # Helper class that defines useful formatting and file handling functions
 
@@ -506,3 +507,34 @@ def get_edges(graph):
 		for v in graph[u]:
 			E |= {(u, v)}
 	return list(E)
+
+def traverse_nums(l, i):
+    j = i + 1
+    result = []
+    n = len(l)
+    while j < n:
+        if l[j] == 'και':
+            if l[j+1].isdigit() or l[j+1].endswith("'") or l[j+1].endswith('΄'):
+                result.append(l[min(j + 1, n)])
+            break
+        if l[j].isdigit() or l[j].endswith("'") or l[j].endswith('΄'):
+            result.append(l[j])
+        j += 1
+
+    if result == []:
+        j = i - 1
+        while j >= 0:
+            n = entities.Numerals.full_number_to_integer(l[j])
+            if l[j] != 'και' and n == 0:
+                break
+            elif l[j] != 'και':
+                result.append(n)
+            j -= 1
+
+    return result
+
+def has_suffix(w, s):
+    for x in s:
+        if w.endswith(x):
+            return True
+    return False

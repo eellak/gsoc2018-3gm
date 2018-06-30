@@ -1,5 +1,4 @@
 import copy
-from entities import Numerals
 
 class Tokenizer:
 
@@ -16,7 +15,7 @@ class Tokenizer:
         self.exceptions.append(e)
         hashmap[str(hash(e))] = e
 
-    def split(self, q, delimiter='.', convert_and_swap_full_nums = True):
+    def split(self, q, delimiter='.'):
 
         for e in self.exceptions:
             q = q.replace(e, self.inv_hashmap[e])
@@ -26,7 +25,6 @@ class Tokenizer:
         for i, x in enumerate(q):
             for h, e in self.hashmap.items():
                 q[i] = q[i].replace(h, e)
-
 
         return q
 

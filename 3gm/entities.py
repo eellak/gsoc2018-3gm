@@ -226,7 +226,7 @@ class Numerals:
             else:
                 result += number
                 k -= 1
-        result
+        return result
 
 
 class EditDistanceClassifier:
