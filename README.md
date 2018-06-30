@@ -32,9 +32,14 @@ For a tutorial on getting started click [here](https://github.com/eellak/gsoc201
 2. Parser for existing laws.
 3. **Named Entities** for Legal Acts (e.g. Laws, Legislative Decrees etc.) encoded in regular expressions.
 4. Topic models for finding Government Gazette Issues that have the same topics. We use an unsupervised model to extract the topics and then group Issues by topics for **cross-linking** between Government Gazette Documents. You can then visualize these topic models with `pyLDAvis`. Topic modelling is done with LDA and NMF algorithms as illustrated in the [Wiki Page](https://github.com/eellak/gsoc2018-3gm/wiki/Topic-Modelling). The source code is located at `src/topic_models.py`.
-5. [Project Wiki](https://github.com/eellak/gsoc2018-3gm/wiki)
+5. Documented end-2-end procedure at [Project Wiki](https://github.com/eellak/gsoc2018-3gm/wiki)
 6. Optionally trained Word2Vec Model for further usage
 7. MongoDB Integration
+8. Fetching Tool for automated fetching of documents from ET
+9. Tool for batch conversion of documents with pdf2txt (for newer documents) or Google Tesseract 4.0 (for performing OCR on older documents)
+10. Digitalized archive of Government Gazette Issues from 1976 - today in plaintext format
+11. Demo Flask application located at `demo/app.py` 
+
 
 ##### In Progress
 
