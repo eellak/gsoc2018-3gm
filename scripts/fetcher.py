@@ -33,8 +33,8 @@ def handle_download(download_page, params):
     """Original function"""
 
     global output_dir
-
-    filename = params['issue_title'] + ".pdf"
+    print(params['issue_date'])
+    filename = str(params['issue_date']).split(' ')[0] + ".pdf"
     outfile = '{}/{}'.format(output_dir, filename)
     if os.path.isfile(outfile):
         return
@@ -107,7 +107,7 @@ def extract_download_links(html, issue_type):
             "issue_type": issue_type}
         print('Download Link')
         print(download_link)
-        handle_download(download_link, params)
+        handle_download(download_link, params, )
 
 
 if __name__ == '__main__':
