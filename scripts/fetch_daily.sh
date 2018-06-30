@@ -1,4 +1,7 @@
 #!/bin/bash
 
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd "$parent_path"
 TODAY=`date +%d.%m.%Y` &&
-./fetcher.py -date_from $TODAY -date_to $TODAY -output_dir $1
+YESTERDAY=`date +%d.%m.%Y -d "-2 days"` &&
+./fetcher.py -date_from $YESTERDAY -date_to $TODAY -output_dir $1
