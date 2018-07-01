@@ -77,7 +77,8 @@ def codify_law():
 
                 amendment = {
                     'tree' : json.dumps(result, ensure_ascii=False),
-                    'paragraph' : paragraph
+                    'paragraph' : paragraph,
+                    'badges' : render_badges(['Hello', 'World'])
                 }
                 amendments.append(amendment)
 
@@ -85,6 +86,32 @@ def codify_law():
 
     return render_template('codify_law.html', **locals())
 
+def color_iterator():
+    colors = ['primary', 'secondary', 'success', 'light', 'dark', 'info', 'danger', 'warning']
+    N = len(colors)
+    i = 0
+    while True:
+        yield colors[i]
+        i = (i + 1) % N
+
+def render_badges(l):
+    result = ''
+    colors = color_iterator()
+    for x in l:
+        result = result + '<span class="badge badge-{}">{}</span> '.format(next(colors), x)
+    return result
+#
+# def render_badges(tree):
+#     return '''
+#     <span class="badge badge-primary">Primary</span>
+#     <span class="badge badge-secondary">Secondary</span>
+#     <span class="badge badge-success">Success</span>
+#     <span class="badge badge-danger">Danger</span>
+#     <span class="badge badge-warning">Warning</span>
+#     <span class="badge badge-info">Info</span>
+#     <span class="badge badge-light">Light</span>
+#     <span class="badge badge-dark">Dark</span>
+#     '''
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True, ssl_context='adhoc')

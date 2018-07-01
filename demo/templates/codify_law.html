@@ -17,12 +17,10 @@ These are the results for codifying {{ data['law'] }}
   <p>{{ amendment['paragraph'] }}</p>
 
   <p>{{ amendment['tree'] }}</p>
-}
+  <p>{{ amendment['badges'] | safe }}</p>
+  <hr>
 
 {% endfor %}
-
-
-
 
 
 
