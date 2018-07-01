@@ -517,7 +517,7 @@ def traverse_nums(l, i):
             if l[j+1].isdigit() or l[j+1].endswith("'") or l[j+1].endswith('΄'):
                 result.append(l[min(j + 1, n)])
             break
-        if l[j].isdigit() or l[j].endswith("'") or l[j].endswith('΄'):
+        if l[j].isdigit() or l[j].endswith("'") or l[j].endswith('΄') or l[j].endswith(','):
             result.append(l[j])
         j += 1
 
@@ -532,6 +532,30 @@ def traverse_nums(l, i):
             j -= 1
 
     return result
+
+def ssconj_doc_iterator(l, i):
+    j = i + 1
+    result = []
+    n = len(l)
+    while j < n:
+        if l[j].text == 'και':
+            if l[j+1].text.isdigit() or l[j+1].text.endswith("'") or l[j+1].text.endswith('΄'):
+                yield l[min(j + 1, n)]
+            break
+        if l[j].text.isdigit() or l[j].text.endswith("'") or l[j].text.endswith('΄') or l[j].text.endswith(','):
+            yield l[j]
+        j += 1
+
+    if result == []:
+        j = i - 1
+        while j >= 0:
+            n = entities.Numerals.full_number_to_integer(l[j].text)
+            if l[j].text != 'και' and n == 0:
+                break
+            elif l[j].text != 'και':
+                yield n
+            j -= 1
+
 
 def has_suffix(w, s):
     for x in s:
