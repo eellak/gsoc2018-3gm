@@ -63,12 +63,20 @@ def autocomplete():
 
 
 @app.route('/codify_law', methods=['POST'])
-def codify_law():
-    data = request.form
+@app.route('/codify_law/<identifier>', methods=['GET'])
+def codify_law(identifier=None):
+    if request.method == 'POST':
+        data = request.form
+    else:
+        print(identifier)
+        data = { 'law' : identifier }
 
     corpus = codifier.get_law(data['law'], export_type='markdown')
     content = Markup(markdown.markdown(corpus))
-    law = codifier.laws[data['law']]
+    try:
+        law = codifier.laws[data['law']]
+    except KeyError:
+        return render_template('error.html')
 
     amendments = []
 
