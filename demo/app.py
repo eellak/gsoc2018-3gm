@@ -2,8 +2,8 @@ from flask import Flask
 from flask import jsonify, render_template, request
 import json
 import sys
-sys.path.append('../3gm')
-
+sys.path.insert(0, '../3gm')
+import codifier
 try:
     import spacy
     from spacy import displacy
@@ -36,6 +36,16 @@ def analyze():
 @app.route('/visualize')
 def visualize():
     return app.send_static_file('templates/graph.html')
+
+@app.route('/codification')
+def codification():
+    global codifier
+    return render_template('codification.html', laws=codifier.codifier.laws)
+
+@app.route('/codify_law', methods=['POST'])
+def codify_law():
+
+        
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True, ssl_context='adhoc')

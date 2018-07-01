@@ -210,9 +210,10 @@ def test():
 	ans = input()
 	cod.export_law(ans, 'foo.md')
 
-if __name__ == '__main__':
-	codifier = LawCodifier()
+codifier = LawCodifier()
 
+if __name__ == '__main__':
+	
 	argc = len(sys.argv)
 
 	if argc <= 1:

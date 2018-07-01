@@ -1,0 +1,40 @@
+<!doctype html>
+<title>3gm Demonstration</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+  ul { margin: 0; padding: 0; display: flex; list-style-type: none; }
+  li > * { padding: 1em; }
+  li.active > a { color: #5e5e5e; border-bottom: 2px solid #4a4a4a; }
+  form > * { padding-right: 1em; }
+  #result { font-weight: bold; }
+  textarea, label, input {
+    width: 100%;
+  }
+  textarea {
+    text-align: justify;
+   }
+
+
+</style>
+<body>
+<ul>
+  <li class="{% if js != 'plain' %}active{% endif %}">
+    <a href="/codification">Codification</a>
+  </li>
+  <li class="{% if js == 'plain' %}active{% endif %}">
+    <a href="{{ url_for('index', js='plain') }}">Syntactic Analysis</a>
+  </li>
+  <li class="{% if js != 'plain' %}active{% endif %}">
+    <a href="https://github.com/eellak/gsoc2018-3gm">Project Homepage</a>
+  </li>
+</ul>
+<br>
+
+{% block body %}{% endblock %}
+
+
+
+</body>

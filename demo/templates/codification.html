@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<h1>Codification</h1>
+
+<p>Select a law from below e.g. (ν. 4418/2018)</p>
+
+<form id="codify" action = "/codify_law" method = "POST">
+<label>Input Law<input name="law"></input><br></label>
+
+<input type="submit" value="Codify">
+</form>
+
+
+
+
+{% endblock %}
