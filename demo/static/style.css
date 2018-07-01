@@ -54,6 +54,17 @@ h5 {
 h6 {
   font-size: 1em; }
 
+p {
+  font-size: 1em;
+  font-family: Verdana, Geneva, sans-serif;
+  text-align: justify;
+}
+
+ol {
+  text-align: justify;
+
+}
+
 small, sub, sup {
   font-size: 75%; }
 

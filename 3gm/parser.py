@@ -1016,3 +1016,6 @@ class LawParser:
 		print(self.sentences[article].keys())
 		for paragraph_id in self.sentences[article].keys():
 			yield self.get_paragraph(article, paragraph_id)
+
+	def get_articles_sorted(self):
+		return sorted(self.articles.keys())		

@@ -1,9 +1,17 @@
 from flask import Flask
-from flask import jsonify, render_template, request
+from flask import jsonify
+from flask import render_template
+from flask import request
+from flask import Markup
+
 import json
 import sys
+import markdown
+
+import collections
 sys.path.insert(0, '../3gm')
-import codifier
+from codifier import *
+
 try:
     import spacy
     from spacy import displacy
@@ -40,12 +48,20 @@ def visualize():
 @app.route('/codification')
 def codification():
     global codifier
-    return render_template('codification.html', laws=codifier.codifier.laws)
+    return render_template('codification.html', laws=codifier.laws)
 
 @app.route('/codify_law', methods=['POST'])
 def codify_law():
+    data = request.form
+    law = data['law']
+    print(codifier.laws.keys())
 
-        
+    corpus = codifier.get_law(law, export_type='markdown')
+    content = Markup(markdown.markdown(corpus))
+
+
+    return render_template('codify_law.html', data=data, corpus=corpus, content=content)
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True, ssl_context='adhoc')
