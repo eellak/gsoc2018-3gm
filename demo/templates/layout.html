@@ -1,11 +1,12 @@
 <!doctype html>
 <title>3gm Demonstration</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
 
 <style>
 
@@ -25,13 +26,13 @@
 </style>
 <body>
 <ul>
-  <li class="{% if js != 'plain' %}active{% endif %}">
+  <li class="{% if js == 'plain' %}active{% endif %}">
     <a href="/codification">Codification</a>
   </li>
   <li class="{% if js == 'plain' %}active{% endif %}">
     <a href="{{ url_for('index', js='plain') }}">Syntactic Analysis</a>
   </li>
-  <li class="{% if js != 'plain' %}active{% endif %}">
+  <li class="{% if js == 'plain' %}active{% endif %}">
     <a href="https://github.com/eellak/gsoc2018-3gm">Project Homepage</a>
   </li>
 </ul>

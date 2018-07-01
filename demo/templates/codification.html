@@ -1,12 +1,32 @@
 {% extends 'layout.html' %}
 {% block body %}
 
+
+<script type="text/javascript">
+$(function() {
+    $("#autocomplete").autocomplete({
+        source:function(request, response) {
+            $.getJSON("{{url_for('autocomplete')}}",{
+                q: request.term,
+            }, function(data) {
+                response(data.matching_results); // matching_results from jsonify
+            });
+        },
+        minLength: 1,
+        select: function(event, ui) {
+            console.log(ui.item.value);
+        }
+    });
+})
+
+</script>
+
 <h1>Codification</h1>
 
 <p>Select a law from below e.g. (ν. 4418/2018)</p>
 
 <form id="codify" action = "/codify_law" method = "POST">
-<label>Input Law<input name="law"></input><br></label>
+<label>Input Law<input name="law" id="autocomplete"></input><br></label>
 
 <input type="submit" value="Codify">
 </form>

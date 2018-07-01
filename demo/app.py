@@ -11,6 +11,7 @@ import markdown
 import collections
 sys.path.insert(0, '../3gm')
 from codifier import *
+autocomplete_laws = list(codifier.laws.keys())
 
 try:
     import spacy
@@ -49,6 +50,12 @@ def visualize():
 def codification():
     global codifier
     return render_template('codification.html', laws=codifier.laws)
+
+@app.route('/autocomplete', methods=['GET'])
+def autocomplete():
+    global autocomplete_laws
+    search = request.args.get('q')
+    return jsonify(matching_results=autocomplete_laws)
 
 @app.route('/codify_law', methods=['POST'])
 def codify_law():
