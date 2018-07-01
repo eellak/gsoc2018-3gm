@@ -13,6 +13,15 @@ These are the results for codifying {{ data['law'] }}
 
 <h4>This law amends the following laws</h4>
 
+{% for amendment in amendments %}
+  <p>{{ amendment['paragraph'] }}</p>
+
+  <p>{{ amendment['tree'] }}</p>
+}
+
+{% endfor %}
+
+
 
 
 

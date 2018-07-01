@@ -169,3 +169,7 @@ label, legend, fieldset {
   display: block;
   margin-bottom: .5rem;
   font-weight: 600; }
+
+.displacy, svg {
+  width: 100%;
+}

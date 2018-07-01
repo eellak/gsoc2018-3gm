@@ -11,7 +11,7 @@ import markdown
 import collections
 sys.path.insert(0, '../3gm')
 from codifier import *
-autocomplete_laws = list(codifier.laws.keys())
+autocomplete_laws = sorted(list(codifier.laws.keys()))
 
 try:
     import spacy
@@ -60,14 +60,30 @@ def autocomplete():
 @app.route('/codify_law', methods=['POST'])
 def codify_law():
     data = request.form
-    law = data['law']
-    print(codifier.laws.keys())
 
-    corpus = codifier.get_law(law, export_type='markdown')
+    corpus = codifier.get_law(data['law'], export_type='markdown')
     content = Markup(markdown.markdown(corpus))
+    law = codifier.laws[data['law']]
+
+    amendments = []
+
+    articles = sorted(law.sentences.keys())
+    print(articles)
+
+    for article in articles:
+        for paragraph in law.get_paragraphs(article):
+            result = syntax.ActionTreeGenerator.generate_action_tree_from_string(paragraph)
+            if result != []:
+
+                amendment = {
+                    'tree' : json.dumps(result, ensure_ascii=False),
+                    'paragraph' : paragraph
+                }
+                amendments.append(amendment)
 
 
-    return render_template('codify_law.html', data=data, corpus=corpus, content=content)
+
+    return render_template('codify_law.html', **locals())
 
 
 if __name__ == '__main__':
