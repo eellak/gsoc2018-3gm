@@ -173,3 +173,7 @@ label, legend, fieldset {
 .displacy, svg {
   width: 100%;
 }
+
+.badge {
+  font-size: 2rem !important; 
+}
