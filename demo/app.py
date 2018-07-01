@@ -25,6 +25,7 @@ import syntax
 
 app = Flask(__name__)
 
+
 @app.route('/', defaults={'js': 'plain'})
 @app.route('/<any(plain, jquery, fetch):js>')
 def index(js):
@@ -42,20 +43,24 @@ def analyze():
 
     return jsonify(result=json_string)
 
+
 @app.route('/visualize')
 def visualize():
     return app.send_static_file('templates/graph.html')
+
 
 @app.route('/codification')
 def codification():
     global codifier
     return render_template('codification.html', laws=codifier.laws)
 
+
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
     global autocomplete_laws
     search = request.args.get('q')
     return jsonify(matching_results=autocomplete_laws)
+
 
 @app.route('/codify_law', methods=['POST'])
 def codify_law():
@@ -72,34 +77,45 @@ def codify_law():
 
     for article in articles:
         for paragraph in law.get_paragraphs(article):
-            result = syntax.ActionTreeGenerator.generate_action_tree_from_string(paragraph)
+            result = syntax.ActionTreeGenerator.generate_action_tree_from_string(
+                paragraph)
             if result != []:
 
                 amendment = {
-                    'tree' : json.dumps(result, ensure_ascii=False),
-                    'paragraph' : paragraph,
-                    'badges' : render_badges_from_tree(result[0])
+                    'tree': json.dumps(result, ensure_ascii=False),
+                    'paragraph': paragraph,
+                    'badges': render_badges_from_tree(result[0])
                 }
                 amendments.append(amendment)
 
-
-
     return render_template('codify_law.html', **locals())
 
+
 def color_iterator():
-    colors = ['primary', 'secondary', 'success', 'light', 'dark', 'info', 'danger', 'warning']
+    colors = [
+        'primary',
+        'secondary',
+        'success',
+        'light',
+        'dark',
+        'info',
+        'danger',
+        'warning']
     N = len(colors)
     i = 0
     while True:
         yield colors[i]
         i = (i + 1) % N
 
+
 def render_badges(l):
     result = ''
     colors = color_iterator()
     for x in l:
-        result = result + '<span class="badge badge-{}">{}</span> '.format(next(colors), x)
+        result = result + \
+            '<span class="badge badge-{}">{}</span> '.format(next(colors), x)
     return result
+
 
 def render_badges_from_tree(tree):
     tags = [
