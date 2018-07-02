@@ -75,8 +75,6 @@
         .enter().append('text')
         .attr("class", "node")
         .text(node => node.name)
-        // .attr("x", function(d) { return d.x; })
-        // .attr("y", function(d) { return d.y; })
         .attr('dx', 15)
         .attr('dy', 4)
         .call(force.drag)

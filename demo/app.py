@@ -13,6 +13,14 @@ sys.path.insert(0, '../3gm')
 from codifier import *
 autocomplete_laws = sorted(list(codifier.laws.keys()))
 
+import networkx
+from networkx.readwrite import json_graph
+from networkx import (
+    draw,
+    DiGraph,
+    Graph,
+)
+
 try:
     import spacy
     from spacy import displacy
