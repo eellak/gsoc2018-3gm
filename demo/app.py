@@ -98,6 +98,14 @@ def codify_law(identifier=None):
 
     return render_template('codify_law.html', **locals())
 
+@app.route('/graph')
+def graph():
+    with open('graph.json') as f:
+        data = json.load(f)
+    data =  json.dumps(data, indent=2)
+
+    return render_template('graph.html', **locals())
+
 
 def color_iterator():
     colors = [
