@@ -46,7 +46,8 @@ class Link:
 		for x in self.actual_links:
 			text = x['text']
 			tag = x['link_type']
-			result[text] |= {tag}
+			fr = x['from']
+			result[text] |= {(tag, fr)}
 
 		return result
 

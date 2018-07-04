@@ -23,6 +23,27 @@ These are the results for codifying {{ data['law'] }}
 {% endfor %}
 
 
+<h1>Links and References</h1>
+
+This law is linked by:
+
+<ol>
+  {% for ref in refs %}
+    <li><a href="#">{{ ref }}</a></li>
+  {% endfor %}
+</ol>
+
+<br>
+
+{% for text, tags in links.items() %}
+
+  <p>{{ text }}</p>
+
+  {% for t in tags %}
+    <p>{{ t | render_badges | safe }}</p>
+  {% endfor %}
+  <hr>
+{% endfor %}
 
 
 {% endblock %}

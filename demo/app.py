@@ -87,6 +87,7 @@ def codify_law(identifier=None):
     except KeyError:
         return render_template('error.html')
 
+    # amendments
     amendments = []
 
     articles = sorted(law.sentences.keys())
@@ -104,6 +105,13 @@ def codify_law(identifier=None):
                     'badges': render_badges_from_tree(result[0])
                 }
                 amendments.append(amendment)
+
+    try:
+        refs = codifier.links['ν. 1920/1991'].links_to
+        links = codifier.links['ν. 1920/1991'].organize_by_text()
+    except KeyError:
+        links = {}
+        refs = []    
 
     return render_template('codify_law.html', **locals())
 
@@ -132,7 +140,7 @@ def color_iterator():
         yield colors[i]
         i = (i + 1) % N
 
-
+@app.template_filter('render_badges')
 def render_badges(l):
     result = ''
     colors = color_iterator()
@@ -152,6 +160,6 @@ def render_badges_from_tree(tree):
     return render_badges(tags)
 
 
-
 if __name__ == '__main__':
+    app.jinja_env.globals.update(render_badges=render_badges)
     app.run(debug=True, use_reloader=True, ssl_context='adhoc')

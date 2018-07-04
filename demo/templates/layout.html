@@ -29,13 +29,13 @@
 <body>
 <ul>
   <li class="{% if js == 'plain' %}active{% endif %}">
-    <a href="/codification">Codification</a>
+    <a class="navbar" href="/codification">Codification</a>
   </li>
   <li class="{% if js == 'plain' %}active{% endif %}">
-    <a href="{{ url_for('index', js='plain') }}">Syntactic Analysis</a>
+    <a class="navbar" href="{{ url_for('index', js='plain') }}">Syntactic Analysis</a>
   </li>
   <li class="{% if js == 'plain' %}active{% endif %}">
-    <a href="https://github.com/eellak/gsoc2018-3gm">Project Homepage</a>
+    <a class="navbar" href="https://github.com/eellak/gsoc2018-3gm">Project Homepage</a>
   </li>
 </ul>
 <br>
