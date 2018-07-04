@@ -577,6 +577,26 @@ def has_suffix(w, s):
     return False
 
 
-def replace_whitespaces(l):
+def replace_whitespaces(s):
     """Replace all unicode whitespaces with normal whitespaces"""
-    pass
+    unicode_whitespaces = [
+        u"\u2009",
+        u"\u2008",
+        u"\u2007",
+        u"\u2006",
+        u"\u2005",
+        u"\u2004",
+        u"\u2003",
+        u"\u2002",
+        u"\u2001",
+        u"\u00a0"
+    ]
+
+    for u in unicode_whitespaces:
+        s = s.replace(u, ' ')
+
+    return s
+
+
+def fix_hyphenthation(s):
+    return re.sub('- +', ' ', s)
