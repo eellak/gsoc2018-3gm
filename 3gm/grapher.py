@@ -19,6 +19,10 @@ def link_issues(input_dir, outfile):
     graph = defaultdict(set)
     txts = []
 
+    cnt = 0
+    ids = {}
+    iids = {}
+
     for root, dirs, files in os.walk(input_dir):
         for file in files:
             if file.endswith('.txt'):
@@ -46,16 +50,23 @@ def link_issues(input_dir, outfile):
                     abbreviation = 'ν.δ.'
 
                 identifier = '{} {}/{}'.format(abbreviation, result[-1], year)
-                print('Identifier')
-                print(identifier)
+                ids[identifier] = cnt
+                iids[cnt] = identifier
+                cnt += 1
+
 
         for entity in LegalEntities.entities:
             neighbors = re.finditer(entity, lines)
             neighbors = [neighbor.group() for neighbor in neighbors]
 
+
             for u in neighbors:
-                graph[identifier] |= {u}
-                graph[u] |= {identifier}
+                if not u in ids:
+                    ids[u] = cnt
+                    iids[cnt] = u
+                    cnt += 1
+                graph[ids[identifier]] |= {ids[u]}
+                graph[ids[u]] |= {ids[identifier]}
 
     components = connected_components(graph)
     print('Number of Connected Components:', len(components))
@@ -72,11 +83,18 @@ def link_issues(input_dir, outfile):
 
 
     G = Graph()
+
     G.add_edges_from(get_edges(graph))
-    d = json_graph.node_link_data(G)
+    for n in G:
+        G.nodes[n]['name'] = n
+
+    CC = list(networkx.connected_component_subgraphs(G))
+    H = CC[2]
+
+    d = json_graph.node_link_data(H)
 
 
-    json.dump(d, open(outfile, 'w'))
+    json.dump(d, open(outfile, 'w'), ensure_ascii=False)
 
 
 

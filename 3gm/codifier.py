@@ -19,13 +19,22 @@ class UnrecognizedCodificationAction(Exception):
 
 
 class Link:
+	"""Link representation"""
 
 	def __init__(self, name=''):
+		"""Initialize an Empty Link
+		:param name : Name of link
+		"""
 		self.name = name
 		self.links_to = set([])
 		self.actual_links = []
 
 	def add_link(self, other, s, link_type='general'):
+		"""Add linking
+		:param other : Neighbor
+		:param s : Content
+		:param link_type : Link type (can be modifying, referential etc.)
+		"""
 		self.links_to |= {other}
 		self.actual_links.append({
 			'from': other,
@@ -34,6 +43,7 @@ class Link:
 		})
 
 	def serialize(self):
+		"""Serialize link to dictionary"""
 		return {
 			'_id': self.name,
 			'links_to': list(self.links_to),

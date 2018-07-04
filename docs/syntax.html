@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module syntax</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>syntax</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/marios/workspace/gsoc2018-3gm/3gm/syntax.py">/home/marios/workspace/gsoc2018-3gm/3gm/syntax.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.html">collections</a><br>
+<a href="datetime.html">datetime</a><br>
+<a href="spacy.displacy.html">spacy.displacy</a><br>
+<a href="el_unnamed.html">el_unnamed</a><br>
+<a href="entities.html">entities</a><br>
+</td><td width="25%" valign=top><a href="helpers.html">helpers</a><br>
+<a href="itertools.html">itertools</a><br>
+<a href="json.html">json</a><br>
+<a href="logging.html">logging</a><br>
+<a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="re.html">re</a><br>
+<a href="shutil.html">shutil</a><br>
+<a href="spacy.html">spacy</a><br>
+<a href="string.html">string</a><br>
+</td><td width="25%" valign=top><a href="tokenizer.html">tokenizer</a><br>
+<a href="urllib.html">urllib</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="syntax.html#ActionTreeGenerator">ActionTreeGenerator</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ActionTreeGenerator">class <strong>ActionTreeGenerator</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Generate&nbsp;the&nbsp;action&nbsp;tree&nbsp;for&nbsp;a&nbsp;given&nbsp;extract.<br>
+The&nbsp;action&nbsp;tree&nbsp;consists&nbsp;of:<br>
+1.&nbsp;action&nbsp;to&nbsp;do&nbsp;(i.e.&nbsp;add,&nbsp;remove,&nbsp;ammend)&nbsp;as&nbsp;the&nbsp;root&nbsp;of&nbsp;the&nbsp;tree<br>
+2.&nbsp;on&nbsp;what&nbsp;to&nbsp;act&nbsp;(i.e.&nbsp;add&nbsp;a&nbsp;paragraph)<br>
+3.&nbsp;where&nbsp;to&nbsp;do&nbsp;it&nbsp;(i.e.&nbsp;on&nbsp;which&nbsp;law&nbsp;after&nbsp;which&nbsp;section)<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Static methods defined here:<br>
+<dl><dt><a name="ActionTreeGenerator-detect_latest_statute"><strong>detect_latest_statute</strong></a>(extract)</dt></dl>
+
+<dl><dt><a name="ActionTreeGenerator-dfs_traversal"><strong>dfs_traversal</strong></a>(token)</dt></dl>
+
+<dl><dt><a name="ActionTreeGenerator-generate_action_tree"><strong>generate_action_tree</strong></a>(extract, issue, article, nested=True, max_what_window=20, max_where_window=30)</dt></dl>
+
+<dl><dt><a name="ActionTreeGenerator-generate_action_tree_from_string"><strong>generate_action_tree_from_string</strong></a>(s, nested=True, max_what_window=20, max_where_window=30)</dt></dl>
+
+<dl><dt><a name="ActionTreeGenerator-get_latest_statute"><strong>get_latest_statute</strong></a>(statutes)</dt><dd><tt>Returns&nbsp;latest&nbsp;statute&nbsp;in&nbsp;a&nbsp;given&nbsp;list&nbsp;of<br>
+statutes&nbsp;by&nbsp;first&nbsp;splitting&nbsp;the&nbsp;statutes&nbsp;and&nbsp;then<br>
+finding&nbsp;the&nbsp;one&nbsp;with&nbsp;the&nbsp;latest&nbsp;year</tt></dd></dl>
+
+<dl><dt><a name="ActionTreeGenerator-nest_tree"><strong>nest_tree</strong></a>(vertex, tree)</dt></dl>
+
+<dl><dt><a name="ActionTreeGenerator-nest_tree_helper"><strong>nest_tree_helper</strong></a>(vertex, tree)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>MONTHS_PREFIXES</strong> = {'Απριλίο': 4, 'Αυγούστο': 8, 'Δεκεμβρίο': 12, 'Ιανουαρίο': 1, 'Ιουλίο': 7, 'Ιουνίο': 6, 'Μαΐο': 5, 'Μαρτίο': 3, 'Νοεμβρίο': 11, 'Οκτωβρίο': 10, ...}<br>
+<strong>actions</strong> = [προστίθεται, διαγράφεται, παύεται, τροποποιείται, αντικαθίσταται]<br>
+<strong>article_regex</strong> = [r'άρθρο \d+', r'άρθρου \d+']<br>
+<strong>date</strong> = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0...τ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'<br>
+<strong>intonations</strong> = {'ά': 'α', 'έ': 'ε', 'ή': 'η', 'ί': 'ι', 'ό': 'ο', 'ύ': 'υ', 'ώ': 'ω'}<br>
+<strong>law_regex</strong> = 'ν. [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'<br>
+<strong>legislative_act_regex</strong> = 'Πράξη(|ς) Νομοθετικού Περιεχομένου ([0-9]|[0-3][0-9]).[0-9][0-9].[1-2][0-9][0-9][0-9]'<br>
+<strong>legislative_decree_regex</strong> = 'ν.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
+<strong>ministers</strong> = [ΠΡΟΚΟΠΙΟΣ ΠΑΥΛΟΠΟΥΛΟΣ, ΔΗΜΟΣ ΠΑΠΑΔΗΜΗΤΡΙΟΥ, ΕΛΕΝΑ ΚΟΥΝΤΥΡΑ, ΣΤΑΥΡΟΣ ΚΟΝΤΟΝΗΣ, ΚΩΝΣΤΑΝΤΙΝΟΣ ΓΑΒΡΟΓΛΟΥ]<br>
+<strong>nlp</strong> = &lt;spacy.lang.el.Greek object&gt;<br>
+<strong>paragraph_regex</strong> = [r'παράγραφος \d+', r'παραγράφου \d+', r'παρ. \d+', 'παράγραφος']<br>
+<strong>presidential_decree_regex</strong> = 'π.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
+<strong>whats</strong> = ['φράση', 'παράγραφος', 'άρθρο', 'εδάφιο', 'φράσεις', 'άρθρα', 'εδάφια', 'παράγραφοι', 'τίτλος', 'περίπτωση', 'περιπτώσεις']<br>
+<strong>wheres</strong> = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']</td></tr></table>
+</body></html>

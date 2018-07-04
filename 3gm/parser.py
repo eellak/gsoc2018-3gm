@@ -69,7 +69,7 @@ class IssueParser:
 					break
 				l = l.replace('-\n', '')
 				l = l.replace('\n', ' ')
-				l = re.sub(' +', ' ', l)
+				l = re.sub(r' +', ' ', l)
 				tmp_lines.append(l)
 
 		for line in tmp_lines:
@@ -1018,4 +1018,4 @@ class LawParser:
 			yield self.get_paragraph(article, paragraph_id)
 
 	def get_articles_sorted(self):
-		return sorted(self.articles.keys())		
+		return sorted(self.articles.keys())

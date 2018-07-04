@@ -599,4 +599,6 @@ def replace_whitespaces(s):
 
 
 def fix_hyphenthation(s):
+    """Fix hyphenthation in string s
+    Example: 'The q- uick brown fox' -> 'The quick brown fox'"""
     return re.sub('- +', ' ', s)

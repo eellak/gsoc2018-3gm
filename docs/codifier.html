@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module codifier</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>codifier</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/marios/workspace/gsoc2018-3gm/3gm/codifier.py">/home/marios/workspace/gsoc2018-3gm/3gm/codifier.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.html">collections</a><br>
+<a href="database.html">database</a><br>
+<a href="entities.html">entities</a><br>
+</td><td width="25%" valign=top><a href="helpers.html">helpers</a><br>
+<a href="parser.html">parser</a><br>
+<a href="pprint.html">pprint</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+<a href="syntax.html">syntax</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="tokenizer.html">tokenizer</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#Exception">builtins.Exception</a>(<a href="builtins.html#BaseException">builtins.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="codifier.html#UnrecognizedCodificationAction">UnrecognizedCodificationAction</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="codifier.html#LawCodifier">LawCodifier</a>
+</font></dt><dt><font face="helvetica, arial"><a href="codifier.html#Link">Link</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LawCodifier">class <strong>LawCodifier</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;class&nbsp;is&nbsp;responsible&nbsp;for&nbsp;binding&nbsp;the&nbsp;different<br>
+modules&nbsp;of&nbsp;the&nbsp;project&nbsp;into&nbsp;the&nbsp;codifier&nbsp;module.<br>
+Functionality:<br>
+1.&nbsp;Construct&nbsp;the&nbsp;database&nbsp;from&nbsp;Government&nbsp;Gazette&nbsp;issues<br>
+2.&nbsp;Parsing&nbsp;New&nbsp;Laws&nbsp;and&nbsp;Fetching&nbsp;Last&nbsp;Versions&nbsp;from&nbsp;database<br>
+3.&nbsp;Invoke&nbsp;Codification&nbsp;tool&nbsp;that&nbsp;recognizes&nbsp;actions&nbsp;and<br>
+builds&nbsp;queries<br>
+4.&nbsp;Interfacing&nbsp;with&nbsp;MongoDB<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="LawCodifier-__init__"><strong>__init__</strong></a>(self, issues_directory=None)</dt><dd><tt>Constructor&nbsp;for&nbsp;<a href="#LawCodifier">LawCodifier</a>&nbsp;class<br>
+:param&nbsp;issues_directory&nbsp;:&nbsp;Issues&nbsp;directory</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-add_directory"><strong>add_directory</strong></a>(issues_directory)</dt><dd><tt>Add&nbsp;additional&nbsp;Directories</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-codify_issue"><strong>codify_issue</strong></a>(self, filename)</dt><dd><tt>Codify&nbsp;certain&nbsp;issue&nbsp;(legacy)<br>
+:param&nbsp;filename&nbsp;:&nbsp;Issue&nbsp;filename</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-codify_law"><strong>codify_law</strong></a>(self, identifier)</dt><dd><tt>Codify&nbsp;certain&nbsp;law.&nbsp;Search&nbsp;all&nbsp;issues&nbsp;within&nbsp;self.<strong>issues</strong><br>
+&nbsp;<br>
+:param&nbsp;identifier&nbsp;:&nbsp;The&nbsp;law&nbsp;identifier&nbsp;e.g.&nbsp;ν.&nbsp;1234/5678</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-codify_new_laws"><strong>codify_new_laws</strong></a>(self)</dt><dd><tt>Append&nbsp;new&nbsp;laws&nbsp;found&nbsp;in&nbsp;self.<strong>issues</strong></tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-create_law_links"><strong>create_law_links</strong></a>(self)</dt><dd><tt>Creates&nbsp;links&nbsp;from&nbsp;existing&nbsp;laws</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-export_law"><strong>export_law</strong></a>(self, identifier, outfile, export_type='markdown')</dt><dd><tt>Export&nbsp;a&nbsp;law&nbsp;in&nbsp;markdown&nbsp;or&nbsp;LaTeX</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-get_law"><strong>get_law</strong></a>(self, identifier, export_type='latex')</dt><dd><tt>Get&nbsp;law&nbsp;string&nbsp;in&nbsp;LaTeX&nbsp;or&nbsp;Markdown&nbsp;string<br>
+&nbsp;<br>
+:param&nbsp;identifier&nbsp;:&nbsp;Law&nbsp;identifier</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-keys"><strong>keys</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LawCodifier-populate_issues"><strong>populate_issues</strong></a>(self, directory)</dt><dd><tt>Populate&nbsp;issues&nbsp;from&nbsp;directory</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-populate_laws"><strong>populate_laws</strong></a>(self)</dt><dd><tt>Populate&nbsp;laws&nbsp;from&nbsp;database&nbsp;and&nbsp;fetch&nbsp;latest&nbsp;versions</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-populate_links"><strong>populate_links</strong></a>(self)</dt><dd><tt>Populate&nbsp;links&nbsp;from&nbsp;database&nbsp;and&nbsp;fetch&nbsp;latest&nbsp;versions</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Link">class <strong>Link</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Link">Link</a>&nbsp;representation<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<strong>__dict__</strong> = mappingproxy({'from_serialized': &lt;staticmethod o...r__': &lt;function Link.__str__ at 0x7f67e95079d8&gt;})
+<dl><dt><a name="Link-__init__"><strong>__init__</strong></a>(self, name='')</dt><dd><tt>Initialize&nbsp;an&nbsp;Empty&nbsp;<a href="#Link">Link</a><br>
+:param&nbsp;name&nbsp;:&nbsp;Name&nbsp;of&nbsp;link</tt></dd></dl>
+
+<dl><dt><a name="Link-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="Link-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<dl><dt><a name="Link-add_link"><strong>add_link</strong></a>(self, other, s, link_type='general')</dt><dd><tt>Add&nbsp;linking<br>
+:param&nbsp;other&nbsp;:&nbsp;Neighbor<br>
+:param&nbsp;s&nbsp;:&nbsp;Content<br>
+:param&nbsp;link_type&nbsp;:&nbsp;<a href="#Link">Link</a>&nbsp;type&nbsp;(can&nbsp;be&nbsp;modifying,&nbsp;referential&nbsp;etc.)</tt></dd></dl>
+
+<dl><dt><a name="Link-organize_by_text"><strong>organize_by_text</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Link-serialize"><strong>serialize</strong></a>(self)</dt><dd><tt>Serialize&nbsp;link&nbsp;to&nbsp;dictionary</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="Link-from_serialized"><strong>from_serialized</strong></a>(s)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UnrecognizedCodificationAction">class <strong>UnrecognizedCodificationAction</strong></a>(<a href="builtins.html#Exception">builtins.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="builtins.html#Exception">Exception</a>&nbsp;class&nbsp;which&nbsp;is&nbsp;raised&nbsp;when&nbsp;the<br>
+codification&nbsp;action&nbsp;is&nbsp;not&nbsp;well-formed.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="codifier.html#UnrecognizedCodificationAction">UnrecognizedCodificationAction</a></dd>
+<dd><a href="builtins.html#Exception">builtins.Exception</a></dd>
+<dd><a href="builtins.html#BaseException">builtins.BaseException</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="UnrecognizedCodificationAction-__init__"><strong>__init__</strong></a>(self, extract)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#Exception">builtins.Exception</a>:<br>
+<dl><dt><a name="UnrecognizedCodificationAction-__new__"><strong>__new__</strong></a>(*args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><a name="UnrecognizedCodificationAction-__delattr__"><strong>__delattr__</strong></a>(self, name, /)</dt><dd><tt>Implement&nbsp;delattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="UnrecognizedCodificationAction-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="UnrecognizedCodificationAction-__reduce__"><strong>__reduce__</strong></a>(...)</dt><dd><tt>helper&nbsp;for&nbsp;pickle</tt></dd></dl>
+
+<dl><dt><a name="UnrecognizedCodificationAction-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="UnrecognizedCodificationAction-__setattr__"><strong>__setattr__</strong></a>(self, name, value, /)</dt><dd><tt>Implement&nbsp;setattr(self,&nbsp;name,&nbsp;value).</tt></dd></dl>
+
+<dl><dt><a name="UnrecognizedCodificationAction-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UnrecognizedCodificationAction-__str__"><strong>__str__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<dl><dt><a name="UnrecognizedCodificationAction-with_traceback"><strong>with_traceback</strong></a>(...)</dt><dd><tt><a href="builtins.html#Exception">Exception</a>.<a href="#UnrecognizedCodificationAction-with_traceback">with_traceback</a>(tb)&nbsp;--<br>
+set&nbsp;self.<strong>__traceback__</strong>&nbsp;to&nbsp;tb&nbsp;and&nbsp;return&nbsp;self.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><strong>__cause__</strong></dt>
+<dd><tt>exception&nbsp;cause</tt></dd>
+</dl>
+<dl><dt><strong>__context__</strong></dt>
+<dd><tt>exception&nbsp;context</tt></dd>
+</dl>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>__suppress_context__</strong></dt>
+</dl>
+<dl><dt><strong>__traceback__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-test"><strong>test</strong></a>()</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>codifier</strong> = &lt;codifier.LawCodifier object&gt;</td></tr></table>
+</body></html>
