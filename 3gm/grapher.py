@@ -14,69 +14,71 @@ from networkx import (
     Graph,
 )
 
-graph = defaultdict(set)
 
+def link_issues(input_dir, outfile):
+    graph = defaultdict(set)
+    txts = []
 
-txts = []
-input_dir = sys.argv[1]
+    for root, dirs, files in os.walk(input_dir):
+        for file in files:
+            if file.endswith('.txt'):
+                txts.append(os.path.join(root, file))
 
+    for infile in txts:
+        with open(infile) as f:
+            lines = f.read().splitlines()
+        year = infile.split('/')[-2]
+        lines = ' '.join(lines)
+        lines = re.sub(' +', ' ', lines)
 
-for root, dirs, files in os.walk(input_dir):
-    for file in files:
-        if file.endswith('.txt'):
-            txts.append(os.path.join(root, file))
+        for ratification in LegalEntities.ratifications:
+            result = re.search(ratification, lines)
+            if result:
+                result = result.group().rstrip().split(' ')
 
-for infile in txts:
-    with open(infile) as f:
-        lines = f.read().splitlines()
-    year = infile.split('/')[-2]
-    lines = ' '.join(lines)
-    lines = re.sub(' +', ' ', lines)
+                abbreviation = 'ν.'
 
-    for ratification in LegalEntities.ratifications:
-        result = re.search(ratification, lines)
-        if result:
-            result = result.group().rstrip().split(' ')
+                if result[0] == 'ΠΡΟΕΔΡΙΚΟ':
+                    abbreviation = 'π.δ.'
+                elif result[0] == 'ΚΟΙΝΗ':
+                    abbreviation = 'ΚΥΑ'
+                elif result[0] == 'ΝΟΜΟΘΕΤΙΚΟ':
+                    abbreviation = 'ν.δ.'
 
-            abbreviation = 'ν.'
+                identifier = '{} {}/{}'.format(abbreviation, result[-1], year)
+                print('Identifier')
+                print(identifier)
 
-            if result[0] == 'ΠΡΟΕΔΡΙΚΟ':
-                abbreviation = 'π.δ.'
-            elif result[0] == 'ΚΟΙΝΗ':
-                abbreviation = 'ΚΥΑ'
-            elif result[0] == 'ΝΟΜΟΘΕΤΙΚΟ':
-                abbreviation = 'ν.δ.'
+        for entity in LegalEntities.entities:
+            neighbors = re.finditer(entity, lines)
+            neighbors = [neighbor.group() for neighbor in neighbors]
 
-            identifier = '{} {}/{}'.format(abbreviation, result[-1], year)
-            print('Identifier')
-            print(identifier)
+            for u in neighbors:
+                graph[identifier] |= {u}
+                graph[u] |= {identifier}
 
-    for entity in LegalEntities.entities:
-        neighbors = re.finditer(entity, lines)
-        neighbors = [neighbor.group() for neighbor in neighbors]
+    components = connected_components(graph)
+    print('Number of Connected Components:', len(components))
 
-        for u in neighbors:
-            graph[identifier] |= {u}
-            graph[u] |= {identifier}
+    avg_degree = 0
 
-components = connected_components(graph)
-print('Number of Connected Components:', len(components))
+    for u in graph.keys():
+        avg_degree += len(graph[u])
 
-avg_degree = 0
+    avg_degree /= len(graph)
 
-for u in graph.keys():
-    avg_degree += len(graph[u])
-
-avg_degree /= len(graph)
-
-print('Average Vertex Degree: ', avg_degree)
+    print('Average Vertex Degree: ', avg_degree)
 
 
 
-G = Graph()
-G.add_edges_from(get_edges(graph))
-d = json_graph.node_link_data(G)
+    G = Graph()
+    G.add_edges_from(get_edges(graph))
+    d = json_graph.node_link_data(G)
 
-outfile = sys.argv[2]
 
-json.dump(d, open(outfile, 'w'))
+    json.dump(d, open(outfile, 'w'))
+
+
+
+if __name__ == '__main__':
+    link_issues(sys.argv[1], sys.argv[2])

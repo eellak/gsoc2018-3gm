@@ -24,6 +24,7 @@ class Database:
         self.db = client['3gmdb']
         self.issues = self.db.issues
         self.laws = self.db.laws
+        self.links = self.db.links
 
     def insert_issue_to_db(self, issue):
         issue.detect_signatories()
@@ -86,3 +87,10 @@ class Database:
         print(temp)
 
         self.laws.save(temp)
+
+    def insert_links(self, links):
+        for link in links:
+            self.links.save(link.serialize())
+
+    def drop_links(self):
+        self.db.drop_collection('links')        

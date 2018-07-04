@@ -1,3 +1,4 @@
+import re
 import sys
 import syntax
 import entities
@@ -13,6 +14,37 @@ class UnrecognizedCodificationAction(Exception):
 
 	def __init__(self, extract):
 		super().__init__('Unrecognized Codification Action on \n', extract)
+
+class Link:
+
+	def __init__(self, name=''):
+		self.name = name
+		self.links_to = set([])
+		self.actual_links = []
+
+	def add_link(self, other, s):
+		self.links_to |= {other}
+		self.actual_links.append({
+			'from' : other,
+			'text' : s
+		})
+
+	def serialize(self):
+		return {
+			'_id' : self.name,
+			'links_to' : list(self.links_to),
+			'actual_links' : self.actual_links
+		}
+
+	def __dict__(self):
+		return self.serialize()
+
+	@staticmethod
+	def from_serialized(s):
+		l = Link(s['_id'])
+		l.links_to = set(s['links_to'])
+		l.actual_links = s['actual_links']
+		return l
 
 
 class LawCodifier:
@@ -193,6 +225,8 @@ class LawCodifier:
 		return result
 
 	def export_law(self, identifier, outfile, export_type='markdown'):
+		"""Export a law in markdown or LaTeX"""
+
 		if export_type not in ['latex', 'markdown']:
 			raise Exception('Unrecognized export type')
 
@@ -202,6 +236,27 @@ class LawCodifier:
 		elif export_type == 'markdown':
 			with open(outfile, 'w+') as f:
 				f.write(result)
+
+	def create_law_links(self):
+			self.links = {}
+
+			for identifier, law in self.laws.items():
+				articles = law.sentences.keys()
+
+				for article in articles:
+						for paragraph in law.get_paragraphs(article):
+							for entity in entities.LegalEntities.entities:
+								neighbors = re.finditer(entity, paragraph)
+								neighbors = [neighbor.group() for neighbor in neighbors]
+
+								for u in neighbors:
+									if u not in self.links:
+										self.links[u] = Link(u)
+									self.links[u].add_link(law.identifier, paragraph)
+
+			for link in self.links.values():
+				self.db.links.save(link.serialize())
+
 
 def test():
 	cod = LawCodifier('../data/2018')
@@ -213,7 +268,7 @@ def test():
 codifier = LawCodifier()
 
 if __name__ == '__main__':
-	
+
 	argc = len(sys.argv)
 
 	if argc <= 1:
