@@ -31,6 +31,19 @@ def job(x):
     else:
         logging.info('[{}/100 complete] {} already a converted file'.format(x))
 
+    count += 1
+    print('Complete {} out of {}'.format(count, total))
+
+def list_files(input_dir, suffix, recursive=True):
+    if recursive:
+        result = []
+        for root, dirs, files in os.walk(input_dir):
+            for file in files:
+                if file.endswith(suffix):
+                    result.append(os.path.join(root, file))
+    else:
+        result = glob.glob('*{}'.format(suffix))
+    return result
 
 
 
@@ -60,6 +73,13 @@ optional.add_argument(
     type=int,
     default=300)
 
+optional.add_argument(
+    '--recursive',
+    dest='recursive',
+    help='Recursive option (default true)'
+    action='store_true')
+
+
 args = parser.parse_args()
 
 global input_dir
@@ -72,6 +92,7 @@ output_dir = args.output_dir
 pdf2txt = args.pdf2txt
 tmp = args.tmp
 resolution = args.resolution
+recursive = args.recursive
 
 njobs = args.njobs
 if not njobs:
@@ -80,20 +101,13 @@ if not njobs:
 if not output_dir.endswith('/'):
     output_dir = output_dir + '/'
 
-pdfs = []
-
-for root, dirs, files in os.walk(input_dir):
-    for file in files:
-        if file.endswith('.pdf'):
-            pdfs.append(os.path.join(root, file))
+pdfs = list_files(input_dir, '.pdf', recursive=recursive)
+txts = list_files(input_dir, '.txt', recursive=recursive)
 
 global total
 total = len(pdfs)
 global count
-count = 0
-
-global percentage
-percentage = count / total * 100
+count = multiprocessing.Value('d', 0)
 
 # use multiprocessing for multiple jobs
 pool = multiprocessing.Pool(int(njobs))
