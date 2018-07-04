@@ -476,37 +476,39 @@ def get_extracts(s, min_words=5):
 
     return extracts, non_extracts
 
-def connected_components(graph):
-	visited = {}
-	components = []
-	for u in graph.keys():
-		visited[u] = False
-	for s in visited.keys():
-		if visited[s]:
-			continue
-		else:
-			component = []
-			q = collections.deque()
-			q.append(s)
-			visited[s] = True
-			while q:
-				p = q.popleft()
-				component.append(p)
-				for r in graph[p]:
-					if not visited[r]:
-						q.append(r)
-						visited[r] = True
-			components.append(component)
 
-	return components
+def connected_components(graph):
+    visited = {}
+    components = []
+    for u in graph.keys():
+        visited[u] = False
+    for s in visited.keys():
+        if visited[s]:
+            continue
+        else:
+            component = []
+            q = collections.deque()
+            q.append(s)
+            visited[s] = True
+            while q:
+                p = q.popleft()
+                component.append(p)
+                for r in graph[p]:
+                    if not visited[r]:
+                        q.append(r)
+                        visited[r] = True
+            components.append(component)
+
+    return components
 
 
 def get_edges(graph):
-	E = set([])
-	for u in graph.keys():
-		for v in graph[u]:
-			E |= {(u, v)}
-	return list(E)
+    E = set([])
+    for u in graph.keys():
+        for v in graph[u]:
+            E |= {(u, v)}
+    return list(E)
+
 
 def traverse_nums(l, i):
     j = i + 1
@@ -514,10 +516,14 @@ def traverse_nums(l, i):
     n = len(l)
     while j < n:
         if l[j] == 'και':
-            if l[j+1].isdigit() or l[j+1].endswith("'") or l[j+1].endswith('΄'):
+            if l[j +
+                 1].isdigit() or l[j +
+                                   1].endswith("'") or l[j +
+                                                         1].endswith('΄'):
                 result.append(l[min(j + 1, n)])
             break
-        if l[j].isdigit() or l[j].endswith("'") or l[j].endswith('΄') or l[j].endswith(','):
+        if l[j].isdigit() or l[j].endswith(
+                "'") or l[j].endswith('΄') or l[j].endswith(','):
             result.append(l[j])
         j += 1
 
@@ -533,16 +539,22 @@ def traverse_nums(l, i):
 
     return result
 
+
 def ssconj_doc_iterator(l, i):
+    """Generator which yields components connected with commas and an "AND" (και)"""
     j = i + 1
     result = []
     n = len(l)
     while j < n:
         if l[j].text == 'και':
-            if l[j+1].text.isdigit() or l[j+1].text.endswith("'") or l[j+1].text.endswith('΄'):
+            if l[j +
+                 1].text.isdigit() or l[j +
+                                        1].text.endswith("'") or l[j +
+                                                                   1].text.endswith('΄'):
                 yield l[min(j + 1, n)]
             break
-        if l[j].text.isdigit() or l[j].text.endswith("'") or l[j].text.endswith('΄') or l[j].text.endswith(','):
+        if l[j].text.isdigit() or l[j].text.endswith(
+                "'") or l[j].text.endswith('΄') or l[j].text.endswith(','):
             yield l[j]
         j += 1
 
@@ -558,7 +570,13 @@ def ssconj_doc_iterator(l, i):
 
 
 def has_suffix(w, s):
+    """Returns true if string w has suffix in list s"""
     for x in s:
         if w.endswith(x):
             return True
     return False
+
+
+def replace_whitespaces(l):
+    """Replace all unicode whitespaces with normal whitespaces"""
+    pass

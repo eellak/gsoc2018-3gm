@@ -6,6 +6,8 @@ import parser
 import helpers
 import database
 import pprint
+import tokenizer
+import collections
 
 class UnrecognizedCodificationAction(Exception):
 	"""Exception class which is raised when the
@@ -15,6 +17,7 @@ class UnrecognizedCodificationAction(Exception):
 	def __init__(self, extract):
 		super().__init__('Unrecognized Codification Action on \n', extract)
 
+
 class Link:
 
 	def __init__(self, name=''):
@@ -22,22 +25,39 @@ class Link:
 		self.links_to = set([])
 		self.actual_links = []
 
-	def add_link(self, other, s):
+	def add_link(self, other, s, link_type='general'):
 		self.links_to |= {other}
 		self.actual_links.append({
-			'from' : other,
-			'text' : s
+			'from': other,
+			'text': s,
+			'link_type' : link_type
 		})
 
 	def serialize(self):
 		return {
-			'_id' : self.name,
-			'links_to' : list(self.links_to),
-			'actual_links' : self.actual_links
+			'_id': self.name,
+			'links_to': list(self.links_to),
+			'actual_links': self.actual_links
 		}
+
+	def organize_by_text(self):
+		result = collections.defaultdict(set)
+
+		for x in self.actual_links:
+			text = x['text']
+			tag = x['link_type']
+			result[text] |= {tag}
+
+		return result
 
 	def __dict__(self):
 		return self.serialize()
+
+	def __str__(self):
+		return self.name
+
+	def __repr__(self):
+		return self.name
 
 	@staticmethod
 	def from_serialized(s):
@@ -65,6 +85,7 @@ class LawCodifier:
 		self.laws = {}
 		self.db = database.Database()
 		self.populate_laws()
+		self.populate_links()
 		self.issues = []
 		if issues_directory:
 			self.populate_issues(issues_directory)
@@ -77,7 +98,7 @@ class LawCodifier:
 	def populate_laws(self):
 		"""Populate laws from database and fetch latest versions"""
 
-		cursor = self.db.laws.find({"versions":{ "$ne" : None}})
+		cursor = self.db.laws.find({"versions": {"$ne": None}})
 		for x in cursor:
 
 			current_version = 0
@@ -86,7 +107,6 @@ class LawCodifier:
 				if int(v['_version']) >= current_version:
 					current_version = int(v['_version'])
 					current_instance = v
-
 
 			law, identifier = parser.LawParser.from_serialized(v)
 			law.version_index = current_version
@@ -146,7 +166,8 @@ class LawCodifier:
 				print(article, issue.name)
 				print('Codifying')
 
-				for i, non_extract in enumerate(issue.get_non_extracts(article)):
+				for i, non_extract in enumerate(
+						issue.get_non_extracts(article)):
 					trees[i] = syntax.ActionTreeGenerator.generate_action_tree(
 						non_extract, issue, article)
 					for j, t in enumerate(trees[i]):
@@ -162,7 +183,8 @@ class LawCodifier:
 								self.laws[law_id] = parser.LawParser(law_id)
 
 							print('Ammendee, ', issue.name)
-							self.db.query_from_tree(self.laws[law_id], t, issue.name)
+							self.db.query_from_tree(
+								self.laws[law_id], t, issue.name)
 
 							print('Pushed to Database')
 						except Exception as e:
@@ -184,12 +206,12 @@ class LawCodifier:
 					serializable['_version'] = 0
 					serializable['amendee'] = issue.name
 					self.db.laws.save({
-						'_id' : new_laws[k].identifier,
-						'versions' : [
+						'_id': new_laws[k].identifier,
+						'versions': [
 							serializable
 						]
 					})
-				except:
+				except BaseException:
 					pass
 
 	def get_law(self, identifier, export_type='latex'):
@@ -201,26 +223,31 @@ class LawCodifier:
 			raise Exception('Unrecognized export type')
 
 		if export_type == 'latex':
-			cur = self.db.laws.find({'_id' : identifier})
+			cur = self.db.laws.find({'_id': identifier})
 			result = '\chapter*{{ {} }}'.format(identifier)
 			for x in cur:
 				for y in x['versions']:
-					result = result + '\section* {{ Version  {} }} \n'.format(y['_version'])
-					for article in sorted(y['articles'].keys(), key=lambda x: int(x)):
-						result = result + '\subsection*{{ Άρθρο {} }}\n'.format(article)
+					result = result + \
+						'\section* {{ Version  {} }} \n'.format(y['_version'])
+					for article in sorted(
+							y['articles'].keys(), key=lambda x: int(x)):
+						result = result + \
+							'\subsection*{{ Άρθρο {} }}\n'.format(article)
 						for paragraph in sorted(y['articles'][article].keys()):
-							result = result + '\paragraph {{ {}. }} {}\n'.format(paragraph, '. '.join(y['articles'][article][paragraph]))
+							result = result + '\paragraph {{ {}. }} {}\n'.format(
+								paragraph, '. '.join(y['articles'][article][paragraph]))
 		elif export_type == 'markdown':
-			cur = self.db.laws.find({'_id' : identifier})
+			cur = self.db.laws.find({'_id': identifier})
 			result = '# {}\n'.format(identifier)
 			for x in cur:
 				for y in x['versions']:
 					result = result + '## Version  {} \n'.format(y['_version'])
-					for article in sorted(y['articles'].keys(), key=lambda x: int(x)):
+					for article in sorted(
+							y['articles'].keys(), key=lambda x: int(x)):
 						result = result + '### Άρθρο {} \n'.format(article)
 						for paragraph in sorted(y['articles'][article].keys()):
-							result = result + ' {}. {}\n'.format(paragraph, '. '.join(y['articles'][article][paragraph]))
-
+							result = result + \
+								' {}. {}\n'.format(paragraph, '. '.join(y['articles'][article][paragraph]))
 
 		return result
 
@@ -238,25 +265,90 @@ class LawCodifier:
 				f.write(result)
 
 	def create_law_links(self):
-			self.links = {}
+		"""Creates links from existing laws"""
 
-			for identifier, law in self.laws.items():
-				articles = law.sentences.keys()
+		self.links = {}
 
-				for article in articles:
-						for paragraph in law.get_paragraphs(article):
-							for entity in entities.LegalEntities.entities:
-								neighbors = re.finditer(entity, paragraph)
-								neighbors = [neighbor.group() for neighbor in neighbors]
+		for identifier, law in self.laws.items():
+			articles = law.sentences.keys()
+
+			for article in articles:
+				for paragraph in law.get_paragraphs(article):
+					try:
+						extracts, non_extracts = helpers.get_extracts(paragraph)
+
+						for entity in entities.LegalEntities.entities:
+							# If law found in amendment body then it is modifying
+							for s in non_extracts:
+
+								neighbors = re.finditer(entity, s)
+								neighbors = set([neighbor.group()
+											 for neighbor in neighbors])
+
+
+								tmp = tokenizer.tokenizer.split(s, ' ')
 
 								for u in neighbors:
 									if u not in self.links:
 										self.links[u] = Link(u)
-									self.links[u].add_link(law.identifier, paragraph)
+									is_modifying = False
 
-			for link in self.links.values():
-				self.db.links.save(link.serialize())
+									for action in entities.actions:
+										for i, w in enumerate(tmp):
+											if action == w:
+												is_modifying = True
+												break
+										if is_modifying:
+											break
 
+									if is_modifying:
+										print('found modifying')
+										self.links[u].add_link(law.identifier, paragraph, link_type='modifying')
+									else:
+										self.links[u].add_link(law.identifier, paragraph, link_type='referential')
+
+							# If enclosed in brackets the link is only referential
+							for s in extracts:
+								neighbors = re.finditer(entity, s)
+								neighbors = set([neighbor.group()
+											 for neighbor in neighbors])
+
+								for u in neighbors:
+									if u not in self.links:
+										self.links[u] = Link(u)
+
+									self.links[u].add_link(law.identifier, paragraph, link_type='referential')
+					#except there are Unmatched brackets
+					except Exception as e:
+						neighbors = re.finditer(entity, paragraph)
+						neighbors = set([neighbor.group()
+									 for neighbor in neighbors])
+
+						for u in neighbors:
+							if u == 'ν. 1920/1991':
+								print('boom')
+								exit()
+
+							if u not in self.links:
+								self.links[u] = Link(u)
+
+							self.links[u].add_link(law.identifier, paragraph, link_type='general')
+
+		for link in self.links.values():
+			self.db.links.save(link.serialize())
+
+	def populate_links(self):
+		"""Populate links from database and fetch latest versions"""
+
+		cursor = self.db.links.find({})
+		self.links = {}
+
+		for x in cursor:
+			l = Link.from_serialized(x)
+			self.links[str(l)] = l
+
+	def keys(self):
+		return list(set(self.laws.keys()) | set(self.links.keys()))
 
 def test():
 	cod = LawCodifier('../data/2018')
@@ -264,6 +356,7 @@ def test():
 	print('Enter a law you wish to texify')
 	ans = input()
 	cod.export_law(ans, 'foo.md')
+
 
 codifier = LawCodifier()
 

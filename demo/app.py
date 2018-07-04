@@ -32,6 +32,7 @@ except ImportError:
 import syntax
 
 app = Flask(__name__)
+codifier_keys = codifier.keys()
 
 
 @app.route('/', defaults={'js': 'plain'})
@@ -149,6 +150,7 @@ def render_badges_from_tree(tree):
     ]
 
     return render_badges(tags)
+
 
 
 if __name__ == '__main__':
