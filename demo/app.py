@@ -113,13 +113,17 @@ def codify_law():
         links = {}
         refs = []
 
+    with open('graph.json') as f:
+        graphData = json.load(f)
+    graphData =  json.dumps(graphData, indent=2)
+    
     return render_template('codify_law.html', **locals())
 
 @app.route('/graph')
 def graph():
     with open('graph.json') as f:
-        data = json.load(f)
-    data =  json.dumps(data, indent=2)
+        graphData = json.load(f)
+    graphData =  json.dumps(graphData, indent=2)
 
     return render_template('graph.html', **locals())
 

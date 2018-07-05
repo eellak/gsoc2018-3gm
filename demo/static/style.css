@@ -177,3 +177,15 @@ label, legend, fieldset {
 .badge {
   font-size: 2rem !important;
 }
+
+ul { margin: 0; padding: 0; display: flex; list-style-type: none; }
+li > * { padding: 1em; }
+li.active > a { color: #5e5e5e; border-bottom: 2px solid #4a4a4a; }
+form > * { padding-right: 1em; }
+#result { font-weight: bold; }
+textarea, label, input {
+  width: 100%;
+}
+textarea {
+  text-align: justify;
+ }
