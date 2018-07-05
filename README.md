@@ -10,7 +10,7 @@
 
 1. [Installation Instructions](https://github.com/eellak/gsoc2018-3gm/wiki/Installation)
 2. [Fetching Documents](https://github.com/eellak/gsoc2018-3gm/wiki/Fetching-Documents)
-3. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier) (Work in progress) 
+3. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier) (Work in progress)
 
 For a tutorial on getting started click [here](https://github.com/eellak/gsoc2018-3gm/wiki/Tutorial)
 
@@ -38,7 +38,8 @@ For a tutorial on getting started click [here](https://github.com/eellak/gsoc201
 8. Fetching Tool for automated fetching of documents from ET
 9. Tool for batch conversion of documents with pdf2txt (for newer documents) or Google Tesseract 4.0 (for performing OCR on older documents)
 10. Digitalized archive of Government Gazette Issues from 1976 - today in plaintext format
-11. Demo Flask application located at `demo/app.py` 
+11. Demo Flask application located at `demo/app.py`
+12. Unit tests
 
 
 ##### In Progress
@@ -57,7 +58,7 @@ Main Body / Extract
 1. Η Τελική Μητρική Οντότητα ενός Ομίλου Πολυεθνικής Επιχείρησης (Ομίλου ΠΕ) που έχει τη φορολογική της κατοικία στην Ελλάδα ή οποιαδήποτε άλλη Αναφέρουσα Οντότητα, σύμφωνα με το Παράρτημα ΙΙΙ Τμήμα ΙΙ, υποβάλλει την Έκθεση ανά Χώρα όσον αφορά το οικείο Φορολογικό Έτος Υποβολής Εκθέσεων εντός δώδεκα (12) μηνών από την τελευταία ημέρα του Φορολογικού
 Έτους Υποβολής Εκθέσεων του Ομίλου ΠΕ, σύμφωνα με το Παράρτημα ΙΙΙ Τμήμα ΙΙ.
 
-The above text signifies the addition of an article to an existing law. We are following heuristic methods since there are no good tools for syntactic analysis for these kind of documents:
+The above text signifies the addition of an article to an existing law. We use a combination of heuristics and NLP from the spaCy package to detect the keywords (e.g. verbs, subjects etc.):
 
 * Detect keywords for additions, removals, replacements etc.
 * Detect the subject which is in nominative in Greek. The subject is also part of some keywords such as article (άρθρο), paragraph(παράγραφος), period (εδάφιο), phrase (φράση) etc. These words have a subset relationship which means that once the algorithm finds the subject it should look up for its predecessors. So it results in a structure like this:
@@ -75,11 +76,17 @@ The above text signifies the addition of an article to an existing law. We are f
 ```
 * And is translated to a MongoDB operation (in this case insertion into the database). Then the information is stored to the database.
 
+2. Demonstration application
+
+
+#### Remaining
+
+1. Finish Detection of phrases.
+2. Finish Demonstration Application.
+
+
 #### Challenges
 
 1. Government Gazette Issues may not always follow guidelines
 2. Improving heuristics
 3. Gathering Information
-
-
-
