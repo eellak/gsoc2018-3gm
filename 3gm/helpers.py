@@ -540,33 +540,51 @@ def traverse_nums(l, i):
     return result
 
 
-def ssconj_doc_iterator(l, i):
-    """Generator which yields components connected with commas and an "AND" (και)"""
+def ssconj_doc_iterator(l, i, singular=True):
+    """Generator which yields components connected with commas and an "AND" (και)
+    Example:
+    1. παράγραφοι 3, 4 και 5 would yield [3,4,5]
+    2. πρώτη και δεύτερη παράγραφος would yield [1,2]
+    3. παράγραφος 1 would yield 1
+    """
+
     j = i + 1
-    result = []
-    n = len(l)
-    while j < n:
-        if l[j].text == 'και':
-            if l[j +
-                 1].text.isdigit() or l[j +
-                                        1].text.endswith("'") or l[j +
-                                                                   1].text.endswith('΄'):
-                yield l[min(j + 1, n)]
-            break
+    if singular:
         if l[j].text.isdigit() or l[j].text.endswith(
                 "'") or l[j].text.endswith('΄') or l[j].text.endswith(','):
-            yield l[j]
-        j += 1
-
-    if result == []:
-        j = i - 1
-        while j >= 0:
+                yield l[j].text
+        else:
+            j = i - 1
             n = entities.Numerals.full_number_to_integer(l[j].text)
-            if l[j].text != 'και' and n == 0:
-                break
-            elif l[j].text != 'και':
+            if n != 0:
                 yield n
-            j -= 1
+            else:
+                raise Exception('Invalid use of Iterator')
+    else:
+        result = []
+        n = len(l)
+        while j < n:
+            if l[j].text == 'και':
+                if l[j +
+                     1].text.isdigit() or l[j +
+                                            1].text.endswith("'") or l[j +
+                                                                       1].text.endswith('΄'):
+                    yield l[min(j + 1, n)].text.strip(',')
+                break
+            if l[j].text.isdigit() or l[j].text.endswith(
+                    "'") or l[j].text.endswith('΄') or l[j].text.endswith(','):
+                yield l[j].text.strip(',')
+            j += 1
+
+        if result == []:
+            j = i - 1
+            while j >= 0:
+                n = entities.Numerals.full_number_to_integer(l[j].text.strip(','))
+                if l[j].text != 'και' and n == 0:
+                    break
+                elif l[j].text != 'και':
+                    yield n
+                j -= 1
 
 
 def has_suffix(w, s):
@@ -576,6 +594,10 @@ def has_suffix(w, s):
             return True
     return False
 
+
+def is_plural(s):
+    """Returns true if s in plural"""
+    return has_suffix(s, entities.plural_suffixes)
 
 def replace_whitespaces(s):
     """Replace all unicode whitespaces with normal whitespaces"""
