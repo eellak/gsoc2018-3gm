@@ -8,6 +8,7 @@ import multiprocessing
 import ocr
 import argparse
 import logging
+import glob
 
 # Minimum bytes for a file to considered purely image
 MIN_BYTES = 200
@@ -27,12 +28,12 @@ def job(x):
             logging.info('{}: File Size unsatisfactory. Performing OCR'.format(x))
             ocr.pdfocr2txt(x, y, resolution=resolution, tmp=tmp)
 
-        logging.info('[{}/100 complete] {} Done'.format(x))
+        logging.info('{} Done'.format(x))
     else:
-        logging.info('[{}/100 complete] {} already a converted file'.format(x))
+        logging.info('{} already a converted file'.format(x))
 
-    count += 1
-    print('Complete {} out of {}'.format(count, total))
+    count.value += 1
+    logging.info('Complete {} out of {}'.format(int(count.value), total))
 
 def list_files(input_dir, suffix, recursive=True):
     if recursive:
@@ -76,7 +77,7 @@ optional.add_argument(
 optional.add_argument(
     '--recursive',
     dest='recursive',
-    help='Recursive option (default true)'
+    help='Recursive option (default true)',
     action='store_true')
 
 
