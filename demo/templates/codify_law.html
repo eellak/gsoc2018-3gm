@@ -17,6 +17,8 @@ These are the results for codifying {{ data['law'] }}
   <p>{{ amendment['paragraph'] }}</p>
 
   <!-- <p>{{ amendment['tree'] }}</p> -->
+
+
   <p>{{ amendment['badges'] | safe }}</p>
   <hr>
 
@@ -29,7 +31,7 @@ This law is linked by:
 
 <ol>
   {% for ref in refs %}
-    <li><a href="#">{{ ref }}</a></li>
+    <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a></li>
   {% endfor %}
 </ol>
 
@@ -37,12 +39,17 @@ This law is linked by:
 
 {% for text, tags in links.items() %}
 
+  <h5>Text</h5>
   <p>{{ text }}</p>
 
+  <h5>Tags</h5>
   {% for t in tags %}
     <p>{{ t | render_badges | safe }}</p>
   {% endfor %}
+
+  
   <hr>
+
 {% endfor %}
 
 
