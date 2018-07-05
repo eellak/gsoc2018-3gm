@@ -14,6 +14,21 @@ try:
 except ImportError:
     pass
 
+
+
+class UncategorizedActionException(Exception):
+    """This exception is raised whenever an action cannot be
+    classified.
+    """
+
+    def __init__(self, s):
+        self.message = 'Uncategorized Action: {}'.format(s)
+        super().__init__(self.message)
+
+    __str__ = lambda self: self.message
+    __repr__ = lambda self: self.message
+
+
 # Action Tree Generation
 
 class ActionTreeGenerator:
@@ -255,10 +270,10 @@ class ActionTreeGenerator:
 
         print(non_extracts)
 
+        extract_cnt = 0
 
 
-
-        for extract, non_extract in itertools.zip_longest(extracts, non_extracts):
+        for non_extract in non_extracts:
 
             doc = nlp(non_extract)
 
@@ -278,6 +293,11 @@ class ActionTreeGenerator:
 
 
                         logging.info('Found ' + str(action))
+
+                        if str(action) not in ['διαγράφεται', 'παύεται']:
+                            extract = extracts[extract_cnt]
+                            extract_cnt += 1
+
 
                         found_what = False
 
