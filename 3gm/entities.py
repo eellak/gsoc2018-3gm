@@ -57,16 +57,6 @@ class Action:
         return w == self.name or w in self.derivatives or w == self.name.capitalize(
         ) or w in list(map(lambda s: s.capitalize(), self.derivatives))
 
-
-ministers = [
-    Minister('ΠΡΟΚΟΠΙΟΣ', 'Β.', 'ΠΑΥΛΟΠΟΥΛΟΣ', 'ΠΡΟΕΔΡΟΣ ΤΗΣ ΔΗΜΟΚΡΑΤΙΑΣ'),
-    Minister('ΔΗΜΟΣ', '', 'ΠΑΠΑΔΗΜΗΤΡΙΟΥ', 'Οικονομίας και Ανάπτυξης'),
-    Minister('ΕΛΕΝΑ', '', 'ΚΟΥΝΤΥΡΑ', 'Τουρισμού'),
-    Minister('ΣΤΑΥΡΟΣ', '', 'ΚΟΝΤΟΝΗΣ', 'Δικαιοσύνης'),
-    Minister('ΚΩΝΣΤΑΝΤΙΝΟΣ', '', 'ΓΑΒΡΟΓΛΟΥ',
-             'Παιδείας, Έρευνας και Θρησκευμάτων')
-]
-
 # Actions
 actions = [
     Action('προστίθεται', 'add', ['προσθέτουμε', 'προσθήκη', 'προστίθενται']),
@@ -92,6 +82,8 @@ whats = [
     ]
 
 wheres = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']
+
+
 law_regex = r'ν. [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'
 legislative_decree_regex = r'ν.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'
 presidential_decree_regex = r'π.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'
@@ -104,6 +96,13 @@ paragraph_regex = [
     'παρ. \d+',
     'παράγραφος']
 
+plural_suffixes = [
+    'οι',
+    'α',
+    'εις',
+    'οι',
+    'ες'
+]
 
 class LegalEntities:
     entities = [

@@ -39,7 +39,8 @@ class Link:
 		self.actual_links.append({
 			'from': other,
 			'text': s,
-			'link_type' : link_type
+			'link_type' : link_type,
+			'status' : 'unapplied'
 		})
 
 	def serialize(self):
@@ -57,7 +58,8 @@ class Link:
 			text = x['text']
 			tag = x['link_type']
 			fr = x['from']
-			result[text] |= {(tag, fr)}
+			status = x['status']
+			result[text] |= {(tag, fr, status)}
 
 		return result
 
