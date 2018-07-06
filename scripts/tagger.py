@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../3gm')
+sys.path.insert(0, '../3gm')
 import os
 import syntax
 import helpers

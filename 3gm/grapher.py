@@ -88,10 +88,8 @@ def link_issues(input_dir, outfile):
     for n in G:
         G.nodes[n]['name'] = n
 
-    CC = list(networkx.connected_component_subgraphs(G))
-    H = CC[2]
-
-    d = json_graph.node_link_data(H)
+    
+    d = json_graph.node_link_data(G)
 
 
     json.dump(d, open(outfile, 'w'), ensure_ascii=False)
