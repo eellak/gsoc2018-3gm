@@ -5,9 +5,26 @@
 
 These are the results for codifying {{ data['law'] }}
 
-<h1>Contents</h1>
+<h1>History of {{ data['law'] }}</h1>
 
-{{ content }}
+<div id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" aria-expanded="false" data-target="#collapseOne" aria-controls="collapseOne">
+          Current Version of {{ data['law'] }}
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        {{ content | safe }}
+      </div>
+    </div>
+  </div>
+
+</div>
 
 <h1>Amendments</h1>
 
@@ -16,10 +33,11 @@ These are the results for codifying {{ data['law'] }}
 {% for amendment in amendments %}
   <p>{{ amendment['paragraph'] }}</p>
 
-  <!-- <p>{{ amendment['tree'] }}</p> -->
+  {% for b in amendment['badges'] %}
+  <p>{{ b | render_badges_from_tree | safe }}</p>
 
+  {% endfor %}
 
-  <p>{{ amendment['badges'] | safe }}</p>
   <hr>
 
 {% endfor %}

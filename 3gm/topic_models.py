@@ -15,6 +15,8 @@ import numpy as np
 import sys
 import pprint
 import re
+import codifier 
+
 
 sys.path.insert(0, '../resources')
 import greek_lemmas
@@ -38,7 +40,7 @@ def display_topics(
 		top_doc_indices = np.argsort(W[:, topic_idx])[
 			::-1][0:no_top_data_samples]
 		for doc_index in top_doc_indices:
-			print(issues[doc_index].filename)
+			print(codifier.codifier.laws[doc_index])
 			graph[doc_index] = list(
 				filter(
 					lambda x: x != doc_index,
@@ -59,33 +61,14 @@ with open('../resources/greek_stoplist.dat') as f:
 		line = line.split(' ')
 		greek_stopwords.append(line[0])
 
-try:
-	issues = parser.get_issues_from_dataset(sys.argv[1])
 
-except:
-	print('Using default directory ../data')
-	issues = parser.get_issues_from_dataset('../data/new')
-
-issues_dict = {}
 
 data_samples = []
 
-for i, issue in enumerate(issues):
-	data_samples.append(re.sub("\d+", " ", ''.join(issue.articles.values())))
-	issues_dict[i] = issue
-
 min_size = 4
 
-for i, sample in enumerate(data_samples):
-	tmp = list(filter(lambda s: len(s) >= min_size, sample.split(' ')))
-	for j, word in enumerate(tmp):
-		try:
-			tmp[j] = greek_lemmas.lemmas[word]
-		except BaseException:
-			tmp[j] = word
-	tmp = ' '.join(tmp)
-	data_samples[i] = tmp
-
+for law in codifier.codifier.laws.keys():
+	data_samples.append(codifier.codifier.get_law(law))
 
 words = []
 for x in data_samples:
@@ -209,11 +192,11 @@ cc_nmf = connected_components(graph_nmf)
 print(cc_nmf)
 print('Filenames')
 for c in cc_nmf:
-	print([issues[d].filename for d in c])
+	print([codifier.codifier.laws[d] for d in c])
 
 print('\nBreadth first Search for Connected Components for Latent Dirichlet Allocation')
 cc_lda = connected_components(graph_lda)
 print(cc_lda)
 print('Filenames')
 for c in cc_lda:
-	print([issues[d].filename for d in c])
+	print([codifier.codifier.laws[d] for d in c])

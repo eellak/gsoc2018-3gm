@@ -101,16 +101,19 @@ def codify_law():
 
     for article in articles:
         for paragraph in law.get_paragraphs(article):
-            result = syntax.ActionTreeGenerator.generate_action_tree_from_string(
-                paragraph)
-            if result != []:
+            try:
+                result = syntax.ActionTreeGenerator.generate_action_tree_from_string(
+                    paragraph)
+                if result != []:
 
-                amendment = {
-                    'tree': json.dumps(result, ensure_ascii=False),
-                    'paragraph': paragraph,
-                    'badges': render_badges_from_tree(result[0])
-                }
-                amendments.append(amendment)
+                    amendment = {
+                        'tree': json.dumps(result, ensure_ascii=False),
+                        'paragraph': paragraph,
+                        'badges': result
+                    }
+                    amendments.append(amendment)
+            except:
+                continue
 
     try:
         refs = codifier.links['ν. 1920/1991'].links_to
@@ -159,7 +162,7 @@ def render_badges(l):
             '<span class="badge badge-{}">{}</span> '.format(next(colors), x)
     return result
 
-
+@app.template_filter('render_badges_from_tree')
 def render_badges_from_tree(tree):
     tags = [
         tree['root']['action'],
