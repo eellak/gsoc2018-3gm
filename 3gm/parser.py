@@ -84,7 +84,10 @@ class IssueParser:
 				except ValueError:
 					self.lines.append(line)
 					if line.startswith('Αρ. Φύλλου'):
-						self.issue_number = int(line.split(' ')[-2])
+						for x in line.split(' '):
+							if x.isdigit():
+								self.issue_number = x
+								break
 
 		self.dates = []
 		self.find_dates()
@@ -359,7 +362,7 @@ class IssueParser:
 		4. Keep the new laws in a dictionary"""
 
 
-		new_law_regex = r'(NOMOΣ|ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ|ΚΟΙΝΗ ΥΠΟΥΡΓΙΚΗ ΑΠΟΦΑΣΗ|ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ) ΥΠ’ ΑΡΙΘΜ. (\d+)'
+		new_law_regex = r'(NOMOΣ|ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ|ΚΟΙΝΗ ΥΠΟΥΡΓΙΚΗ ΑΠΟΦΑΣΗ|ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ) ΥΠ’ ΑΡΙΘ(|Μ). (\d+)'
 		self.new_laws = {}
 		regions_of_interest = []
 
@@ -382,7 +385,7 @@ class IssueParser:
 					try:
 						year, month, day = str(self.issue_date).split('-')
 					except BaseException:
-						year = datetime.date.today().year
+						year = self.filename[:4]
 
 					abbreviation = 'ν.'
 
@@ -433,18 +436,24 @@ def generate_model_from_government_gazette_issues(directory='../data'):
 	return issues, model
 
 
-def get_issues_from_dataset(directory='../data'):
+def get_issues_from_dataset(directory='../data', text_format=False):
 	cwd = os.getcwd()
 	os.chdir(directory)
-	filelist = glob.glob('*.pdf'.format(directory))
 	issues = []
-	for filename in filelist:
-		outfile = filename.strip('.pdf') + '.txt'
-		print(outfile)
-		if not os.path.isfile(outfile):
-			os.system('pdf2txt.py {} > {}'.format(filename, outfile))
-		issue = IssueParser(outfile)
-		issues.append(issue)
+	if text_format:
+		filelist = glob.glob('*.txt')
+		for filename in filelist:
+			issue = IssueParser(filename)
+			issues.append(issue)
+	else:
+		filelist = glob.glob('*.pdf')
+		for filename in filelist:
+			outfile = filename.strip('.pdf') + '.txt'
+			print(outfile)
+			if not os.path.isfile(outfile):
+				os.system('pdf2txt.py {} > {}'.format(filename, outfile))
+			issue = IssueParser(outfile)
+			issues.append(issue)
 
 	os.chdir(cwd)
 	return issues

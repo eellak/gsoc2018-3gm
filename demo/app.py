@@ -32,7 +32,6 @@ except ImportError:
 import syntax
 
 app = Flask(__name__)
-codifier_keys = codifier.keys()
 
 
 @app.route('/syntax', defaults={'js': 'plain'})
@@ -73,7 +72,8 @@ def codification():
 def autocomplete():
     global autocomplete_laws
     search = request.args.get('q')
-    return jsonify(matching_results=autocomplete_laws)
+    match = list(filter(lambda x: x.startswith(search), autocomplete_laws ))
+    return jsonify(matching_results=match)
 
 
 @app.route('/codify_law', methods=['POST', 'GET'])

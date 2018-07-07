@@ -103,10 +103,10 @@ class LawCodifier:
 		if issues_directory:
 			self.populate_issues(issues_directory)
 
-	def add_directory(issues_directory):
+	def add_directory(self, issues_directory, text_format=True):
 		"""Add additional Directories"""
 
-		self.issues.extend(parser.get_issues_from_dataset(issues_directory))
+		self.issues.extend(parser.get_issues_from_dataset(issues_directory, text_format=text_format))
 
 	def populate_laws(self):
 		"""Populate laws from database and fetch latest versions"""
@@ -125,10 +125,10 @@ class LawCodifier:
 			law.version_index = current_version
 			self.laws[identifier] = law
 
-	def populate_issues(self, directory):
+	def populate_issues(self, directory, text_format=True):
 		"""Populate issues from directory"""
 
-		self.issues = parser.get_issues_from_dataset(directory)
+		self.issues = parser.get_issues_from_dataset(directory, text_format=text_format)
 
 	def codify_issue(self, filename):
 		"""Codify certain issue (legacy)
@@ -285,6 +285,8 @@ class LawCodifier:
 		for identifier, law in self.laws.items():
 			articles = law.sentences.keys()
 
+
+
 			for article in articles:
 				for paragraph in law.get_paragraphs(article):
 					try:
@@ -364,8 +366,13 @@ class LawCodifier:
 		return list(set(self.laws.keys()) | set(self.links.keys()))
 
 def test():
-	cod = LawCodifier('../data/2018')
+	cod = LawCodifier()
+	for i in range(1998, 2000):
+		cod.add_directory('../data/' + str(i))
+
 	cod.codify_new_laws()
+
+
 	print('Enter a law you wish to texify')
 	ans = input()
 	cod.export_law(ans, 'foo.md')
