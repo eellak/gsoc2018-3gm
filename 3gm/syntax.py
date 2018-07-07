@@ -146,6 +146,7 @@ class ActionTreeGenerator:
                         print('Subject is', tree['what'])
 
 
+
                     # TODO fix numeral if full
 
                     # If it is a phrase it's located after the word enclosed in quotation marks
@@ -302,7 +303,6 @@ class ActionTreeGenerator:
                         found_what = False
 
                         root_token = doc[i]
-                        print(doc[i])
 
                         for child in root_token.children:
 
@@ -315,14 +315,17 @@ class ActionTreeGenerator:
                                             'context' : what,
                                         }
                                         found_what = True
-                                        print('nlp ok')
+                                        logging.info('nlp ok')
                                         print(tree)
+
+                                        is_plural =  helpers.is_plural(what)
+
                                         break
 
                         if not found_what:
                             # fallback mode
 
-                            print('Exiting')
+                            print('Fallback')
 
                             for j in range(1, max_what_window + 1):
                                 for what in whats:
@@ -332,6 +335,7 @@ class ActionTreeGenerator:
                                             'index' : i + j,
                                             'context' : what,
                                         }
+
                                         if i + j + 1 <= len(tmp) - 1 and re.search(r'[0-9]', tmp[i + j + 1]) != None:
                                             tree['what']['number'] = tmp[i + j + 1]
                                         else:

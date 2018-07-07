@@ -552,6 +552,7 @@ def ssconj_doc_iterator(l, i, singular=True):
     if singular:
         if l[j].text.isdigit() or l[j].text.endswith(
                 "'") or l[j].text.endswith('΄') or l[j].text.endswith(','):
+
                 yield l[j].text
         else:
             j = i - 1
@@ -570,8 +571,8 @@ def ssconj_doc_iterator(l, i, singular=True):
                                             1].text.endswith("'") or l[j +
                                                                        1].text.endswith('΄'):
                     yield l[min(j + 1, n)].text.strip(',')
-                break
-            if l[j].text.isdigit() or l[j].text.endswith(
+                    return
+            elif l[j].text.isdigit() or l[j].text.endswith(
                     "'") or l[j].text.endswith('΄') or l[j].text.endswith(','):
                 yield l[j].text.strip(',')
             j += 1

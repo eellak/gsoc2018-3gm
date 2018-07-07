@@ -116,8 +116,8 @@ def codify_law():
                 continue
 
     try:
-        refs = codifier.links['ν. 1920/1991'].links_to
-        links = codifier.links['ν. 1920/1991'].organize_by_text()
+        refs = codifier.links[data['law']].links_to
+        links = codifier.links[data['law']].organize_by_text()
     except KeyError:
         links = {}
         refs = []

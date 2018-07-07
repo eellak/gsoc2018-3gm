@@ -43,6 +43,7 @@ These are the results for codifying {{ data['law'] }}
 {% endfor %}
 
 
+{% if refs != [] %}
 <h1>Links and References</h1>
 
 This law is linked by:
@@ -71,6 +72,6 @@ This law is linked by:
 
 {% endfor %}
 
-
+{% endif %}
 
 {% endblock %}
