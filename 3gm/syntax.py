@@ -248,11 +248,8 @@ class ActionTreeGenerator:
         global whats
 
         trees = []
-        print('Candidate String is')
-        print(s)
 
         # get extracts and non-extracts using helper functions
-        print('Foo')
         extracts, non_extracts = helpers.get_extracts(s)
 
         print(extracts)
@@ -300,78 +297,20 @@ class ActionTreeGenerator:
                             extract_cnt += 1
 
 
-                        found_what = False
+                        found_what, tree, is_plural = ActionTreeGenerator.get_nsubj(doc, i, tree)
+                        if found_what:
+                            print(tree['what'], is_plural)
+                            k = tree['what']['index']
 
-                        root_token = doc[i]
+                            iters = list(helpers.ssconj_doc_iterator(doc, k, is_plural))
+                            print(iters)
 
-                        for child in root_token.children:
-
-                            if child.dep_ in ['nsubj', 'obl']:
-                                for what in whats:
-                                    if child.text == what:
-                                        tree['root']['children'].append('law')
-                                        tree['what'] = {
-                                            'index' : child.idx,
-                                            'context' : what,
-                                        }
-                                        found_what = True
-                                        logging.info('nlp ok')
-                                        print(tree)
-
-                                        is_plural =  helpers.is_plural(what)
-
-                                        break
-
-                        if not found_what:
-                            # fallback mode
-
-                            print('Fallback')
-
-                            for j in range(1, max_what_window + 1):
-                                for what in whats:
-                                    if i + j  <= len(tmp) - 1 and what == tmp[i + j]:
-                                        tree['root']['children'].append('law')
-                                        tree['what'] = {
-                                            'index' : i + j,
-                                            'context' : what,
-                                        }
-
-                                        if i + j + 1 <= len(tmp) - 1 and re.search(r'[0-9]', tmp[i + j + 1]) != None:
-                                            tree['what']['number'] = tmp[i + j + 1]
-                                        else:
-                                            tree['what']['number'] = None
-
-                                        found_what == True
-                                        break
-
-                                if found_what:
-                                    break
-
-                                    if i - j >= 0 and what == tmp[i - j]:
-                                        tree['root']['children'].append('law')
-                                        tree['what'] = {
-                                            'index' : i - j,
-                                            'context' : what,
-                                        }
-                                        if i - j >= 0 and re.search(r'[0-9]', tmp[i - j + 1]) != None:
-                                            tree['what']['number'] = tmp[i - j + 1]
-                                        else:
-                                            tree['what']['number'] = None
-                                        found_what = True
-                                        break
-
-                                if found_what:
-                                    break
-
-                            if found_what:
-                                print('What')
-                                print('Subject is', tree['what'])
+                        else:
+                            found_what, tree, is_plural = ActionTreeGenerator.get_nsubj_fallback(tmp, i, tree)
 
 
-                        # TODO fix numeral if full
 
-                        # If it is a phrase it's located after the word enclosed in quotation marks
-                        k = tree['what']['index']
+
 
 
                         if tree['what']['context'] in ['παράγραφος', 'παράγραφοι']:
@@ -481,17 +420,63 @@ class ActionTreeGenerator:
     def nest_tree(vertex, tree):
         ActionTreeGenerator.nest_tree_helper(vertex, tree)
 
+    @staticmethod
+    def get_nsubj(doc, i, tree):
+        global whats
+        found_what = False
+        root_token = doc[i]
+        for child in root_token.children:
+
+            if child.dep_ in ['nsubj', 'obl']:
+                for what in whats:
+                    if child.text == what:
+                        found_what = True
+                        tree['root']['children'].append('law')
+                        tree['what'] = {
+                            'index' : child.i,
+                            'context' : what,
+                        }
+                        logging.info('nlp ok')
+
+                        is_plural =  helpers.is_plural(what)
+
+                        return found_what, tree, is_plural
+
+        return found_what, tree, False
 
     @staticmethod
-    def dfs_traversal(token):
-        tree = {}
-        stack = [token]
+    def get_nsubj_fallback(tmp, tree, i):
+        found_what = False
+        logging.info('Fallback mode')
+        for j in range(1, max_what_window + 1):
+            for what in whats:
+                if i + j  <= len(tmp) - 1 and what == tmp[i + j]:
+                    tree['root']['children'].append('law')
+                    tree['what'] = {
+                        'index' : i + j,
+                        'context' : what,
+                    }
 
+                    if i + j + 1 <= len(tmp) - 1 and re.search(r'[0-9]', tmp[i + j + 1]) != None:
+                        tree['what']['number'] = tmp[i + j + 1]
+                    else:
+                        tree['what']['number'] = None
 
-        while stack != []:
-            tok = stack.pop()
-            tree[tok.text] = tok
-            for child in tok.children:
-                stack.append(child)
+                    is_plural = helpers.is_plural(what)
+                    return found_what, tree, is_plural
 
-        return tree
+                if i - j >= 0 and what == tmp[i - j]:
+                    tree['root']['children'].append('law')
+                    tree['what'] = {
+                        'index' : i - j,
+                        'context' : what,
+                    }
+                    if i - j >= 0 and re.search(r'[0-9]', tmp[i - j + 1]) != None:
+                        tree['what']['number'] = tmp[i - j + 1]
+                    else:
+                        tree['what']['number'] = None
+
+                    is_plural = helpers.is_plural(what)
+                    return found_what, tree, is_plural
+
+        return found_what, tree, False
