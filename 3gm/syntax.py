@@ -302,8 +302,7 @@ class ActionTreeGenerator:
                         if found_what:
                             k = tree['what']['index']
                             if tree['what']['context'] not in ['φράση', 'φράσεις']:
-                                iters = list(helpers.ssconj_doc_iterator(doc, k, is_plural))
-                                print(iters)
+                                tree['what']['number'] = list(helpers.ssconj_doc_iterator(doc, k, is_plural))
 
                         else:
                             found_what, tree, is_plural = ActionTreeGenerator.get_nsubj_fallback(tmp, i, tree)
@@ -312,38 +311,45 @@ class ActionTreeGenerator:
                         # get content
                         tree, max_depth = ActionTreeGenerator.get_content(tree, extract)
 
-                        # get latest statute
-                        law = ActionTreeGenerator.detect_latest_statute(non_extract)
+                        # split to subtrees
+                        subtrees = ActionTreeGenerator.split_tree(tree)
 
-                        # first level are laws
-                        tree['law'] = {
-                            '_id' : law,
-                            'children' : ['article']
-                        }
+                        # iterate over subtrees
+                        for subtree in subtrees:
 
-                        #second level is article
-                        if max_depth >= 2:
-                            articles = list ( filter(lambda x : x != [],  [list(re.finditer(a, non_extract)) for a in article_regex]))
-                            tree['article']['_id'] = articles[0][0].group().split(' ')[1]
-                            tree['article']['children'] = ['paragraph'] if max_depth > 2 else []
+                            # get latest statute
+                            law = ActionTreeGenerator.detect_latest_statute(non_extract)
 
-                        # third level is paragraph
-                        if max_depth > 3:
-                            paragraph = list ( filter(lambda x : x != [],  [list(re.finditer(a, non_extract)) for a in paragraph_regex]))
+                            # first level are laws
+                            subtree['law'] = {
+                                '_id' : law,
+                                'children' : ['article']
+                            }
 
-                            tree['paragraph']['_id'] = int(paragraph[0][0].group().split(' ')[1])
-                            tree['paragraph']['children'] = ['period'] if max_depth > 4 else []
 
-                        # nest into dictionary
-                        if nested:
-                            try:
-                                ActionTreeGenerator.nest_tree('root', tree)
-                                # TODO split tree
 
-                                trees.append(tree)
+                            #second level is article
+                            if max_depth >= 2:
+                                articles = list ( filter(lambda x : x != [],  [list(re.finditer(a, non_extract)) for a in article_regex]))
+                                subtree['article']['_id'] = articles[0][0].group().split(' ')[1]
+                                subtree['article']['children'] = ['paragraph'] if max_depth > 2 else []
 
-                            except:
-                                pass
+                            # third level is paragraph
+                            if max_depth > 3:
+                                paragraph = list ( filter(lambda x : x != [],  [list(re.finditer(a, non_extract)) for a in paragraph_regex]))
+
+                                subtree['paragraph']['_id'] = int(paragraph[0][0].group().split(' ')[1])
+                                subtree['paragraph']['children'] = ['period'] if max_depth > 4 else []
+
+                            # nest into dictionary
+                            if nested:
+                                try:
+                                    ActionTreeGenerator.nest_tree('root', subtree)
+
+                                    trees.append(subtree)
+
+                                except:
+                                    pass
 
 
         return trees
@@ -445,6 +451,7 @@ class ActionTreeGenerator:
             if match:
                 spans.append(match.span()[0])
         spans.append(len(q))
+        spans.sort()
 
         result = []
         for i in range(len(spans) - 1):
