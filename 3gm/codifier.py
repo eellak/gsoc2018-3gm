@@ -367,7 +367,7 @@ class LawCodifier:
 
 def test():
 	cod = LawCodifier()
-	for i in range(1998, 2000):
+	for i in range(1998, 2019):
 		cod.add_directory('../data/' + str(i))
 
 	cod.codify_new_laws()

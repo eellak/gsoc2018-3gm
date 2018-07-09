@@ -5,6 +5,7 @@ import logging
 import helpers
 import tokenizer
 import itertools
+import copy
 
 try:
     import spacy
@@ -299,73 +300,19 @@ class ActionTreeGenerator:
 
                         found_what, tree, is_plural = ActionTreeGenerator.get_nsubj(doc, i, tree)
                         if found_what:
-                            print(tree['what'], is_plural)
                             k = tree['what']['index']
-
-                            iters = list(helpers.ssconj_doc_iterator(doc, k, is_plural))
-                            print(iters)
+                            if tree['what']['context'] not in ['φράση', 'φράσεις']:
+                                iters = list(helpers.ssconj_doc_iterator(doc, k, is_plural))
+                                print(iters)
 
                         else:
                             found_what, tree, is_plural = ActionTreeGenerator.get_nsubj_fallback(tmp, i, tree)
 
 
+                        # get content
+                        tree, max_depth = ActionTreeGenerator.get_content(tree, extract)
 
-                        if tree['what']['context'] in ['παράγραφος', 'παράγραφοι']:
-                            if tree['root']['action'] != 'διαγράφεται':
-                                content = extract
-                                tree['paragraph']['content'] = content
-                                tree['what']['content'] = content
-                            max_depth = 4
-
-                        elif tree['what']['context'] == 'άρθρο':
-                            if tree['root']['action'] != 'διαγράφεται':
-                                content = extract
-                                tree['article']['content'] = content
-                                tree['what']['content'] = content
-                            max_depth = 3
-                        elif tree['what']['context'] == 'εδάφιο':
-                            content = extract
-
-                            tree['what']['content'] = content
-                        elif tree['what']['context'] == 'φράση':
-                            # TODO more epxressions for detection
-                            # TODO separate phrases from paragraphs and articles so they always exist in extracts
-
-
-
-                            location = 'end'
-                            # get old phrase
-                            before_phrase = re.search(' μετά τη φράση «', extract)
-                            after_phrase = re.search(' πριν τη φράση «', extract)
-                            old_phrase = None
-                            if before_phrase or after_phrase:
-                                if before_phrase:
-                                    start_of_phrase = before_phrase.span()[1]
-                                    end_of_phrase = re.search('»', extract[start_of_phrase:]).span()[0] + start_of_phrase
-                                    location = 'before'
-                                    old_phrase = extract[start_of_phrase: end_of_phrase]
-                                elif after_phrase:
-                                    start_of_phrase = after_phrase.span()[1]
-                                    end_of_phrase = re.search('»', extract[start_of_phrase:]).span()[0]
-                                    location = 'after'
-                                    old_phrase = extract[start_of_phrase: end_of_phrase]
-
-                            new_phrase = None
-                            phrase_index = re.search(' η φράση(|,) «', extract)
-
-                            if phrase_index:
-                                start_of_phrase = phrase_index.span()[1]
-                                end_of_phrase = re.search('»', extract[start_of_phrase:]).span()[0] + start_of_phrase
-                                new_phrase = extract[start_of_phrase + 2: end_of_phrase - 2]
-
-                            if old_phrase and new_phrase:
-                                tree['what']['location'] = location
-                                tree['what']['old_phrase'] = old_phrase
-                                tree['what']['new_phrase'] = new_phrase
-                                tree['what']['content'] = new_phrase
-
-
-
+                        # get latest statute
                         law = ActionTreeGenerator.detect_latest_statute(non_extract)
 
                         # first level are laws
@@ -391,8 +338,10 @@ class ActionTreeGenerator:
                         if nested:
                             try:
                                 ActionTreeGenerator.nest_tree('root', tree)
+                                # TODO split tree
+
                                 trees.append(tree)
-                                print(tree)
+
                             except:
                                 pass
 
@@ -504,3 +453,84 @@ class ActionTreeGenerator:
             result.append(q[start:end])
 
         return result
+
+    @staticmethod
+    def split_tree(tree):
+        idx_list = tree['what']['number']
+        extract = tree['what']['content']
+        what = tree['what']['context']
+
+        if len(idx_list) == 1:
+            tree['what']['number'] = idx_list[0]
+            result = [tree]
+
+        else:
+            result = []
+            contents = ActionTreeGenerator.get_rois_from_extract(extract, what, idx_list)
+            for idx, s in itertools.zip_longest(idx_list, contents):
+                tmp = copy.deepcopy(tree)
+                tmp['what']['number'] = idx
+                tmp['what']['content'] = s
+                result.append(tmp)
+
+        return result
+
+    @staticmethod
+    def get_content(tree, extract):
+        max_depth = 0
+
+        if tree['what']['context'] in ['άρθρο', 'άρθρα']:
+            if tree['root']['action'] != 'διαγράφεται':
+                content = extract
+                tree['article']['content'] = content
+                tree['what']['content'] = content
+            max_depth = 3
+
+        elif tree['what']['context'] in ['παράγραφος', 'παράγραφοι']:
+            if tree['root']['action'] != 'διαγράφεται':
+                content = extract
+                tree['paragraph']['content'] = content
+                tree['what']['content'] = content
+            max_depth = 4
+
+        elif tree['what']['context'] in ['εδάφιο', 'εδάφια']:
+            if tree['root']['action'] != 'διαγράφεται':
+                content = extract
+                tree['what']['content'] = content
+            max_depth = 5
+
+        elif tree['what']['context'] in ['φράση', 'φράσεις']:
+            location = 'end'
+            max_depth = 6
+
+            # get old phrase
+            before_phrase = re.search(' μετά τη φράση «', s)
+            after_phrase = re.search(' πριν τη φράση «', s)
+            old_phrase = None
+            if before_phrase or after_phrase:
+                if before_phrase:
+                    start_of_phrase = before_phrase.span()[1]
+                    end_of_phrase = re.search('»', s[start_of_phrase:]).span()[0] + start_of_phrase
+                    location = 'before'
+                    old_phrase = s[start_of_phrase: end_of_phrase]
+                elif after_phrase:
+                    start_of_phrase = after_phrase.span()[1]
+                    end_of_phrase = re.search('»', s[start_of_phrase:]).span()[0]
+                    location = 'after'
+                    old_phrase = s[start_of_phrase: end_of_phrase]
+
+            new_phrase = None
+            phrase_index = re.search(' η φράση(|,) «', s)
+
+            if phrase_index:
+                start_of_phrase = phrase_index.span()[1]
+                end_of_phrase = re.search('»', s[start_of_phrase:]).span()[0] + start_of_phrase
+                new_phrase = s[start_of_phrase + 2: end_of_phrase - 2]
+
+            if old_phrase and new_phrase:
+                tree['what']['location'] = location
+                tree['what']['old_phrase'] = old_phrase
+                tree['what']['new_phrase'] = new_phrase
+                tree['what']['content'] = new_phrase
+
+        return tree, max_depth

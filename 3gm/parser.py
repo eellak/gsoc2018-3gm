@@ -631,6 +631,8 @@ class LawParser:
 
 					for par in paragraphs.keys():
 						val = ''.join(paragraphs[par])[1:]
+						val = helpers.fix_whitespaces(val)
+						val = helpers.fix_par_abbrev(val)
 						paragraphs[par] = val
 						sentences[par] = list(
 							filter(

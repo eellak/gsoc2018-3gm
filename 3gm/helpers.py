@@ -510,37 +510,7 @@ def get_edges(graph):
     return list(E)
 
 
-def traverse_nums(l, i):
-    j = i + 1
-    result = []
-    n = len(l)
-    while j < n:
-        if l[j] == 'και':
-            if l[j +
-                 1].isdigit() or l[j +
-                                   1].endswith("'") or l[j +
-                                                         1].endswith('΄'):
-                result.append(l[min(j + 1, n)])
-            break
-        if l[j].isdigit() or l[j].endswith(
-                "'") or l[j].endswith('΄') or l[j].endswith(','):
-            result.append(l[j])
-        j += 1
-
-    if result == []:
-        j = i - 1
-        while j >= 0:
-            n = entities.Numerals.full_number_to_integer(l[j])
-            if l[j] != 'και' and n == 0:
-                break
-            elif l[j] != 'και':
-                result.append(n)
-            j -= 1
-
-    return result
-
-
-def ssconj_doc_iterator(l, i, singular=True):
+def ssconj_doc_iterator(l, i, is_plural=False):
     """Generator which yields components connected with commas and an "AND" (και)
     Example:
     1. παράγραφοι 3, 4 και 5 would yield [3,4,5]
@@ -549,14 +519,12 @@ def ssconj_doc_iterator(l, i, singular=True):
     """
 
     j = i + 1
-    if singular:
-        if l[j].text.isdigit() or l[j].text.endswith(
-                "'") or l[j].text.endswith('΄') or l[j].text.endswith(','):
-
-                yield l[j].text
+    if not is_plural:
+        if str(l[j]).isdigit() or str(l[j]).endswith("'") or str(l[j]).endswith('΄') or str(l[j]).endswith(','):
+                yield str(l[j])
         else:
             j = i - 1
-            n = entities.Numerals.full_number_to_integer(l[j].text)
+            n = entities.Numerals.full_number_to_integer(str(l[j]))
             if n != 0:
                 yield n
             else:
@@ -565,25 +533,22 @@ def ssconj_doc_iterator(l, i, singular=True):
         result = []
         n = len(l)
         while j < n:
-            if l[j].text == 'και':
-                if l[j +
-                     1].text.isdigit() or l[j +
-                                            1].text.endswith("'") or l[j +
-                                                                       1].text.endswith('΄'):
-                    yield l[min(j + 1, n)].text.strip(',')
+            if str(l[j]) == 'και':
+                if str(l[j + 1]).isdigit() or str(l[j + 1]).endswith("'") or str(l[j + 1]).endswith('΄'):
+                    yield str(l[min(j + 1, n)]).strip(',')
                     return
-            elif l[j].text.isdigit() or l[j].text.endswith(
-                    "'") or l[j].text.endswith('΄') or l[j].text.endswith(','):
-                yield l[j].text.strip(',')
+            elif str(l[j]).isdigit() or str(l[j]).endswith(
+                    "'") or str(l[j]).endswith('΄') or str(l[j]).endswith(','):
+                yield str(l[j]).strip(',')
             j += 1
 
         if result == []:
             j = i - 1
             while j >= 0:
-                n = entities.Numerals.full_number_to_integer(l[j].text.strip(','))
-                if l[j].text != 'και' and n == 0:
-                    break
-                elif l[j].text != 'και':
+                n = entities.Numerals.full_number_to_integer(str(l[j]).strip(','))
+                if str(l[j]) != 'και' and n == 0:
+                    return
+                elif str(l[j]) != 'και':
                     yield n
                 j -= 1
 
@@ -600,7 +565,7 @@ def is_plural(s):
     """Returns true if s in plural"""
     return has_suffix(s, entities.plural_suffixes)
 
-def replace_whitespaces(s):
+def fix_whitespaces(s):
     """Replace all unicode whitespaces with normal whitespaces"""
     unicode_whitespaces = [
         u"\u2009",
@@ -624,4 +589,21 @@ def replace_whitespaces(s):
 def fix_hyphenthation(s):
     """Fix hyphenthation in string s
     Example: 'The q- uick brown fox' -> 'The quick brown fox'"""
-    return re.sub('- +', ' ', s)
+    try:
+        return re.sub('- +', ' ', s)
+    except:
+        return s
+
+def fix_par_abbrev(s):
+    q = {
+        'η παρ.' : 'η παράγραφος',
+        'της παρ.' : 'της παραγράφου',
+        'την παρ.' : 'την παράγραφο',
+        'οι παρ.' : 'οι παράγραφοι',
+        'των παρ.' : 'των παραγράφων',
+        'τις παρ.' : 'τις παραγράφους'
+    }
+
+    for x, y in q.items():
+        s = s.replace(x, y)
+    return s
