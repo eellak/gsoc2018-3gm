@@ -309,6 +309,7 @@ class ActionTreeGenerator:
                             found_what, tree, is_plural = ActionTreeGenerator.get_nsubj_fallback(tmp, i, tree)
 
 
+
                         if tree['what']['context'] in ['παράγραφος', 'παράγραφοι']:
                             if tree['root']['action'] != 'διαγράφεται':
                                 content = extract
@@ -493,15 +494,13 @@ class ActionTreeGenerator:
         for x in queries:
             match = re.search(x, q)
             if match:
-                spans.append(match.span())
-        spans.append((len(q), len(q)))
+                spans.append(match.span()[0])
+        spans.append(len(q))
 
         result = []
-
         for i in range(len(spans) - 1):
-            start = spans[i][0]
-            end = spans[i+1][0]
-
+            start = spans[i]
+            end = spans[i+1]
             result.append(q[start:end])
 
         return result
