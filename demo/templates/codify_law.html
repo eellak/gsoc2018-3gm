@@ -26,6 +26,19 @@ These are the results for codifying {{ data['law'] }}
 
 </div>
 
+<br>
+{% if topics %}
+<p>Topics: {{ topics['keywords'] | render_badges | safe }}</p>
+
+<p>Similar Laws:
+
+  <ol>
+  {% for ref in topics['statutes'] %}
+    <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a></li>
+  {% endfor %}
+</ol>
+{% endif %}
+
 <h1>Amendments</h1>
 
 <h4>This law amends the following laws</h4>

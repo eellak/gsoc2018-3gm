@@ -18,6 +18,8 @@ except pymongo.errors.ConnectionFailure as e:
     print("Could not connect to MongoDB: %s" % e)
 
 
+
+
 class Database:
 
     def __init__(self):
@@ -25,6 +27,7 @@ class Database:
         self.issues = self.db.issues
         self.laws = self.db.laws
         self.links = self.db.links
+        self.topics = self.db.topics
 
     def insert_issue_to_db(self, issue):
         issue.detect_signatories()
@@ -93,4 +96,7 @@ class Database:
             self.links.save(link.serialize())
 
     def drop_links(self):
-        self.db.drop_collection('links')        
+        self.db.drop_collection('links')
+
+    def drop_topics(self):
+        self.db.drop_collection('topics')

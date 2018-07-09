@@ -126,6 +126,14 @@ def codify_law():
         graphData = json.load(f)
     graphData =  json.dumps(graphData, indent=2)
 
+    try:
+        topics = list(codifier.db.topics.find({
+            'statutes' : data['law']
+            }))[0]
+    except IndexError:
+        topics = None
+
+
     return render_template('codify_law.html', **locals())
 
 @app.route('/graph')

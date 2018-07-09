@@ -15,14 +15,18 @@ import numpy as np
 import sys
 import pprint
 import re
-import codifier 
+import codifier
+import database
 
 
 sys.path.insert(0, '../resources')
 import greek_lemmas
 
 
-def display_topics(
+db = database.Database()
+
+
+def process_topics(
 		H,
 		W,
 		feature_names,
@@ -32,6 +36,8 @@ def display_topics(
 	graph = {}
 	topics = {}
 	for topic_idx, topic in enumerate(H):
+
+
 		print("Topic %d:" % (topic_idx))
 		topics[topic_idx] = [feature_names[i]
 							 for i in topic.argsort()[:-no_top_words - 1:-1]]
@@ -39,16 +45,36 @@ def display_topics(
 		print(" ".join(topics[topic_idx]))
 		top_doc_indices = np.argsort(W[:, topic_idx])[
 			::-1][0:no_top_data_samples]
+
+
+		similar = []
 		for doc_index in top_doc_indices:
-			print(codifier.codifier.laws[doc_index])
+			print(indices[doc_index])
+			similar.append(indices[doc_index])
 			graph[doc_index] = list(
 				filter(
 					lambda x: x != doc_index,
 					top_doc_indices))
 
+		s = {
+			'_id' : topic_idx,
+			'keywords' : topics[topic_idx],
+			'statutes' : similar
+
+		}
+
+		global db
+
+		db.topics.save(s)
+
+
+
 	print(graph)
 	print(topics)
-	return graph
+	return graph, topics, top_doc_indices
+
+
+
 
 greek_stopwords = []
 cnt_swords = 300
@@ -64,20 +90,44 @@ with open('../resources/greek_stoplist.dat') as f:
 
 
 data_samples = []
+indices = {}
 
 min_size = 4
 
+i = 0
 for law in codifier.codifier.laws.keys():
-	data_samples.append(codifier.codifier.get_law(law))
+	print(law)
+	corpus = codifier.codifier.get_law(law)
+	tmp = corpus.split(' ')
+	corpus = []
+	for j, word in enumerate(tmp):
+		if tmp[j].isdigit() or len(tmp[j]) < min_size:
+			continue
+		try:
+			corpus.append(greek_lemmas.lemmas[word])
+		except BaseException:
+			corpus.append(word)
+
+	corpus = ' '.join(corpus)
+
+	data_samples.append(corpus)
+	indices[i] = law
+
+	i += 1
 
 words = []
+
 for x in data_samples:
 	words.extend(x.split(' '))
 
+print('Counting words')
 counter = collections.Counter(words)
 gg_most_common = 350
 for w in counter.most_common(gg_most_common):
 	greek_stopwords.append(w[0])
+
+print('Done')
+
 
 # Initial Parameters
 no_features = 1000
@@ -171,15 +221,15 @@ lda_W = lda_model.transform(tf)
 lda_H = lda_model.components_
 
 no_top_words = 5
-no_top_data_samples = 3
-graph_nmf = display_topics(
+no_top_data_samples = 200
+graph_nmf, topics, top_doc_indices = process_topics(
 	nmf_H,
 	nmf_W,
 	tfidf_feature_names,
 	data_samples,
 	no_top_words,
 	no_top_data_samples)
-graph_lda = display_topics(
+graph_lda, topics, top_doc_indices = process_topics(
 	lda_H,
 	lda_W,
 	tf_feature_names,
@@ -192,11 +242,11 @@ cc_nmf = connected_components(graph_nmf)
 print(cc_nmf)
 print('Filenames')
 for c in cc_nmf:
-	print([codifier.codifier.laws[d] for d in c])
+	print([codifier.codifier.laws[indices[d]] for d in c])
 
 print('\nBreadth first Search for Connected Components for Latent Dirichlet Allocation')
 cc_lda = connected_components(graph_lda)
 print(cc_lda)
 print('Filenames')
 for c in cc_lda:
-	print([codifier.codifier.laws[d] for d in c])
+	print([codifier.codifier.laws[indices[d]] for d in c])

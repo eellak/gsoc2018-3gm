@@ -326,8 +326,6 @@ class ActionTreeGenerator:
                                 'children' : ['article']
                             }
 
-
-
                             #second level is article
                             if max_depth >= 2:
                                 articles = list ( filter(lambda x : x != [],  [list(re.finditer(a, non_extract)) for a in article_regex]))
@@ -336,9 +334,10 @@ class ActionTreeGenerator:
 
                             # third level is paragraph
                             if max_depth > 3:
-                                paragraph = list ( filter(lambda x : x != [],  [list(re.finditer(a, non_extract)) for a in paragraph_regex]))
 
+                                paragraph = list ( filter(lambda x : x != [],  [list(re.finditer(a, non_extract)) for a in paragraph_regex]))
                                 subtree['paragraph']['_id'] = int(paragraph[0][0].group().split(' ')[1])
+
                                 subtree['paragraph']['children'] = ['period'] if max_depth > 4 else []
 
                             # nest into dictionary
@@ -541,3 +540,18 @@ class ActionTreeGenerator:
                 tree['what']['content'] = new_phrase
 
         return tree, max_depth
+
+    @staticmethod
+    def detect_from_regex(non_extract, regex):
+        roi = list ( filter(lambda x : x != [],  [list(re.finditer(a, non_extract)) for a in regex]))
+        return int(paragraph[0][0].group().split(' ')[1])
+
+    @staticmethod
+    def detect_with_iterator(non_extract_split, words):
+        for i, w in enumerate(non_extract_split):
+            if w in words:
+                try:
+                    iters = list(helpers.ssconj_doc_iterator(non_extract_split, i))
+                    return iters[0]
+                except:
+                    continue    
