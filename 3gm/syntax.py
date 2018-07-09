@@ -309,10 +309,6 @@ class ActionTreeGenerator:
                             found_what, tree, is_plural = ActionTreeGenerator.get_nsubj_fallback(tmp, i, tree)
 
 
-
-
-
-
                         if tree['what']['context'] in ['παράγραφος', 'παράγραφοι']:
                             if tree['root']['action'] != 'διαγράφεται':
                                 content = extract
@@ -480,3 +476,32 @@ class ActionTreeGenerator:
                     return found_what, tree, is_plural
 
         return found_what, tree, False
+
+    @staticmethod
+    def get_rois_from_extract(q, what, idx_list):
+        queries = []
+        for idx in idx_list:
+            if what in ['παράγραφος', 'παράγραφοι']:
+                x = idx + '. '
+            elif what in ['άρθρο', 'άρθρα']:
+                x = 'Άρθρο ' + idx
+            elif what in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
+                x = idx + ') '
+            queries.append(x)
+
+        spans = []
+        for x in queries:
+            match = re.search(x, q)
+            if match:
+                spans.append(match.span())
+        spans.append((len(q), len(q)))
+
+        result = []
+
+        for i in range(len(spans) - 1):
+            start = spans[i][0]
+            end = spans[i+1][0]
+
+            result.append(q[start:end])
+
+        return result
