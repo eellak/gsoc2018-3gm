@@ -127,9 +127,12 @@ td, th {
 
 /* Buttons, forms and input */
 input, textarea {
-  border: 1px solid #4a4a4a; }
-  input:focus, textarea:focus {
-    border: 1px solid #338618; }
+  border: 1px solid #4a4a4a;
+}
+input:focus, textarea:focus {
+  border: 1px solid #338618;
+
+}
 
 textarea {
   width: 100%; }

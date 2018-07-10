@@ -67,7 +67,7 @@ class IssueParser:
 				l = infile.readline()
 				if not l:
 					break
-				l = l.replace('-\n', '')
+				l = l.replace('−\n', '')
 				l = l.replace('\n', ' ')
 				l = re.sub(r' +', ' ', l)
 				tmp_lines.append(l)
