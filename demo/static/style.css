@@ -15,7 +15,11 @@ body {
   margin: auto;
   color: #4a4a4a;
   background-color: #f9f9f9;
-  padding: 13px; }
+  padding: 13px;
+  padding:10px;
+  padding-bottom:60px;
+  height: 100%;
+ }
 
 @media (max-width: 684px) {
   body {
@@ -189,3 +193,13 @@ textarea, label, input {
 textarea {
   text-align: justify;
  }
+
+.footer {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  text-align: center;
+  font-style: italic;
+}

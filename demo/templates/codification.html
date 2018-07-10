@@ -23,12 +23,23 @@ $(function() {
 
 <h1>Codification</h1>
 
-<p>Select a law from below e.g. (ν. 4511/2018)</p>
+<p>Select a law from below: </p>
 
 <form id="codify" action = "/codify_law" method = "POST">
-<label>Input Law<input name="law" id="autocomplete"></input><br></label>
-
+<input name="law" id="autocomplete"></input>
+<br>
 <input type="submit" value="Codify">
 </form>
+
+<h2>Examples</h2>
+
+You can try the following examples in the searchbar:
+
+<ol>
+  <li>ν. 4511/2018</li>
+  <li>ν. 4001/2011</li>
+</ol>
+
+
 
 {% endblock %}

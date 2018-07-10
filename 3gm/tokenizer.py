@@ -58,7 +58,7 @@ class Tokenizer:
         return q
 
     def remove_subordinate(self, q):
-        return re.sub(self.subordinate_conjuctions_regex, '', q)
+        return re.sub(self.subordinate_conjuctions_regex, ' ', q)
 
 
 global TOKENIZER_EXCEPTIONS
