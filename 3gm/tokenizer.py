@@ -1,4 +1,6 @@
 import copy
+import re
+
 
 class Tokenizer:
 
@@ -11,11 +13,38 @@ class Tokenizer:
             self.hashmap[h] = e
             self.inv_hashmap[e] = h
 
+        self.subordinate_conjuctions = [
+            'ότι',
+            'πως',
+            'που',
+            'μήπως',
+            'να',
+            'όταν',
+            'ενώ',
+            'καθώς',
+            'αφού',
+            'αφότου',
+            'ωσότου',
+            'για να',
+            'άμα',
+            'εάν',
+            'αν',
+            'ώστε',
+            'αν και',
+            'μολονότι',
+            'παρά'
+        ]
+
+        self.subordinate_conjuctions_regex = r', ({})[^,]*, '.format(
+            '|'.join(self.subordinate_conjuctions))
+
     def add_exception(self, e):
         self.exceptions.append(e)
         hashmap[str(hash(e))] = e
 
-    def split(self, q, delimiter='.'):
+    def split(self, q, remove_subordinate=False, delimiter='.'):
+        if remove_subordinate:
+            q = self.remove_subordinate(q)
 
         for e in self.exceptions:
             q = q.replace(e, self.inv_hashmap[e])
@@ -27,6 +56,9 @@ class Tokenizer:
                 q[i] = q[i].replace(h, e)
 
         return q
+
+    def remove_subordinate(self, q):
+        return re.sub(self.subordinate_conjuctions_regex, '', q)
 
 
 global TOKENIZER_EXCEPTIONS

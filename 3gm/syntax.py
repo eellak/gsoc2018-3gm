@@ -41,6 +41,13 @@ class ActionTreeGenerator:
         3. where to do it (i.e. on which law after which section)
     """
 
+    trans_lookup = {
+        'άρθρο' : 'article',
+        'παράγραφος' : 'paragraph',
+        'εδάφιο' : 'period',
+        'φράση' : 'phrase'
+    }
+
     @staticmethod
     def get_latest_statute(statutes):
         """Returns latest statute in a given list of
@@ -244,7 +251,7 @@ class ActionTreeGenerator:
         return trees
 
     @staticmethod
-    def generate_action_tree_from_string(s, nested=True, max_what_window = 20, max_where_window = 30):
+    def generate_action_tree_from_string(s, nested=True, max_what_window = 20, max_where_window = 30, use_regex=False):
         global actions
         global whats
 
@@ -304,12 +311,14 @@ class ActionTreeGenerator:
                             if tree['what']['context'] not in ['φράση', 'φράσεις']:
                                 tree['what']['number'] = list(helpers.ssconj_doc_iterator(doc, k, is_plural))
 
+                            print(tree['what'])
+
                         else:
                             found_what, tree, is_plural = ActionTreeGenerator.get_nsubj_fallback(tmp, i, tree)
 
 
                         # get content
-                        tree, max_depth = ActionTreeGenerator.get_content(tree, extract)
+                        tree, max_depth = ActionTreeGenerator.get_content(tree, extract, s)
 
                         # split to subtrees
                         subtrees = ActionTreeGenerator.split_tree(tree)
@@ -462,9 +471,14 @@ class ActionTreeGenerator:
 
     @staticmethod
     def split_tree(tree):
-        idx_list = tree['what']['number']
-        extract = tree['what']['content']
-        what = tree['what']['context']
+
+        try:
+            idx_list = tree['what']['number']
+            extract = tree['what']['content']
+            what = tree['what']['context']
+        except BaseException:
+            return [tree]
+
 
         if len(idx_list) == 1:
             tree['what']['number'] = idx_list[0]
@@ -482,7 +496,7 @@ class ActionTreeGenerator:
         return result
 
     @staticmethod
-    def get_content(tree, extract):
+    def get_content(tree, extract, s):
         max_depth = 0
 
         if tree['what']['context'] in ['άρθρο', 'άρθρα']:
@@ -554,4 +568,4 @@ class ActionTreeGenerator:
                     iters = list(helpers.ssconj_doc_iterator(non_extract_split, i))
                     return iters[0]
                 except:
-                    continue    
+                    continue

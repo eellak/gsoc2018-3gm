@@ -25,6 +25,12 @@ import greek_lemmas
 
 db = database.Database()
 
+def contains_digit(s):
+	for i in range(len(s)):
+		if s[i].isdigit():
+			return True
+	return False
+
 
 def process_topics(
 		H,
@@ -101,7 +107,7 @@ for law in codifier.codifier.laws.keys():
 	tmp = corpus.split(' ')
 	corpus = []
 	for j, word in enumerate(tmp):
-		if tmp[j].isdigit() or len(tmp[j]) < min_size:
+		if contains_digit(tmp[j]) or len(tmp[j]) < min_size:
 			continue
 		try:
 			corpus.append(greek_lemmas.lemmas[word])
@@ -153,11 +159,10 @@ tf_vectorizer = CountVectorizer(
 tf = tf_vectorizer.fit_transform(data_samples)
 tf_feature_names = tf_vectorizer.get_feature_names()
 
-no_topics = 10
 
 # Run NMF
 nmf_model = NMF(
-	n_components=no_topics,
+	n_components=1000,
 	random_state=1,
 	alpha=.1,
 	l1_ratio=.5,
@@ -189,15 +194,16 @@ model = GridSearchCV(
 	fit_params=None,
 	iid=True,
 	n_jobs=1,
-	param_grid={
-		'n_components': range(
-			10,
-			31,
-			5),
+	param_grid={ # change e.g. to range() for grid search
+		'n_components': [10],
 		'learning_decay': [
 			0.5,
 			0.7,
-			0.9]},
+			0.9],
+		'n_samples' : [2000],
+		'n_features'  : [1000]
+
+		},
 	pre_dispatch='2*n_jobs',
 	refit=True,
 	return_train_score='warn',
@@ -220,8 +226,8 @@ print("Best Perplexity Score: ", lda_model.perplexity(tfidf))
 lda_W = lda_model.transform(tf)
 lda_H = lda_model.components_
 
-no_top_words = 5
-no_top_data_samples = 200
+no_top_words = 10
+no_top_data_samples = 3
 graph_nmf, topics, top_doc_indices = process_topics(
 	nmf_H,
 	nmf_W,
