@@ -53,7 +53,8 @@ class Action:
                 word if not _normalize_word else normalize_word(word), derivative)
         return np.dot(scores, self.weight_vector)
 
-    def __eq__(self, w):
+    def __eq__(self, q):
+        w = q.lower()
         return w == self.name or w in self.derivatives or w == self.name.capitalize(
         ) or w in list(map(lambda s: s.capitalize(), self.derivatives))
 

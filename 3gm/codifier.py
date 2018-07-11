@@ -8,6 +8,7 @@ import database
 import pprint
 import tokenizer
 import collections
+import argparse
 
 class UnrecognizedCodificationAction(Exception):
 	"""Exception class which is raised when the
@@ -241,7 +242,7 @@ class LawCodifier:
 			for x in cur:
 				for y in x['versions']:
 					result = result + \
-						'\section* {{ Version  {} }} \n'.format(y['_version'])
+						'\section* {{ Έκδοση  {} }} \n'.format(y['_version'])
 					for article in sorted(
 							y['articles'].keys(), key=lambda x: int(x)):
 						result = result + \
@@ -254,7 +255,7 @@ class LawCodifier:
 			result = '# {}\n'.format(identifier)
 			for x in cur:
 				for y in x['versions']:
-					result = result + '## Version  {} \n'.format(y['_version'])
+					result = result + '## Έκδοση  {} \n'.format(y['_version'])
 					for article in sorted(
 							y['articles'].keys(), key=lambda x: int(x)):
 						result = result + '### Άρθρο {} \n'.format(article)
@@ -379,6 +380,12 @@ class LawCodifier:
 		print('Maximum Degree: ', max_degree)
 		print('Average Degree', avg_degree)
 
+	def codify_pair(self, source, target):
+		source_law = self.laws[source]
+		target_law = self.laws[target]
+
+		# TODO finish
+
 
 
 def test():
@@ -398,12 +405,30 @@ def test():
 codifier = LawCodifier()
 
 if __name__ == '__main__':
+	parser = argparse.ArgumentParser(
+		description='''This is the command line tool for codifying documents''')
+	required = parser.add_argument_group('required arguments')
+	optional = parser.add_argument_group('optional arguments')
 
-	argc = len(sys.argv)
+	required.add_argument(
+		'-source',
+		help='Source Statute',
+		required=True)
+	required.add_argument(
+		'-target',
+		help='Target Statute',
+		required=True)
 
-	if argc <= 1:
-		print('Please use one or more files as arguments')
-		sys.exit(0)
+	optional.add_argument(
+		'--rollback',
+		help='Rollback taget Statute to version 0',
+		action='store_true')
 
-	for i in range(1, argc):
-		codifier.codify_issue(sys.argv[i])
+	args = parser.parse_args()
+	print('Source Statute: {}\nTarget Statute: {}'.format(args.source, args.target))
+
+	if args.rollback:
+		print('Rolling back ', args.target)
+		codifier.db.rollback_laws(args.target)
+
+	codifier.codify_pair(args.source, args.target)	

@@ -101,8 +101,11 @@ class Database:
     def drop_topics(self):
         self.db.drop_collection('topics')
 
-    def rollback_laws(self):
-        cursor = self.laws.find({})
+    def rollback_laws(self, identifier=None):
+        if identifier:
+            cursor = self.laws.find({'_id' : identifier})
+        else:
+            cursor = self.laws.find({})
 
         for x in cursor:
             try:
@@ -112,5 +115,6 @@ class Database:
                 }
 
                 self.laws.save(y)
+            # Version 0 does not exist
             except IndexError:
-                pass    
+                pass
