@@ -40,7 +40,7 @@ class Link:
 			'from': other,
 			'text': s,
 			'link_type' : link_type,
-			'status' : 'unapplied'
+			'status' : 'μη εφαρμοσμένος'
 		})
 
 	def serialize(self):
@@ -318,9 +318,9 @@ class LawCodifier:
 
 									if is_modifying:
 										print('found modifying')
-										self.links[u].add_link(law.identifier, paragraph, link_type='modifying')
+										self.links[u].add_link(law.identifier, paragraph, link_type='τροποποιητικός')
 									else:
-										self.links[u].add_link(law.identifier, paragraph, link_type='referential')
+										self.links[u].add_link(law.identifier, paragraph, link_type='αναφορικός')
 
 							# If enclosed in brackets the link is only referential
 							for s in extracts:
@@ -332,7 +332,7 @@ class LawCodifier:
 									if u not in self.links:
 										self.links[u] = Link(u)
 
-									self.links[u].add_link(law.identifier, paragraph, link_type='referential')
+									self.links[u].add_link(law.identifier, paragraph, link_type='αναφορικός')
 					#except there are Unmatched brackets
 					except Exception as e:
 						neighbors = re.finditer(entity, paragraph)
@@ -340,14 +340,11 @@ class LawCodifier:
 									 for neighbor in neighbors])
 
 						for u in neighbors:
-							if u == 'ν. 1920/1991':
-								print('boom')
-								exit()
 
 							if u not in self.links:
 								self.links[u] = Link(u)
 
-							self.links[u].add_link(law.identifier, paragraph, link_type='general')
+							self.links[u].add_link(law.identifier, paragraph, link_type='γενικός')
 
 		for link in self.links.values():
 			self.db.links.save(link.serialize())
@@ -365,12 +362,32 @@ class LawCodifier:
 	def keys(self):
 		return list(set(self.laws.keys()) | set(self.links.keys()))
 
+	def calculate_links_degrees(self):
+
+		cursor = self.db.links.find({})
+		max_degree = -1
+		sum_degrees = 0
+		cnt = 0
+
+		for x in cursor:
+			d = len(set(x['links_to']))
+			max_degree = max(max_degree, d)
+			sum_degrees += d
+			cnt += 1
+
+		avg_degree = sum_degrees / cnt
+		print('Maximum Degree: ', max_degree)
+		print('Average Degree', avg_degree)
+
+
+
 def test():
 	cod = LawCodifier()
 	for i in range(1998, 2019):
 		cod.add_directory('../data/' + str(i))
 
 	cod.codify_new_laws()
+	cod.create_law_links()
 
 
 	print('Enter a law you wish to texify')

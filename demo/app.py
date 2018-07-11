@@ -144,6 +144,13 @@ def graph():
 
     return render_template('graph.html', **locals())
 
+@app.route('/history')
+def history():
+    identifier = request.args.get('identifier')
+    return render_template('history.html', **locals())
+
+
+
 
 def color_iterator():
     colors = [
