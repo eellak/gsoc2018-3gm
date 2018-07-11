@@ -105,8 +105,12 @@ class Database:
         cursor = self.laws.find({})
 
         for x in cursor:
-            for i, v in enumerate(x['version']):
-                if v['_version'] != 0:
-                    del x['version'][i]
+            try:
+                y = {
+                    '_id' : x['_id'],
+                    'versions' : [x['versions'][0]]
+                }
 
-            self.laws.save(x)
+                self.laws.save(y)
+            except IndexError:
+                pass    
