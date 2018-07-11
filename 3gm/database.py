@@ -100,3 +100,13 @@ class Database:
 
     def drop_topics(self):
         self.db.drop_collection('topics')
+
+    def rollback_laws(self):
+        cursor = self.laws.find({})
+
+        for x in cursor:
+            for i, v in enumerate(x['version']):
+                if v['_version'] != 0:
+                    del x['version'][i]
+
+            self.laws.save(x)
