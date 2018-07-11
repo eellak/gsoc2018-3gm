@@ -173,7 +173,7 @@ def render_badges(l):
 @app.template_filter('render_badges_from_tree')
 def render_badges_from_tree(tree):
     try:
-        what = '{} {}'.format(tree['what']['context'], tree['what']['number'] if tree['what']['number'] in tree['what'] else '')
+        what = '{} {}'.format(tree['what']['context'], tree['what']['number'])
     except:
         what = tree['what']['context']
 
