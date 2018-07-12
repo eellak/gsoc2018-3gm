@@ -7,6 +7,7 @@ from flask import Markup
 import json
 import sys
 import markdown
+import pymongo
 
 import collections
 sys.path.insert(0, '../3gm')
@@ -157,7 +158,8 @@ def legal_index():
 @app.route('/full_index')
 def full_index():
     global codifier
-    full_index = codifier.db.links.find({})
+    full_index = codifier.db.links.find().sort('_id',pymongo.ASCENDING)
+
     return render_template('full_index.html', full_index=full_index)
 
 
