@@ -385,7 +385,7 @@ class IssueParser:
 					try:
 						year, month, day = str(self.issue_date).split('-')
 					except BaseException:
-						year = self.filename[:4]
+						year = self.filename.split('/')[-1][:4]
 
 					abbreviation = 'ν.'
 
@@ -1030,4 +1030,31 @@ class LawParser:
 			yield self.get_paragraph(article, paragraph_id)
 
 	def get_articles_sorted(self):
-		return sorted(self.articles.keys())
+		return sorted(self.articles.keys(), key=lambda x: int(x))
+
+	def export_law(self, export_type='latex'):
+		"""Get law string in LaTeX or Markdown string
+
+		:param identifier : Law identifier
+		"""
+		if export_type not in ['latex', 'markdown']:
+			raise Exception('Unrecognized export type')
+
+		if export_type == 'latex':
+			result = '\chapter*{{ {} }}'.format(self.identifier)
+			for article in self.get_articles_sorted():
+				result = result + \
+					'\subsection*{{ Άρθρο {} }}\n'.format(article)
+				for i, paragraph in enumerate(self.get_paragraphs(article)):
+					result = result + '\paragraph {{ {}. }} {}\n'.format(
+						i, paragraph)
+		elif export_type == 'markdown':
+
+			result = '# {}\n'.format(self.identifier)
+			for article in self.get_articles_sorted():
+				result = result + '### Άρθρο {} \n'.format(article)
+				for i, paragraph in enumerate(self.get_paragraphs(article)):
+					result = result + \
+						' {}. {}\n'.format(i, paragraph)
+
+		return result

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import re
 import sys
 import syntax
@@ -380,13 +382,47 @@ class LawCodifier:
 		print('Maximum Degree: ', max_degree)
 		print('Average Degree', avg_degree)
 
-	def codify_pair(self, source, target):
-		source_law = self.laws[source]
-		target_law = self.laws[target]
+	@staticmethod
+	def codify_pair(source, target, outfile=None):
+		source_issue = parser.IssueParser(source)
+		target_issue = parser.IssueParser(target)
 
-		# TODO finish
+		source_issue.detect_new_laws()
+		target_issue.detect_new_laws()
 
+		source_law = list(source_issue.new_laws.items())[0][1]
+		target_law = list(target_issue.new_laws.items())[0][1]
 
+		source_articles = source_law.get_articles_sorted()
+		input_md = target_law.export_law('markdown')
+
+		for article in source_articles:
+			for paragraph in source_law.get_paragraphs(article):
+				try:
+					trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(paragraph)
+				except:
+					continue
+
+				for tree in trees:
+					print('Found amendment at: ')
+					print(paragraph)
+					if tree['law']['_id'] == target_law.identifier:
+						target_law.query_from_tree(tree)
+
+		output_md = target_law.export_law('markdown')
+		print('Result')
+		print(output_md)
+
+		if outfile:
+			print('Writing output to ', outfile)
+			with open(outfile, 'w+') as f:
+				if input_md == output_md:
+					f.write(input_md)
+				else:
+					f.write('# Αρχική έκδοση του {}'.format(target_law.identifier))
+					f.write(input_md)
+					f.write('# Έκδοση του {} μετά τις τροποποιήσεις του {}'.format(target_law.identifier, source_law.identifier))
+					f.write(output_md)
 
 def test():
 	cod = LawCodifier()
@@ -402,13 +438,15 @@ def test():
 	cod.export_law(ans, 'foo.md')
 
 
+
 codifier = LawCodifier()
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(
+	argparser = argparse.ArgumentParser(
 		description='''This is the command line tool for codifying documents''')
-	required = parser.add_argument_group('required arguments')
-	optional = parser.add_argument_group('optional arguments')
+
+	required = argparser.add_argument_group('required arguments')
+	optional = argparser.add_argument_group('optional arguments')
 
 	required.add_argument(
 		'-source',
@@ -420,15 +458,11 @@ if __name__ == '__main__':
 		required=True)
 
 	optional.add_argument(
-		'--rollback',
-		help='Rollback taget Statute to version 0',
-		action='store_true')
+		'--output',
+		help='Output file'
+	)
 
-	args = parser.parse_args()
+	args = argparser.parse_args()
 	print('Source Statute: {}\nTarget Statute: {}'.format(args.source, args.target))
 
-	if args.rollback:
-		print('Rolling back ', args.target)
-		codifier.db.rollback_laws(args.target)
-
-	codifier.codify_pair(args.source, args.target)	
+	LawCodifier.codify_pair(args.source, args.target, args.output)
