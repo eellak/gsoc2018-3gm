@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<h1>Ευρετήριο Νομοθετημάτων</h1>
+
+<p>Επισκεφθείτε το <a href="/full_index">Πλήρες Ευρετήριο Συνδέσμων</a>
+
+<ol>
+  {% for k in indexed_list %}
+  <li><a href="{{ url_for('codify_law', identifier=k )}}">{{ k }}</a></li>
+  {% endfor %}
+</ol>
+
+{% endblock %}

@@ -149,7 +149,16 @@ def history():
     identifier = request.args.get('identifier')
     return render_template('history.html', **locals())
 
+@app.route('/legal_index')
+def legal_index():
+    global autocomplete_laws
+    return render_template('index.html', indexed_list=autocomplete_laws)
 
+@app.route('/full_index')
+def full_index():
+    global codifier
+    full_index = codifier.db.links.find({})
+    return render_template('full_index.html', full_index=full_index)
 
 
 def color_iterator():
