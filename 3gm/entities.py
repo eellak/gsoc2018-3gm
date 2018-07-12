@@ -197,6 +197,28 @@ class Numerals:
         900: 'εννιακοστιοστ'
     }
 
+    greek_nums = {
+        'α': 1,
+        'β' : 2,
+        'γ' : 3,
+        'δ' : 4,
+        'ε' : 5,
+        'στ' : 6,
+        'ζ' : 7,
+        'η' : 8,
+        'θ' : 9,
+        'ι' : 10,
+        'κ' : 20,
+        'λ' : 30,
+        'μ' : 40,
+        'ν' : 50,
+        'ξ' : 60,
+        'ο' : 70,
+        'π' : 80,
+        'Ϟ' : 90,
+        'ρ' : 100
+    }
+
     @staticmethod
     def full_number_to_integer(s):
         result = 0
@@ -230,6 +252,58 @@ class Numerals:
                 result += number
                 k -= 1
         return result
+
+    @staticmethod
+    def greek_nums_to_int(s):
+        r = 0
+        for key, val in Numerals.greek_nums.items():
+            if key in s:
+                r += val
+
+        return r
+
+    class GreekNum:
+
+        def __init__(self, s):
+            self._s = s
+            self.value = Numerals.greek_nums_to_int(s)
+
+        @property
+        def s(self):
+            return self._s
+
+        @s.getter
+        def s(self):
+            return self._s
+
+        @s.setter
+        def s(self, v):
+            self._s = v
+            self.value = Numerals.greek_nums_to_int(v)
+
+        def __eq__(self, other):
+            return self.value == other.value
+
+        def __ne__(self, other):
+            return self.value != other.value
+
+        def __gt__(self, other):
+            return self.value > other.value
+
+        def __lt__(self, other):
+            return self.value < other.value
+
+        def __ge__(self, other):
+            return self.value >= other.value
+
+        def __le__(self, other):
+            return self.value <= other.value
+
+        def __str__(self):
+            return self.s
+
+        def __repr__(self):
+            return self.s
 
 
 class EditDistanceClassifier:
