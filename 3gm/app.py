@@ -3,6 +3,7 @@ from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import Markup
+from flask import url_for
 
 import json
 import sys
@@ -10,8 +11,8 @@ import markdown
 import pymongo
 
 import collections
-sys.path.insert(0, '../3gm')
 from codifier import *
+
 import helpers
 autocomplete_laws = sorted(list(codifier.keys()))
 
@@ -41,7 +42,7 @@ app = Flask(__name__)
 def index(js):
     example = '''Στο τέλος του άρθρου 5 της από 24.12.1990 Πράξης Νομοθετικού Περιεχομένου «Περί Μουσουλμάνων Θρησκευτικών Λειτουργών» (Α΄182) που κυρώθηκε με το άρθρο μόνο του ν. 1920/1991 (Α΄11) προστίθεται παράγραφος 4 ως εξής:  «4.α. Οι υποθέσεις της παραγράφου 2 ρυθμίζονται από τις κοινές διατάξεις και μόνο κατ’ εξαίρεση υπάγονται στη δικαιοδοσία του Μουφτή, εφόσον αμφότερα τα διάδικα μέρη υποβάλουν σχετική αίτησή τους ενώπιόν του για επίλυση της συγκεκριμένης διαφοράς κατά τον Ιερό Μουσουλμανικό Νόμο. Η υπαγωγή της υπόθεσης στη δικαιοδοσία του Μουφτή είναι αμετάκλητη και αποκλείει τη δικαιοδοσία των τακτικών δικαστηρίων για τη συγκεκριμένη διαφορά. Εάν οποιοδήποτε από τα μέρη δεν επιθυμεί την υπαγωγή της υπόθεσής του στη δικαιοδοσία του Μουφτή, δύναται να προσφύγει στα πολιτικά δικαστήρια, κατά τις κοινές ουσιαστικές και δικονομικές διατάξεις, τα οποία σε κάθε περίπτωση έχουν το τεκμήριο της δικαιοδοσίας.  β. Με προεδρικό διάταγμα που εκδίδεται με πρόταση των Υπουργών Παιδείας, Έρευνας και Θρησκευμάτων και Δικαιοσύνης, Διαφάνειας και Ανθρωπίνων Δικαιωμάτων καθορίζονται όλοι οι αναγκαίοι δικονομικοί κανόνες για τη συζήτηση της υπόθεσης ενώπιον του Μουφτή και την έκδοση των αποφάσεών του και ιδίως η διαδικασία υποβολής αιτήσεως των μερών, η οποία πρέπει να περιέχει τα στοιχεία των εισαγωγικών δικογράφων κατά τον Κώδικα Πολιτικής Δικονομίας και, επί ποινή ακυρότητας, ρητή ανέκκλητη δήλωση κάθε διαδίκου περί  επιλογής της συγκεκριμένης δικαιοδοσίας, η παράσταση των πληρεξουσίων δικηγόρων, η διαδικασία κατάθεσης και επίδοσής της στο αντίδικο μέρος, η διαδικασία της συζήτησης και της έκδοσης απόφασης, τα θέματα οργάνωσης, σύστασης και διαδικασίας πλήρωσης θέσεων προσωπικού (μονίμων, ιδιωτικού δικαίου αορίστου χρόνου και μετακλητών υπαλλήλων) και λειτουργίας της σχετικής υπηρεσίας της τήρησης αρχείου, καθώς και κάθε σχετικό θέμα για την εφαρμογή του παρόντος. γ. Οι κληρονομικές σχέσεις των μελών της μουσουλμανικής μειονότητας της Θράκης ρυθμίζονται από τις διατάξεις του Αστικού Κώδικα, εκτός εάν ο διαθέτης συ- ντάξει ενώπιον συμβολαιογράφου δήλωση τελευταίας βούλησης, κατά τον τύπο της δημόσιας διαθήκης, με αποκλειστικό περιεχόμενό της τη ρητή επιθυμία του να υπαχθεί η κληρονομική του διαδοχή στον Ιερό Μουσουλμανικό Νόμο. Η δήλωση αυτή είναι ελεύθερα ανακλητή, είτε με μεταγενέστερη αντίθετη δήλωσή του ενώπιον συμβολαιογράφου είτε με σύνταξη μεταγενέστερης διαθήκης, κατά τους όρους του Αστικού Κώδικα. Ταυτόχρονη εφαρμογή του Αστικού Κώδικα και του Ιερού Μουσουλμανικού Νόμου στην κληρονομική περιουσία ή σε ποσοστό ή και σε διακεκριμένα στοιχεία αυτής απαγορεύεται.»'''
 
-    with open('examples.md') as f:
+    with open('templates/examples.md') as f:
         examples = Markup(markdown.markdown(f.read()))
 
 
@@ -77,18 +78,21 @@ def autocomplete():
     match = list(filter(lambda x: x.startswith(search), autocomplete_laws ))
     return jsonify(matching_results=match)
 
-
 @app.route('/codify_law', methods=['POST', 'GET'])
-def codify_law():
-    if request.method == 'POST':
-        data = request.form
-    elif request.method == 'GET':
-        identifier = request.args.get('identifier')
-        print(identifier)
+@app.route('/codify_law/<identifier>', methods=['GET'])
+def codify_law(identifier=None):
+    try:
+        if request.method == 'POST':
+            data = request.form
+        elif request.method == 'GET':
+            identifier = request.args.get('identifier')
+            print(identifier)
+            data = { 'law' : identifier }
+    except:
         data = { 'law' : identifier }
 
     corpus = codifier.get_law(data['law'], export_type='markdown')
-
+    corpus = render_links(corpus)
     content = Markup(markdown.markdown(corpus))
     try:
         law = codifier.laws[data['law']]
@@ -212,7 +216,7 @@ def render_links(content):
         search_results.extend(tmp)
     hyperlinks = [to_hyperlink(l[0]) for l in search_results]
     splitted = helpers.split_index(content, [l[1] for l in search_results])
-    
+
     i = 0
     for x, y in zip(search_results, hyperlinks):
         splitted[i] = splitted[i].replace(x[0], y)
@@ -220,9 +224,16 @@ def render_links(content):
 
     return ''.join(splitted)
 
-def to_hyperlink(l):
-    return '''<a href="{{ url_for('codify_law', identifier='{0}' )}}">{0}</a>'''.format(l)
+def to_hyperlink(l, link_type='markdown'):
+    u = url_for('codify_law', identifier=l)
+    if link_type == 'html':
+        return '''<a href="{1}">{0}</a>'''.format(l, u)
+    elif link_type == 'markdown':
+        return '[{0}]({1})'.format(l, u)
 
+@app.template_filter('render_md')
+def render_md(corpus):
+    return Markup(markdown.markdown(corpus))
 
 
 if __name__ == '__main__':

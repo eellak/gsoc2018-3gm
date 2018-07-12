@@ -6,7 +6,7 @@
 
 <ol>
   {% for k in full_index %}
-  <li><a href="{{ url_for('codify_law', identifier=k['_id'] )}}">{{ k['_id'] }}</a></li>
+  <li id="{{ k['_id'] }}"><a href="{{ url_for('codify_law', identifier=k['_id'] )}}">{{ k['_id'] }}</a></li>
   <ol>
     {% for l in k['links_to'] %}
       <li><a href="{{ url_for('codify_law', identifier=l )}}">{{ l }}</a></li>

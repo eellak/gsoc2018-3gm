@@ -7,7 +7,7 @@
 
 <ol>
   {% for k in indexed_list %}
-  <li><a href="{{ url_for('codify_law', identifier=k )}}">{{ k }}</a></li>
+  <li id="{{ k }}"><a href="{{ url_for('codify_law', identifier=k )}}">{{ k }}</a></li>
   {% endfor %}
 </ol>
 
