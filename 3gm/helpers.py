@@ -11,6 +11,7 @@ import collections
 import datetime
 import re
 import entities
+import itertools
 
 # Helper class that defines useful formatting and file handling functions
 
@@ -607,3 +608,12 @@ def fix_par_abbrev(s):
     for x, y in q.items():
         s = s.replace(x, y)
     return s
+
+def split_index(s, idx_list):
+    if idx_list == []:
+        return [s]
+    idx_list.append(len(s))
+    result = [s[:idx_list[0]]]
+    for x, y in zip(idx_list, idx_list[1:]):
+        result.append(s[x : y])
+    return result

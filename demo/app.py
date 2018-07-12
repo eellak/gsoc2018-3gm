@@ -12,6 +12,7 @@ import pymongo
 import collections
 sys.path.insert(0, '../3gm')
 from codifier import *
+import helpers
 autocomplete_laws = sorted(list(codifier.keys()))
 
 import networkx
@@ -202,6 +203,26 @@ def render_badges_from_tree(tree):
     ]
 
     return render_badges(tags)
+
+@app.template_filter('render_links')
+def render_links(content):
+    search_results = []
+    for entity in entities.LegalEntities.entities:
+        tmp = [(x.group(), x.span()[1]) for x in re.finditer(entity, content)]
+        search_results.extend(tmp)
+    hyperlinks = [to_hyperlink(l[0]) for l in search_results]
+    splitted = helpers.split_index(content, [l[1] for l in search_results])
+    
+    i = 0
+    for x, y in zip(search_results, hyperlinks):
+        splitted[i] = splitted[i].replace(x[0], y)
+        i += 1
+
+    return ''.join(splitted)
+
+def to_hyperlink(l):
+    return '''<a href="{{ url_for('codify_law', identifier='{0}' )}}">{0}</a>'''.format(l)
+
 
 
 if __name__ == '__main__':
