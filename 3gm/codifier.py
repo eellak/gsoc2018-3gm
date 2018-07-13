@@ -79,6 +79,10 @@ class Link:
 	def __repr__(self):
 		return self.name
 
+	def __iter__(self):
+		for x in self.actual_links:
+			yield x	
+
 	@staticmethod
 	def from_serialized(s):
 		l = Link(s['_id'])
