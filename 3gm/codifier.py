@@ -81,7 +81,7 @@ class Link:
 
 	def __iter__(self):
 		for x in self.actual_links:
-			yield x	
+			yield x
 
 	@staticmethod
 	def from_serialized(s):
@@ -292,6 +292,14 @@ class LawCodifier:
 				s = self.get_law(law, export_type='str')
 				f.write(s + '\n')
 
+	def export_phrase_links(self, outfile):
+		with open(outfile, 'w+') as f:
+			for l, lobj in self.links.items():
+				for x in lobj:
+					periods = tokenizer.tokenizer.split(x['text'], delimiter='. ')
+					for p in periods:
+						if re.search(r'(φράση|φράσεις)', p):
+							f.write(p + '\n')
 
 	def export_law(self, identifier, outfile, export_type='markdown'):
 		"""Export a law in markdown or LaTeX"""
@@ -472,16 +480,8 @@ def test():
 	cod = LawCodifier()
 	for i in range(1998, 2019):
 		cod.add_directory('../data/' + str(i))
-
 	cod.codify_new_laws()
 	cod.create_law_links()
-
-
-	print('Enter a law you wish to texify')
-	ans = input()
-	cod.export_law(ans, 'foo.md')
-
-
 
 codifier = LawCodifier()
 
