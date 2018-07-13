@@ -521,8 +521,12 @@ def ssconj_doc_iterator(l, i, is_plural=False):
 
     j = i + 1
     if not is_plural:
-        if str(l[j]).isdigit() or str(l[j]).endswith("'") or str(l[j]).endswith('΄') or str(l[j]).endswith(','):
-                yield str(l[j])
+        if str(
+            l[j]).isdigit() or str(
+            l[j]).endswith("'") or str(
+            l[j]).endswith('΄') or str(
+                l[j]).endswith(','):
+            yield str(l[j])
         else:
             j = i - 1
             n = entities.Numerals.full_number_to_integer(str(l[j]))
@@ -535,7 +539,8 @@ def ssconj_doc_iterator(l, i, is_plural=False):
         n = len(l)
         while j < n:
             if str(l[j]) == 'και':
-                if str(l[j + 1]).isdigit() or str(l[j + 1]).endswith("'") or str(l[j + 1]).endswith('΄'):
+                if str(l[j + 1]).isdigit() or str(l[j + 1]
+                                                  ).endswith("'") or str(l[j + 1]).endswith('΄'):
                     yield str(l[min(j + 1, n)]).strip(',')
                     return
             elif str(l[j]).isdigit() or str(l[j]).endswith(
@@ -546,7 +551,8 @@ def ssconj_doc_iterator(l, i, is_plural=False):
         if result == []:
             j = i - 1
             while j >= 0:
-                n = entities.Numerals.full_number_to_integer(str(l[j]).strip(','))
+                n = entities.Numerals.full_number_to_integer(
+                    str(l[j]).strip(','))
                 if str(l[j]) != 'και' and n == 0:
                     return
                 elif str(l[j]) != 'και':
@@ -565,6 +571,7 @@ def has_suffix(w, s):
 def is_plural(s):
     """Returns true if s in plural"""
     return has_suffix(s, entities.plural_suffixes)
+
 
 def fix_whitespaces(s):
     """Replace all unicode whitespaces with normal whitespaces"""
@@ -592,22 +599,24 @@ def fix_hyphenthation(s):
     Example: 'The q- uick brown fox' -> 'The quick brown fox'"""
     try:
         return re.sub('(-|−) +', '', s)
-    except:
+    except BaseException:
         return s
+
 
 def fix_par_abbrev(s):
     q = {
-        'η παρ.' : 'η παράγραφος',
-        'της παρ.' : 'της παραγράφου',
-        'την παρ.' : 'την παράγραφο',
-        'οι παρ.' : 'οι παράγραφοι',
-        'των παρ.' : 'των παραγράφων',
-        'τις παρ.' : 'τις παραγράφους'
+        'η παρ.': 'η παράγραφος',
+        'της παρ.': 'της παραγράφου',
+        'την παρ.': 'την παράγραφο',
+        'οι παρ.': 'οι παράγραφοι',
+        'των παρ.': 'των παραγράφων',
+        'τις παρ.': 'τις παραγράφους'
     }
 
     for x, y in q.items():
         s = s.replace(x, y)
     return s
+
 
 def split_index(s, idx_list):
     if idx_list == []:
@@ -615,5 +624,5 @@ def split_index(s, idx_list):
     idx_list.append(len(s))
     result = [s[:idx_list[0]]]
     for x, y in zip(idx_list, idx_list[1:]):
-        result.append(s[x : y])
+        result.append(s[x: y])
     return result
