@@ -58,7 +58,7 @@ def analyze():
     a = request.form.get('a', '', type=str)
     result = syntax.ActionTreeGenerator.generate_action_tree_from_string(a)
     print(result)
-    json_string = json.dumps(result, ensure_ascii=False)2018
+    json_string = json.dumps(result, ensure_ascii=False)
     print(json_string)
 
     return jsonify(result=json_string)
