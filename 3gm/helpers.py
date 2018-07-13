@@ -626,3 +626,5 @@ def split_index(s, idx_list):
     for x, y in zip(idx_list, idx_list[1:]):
         result.append(s[x: y])
     return result
+
+invert_dict = lambda d: dict(zip(d.values(), d.keys()))
