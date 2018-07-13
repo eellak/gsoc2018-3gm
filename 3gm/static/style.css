@@ -206,3 +206,9 @@ textarea {
   text-align: center;
   font-style: italic;
 }
+
+p.sparse {
+  line-height: 2;
+
+
+}

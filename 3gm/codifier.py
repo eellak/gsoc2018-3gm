@@ -11,6 +11,10 @@ import pprint
 import tokenizer
 import collections
 import argparse
+import multiprocessing
+import gensim
+from gensim.models import KeyedVectors
+
 
 class UnrecognizedCodificationAction(Exception):
 	"""Exception class which is raised when the
@@ -235,7 +239,7 @@ class LawCodifier:
 
 		:param identifier : Law identifier
 		"""
-		if export_type not in ['latex', 'markdown']:
+		if export_type not in ['latex', 'markdown', 'str']:
 			raise Exception('Unrecognized export type')
 
 		if export_type == 'latex':
@@ -264,13 +268,31 @@ class LawCodifier:
 						for paragraph in sorted(y['articles'][article].keys()):
 							result = result + \
 								' {}. {}\n'.format(paragraph, '. '.join(y['articles'][article][paragraph]))
+		elif export_type == 'str':
+			cur = self.db.laws.find({'_id': identifier})
+			result = '{} '.format(identifier)
+			for x in cur:
+				for y in x['versions']:
+					for article in sorted(
+							y['articles'].keys(), key=lambda x: int(x)):
+						for paragraph in sorted(y['articles'][article].keys()):
+							result = result + \
+								'{} '.format('. '.join(y['articles'][article][paragraph]))
+
 
 		return result
+
+	def export_codifier_corpus(self, outfile):
+		with open(outfile, 'w+') as f:
+			for law in self.laws:
+				s = self.get_law(law, export_type='str')
+				f.write(s + '\n')
+
 
 	def export_law(self, identifier, outfile, export_type='markdown'):
 		"""Export a law in markdown or LaTeX"""
 
-		if export_type not in ['latex', 'markdown']:
+		if export_type not in ['latex', 'markdown', 'str']:
 			raise Exception('Unrecognized export type')
 
 		result = self.get_law(identifier, export_type=export_type)
@@ -381,6 +403,24 @@ class LawCodifier:
 		avg_degree = sum_degrees / cnt
 		print('Maximum Degree: ', max_degree)
 		print('Average Degree', avg_degree)
+
+	def train_word2vec(self):
+		params = {'size': 200, 'iter': 20, 'window': 2, 'min_count': 15,
+				  'workers': max(1, multiprocessing.cpu_count() - 1), 'sample': 1E-3, }
+
+		all_sentences = []
+
+		for law in self.laws.values():
+			for article in law.sentences.keys():
+				for par in law.sentences[article]:
+					for per in law.sentences[article][par]:
+						all_sentences.append(per)
+
+		self.model = gensim.models.Word2Vec(all_sentences, **params)
+		print('Model train complete!')
+		self.model.wv.save_word2vec_format('model')
+
+		return self.model
 
 	@staticmethod
 	def codify_pair(source, target, outfile=None):

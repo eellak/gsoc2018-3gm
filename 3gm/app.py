@@ -9,8 +9,9 @@ import json
 import sys
 import markdown
 import pymongo
-
 import collections
+
+sys.path.insert(0, './')
 from codifier import *
 
 import helpers
@@ -45,8 +46,11 @@ def index(js):
     with open('templates/examples.md') as f:
         examples = Markup(markdown.markdown(f.read()))
 
-
-    return render_template('{0}.html'.format(js), js=js, example=example, examples=examples)
+    return render_template(
+        '{0}.html'.format(js),
+        js=js,
+        example=example,
+        examples=examples)
 
 
 @app.route('/analyze', methods=['POST'])
@@ -54,7 +58,7 @@ def analyze():
     a = request.form.get('a', '', type=str)
     result = syntax.ActionTreeGenerator.generate_action_tree_from_string(a)
     print(result)
-    json_string = json.dumps(result, ensure_ascii=False)
+    json_string = json.dumps(result, ensure_ascii=False)2018
     print(json_string)
 
     return jsonify(result=json_string)
@@ -63,6 +67,7 @@ def analyze():
 @app.route('/visualize')
 def visualize():
     return app.send_static_file('templates/graph.html')
+
 
 @app.route('/')
 @app.route('/codification')
@@ -75,21 +80,18 @@ def codification():
 def autocomplete():
     global autocomplete_laws
     search = request.args.get('q')
-    match = list(filter(lambda x: x.startswith(search), autocomplete_laws ))
+    match = list(filter(lambda x: x.startswith(search), autocomplete_laws))
     return jsonify(matching_results=match)
 
+
 @app.route('/codify_law', methods=['POST', 'GET'])
-@app.route('/codify_law/<identifier>', methods=['GET'])
 def codify_law(identifier=None):
-    try:
-        if request.method == 'POST':
-            data = request.form
-        elif request.method == 'GET':
-            identifier = request.args.get('identifier')
-            print(identifier)
-            data = { 'law' : identifier }
-    except:
-        data = { 'law' : identifier }
+    if request.method == 'POST':
+        data = request.form
+    elif request.method == 'GET':
+        identifier = request.args.get('identifier')
+        print(identifier)
+        data = {'law': identifier}
 
     corpus = codifier.get_law(data['law'], export_type='markdown')
     corpus = render_links(corpus)
@@ -118,7 +120,7 @@ def codify_law(identifier=None):
                         'badges': result
                     }
                     amendments.append(amendment)
-            except:
+            except BaseException:
                 continue
 
     try:
@@ -130,40 +132,44 @@ def codify_law(identifier=None):
 
     with open('graph.json') as f:
         graphData = json.load(f)
-    graphData =  json.dumps(graphData, indent=2)
+    graphData = json.dumps(graphData, indent=2)
 
     try:
         topics = list(codifier.db.topics.find({
-            'statutes' : data['law']
-            }))[0]
+            'statutes': data['law']
+        }))[0]
+
     except IndexError:
         topics = None
 
-
     return render_template('codify_law.html', **locals())
+
 
 @app.route('/graph')
 def graph():
     with open('graph.json') as f:
         graphData = json.load(f)
-    graphData =  json.dumps(graphData, indent=2)
+    graphData = json.dumps(graphData, indent=2)
 
     return render_template('graph.html', **locals())
+
 
 @app.route('/history')
 def history():
     identifier = request.args.get('identifier')
     return render_template('history.html', **locals())
 
+
 @app.route('/legal_index')
 def legal_index():
     global autocomplete_laws
     return render_template('index.html', indexed_list=autocomplete_laws)
 
+
 @app.route('/full_index')
 def full_index():
     global codifier
-    full_index = codifier.db.links.find().sort('_id',pymongo.ASCENDING)
+    full_index = codifier.db.links.find().sort('_id', pymongo.ASCENDING)
 
     return render_template('full_index.html', full_index=full_index)
 
@@ -184,6 +190,7 @@ def color_iterator():
         yield colors[i]
         i = (i + 1) % N
 
+
 @app.template_filter('render_badges')
 def render_badges(l):
     result = ''
@@ -193,11 +200,12 @@ def render_badges(l):
             '<span class="badge badge-{}">{}</span> '.format(next(colors), x)
     return result
 
+
 @app.template_filter('render_badges_from_tree')
 def render_badges_from_tree(tree):
     try:
         what = '{} {}'.format(tree['what']['context'], tree['what']['number'])
-    except:
+    except BaseException:
         what = tree['what']['context']
 
     tags = [
@@ -207,6 +215,7 @@ def render_badges_from_tree(tree):
     ]
 
     return render_badges(tags)
+
 
 @app.template_filter('render_links')
 def render_links(content):
@@ -224,12 +233,14 @@ def render_links(content):
 
     return ''.join(splitted)
 
+
 def to_hyperlink(l, link_type='markdown'):
     u = url_for('codify_law', identifier=l)
     if link_type == 'html':
         return '''<a href="{1}">{0}</a>'''.format(l, u)
     elif link_type == 'markdown':
         return '[{0}]({1})'.format(l, u)
+
 
 @app.template_filter('render_md')
 def render_md(corpus):
