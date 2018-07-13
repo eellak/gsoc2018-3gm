@@ -679,6 +679,7 @@ class LawParser:
 		law.lemmas = x['lemmas']
 		law.titles = x['titles']
 		law.sentences = x['articles']
+		law.amendee = x['amendee']
 		return law, identifier
 
 	def add_article(self, article, content, title=None, lemmas=None):

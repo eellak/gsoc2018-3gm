@@ -83,6 +83,12 @@ class Link:
 		for x in self.actual_links:
 			yield x
 
+	def sort(self):
+		try:
+			self.actual_links.sort(key=lambda x: helpers.compare_year(x['from']))
+		except:
+			self.actual_links.sort(key=lambda x: x['from'])
+
 	@staticmethod
 	def from_serialized(s):
 		l = Link(s['_id'])
@@ -135,6 +141,27 @@ class LawCodifier:
 			law, identifier = parser.LawParser.from_serialized(v)
 			law.version_index = current_version
 			self.laws[identifier] = law
+
+	def get_history(self, law):
+		history = []
+
+		cursor = self.db.laws.find({
+			"_id" : law,
+			"versions": {"$ne": None}
+		})
+		for x in cursor:
+
+			for v in x['versions']:
+				current_version = int(v['_version'])
+				current_instance = v
+				instance, identifier = parser.LawParser.from_serialized(v)
+				instance.version_index = current_version
+				history.append(instance)
+
+		history_links = self.links[law]
+		history_links.sort()
+
+		return history, history_links
 
 	def populate_issues(self, directory, text_format=True):
 		"""Populate issues from directory"""

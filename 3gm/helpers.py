@@ -628,3 +628,9 @@ def split_index(s, idx_list):
     return result
 
 invert_dict = lambda d: dict(zip(d.values(), d.keys()))
+
+def compare_year(s):
+    try:
+        return int(s.split('/')[-1])
+    except:
+        return int(s.split('.')[-1])
