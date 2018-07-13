@@ -6,7 +6,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.model_selection import GridSearchCV
 from sklearn.decomposition import NMF, LatentDirichletAllocation
 
-# Helper Functions
+# Imports
 from helpers import connected_components, get_edges
 import parser
 import collections
@@ -17,6 +17,7 @@ import re
 import codifier
 import database
 import math
+import pickle
 
 
 sys.path.insert(0, '../resources')
@@ -38,7 +39,8 @@ def process_topics(
 		feature_names,
 		data_samples,
 		no_top_words,
-		no_top_data_samples):
+		no_top_data_samples,
+		indices):
 	graph = {}
 	topics = {}
 	global db
@@ -127,9 +129,15 @@ def build_gg_stoplist(data_samples, greek_stopwords, gg_most_common = 500):
 	for x in data_samples:
 		words.extend(x.split(' '))
 	print('Counting words')
-	counter = collections.Counter(words)
-	for w in counter.most_common(gg_most_common):
-		greek_stopwords.append(w[0])
+
+	try:
+		counter = pickle.load(open('gg_stoplist.pickle', 'rb'))
+	except:
+		counter = collections.Counter(words)
+		pickle.dump(counter, open('gg_stoplist.pickle', 'wb'))
+	finally:
+		for w in counter.most_common(gg_most_common):
+			greek_stopwords.append(w[0])
 	print('Done Counting')
 	return greek_stopwords, words
 
@@ -188,7 +196,8 @@ def main():
 		tf_feature_names,
 		data_samples,
 		no_top_words,
-		no_top_data_samples)
+		no_top_data_samples,
+		indices)
 
 if __name__ == '__main__':
 	main()
