@@ -9,7 +9,7 @@
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>parser</strong></big></big></font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/marios/workspace/gsoc2018-3gm/3gm/parser.py">/home/marios/workspace/gsoc2018-3gm/3gm/parser.py</a></font></td></tr></table>
-    <p><tt>#&nbsp;-*-&nbsp;coding:&nbsp;utf-8&nbsp;-*-</tt></p>
+    <p></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -18,24 +18,25 @@
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.html">collections</a><br>
+<a href="copy.html">copy</a><br>
 <a href="datetime.html">datetime</a><br>
 <a href="spacy.displacy.html">spacy.displacy</a><br>
 <a href="el_unnamed.html">el_unnamed</a><br>
 <a href="entities.html">entities</a><br>
-<a href="gensim.html">gensim</a><br>
-</td><td width="25%" valign=top><a href="glob.html">glob</a><br>
+</td><td width="25%" valign=top><a href="gensim.html">gensim</a><br>
+<a href="glob.html">glob</a><br>
 <a href="helpers.html">helpers</a><br>
 <a href="itertools.html">itertools</a><br>
 <a href="json.html">json</a><br>
 <a href="logging.html">logging</a><br>
-<a href="mimetypes.html">mimetypes</a><br>
-</td><td width="25%" valign=top><a href="multiprocessing.html">multiprocessing</a><br>
+</td><td width="25%" valign=top><a href="mimetypes.html">mimetypes</a><br>
+<a href="multiprocessing.html">multiprocessing</a><br>
 <a href="numpy.html">numpy</a><br>
 <a href="os.html">os</a><br>
 <a href="pprint.html">pprint</a><br>
 <a href="re.html">re</a><br>
-<a href="shutil.html">shutil</a><br>
-</td><td width="25%" valign=top><a href="spacy.html">spacy</a><br>
+</td><td width="25%" valign=top><a href="shutil.html">shutil</a><br>
+<a href="spacy.html">spacy</a><br>
 <a href="string.html">string</a><br>
 <a href="tokenizer.html">tokenizer</a><br>
 <a href="urllib.html">urllib</a><br>
@@ -80,8 +81,8 @@ in&nbsp;construction&nbsp;of&nbsp;the&nbsp;parse&nbsp;tree&nbsp;for&nbsp;each&nb
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="IssueParser-__contains__"><strong>__contains__</strong></a>(self, key)</dt></dl>
 
-<strong>__dict__</strong> = mappingproxy({'detect_statutes': &lt;function Issue...ction IssueParser.find_dates at 0x7fc5189cc2f0&gt;})
-<dl><dt><a name="IssueParser-__init__"><strong>__init__</strong></a>(self, filename, toTxt=False)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+<strong>__dict__</strong> = mappingproxy({'find_dates': &lt;function IssueParse...ion IssueParser.find_statute at 0x7f58532542f0&gt;})
+<dl><dt><a name="IssueParser-__init__"><strong>__init__</strong></a>(self, filename, stdin=False, toTxt=False)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
 
 <dl><dt><a name="IssueParser-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
 
@@ -115,11 +116,11 @@ Strip&nbsp;punctuation&nbsp;and&nbsp;split&nbsp;document&nbsp;into&nbsp;sentence
 <dl><dt><a name="IssueParser-get_non_extracts"><strong>get_non_extracts</strong></a>(self, article)</dt><dd><tt>Get&nbsp;non-extracts&nbsp;i.e.&nbsp;where&nbsp;the&nbsp;commands&nbsp;for&nbsp;ammendments<br>
 can&nbsp;be&nbsp;found</tt></dd></dl>
 
+<dl><dt><a name="IssueParser-parse_name"><strong>parse_name</strong></a>(self)</dt></dl>
+
 <dl><dt><a name="IssueParser-serialize"><strong>serialize</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="IssueParser-split_article"><strong>split_article</strong></a>(self, article)</dt></dl>
-
-<dl><dt><a name="IssueParser-train_word2vec"><strong>train_word2vec</strong></a>(self)</dt></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -133,7 +134,7 @@ Data descriptors defined here:<br>
 <font color="#000000" face="helvetica, arial"><a name="LawParser">class <strong>LawParser</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>This&nbsp;class&nbsp;hosts&nbsp;the&nbsp;law&nbsp;parser.The&nbsp;law&nbsp;is&nbsp;provided<br>
+<td colspan=2><tt>This&nbsp;class&nbsp;hosts&nbsp;the&nbsp;law&nbsp;parser.&nbsp;The&nbsp;law&nbsp;is&nbsp;provided<br>
 in&nbsp;a&nbsp;file&nbsp;(if&nbsp;it&nbsp;exists)&nbsp;and&nbsp;is&nbsp;parsed&nbsp;in&nbsp;order&nbsp;to&nbsp;be<br>
 split&nbsp;in&nbsp;articles&nbsp;and&nbsp;sentences,&nbsp;ready&nbsp;to&nbsp;be&nbsp;stored&nbsp;in<br>
 the&nbsp;database.&nbsp;This&nbsp;class&nbsp;supports&nbsp;insertions,&nbsp;replacements<br>
@@ -142,8 +143,8 @@ It&nbsp;can&nbsp;also&nbsp;provide&nbsp;a&nbsp;serializable&nbsp;<a href="builti
 database&nbsp;with&nbsp;its&nbsp;contents.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<strong>__dict__</strong> = mappingproxy({'add_paragraph': &lt;function LawPars...tion LawParser.append_period at 0x7fc5189cf488&gt;})
-<dl><dt><a name="LawParser-__init__"><strong>__init__</strong></a>(self, identifier, filename=None)</dt><dd><tt>The&nbsp;constructor&nbsp;of&nbsp;<a href="#LawParser">LawParser</a>&nbsp;is&nbsp;responsible&nbsp;for<br>
+<strong>__dict__</strong> = mappingproxy({'replace_period': &lt;function LawPar...ion LawParser.fix_paragraphs at 0x7f5853254bf8&gt;})
+<dl><dt><a name="LawParser-__init__"><strong>__init__</strong></a>(self, identifier, filename=None, autoincrement_version=False)</dt><dd><tt>The&nbsp;constructor&nbsp;of&nbsp;<a href="#LawParser">LawParser</a>&nbsp;is&nbsp;responsible&nbsp;for<br>
 reading&nbsp;and&nbsp;parsing&nbsp;the&nbsp;file&nbsp;as&nbsp;well&nbsp;as&nbsp;detecting<br>
 titles,&nbsp;lemmas&nbsp;and&nbsp;articles&nbsp;which&nbsp;are&nbsp;split&nbsp;into&nbsp;sentences<br>
 by&nbsp;<a href="#LawParser-find_corpus">find_corpus</a>()<br>
@@ -166,7 +167,18 @@ by&nbsp;<a href="#LawParser-find_corpus">find_corpus</a>()<br>
 :paragraph&nbsp;paragraph&nbsp;id<br>
 :content&nbsp;content&nbsp;in&nbsp;raw&nbsp;text&nbsp;to&nbsp;be&nbsp;split&nbsp;into&nbsp;periods</tt></dd></dl>
 
-<dl><dt><a name="LawParser-append_period"><strong>append_period</strong></a>(self, context, article, paragraph)</dt><dd><tt>Append&nbsp;period&nbsp;to&nbsp;article&nbsp;and&nbsp;paragraph</tt></dd></dl>
+<dl><dt><a name="LawParser-append_period"><strong>append_period</strong></a>(self, content, article, paragraph)</dt><dd><tt>Append&nbsp;period&nbsp;to&nbsp;article&nbsp;and&nbsp;paragraph<br>
+:params&nbsp;context&nbsp;:&nbsp;The&nbsp;period&nbsp;content<br>
+:params&nbsp;article&nbsp;:&nbsp;Article&nbsp;number<br>
+:params&nbsp;paragraph&nbsp;:&nbsp;Paragraph&nbsp;number</tt></dd></dl>
+
+<dl><dt><a name="LawParser-apply_links"><strong>apply_links</strong></a>(self, links)</dt><dd><tt>Apply&nbsp;links&nbsp;to&nbsp;the&nbsp;given&nbsp;law<br>
+:params&nbsp;links&nbsp;:&nbsp;A&nbsp;Link&nbsp;<a href="builtins.html#object">object</a><br>
+Returns&nbsp;the&nbsp;serializable&nbsp;<a href="builtins.html#object">object</a>&nbsp;containing&nbsp;all&nbsp;the&nbsp;versions&nbsp;of&nbsp;the<br>
+current&nbsp;statute&nbsp;and&nbsp;the&nbsp;links&nbsp;themselves.</tt></dd></dl>
+
+<dl><dt><a name="LawParser-export_law"><strong>export_law</strong></a>(self, export_type='markdown')</dt><dd><tt>Get&nbsp;law&nbsp;string&nbsp;in&nbsp;LaTeX,&nbsp;Markdown,&nbsp;string,&nbsp;plaintext&nbsp;and&nbsp;Issue-like&nbsp;format<br>
+:param&nbsp;identifier&nbsp;:&nbsp;Law&nbsp;identifier</tt></dd></dl>
 
 <dl><dt><a name="LawParser-find_corpus"><strong>find_corpus</strong></a>(self, government_gazette_issue=False, fix_paragraphs=True)</dt><dd><tt>Analyzes&nbsp;the&nbsp;corpus&nbsp;to&nbsp;articles,&nbsp;paragraphs&nbsp;and<br>
 then&nbsp;sentences</tt></dd></dl>
@@ -178,17 +190,21 @@ a&nbsp;corpus&nbsp;of&nbsp;lines&nbsp;enumerated&nbsp;with&nbsp;natural&nbsp;num
 1.,&nbsp;2.,&nbsp;etc.&nbsp;would&nbsp;be&nbsp;groupped&nbsp;into&nbsp;respective<br>
 paragraps</tt></dd></dl>
 
-<dl><dt><a name="LawParser-get_articles_sorted"><strong>get_articles_sorted</strong></a>(self)</dt></dl>
+<dl><dt><a name="LawParser-get_articles_sorted"><strong>get_articles_sorted</strong></a>(self)</dt><dd><tt>Returns&nbsp;the&nbsp;articles&nbsp;of&nbsp;the&nbsp;statute&nbsp;sorted</tt></dd></dl>
 
-<dl><dt><a name="LawParser-get_paragraph"><strong>get_paragraph</strong></a>(self, article, paragraph_id)</dt><dd><tt>Join&nbsp;sentences&nbsp;to&nbsp;paragraph</tt></dd></dl>
+<dl><dt><a name="LawParser-get_paragraph"><strong>get_paragraph</strong></a>(self, article, paragraph_id)</dt><dd><tt>Join&nbsp;sentences&nbsp;to&nbsp;paragraph<br>
+:params&nbsp;article&nbsp;:&nbsp;Article&nbsp;number<br>
+:params&nbsp;paragraph_id&nbsp;:&nbsp;Paragraph&nbsp;ID</tt></dd></dl>
 
-<dl><dt><a name="LawParser-get_paragraphs"><strong>get_paragraphs</strong></a>(self, article)</dt><dd><tt>Return&nbsp;Paragraphs&nbsp;via&nbsp;a&nbsp;generator</tt></dd></dl>
+<dl><dt><a name="LawParser-get_paragraphs"><strong>get_paragraphs</strong></a>(self, article)</dt><dd><tt>Return&nbsp;Paragraphs&nbsp;via&nbsp;a&nbsp;generator<br>
+:params&nbsp;article&nbsp;:&nbsp;The&nbsp;article&nbsp;number</tt></dd></dl>
 
 <dl><dt><a name="LawParser-insert_period"><strong>insert_period</strong></a>(self, position, old_period, new_period, article=None, paragraph=None)</dt><dd><tt>Insertion&nbsp;of&nbsp;period&nbsp;relative&nbsp;to&nbsp;another&nbsp;period</tt></dd></dl>
 
 <dl><dt><a name="LawParser-insert_phrase"><strong>insert_phrase</strong></a>(self, position, old_phrase, new_phrase, article=None, paragraph=None)</dt><dd><tt>Phrase&nbsp;insertion&nbsp;with&nbsp;respect&nbsp;to&nbsp;another&nbsp;phrase</tt></dd></dl>
 
-<dl><dt><a name="LawParser-query_from_tree"><strong>query_from_tree</strong></a>(self, tree)</dt><dd><tt>Returns&nbsp;a&nbsp;serizlizable&nbsp;<a href="builtins.html#object">object</a>&nbsp;from&nbsp;a&nbsp;tree&nbsp;in&nbsp;nested&nbsp;form</tt></dd></dl>
+<dl><dt><a name="LawParser-query_from_tree"><strong>query_from_tree</strong></a>(self, tree)</dt><dd><tt>Returns&nbsp;a&nbsp;serizlizable&nbsp;<a href="builtins.html#object">object</a>&nbsp;from&nbsp;a&nbsp;tree&nbsp;in&nbsp;nested&nbsp;form<br>
+:params&nbsp;tree&nbsp;:&nbsp;A&nbsp;query&nbsp;tree&nbsp;generated&nbsp;from&nbsp;syntax.py</tt></dd></dl>
 
 <dl><dt><a name="LawParser-remove_article"><strong>remove_article</strong></a>(self, article)</dt><dd><tt>Removal&nbsp;of&nbsp;article&nbsp;based&nbsp;on&nbsp;its&nbsp;id<br>
 :param&nbsp;artitcle&nbsp;id</tt></dd></dl>
@@ -210,7 +226,9 @@ paragraps</tt></dd></dl>
 <dl><dt><a name="LawParser-serialize"><strong>serialize</strong></a>(self)</dt><dd><tt>Returns&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;in&nbsp;database-friendly&nbsp;format<br>
 in&nbsp;a&nbsp;dictionary.</tt></dd></dl>
 
-<dl><dt><a name="LawParser-set_title"><strong>set_title</strong></a>(self, content, article_id)</dt></dl>
+<dl><dt><a name="LawParser-set_title"><strong>set_title</strong></a>(self, content, article)</dt><dd><tt>Set&nbsp;title&nbsp;of&nbsp;article<br>
+:params&nbsp;content&nbsp;:&nbsp;Actual&nbsp;title<br>
+:params&nbsp;article_id&nbsp;:&nbsp;Article&nbsp;number</tt></dd></dl>
 
 <hr>
 Static methods defined here:<br>
@@ -291,9 +309,7 @@ Data descriptors inherited from <a href="builtins.html#BaseException">builtins.B
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-generate_model_from_government_gazette_issues"><strong>generate_model_from_government_gazette_issues</strong></a>(directory='../data')</dt></dl>
- <dl><dt><a name="-get_issues_from_dataset"><strong>get_issues_from_dataset</strong></a>(directory='../data')</dt></dl>
- <dl><dt><a name="-train_word2vec_on_test_data"><strong>train_word2vec_on_test_data</strong></a>()</dt></dl>
+<td width="100%"><dl><dt><a name="-get_issues_from_dataset"><strong>get_issues_from_dataset</strong></a>(directory='../data', text_format=False)</dt></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -302,19 +318,19 @@ Data descriptors inherited from <a href="builtins.html#BaseException">builtins.B
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>MONTHS_PREFIXES</strong> = {'Απριλίο': 4, 'Αυγούστο': 8, 'Δεκεμβρίο': 12, 'Ιανουαρίο': 1, 'Ιουλίο': 7, 'Ιουνίο': 6, 'Μαΐο': 5, 'Μαρτίο': 3, 'Νοεμβρίο': 11, 'Οκτωβρίο': 10, ...}<br>
-<strong>actions</strong> = [προστίθεται, διαγράφεται, παύεται, τροποποιείται, αντικαθίσταται]<br>
+<strong>actions</strong> = [προστίθεται, διαγράφεται, παύεται, τροποποιείται, αντικαθίσταται, αναριθμείται]<br>
 <strong>article_regex</strong> = [r'άρθρο \d+', r'άρθρου \d+']<br>
 <strong>date</strong> = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0...τ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'<br>
 <strong>date_regex</strong> = re.compile('(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\...ου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιου)<br>
 <strong>intonations</strong> = {'ά': 'α', 'έ': 'ε', 'ή': 'η', 'ί': 'ι', 'ό': 'ο', 'ύ': 'υ', 'ώ': 'ω'}<br>
-<strong>law_regex</strong> = 'ν. [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'<br>
+<strong>law_regex</strong> = '(ν.|Ν.) [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'<br>
 <strong>legislative_act_regex</strong> = 'Πράξη(|ς) Νομοθετικού Περιεχομένου ([0-9]|[0-3][0-9]).[0-9][0-9].[1-2][0-9][0-9][0-9]'<br>
-<strong>legislative_decree_regex</strong> = 'ν.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
-<strong>ministers</strong> = [ΠΡΟΚΟΠΙΟΣ ΠΑΥΛΟΠΟΥΛΟΣ, ΔΗΜΟΣ ΠΑΠΑΔΗΜΗΤΡΙΟΥ, ΕΛΕΝΑ ΚΟΥΝΤΥΡΑ, ΣΤΑΥΡΟΣ ΚΟΝΤΟΝΗΣ, ΚΩΝΣΤΑΝΤΙΝΟΣ ΓΑΒΡΟΓΛΟΥ]<br>
+<strong>legislative_decree_regex</strong> = '(ν.δ.|Ν.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
 <strong>nlp</strong> = &lt;spacy.lang.el.Greek object&gt;<br>
 <strong>paragraph_regex</strong> = [r'παράγραφος \d+', r'παραγράφου \d+', r'παρ. \d+', 'παράγραφος']<br>
 <strong>params</strong> = {'iter': 20, 'min_count': 15, 'sample': 0.001, 'size': 200, 'window': 2, 'workers': 7}<br>
-<strong>presidential_decree_regex</strong> = 'π.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
-<strong>whats</strong> = ['φράση', 'παράγραφος', 'άρθρο', 'εδάφιο', 'φράσεις', 'άρθρα', 'εδάφια', 'παράγραφοι', 'τίτλος', 'περίπτωση', 'περιπτώσεις']<br>
+<strong>plural_suffixes</strong> = ['οι', 'α', 'εις', 'οι', 'ες']<br>
+<strong>presidential_decree_regex</strong> = '(π.δ.|Π.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
+<strong>whats</strong> = ['φράση', 'παράγραφος', 'άρθρο', 'εδάφιο', 'φράσεις', 'άρθρα', 'εδάφια', 'παράγραφοι', 'τίτλος', 'περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']<br>
 <strong>wheres</strong> = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']</td></tr></table>
 </body></html>

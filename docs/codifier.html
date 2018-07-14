@@ -17,13 +17,16 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.html">collections</a><br>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="argparse.html">argparse</a><br>
+<a href="collections.html">collections</a><br>
 <a href="database.html">database</a><br>
 <a href="entities.html">entities</a><br>
-</td><td width="25%" valign=top><a href="helpers.html">helpers</a><br>
+</td><td width="25%" valign=top><a href="gensim.html">gensim</a><br>
+<a href="helpers.html">helpers</a><br>
+<a href="multiprocessing.html">multiprocessing</a><br>
 <a href="parser.html">parser</a><br>
-<a href="pprint.html">pprint</a><br>
-</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="pprint.html">pprint</a><br>
+<a href="re.html">re</a><br>
 <a href="syntax.html">syntax</a><br>
 <a href="sys.html">sys</a><br>
 </td><td width="25%" valign=top><a href="tokenizer.html">tokenizer</a><br>
@@ -69,7 +72,9 @@ builds&nbsp;queries<br>
 <dl><dt><a name="LawCodifier-__init__"><strong>__init__</strong></a>(self, issues_directory=None)</dt><dd><tt>Constructor&nbsp;for&nbsp;<a href="#LawCodifier">LawCodifier</a>&nbsp;class<br>
 :param&nbsp;issues_directory&nbsp;:&nbsp;Issues&nbsp;directory</tt></dd></dl>
 
-<dl><dt><a name="LawCodifier-add_directory"><strong>add_directory</strong></a>(issues_directory)</dt><dd><tt>Add&nbsp;additional&nbsp;Directories</tt></dd></dl>
+<dl><dt><a name="LawCodifier-add_directory"><strong>add_directory</strong></a>(self, issues_directory, text_format=True)</dt><dd><tt>Add&nbsp;additional&nbsp;Directories</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-calculate_links_degrees"><strong>calculate_links_degrees</strong></a>(self)</dt><dd><tt>Calculate&nbsp;statistics&nbsp;of&nbsp;links</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-codify_issue"><strong>codify_issue</strong></a>(self, filename)</dt><dd><tt>Codify&nbsp;certain&nbsp;issue&nbsp;(legacy)<br>
 :param&nbsp;filename&nbsp;:&nbsp;Issue&nbsp;filename</tt></dd></dl>
@@ -82,19 +87,32 @@ builds&nbsp;queries<br>
 
 <dl><dt><a name="LawCodifier-create_law_links"><strong>create_law_links</strong></a>(self)</dt><dd><tt>Creates&nbsp;links&nbsp;from&nbsp;existing&nbsp;laws</tt></dd></dl>
 
+<dl><dt><a name="LawCodifier-export_codifier_corpus"><strong>export_codifier_corpus</strong></a>(self, outfile, labels=None)</dt><dd><tt>Export&nbsp;every&nbsp;law&nbsp;in&nbsp;a&nbsp;line&nbsp;in&nbsp;str&nbsp;format</tt></dd></dl>
+
 <dl><dt><a name="LawCodifier-export_law"><strong>export_law</strong></a>(self, identifier, outfile, export_type='markdown')</dt><dd><tt>Export&nbsp;a&nbsp;law&nbsp;in&nbsp;markdown&nbsp;or&nbsp;LaTeX</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-export_phrase_links"><strong>export_phrase_links</strong></a>(self, outfile)</dt><dd><tt>Export&nbsp;links&nbsp;that&nbsp;have&nbsp;to&nbsp;do&nbsp;with&nbsp;operations<br>
+on&nbsp;phrases&nbsp;in&nbsp;plaintext&nbsp;format</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-get_history"><strong>get_history</strong></a>(self, law)</dt><dd><tt>Return&nbsp;the&nbsp;history&nbsp;and&nbsp;links&nbsp;of&nbsp;a&nbsp;certain&nbsp;law</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-get_law"><strong>get_law</strong></a>(self, identifier, export_type='latex')</dt><dd><tt>Get&nbsp;law&nbsp;string&nbsp;in&nbsp;LaTeX&nbsp;or&nbsp;Markdown&nbsp;string<br>
 &nbsp;<br>
 :param&nbsp;identifier&nbsp;:&nbsp;Law&nbsp;identifier</tt></dd></dl>
 
-<dl><dt><a name="LawCodifier-keys"><strong>keys</strong></a>(self)</dt></dl>
+<dl><dt><a name="LawCodifier-keys"><strong>keys</strong></a>(self)</dt><dd><tt>Return&nbsp;set&nbsp;of&nbsp;keys&nbsp;for&nbsp;the&nbsp;codifier</tt></dd></dl>
 
-<dl><dt><a name="LawCodifier-populate_issues"><strong>populate_issues</strong></a>(self, directory)</dt><dd><tt>Populate&nbsp;issues&nbsp;from&nbsp;directory</tt></dd></dl>
+<dl><dt><a name="LawCodifier-populate_issues"><strong>populate_issues</strong></a>(self, directory, text_format=True)</dt><dd><tt>Populate&nbsp;issues&nbsp;from&nbsp;directory</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-populate_laws"><strong>populate_laws</strong></a>(self)</dt><dd><tt>Populate&nbsp;laws&nbsp;from&nbsp;database&nbsp;and&nbsp;fetch&nbsp;latest&nbsp;versions</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-populate_links"><strong>populate_links</strong></a>(self)</dt><dd><tt>Populate&nbsp;links&nbsp;from&nbsp;database&nbsp;and&nbsp;fetch&nbsp;latest&nbsp;versions</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-train_word2vec"><strong>train_word2vec</strong></a>(self)</dt><dd><tt>Train&nbsp;a&nbsp;word2vec&nbsp;model&nbsp;using&nbsp;the&nbsp;words&nbsp;of&nbsp;the&nbsp;codifier</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="LawCodifier-codify_pair"><strong>codify_pair</strong></a>(source=None, target=None, outfile=None)</dt></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -114,9 +132,11 @@ Data descriptors defined here:<br>
 <td colspan=2><tt><a href="#Link">Link</a>&nbsp;representation<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<strong>__dict__</strong> = mappingproxy({'from_serialized': &lt;staticmethod o...r__': &lt;function Link.__str__ at 0x7f67e95079d8&gt;})
+<strong>__dict__</strong> = mappingproxy({'__iter__': &lt;function Link.__iter_...__': &lt;function Link.__repr__ at 0x7fed43dd4d90&gt;})
 <dl><dt><a name="Link-__init__"><strong>__init__</strong></a>(self, name='')</dt><dd><tt>Initialize&nbsp;an&nbsp;Empty&nbsp;<a href="#Link">Link</a><br>
 :param&nbsp;name&nbsp;:&nbsp;Name&nbsp;of&nbsp;link</tt></dd></dl>
+
+<dl><dt><a name="Link-__iter__"><strong>__iter__</strong></a>(self)</dt><dd><tt>Yields&nbsp;actual_links&nbsp;elements</tt></dd></dl>
 
 <dl><dt><a name="Link-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
 
@@ -127,13 +147,15 @@ Data descriptors defined here:<br>
 :param&nbsp;s&nbsp;:&nbsp;Content<br>
 :param&nbsp;link_type&nbsp;:&nbsp;<a href="#Link">Link</a>&nbsp;type&nbsp;(can&nbsp;be&nbsp;modifying,&nbsp;referential&nbsp;etc.)</tt></dd></dl>
 
-<dl><dt><a name="Link-organize_by_text"><strong>organize_by_text</strong></a>(self)</dt></dl>
+<dl><dt><a name="Link-organize_by_text"><strong>organize_by_text</strong></a>(self)</dt><dd><tt>Format&nbsp;for&nbsp;rendering</tt></dd></dl>
 
 <dl><dt><a name="Link-serialize"><strong>serialize</strong></a>(self)</dt><dd><tt>Serialize&nbsp;link&nbsp;to&nbsp;dictionary</tt></dd></dl>
 
+<dl><dt><a name="Link-sort"><strong>sort</strong></a>(self)</dt><dd><tt>Sort&nbsp;actual&nbsp;links&nbsp;by&nbsp;year</tt></dd></dl>
+
 <hr>
 Static methods defined here:<br>
-<dl><dt><a name="Link-from_serialized"><strong>from_serialized</strong></a>(s)</dt></dl>
+<dl><dt><a name="Link-from_serialized"><strong>from_serialized</strong></a>(s)</dt><dd><tt>Create&nbsp;a&nbsp;link&nbsp;from&nbsp;a&nbsp;serialized&nbsp;<a href="builtins.html#object">object</a></tt></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -211,7 +233,7 @@ Data descriptors inherited from <a href="builtins.html#BaseException">builtins.B
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-test"><strong>test</strong></a>()</dt></dl>
+<td width="100%"><dl><dt><a name="-build"><strong>build</strong></a>(start=1998, end=2018, data_dir='../data/')</dt></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">

@@ -1,4 +1,6 @@
+# Uploader script
 #!/usr/bin/env python3
+# usage: uploader.py file1.txt file2.txt ... filen.txt
 
 import sys
 sys.path.insert(0, '../3gm')

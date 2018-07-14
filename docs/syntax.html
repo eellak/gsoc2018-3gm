@@ -18,21 +18,22 @@
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.html">collections</a><br>
+<a href="copy.html">copy</a><br>
 <a href="datetime.html">datetime</a><br>
 <a href="spacy.displacy.html">spacy.displacy</a><br>
 <a href="el_unnamed.html">el_unnamed</a><br>
-<a href="entities.html">entities</a><br>
-</td><td width="25%" valign=top><a href="helpers.html">helpers</a><br>
+</td><td width="25%" valign=top><a href="entities.html">entities</a><br>
+<a href="helpers.html">helpers</a><br>
 <a href="itertools.html">itertools</a><br>
 <a href="json.html">json</a><br>
 <a href="logging.html">logging</a><br>
-<a href="numpy.html">numpy</a><br>
-</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="os.html">os</a><br>
 <a href="re.html">re</a><br>
 <a href="shutil.html">shutil</a><br>
 <a href="spacy.html">spacy</a><br>
-<a href="string.html">string</a><br>
-</td><td width="25%" valign=top><a href="tokenizer.html">tokenizer</a><br>
+</td><td width="25%" valign=top><a href="string.html">string</a><br>
+<a href="tokenizer.html">tokenizer</a><br>
 <a href="urllib.html">urllib</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -42,6 +43,12 @@
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#Exception">builtins.Exception</a>(<a href="builtins.html#BaseException">builtins.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="syntax.html#UncategorizedActionException">UncategorizedActionException</a>
+</font></dt></dl>
+</dd>
 <dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
 </font></dt><dd>
 <dl>
@@ -63,21 +70,33 @@ The&nbsp;action&nbsp;tree&nbsp;consists&nbsp;of:<br>
 3.&nbsp;where&nbsp;to&nbsp;do&nbsp;it&nbsp;(i.e.&nbsp;on&nbsp;which&nbsp;law&nbsp;after&nbsp;which&nbsp;section)<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Static methods defined here:<br>
+<dl><dt><a name="ActionTreeGenerator-detect_from_regex"><strong>detect_from_regex</strong></a>(non_extract, regex)</dt></dl>
+
 <dl><dt><a name="ActionTreeGenerator-detect_latest_statute"><strong>detect_latest_statute</strong></a>(extract)</dt></dl>
 
-<dl><dt><a name="ActionTreeGenerator-dfs_traversal"><strong>dfs_traversal</strong></a>(token)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-detect_with_iterator"><strong>detect_with_iterator</strong></a>(non_extract_split, words)</dt></dl>
 
 <dl><dt><a name="ActionTreeGenerator-generate_action_tree"><strong>generate_action_tree</strong></a>(extract, issue, article, nested=True, max_what_window=20, max_where_window=30)</dt></dl>
 
-<dl><dt><a name="ActionTreeGenerator-generate_action_tree_from_string"><strong>generate_action_tree_from_string</strong></a>(s, nested=True, max_what_window=20, max_where_window=30)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-generate_action_tree_from_string"><strong>generate_action_tree_from_string</strong></a>(s, nested=True, max_what_window=20, max_where_window=30, use_regex=False)</dt></dl>
+
+<dl><dt><a name="ActionTreeGenerator-get_content"><strong>get_content</strong></a>(tree, extract, s)</dt></dl>
 
 <dl><dt><a name="ActionTreeGenerator-get_latest_statute"><strong>get_latest_statute</strong></a>(statutes)</dt><dd><tt>Returns&nbsp;latest&nbsp;statute&nbsp;in&nbsp;a&nbsp;given&nbsp;list&nbsp;of<br>
 statutes&nbsp;by&nbsp;first&nbsp;splitting&nbsp;the&nbsp;statutes&nbsp;and&nbsp;then<br>
 finding&nbsp;the&nbsp;one&nbsp;with&nbsp;the&nbsp;latest&nbsp;year</tt></dd></dl>
 
+<dl><dt><a name="ActionTreeGenerator-get_nsubj"><strong>get_nsubj</strong></a>(doc, i, tree)</dt></dl>
+
+<dl><dt><a name="ActionTreeGenerator-get_nsubj_fallback"><strong>get_nsubj_fallback</strong></a>(tmp, tree, i)</dt></dl>
+
+<dl><dt><a name="ActionTreeGenerator-get_rois_from_extract"><strong>get_rois_from_extract</strong></a>(q, what, idx_list)</dt></dl>
+
 <dl><dt><a name="ActionTreeGenerator-nest_tree"><strong>nest_tree</strong></a>(vertex, tree)</dt></dl>
 
 <dl><dt><a name="ActionTreeGenerator-nest_tree_helper"><strong>nest_tree_helper</strong></a>(vertex, tree)</dt></dl>
+
+<dl><dt><a name="ActionTreeGenerator-split_tree"><strong>split_tree</strong></a>(tree)</dt></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -87,6 +106,74 @@ Data descriptors defined here:<br>
 <dl><dt><strong>__weakref__</strong></dt>
 <dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
 </dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>trans_lookup</strong> = {'άρθρο': 'article', 'εδάφιο': 'period', 'παράγραφος': 'paragraph', 'φράση': 'phrase'}</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UncategorizedActionException">class <strong>UncategorizedActionException</strong></a>(<a href="builtins.html#Exception">builtins.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;exception&nbsp;is&nbsp;raised&nbsp;whenever&nbsp;an&nbsp;action&nbsp;cannot&nbsp;be<br>
+classified.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="syntax.html#UncategorizedActionException">UncategorizedActionException</a></dd>
+<dd><a href="builtins.html#Exception">builtins.Exception</a></dd>
+<dd><a href="builtins.html#BaseException">builtins.BaseException</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="UncategorizedActionException-__init__"><strong>__init__</strong></a>(self, s)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><strong>__repr__</strong> <em>lambda</em> self</dt></dl>
+
+<dl><dt><strong>__str__</strong> <em>lambda</em> self</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="builtins.html#Exception">builtins.Exception</a>:<br>
+<dl><dt><a name="UncategorizedActionException-__new__"><strong>__new__</strong></a>(*args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">builtins.type</a></font></font></dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><a name="UncategorizedActionException-__delattr__"><strong>__delattr__</strong></a>(self, name, /)</dt><dd><tt>Implement&nbsp;delattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="UncategorizedActionException-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="UncategorizedActionException-__reduce__"><strong>__reduce__</strong></a>(...)</dt><dd><tt>helper&nbsp;for&nbsp;pickle</tt></dd></dl>
+
+<dl><dt><a name="UncategorizedActionException-__setattr__"><strong>__setattr__</strong></a>(self, name, value, /)</dt><dd><tt>Implement&nbsp;setattr(self,&nbsp;name,&nbsp;value).</tt></dd></dl>
+
+<dl><dt><a name="UncategorizedActionException-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UncategorizedActionException-with_traceback"><strong>with_traceback</strong></a>(...)</dt><dd><tt><a href="builtins.html#Exception">Exception</a>.<a href="#UncategorizedActionException-with_traceback">with_traceback</a>(tb)&nbsp;--<br>
+set&nbsp;self.<strong>__traceback__</strong>&nbsp;to&nbsp;tb&nbsp;and&nbsp;return&nbsp;self.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="builtins.html#BaseException">builtins.BaseException</a>:<br>
+<dl><dt><strong>__cause__</strong></dt>
+<dd><tt>exception&nbsp;cause</tt></dd>
+</dl>
+<dl><dt><strong>__context__</strong></dt>
+<dd><tt>exception&nbsp;context</tt></dd>
+</dl>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>__suppress_context__</strong></dt>
+</dl>
+<dl><dt><strong>__traceback__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -95,17 +182,17 @@ Data descriptors defined here:<br>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>MONTHS_PREFIXES</strong> = {'Απριλίο': 4, 'Αυγούστο': 8, 'Δεκεμβρίο': 12, 'Ιανουαρίο': 1, 'Ιουλίο': 7, 'Ιουνίο': 6, 'Μαΐο': 5, 'Μαρτίο': 3, 'Νοεμβρίο': 11, 'Οκτωβρίο': 10, ...}<br>
-<strong>actions</strong> = [προστίθεται, διαγράφεται, παύεται, τροποποιείται, αντικαθίσταται]<br>
+<strong>actions</strong> = [προστίθεται, διαγράφεται, παύεται, τροποποιείται, αντικαθίσταται, αναριθμείται]<br>
 <strong>article_regex</strong> = [r'άρθρο \d+', r'άρθρου \d+']<br>
 <strong>date</strong> = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0...τ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'<br>
 <strong>intonations</strong> = {'ά': 'α', 'έ': 'ε', 'ή': 'η', 'ί': 'ι', 'ό': 'ο', 'ύ': 'υ', 'ώ': 'ω'}<br>
-<strong>law_regex</strong> = 'ν. [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'<br>
+<strong>law_regex</strong> = '(ν.|Ν.) [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'<br>
 <strong>legislative_act_regex</strong> = 'Πράξη(|ς) Νομοθετικού Περιεχομένου ([0-9]|[0-3][0-9]).[0-9][0-9].[1-2][0-9][0-9][0-9]'<br>
-<strong>legislative_decree_regex</strong> = 'ν.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
-<strong>ministers</strong> = [ΠΡΟΚΟΠΙΟΣ ΠΑΥΛΟΠΟΥΛΟΣ, ΔΗΜΟΣ ΠΑΠΑΔΗΜΗΤΡΙΟΥ, ΕΛΕΝΑ ΚΟΥΝΤΥΡΑ, ΣΤΑΥΡΟΣ ΚΟΝΤΟΝΗΣ, ΚΩΝΣΤΑΝΤΙΝΟΣ ΓΑΒΡΟΓΛΟΥ]<br>
+<strong>legislative_decree_regex</strong> = '(ν.δ.|Ν.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
 <strong>nlp</strong> = &lt;spacy.lang.el.Greek object&gt;<br>
 <strong>paragraph_regex</strong> = [r'παράγραφος \d+', r'παραγράφου \d+', r'παρ. \d+', 'παράγραφος']<br>
-<strong>presidential_decree_regex</strong> = 'π.δ. ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
-<strong>whats</strong> = ['φράση', 'παράγραφος', 'άρθρο', 'εδάφιο', 'φράσεις', 'άρθρα', 'εδάφια', 'παράγραφοι', 'τίτλος', 'περίπτωση', 'περιπτώσεις']<br>
+<strong>plural_suffixes</strong> = ['οι', 'α', 'εις', 'οι', 'ες']<br>
+<strong>presidential_decree_regex</strong> = '(π.δ.|Π.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
+<strong>whats</strong> = ['φράση', 'παράγραφος', 'άρθρο', 'εδάφιο', 'φράσεις', 'άρθρα', 'εδάφια', 'παράγραφοι', 'τίτλος', 'περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']<br>
 <strong>wheres</strong> = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']</td></tr></table>
 </body></html>

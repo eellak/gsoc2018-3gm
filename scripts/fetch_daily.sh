@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Fetch daily script
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
 TODAY=`date +%d.%m.%Y` &&
