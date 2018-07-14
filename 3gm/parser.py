@@ -198,6 +198,12 @@ class IssueParser:
 		finally:
 			return self.dates
 
+	def parse_name(self):
+		# parse 20150100022.txt
+		r = helpers.split_index(s, [4, 6, 8])
+		return 'ΦΕΚ Α {}/{}'.format(r[-1], r[1])
+
+
 	def find_articles(self, min_extract_chars=100):
 		"""Split the document into articles,
 		Detect Extracts that are more than min_extract_chars.

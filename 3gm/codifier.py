@@ -162,7 +162,7 @@ class LawCodifier:
 			history_links = self.links[law]
 			history_links.sort()
 		except:
-			history_links = {}	
+			history_links = {}
 
 		return history, history_links
 
@@ -258,9 +258,10 @@ class LawCodifier:
 				try:
 					serializable = new_laws[k].__dict__()
 					serializable['_version'] = 0
-					serializable['amendee'] = issue.name
+					serializable['amendee'] = new_laws[k].identifier
 					self.db.laws.save({
 						'_id': new_laws[k].identifier,
+						'issue' : issue.parse_name()
 						'versions': [
 							serializable
 						]
@@ -465,9 +466,15 @@ class LawCodifier:
 		return self.model
 
 	@staticmethod
-	def codify_pair(source, target, outfile=None):
-		source_issue = parser.IssueParser(source)
-		target_issue = parser.IssueParser(target)
+	def codify_pair(source=None, target=None, outfile=None):
+		if source:
+			source_issue = parser.IssueParser(source)
+		else:
+			source_issue = parser.IssueParser(None, stdin=True)
+		if target:
+			target_issue = parser.IssueParser(target)
+		else:
+			target_issue = parser.IssueParser(None, stdin=True)
 
 		source_issue.detect_new_laws()
 		target_issue.detect_new_laws()
@@ -476,7 +483,7 @@ class LawCodifier:
 		target_law = list(target_issue.new_laws.items())[0][1]
 
 		source_articles = source_law.get_articles_sorted()
-		input_md = target_law.export_law('issue')
+		input_txt = target_law.export_law('issue')
 
 		for article in source_articles:
 			for paragraph in source_law.get_paragraphs(article):
@@ -491,20 +498,20 @@ class LawCodifier:
 					if tree['law']['_id'] == target_law.identifier:
 						target_law.query_from_tree(tree)
 
-		output_md = target_law.export_law('issue')
+		output_txt = target_law.export_law('issue')
 		print('Result')
-		print(output_md)
+		print(output_txt)
 
 		if outfile:
 			print('Writing output to ', outfile)
 			with open(outfile, 'w+') as f:
-				if input_md == output_md:
-					f.write(input_md)
+				if input_txt == output_txt:
+					f.write(input_txt)
 				else:
 					f.write('# Αρχική έκδοση του {}'.format(target_law.identifier))
-					f.write(input_md)
+					f.write(input_txt)
 					f.write('# Έκδοση του {} μετά τις τροποποιήσεις του {}'.format(target_law.identifier, source_law.identifier))
-					f.write(output_md)
+					f.write(output_txt)
 
 def test():
 	cod = LawCodifier()
@@ -522,14 +529,13 @@ if __name__ == '__main__':
 	required = argparser.add_argument_group('required arguments')
 	optional = argparser.add_argument_group('optional arguments')
 
-	required.add_argument(
-		'-source',
-		help='Source Statute',
-		required=True)
-	required.add_argument(
-		'-target',
-		help='Target Statute',
-		required=True)
+	optional.add_argument(
+		'--source',
+		help='Source Statute')
+	optional.add_argument(
+		'--target',
+		help='Target Statute'
+	)
 
 	optional.add_argument(
 		'--output',
@@ -537,6 +543,4 @@ if __name__ == '__main__':
 	)
 
 	args = argparser.parse_args()
-	print('Source Statute: {}\nTarget Statute: {}'.format(args.source, args.target))
-
 	LawCodifier.codify_pair(args.source, args.target, args.output)
