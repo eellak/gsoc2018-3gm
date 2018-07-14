@@ -156,7 +156,18 @@ def graph():
 
 @app.route('/history')
 def history():
+    global codifier
     identifier = request.args.get('identifier')
+    history, links = codifier.get_history(identifier)
+
+    if links:
+        links = links.organize_by_text()
+
+    # Get as markdown
+    for x in history:
+        x.content = x.export_law('markdown')
+
+
     return render_template('history.html', **locals())
 
 
@@ -246,6 +257,9 @@ def to_hyperlink(l, link_type='markdown'):
 def render_md(corpus):
     return Markup(markdown.markdown(corpus))
 
+@app.template_filter('listify')
+def listify(s):
+    return list(s)
 
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)

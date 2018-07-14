@@ -158,8 +158,11 @@ class LawCodifier:
 				instance.version_index = current_version
 				history.append(instance)
 
-		history_links = self.links[law]
-		history_links.sort()
+		try:
+			history_links = self.links[law]
+			history_links.sort()
+		except:
+			history_links = {}	
 
 		return history, history_links
 

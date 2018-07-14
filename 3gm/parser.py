@@ -75,7 +75,7 @@ class IssueParser:
 		for line in tmp_lines:
 			if line == '':
 				continue
-			elif line.startswith('Τεύχος') or line.startswith('ΕΦΗΜΕΡΙ∆Α TΗΣ ΚΥΒΕΡΝΗΣΕΩΣ'):
+			elif line.startswith('Τεύχος') or line.startswith('ΕΦΗΜΕΡΙ∆Α TΗΣ ΚΥΒΕΡΝΗΣΕΩΣ') or line.startswith('ΕΦΗΜΕΡΙΣ ΤΗΣ ΚΥΒΕΡΝΗΣΕΩΣ'):
 				continue
 			else:
 				try:
@@ -475,7 +475,7 @@ class LawParser:
 					database with its contents.
 	"""
 
-	def __init__(self, identifier, filename=None):
+	def __init__(self, identifier, filename=None, autoincrement_version=False):
 		"""The constructor of LawParser is responsible for
 		reading and parsing the file as well as detecting
 		titles, lemmas and articles which are split into sentences
@@ -486,6 +486,7 @@ class LawParser:
 		"""
 		self.lines = []
 		self.identifier = identifier
+		self.autoincrement_version = autoincrement_version
 		self.version_index = 0
 		if filename and isinstance(filename, str):
 			self.filename = filename
@@ -661,7 +662,8 @@ class LawParser:
 		"""Returns the object in database-friendly format
 		in a dictionary.
 		"""
-		self.version_index += 1
+		if self.autoincrement_version:
+			self.version_index += 1
 
 		return {
 			'_id': self.identifier,
@@ -1031,9 +1033,9 @@ class LawParser:
 			yield self.get_paragraph(article, paragraph_id)
 
 	def get_articles_sorted(self):
-		return sorted(self.articles.keys(), key=lambda x: int(x))
+		return sorted(self.sentences.keys(), key=lambda x: int(x))
 
-	def export_law(self, export_type='latex'):
+	def export_law(self, export_type='markdown'):
 		"""Get law string in LaTeX or Markdown string
 
 		:param identifier : Law identifier
@@ -1091,3 +1093,51 @@ class LawParser:
 			result = result + self.export_type('plaintext')
 
 		return result
+
+	def apply_links(self, links):
+		links.sort()
+
+		links_hash = collections.defaultdict(list)
+		serializables = []
+
+		for l in links:
+			links_hash[l['from']].append(l)
+
+		sorted_links_keys = sorted(links_hash.keys(), key=helpers.compare_year)
+
+		links_groups = []
+
+		for k in sorted_links_keys:
+			links_groups.append(links_hash[k])
+
+		print([len(k) for k in links_groups])
+
+		initial = self.serialize()
+		initial['_version'] = self.version_index
+
+		versions = [initial]
+
+		for link_group in links_groups:
+			# TODO Add syntax and db
+			# TODO update link state
+			for l in link_group:
+				pass # APPLY LINK
+
+			self.version_index += 1
+
+			s = self.serialize()
+			s['_version'] = self.version_index
+			s['amendee'] = link_group[0]['from']
+			versions.append(s)
+
+			print(s['_version'], s['amendee'])
+			input()
+
+
+		final_serializable = {
+			'_id' : self.identifier,
+			'versions' : versions
+		}
+
+
+		return final_serializable, links_hash, links
