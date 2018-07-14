@@ -92,6 +92,7 @@ def pdfocr2txt(data, outfile, resolution=300, tmp='/tmp/'):
     else:
         for txt in final_text:
             sys.stdout.write(txt)
+        sys.stdout.flush()    
 
     logging.info('Cleaning {} directory'.format(dir_name))
     rmdir(dir_name)
