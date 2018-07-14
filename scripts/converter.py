@@ -21,9 +21,13 @@ def job(x):
     global output_dir
     global count
     y = x.replace('.pdf', '.txt')
-    y = output_dir + y.split('/')[-1]
+    if output_dir:
+        y = output_dir + y.split('/')[-1]
     if not os.path.isfile(y):
-        os.system('python3 {} {} > {}'.format(pdf2txt, x, y))
+        if output_dir:
+            os.system('python3 {} {} > {}'.format(pdf2txt, x, y))
+        else:
+            os.system('python3 {} {}'.format(pdf2txt, x))    
         if os.stat(y).st_size <= MIN_BYTES:
             logging.info('{}: File Size unsatisfactory. Performing OCR'.format(x))
             ocr.pdfocr2txt(x, y, resolution=resolution, tmp=tmp)
@@ -58,7 +62,7 @@ optional = parser.add_argument_group('optional arguments')
 
 required.add_argument('-pdf2txt', help='pdf2txt.py Executable')
 required.add_argument('-input_dir', help='Input Directory')
-required.add_argument('-output_dir', help='Output Directory')
+optional.add_argument('-output_dir', help='Output Directory (if omitted output goes to stdout)')
 optional.add_argument(
     '--njobs',
     help='Number of parallel jobs (default = 1)',
@@ -96,8 +100,6 @@ resolution = args.resolution
 recursive = args.recursive
 
 njobs = args.njobs
-if not njobs:
-    njobs = 1
 
 if not output_dir.endswith('/'):
     output_dir = output_dir + '/'

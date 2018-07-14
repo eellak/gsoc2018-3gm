@@ -85,9 +85,13 @@ def pdfocr2txt(data, outfile, resolution=300, tmp='/tmp/'):
 
     logging.info('Writing {} to file {}'.format(data, outfile))
 
-    with open(outfile, 'w+') as f:
+    if outfile:
+        with open(outfile, 'w+') as f:
+            for txt in final_text:
+                f.write(txt)
+    else:
         for txt in final_text:
-            f.write(txt)
+            sys.stdout.write(txt)
 
     logging.info('Cleaning {} directory'.format(dir_name))
     rmdir(dir_name)
