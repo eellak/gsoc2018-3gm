@@ -1038,7 +1038,7 @@ class LawParser:
 
 		:param identifier : Law identifier
 		"""
-		if export_type not in ['latex', 'markdown']:
+		if export_type not in ['latex', 'markdown', 'str', 'plaintext', 'issue']:
 			raise Exception('Unrecognized export type')
 
 		if export_type == 'latex':
@@ -1057,5 +1057,37 @@ class LawParser:
 				for i, paragraph in enumerate(self.get_paragraphs(article)):
 					result = result + \
 						' {}. {}\n'.format(i, paragraph)
+
+		elif export_type == 'str':
+			result = ''
+			for article in self.get_articles_sorted():
+				result = result + 'Άρθρο {} '.format(article)
+				for i, paragraph in enumerate(self.get_paragraphs(article)):
+					result = result + '{} '.format(i, paragraph)
+
+		elif export_type == 'plaintext':
+
+			result = ''
+			for article in self.get_articles_sorted():
+				result = result + 'Άρθρο {} \n'.format(article)
+				for i, paragraph in enumerate(self.get_paragraphs(article)):
+					result = result + \
+						' {}. {}\n'.format(i, paragraph)
+
+		elif export_type == 'issue':
+			abbreviations = {
+				'ν.' : 'ΝΌΜΟΣ',
+				'π.δ.' : 'ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ',
+				'ν.δ.' : 'ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ'
+			}
+			result = ''
+
+			for key, val in abbreviations.items():
+				if self.identifier.lower().startswith(key):
+					counter = self.identifier.split('/')[-2]
+					result = '{} ΥΠ’ ΑΡΙΘΜ. {}\n'.format(val, counter)
+					break
+
+			result = result + self.export_type('plaintext')
 
 		return result

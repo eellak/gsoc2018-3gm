@@ -473,7 +473,7 @@ class LawCodifier:
 		target_law = list(target_issue.new_laws.items())[0][1]
 
 		source_articles = source_law.get_articles_sorted()
-		input_md = target_law.export_law('markdown')
+		input_md = target_law.export_law('issue')
 
 		for article in source_articles:
 			for paragraph in source_law.get_paragraphs(article):
@@ -488,7 +488,7 @@ class LawCodifier:
 					if tree['law']['_id'] == target_law.identifier:
 						target_law.query_from_tree(tree)
 
-		output_md = target_law.export_law('markdown')
+		output_md = target_law.export_law('issue')
 		print('Result')
 		print(output_md)
 
