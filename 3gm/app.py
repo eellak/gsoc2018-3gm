@@ -184,6 +184,9 @@ def full_index():
 
     return render_template('full_index.html', full_index=full_index)
 
+@app.route('/docs/<page>')
+def docs(page):
+    return render_template('docs/' + page + '.html')
 
 def color_iterator():
     colors = [
