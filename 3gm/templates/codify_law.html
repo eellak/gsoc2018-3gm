@@ -12,7 +12,7 @@
     <div class="card-header" id="headingOne">
       <h3 class="lg-0">
         <button class="btn btn-link" data-toggle="collapse" aria-expanded="false" data-target="#collapseOne" aria-controls="collapseOne">
-          Παρούσα έκδοση {{ data['law'] }}
+          <h1>Παρούσα έκδοση {{ data['law'] }}</h1>
         </button>
       </h3>
     </div>
@@ -23,17 +23,10 @@
       </div>
     </div>
   </div>
+  </div>
 
-  <div class="card">
-    <div class="card-header" id="headingOne">
-      <h5 class="mb-0">
-        <button class="btn btn-link" data-toggle="collapse" aria-expanded="false" data-target="#collapseOne" aria-controls="collapseOne">
-          <a href="{{ url_for('history', identifier=data['law'] )}}">Ιστορικό του {{ data['law'] }}</a>
-        </button>
-      </h5>
-    </div>
-
-</div>
+<br>
+  <p><a href="{{ url_for('history', identifier=data['law'] )}}">Δείτε το πλήρες ιστορικό του {{ data['law'] }}</a></p>
 
 <br>
 {% if topics %}
@@ -41,7 +34,7 @@
 
 <p>Παρόμοια Νομοθετήματα:
 
-  <ol>
+<ol>
   {% for ref in topics['statutes'] %}
     <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a></li>
   {% endfor %}

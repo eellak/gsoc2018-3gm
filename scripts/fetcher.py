@@ -56,6 +56,7 @@ def handle_download(download_page, params):
         return
 
     Helper.download(download_link, filename, output_dir)
+    return filename
 
 
 def extract_download_links(html, issue_type):
@@ -107,7 +108,8 @@ def extract_download_links(html, issue_type):
             "issue_type": issue_type}
         print('Download Link')
         print(download_link)
-        handle_download(download_link, params, )
+        handle_download(download_link, params)
+        return filename
 
 
 if __name__ == '__main__':
@@ -134,6 +136,12 @@ if __name__ == '__main__':
     optional.add_argument(
         '--chromedriver',
         help='Chrome driver executable')
+    optional.add_argument(
+        '--upload',
+        help='Upload to database',
+        action='store_true'
+    )
+
 
     args = parser.parse_args()
 
@@ -186,6 +194,8 @@ if __name__ == '__main__':
     driver.find_element_by_name("chbIssue_1").click()
     driver.find_element_by_id("search").click()
 
+    filenames = []
+
     try:
         # By default we'll see the first page of results, well.. first
         active_page = 1
@@ -198,7 +208,10 @@ if __name__ == '__main__':
         for current_page in range(0, num_pages):
 
             # Extract and handle download links.
-            extract_download_links(driver.page_source, 'Α')
+            filename = extract_download_links(driver.page_source, 'Α')
+
+            if args.upload:
+                filenames.append(filename)
 
             # We have to re-find the pagination list because the DOM has been
             # rebuilt.
@@ -213,3 +226,7 @@ if __name__ == '__main__':
 
     finally:
         driver.quit()
+
+        if args.upload:
+            import uploader
+            uploader.upload(filenames)

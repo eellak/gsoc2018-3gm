@@ -59,6 +59,7 @@ class Link:
 		}
 
 	def organize_by_text(self):
+		"""Format for rendering"""
 		result = collections.defaultdict(set)
 
 		for x in self.actual_links:
@@ -80,10 +81,12 @@ class Link:
 		return self.name
 
 	def __iter__(self):
+		"""Yields actual_links elements"""
 		for x in self.actual_links:
 			yield x
 
 	def sort(self):
+		"""Sort actual links by year"""
 		try:
 			self.actual_links.sort(key=lambda x: helpers.compare_year(x['from']))
 		except:
@@ -91,6 +94,7 @@ class Link:
 
 	@staticmethod
 	def from_serialized(s):
+		"""Create a link from a serialized object"""
 		l = Link(s['_id'])
 		l.links_to = set(s['links_to'])
 		l.actual_links = s['actual_links']
@@ -143,6 +147,7 @@ class LawCodifier:
 			self.laws[identifier] = law
 
 	def get_history(self, law):
+		"""Return the history and links of a certain law"""
 		history = []
 
 		cursor = self.db.laws.find({
@@ -258,10 +263,9 @@ class LawCodifier:
 				try:
 					serializable = new_laws[k].__dict__()
 					serializable['_version'] = 0
-					serializable['amendee'] = new_laws[k].identifier
+					serializable['amendee'] = k
 					self.db.laws.save({
 						'_id': new_laws[k].identifier,
-						'issue' : issue.parse_name()
 						'versions': [
 							serializable
 						]
@@ -317,13 +321,20 @@ class LawCodifier:
 
 		return result
 
-	def export_codifier_corpus(self, outfile):
+	def export_codifier_corpus(self, outfile, labels=None):
+		"""Export every law in a line in str format"""
+		if labels:
+			labels = open(labels, 'w+')
 		with open(outfile, 'w+') as f:
 			for law in self.laws:
 				s = self.get_law(law, export_type='str')
 				f.write(s + '\n')
+				labels.write(str(law) + '\n')
+		labels.close()
 
 	def export_phrase_links(self, outfile):
+		"""Export links that have to do with operations
+		on phrases in plaintext format"""
 		with open(outfile, 'w+') as f:
 			for l, lobj in self.links.items():
 				for x in lobj:
@@ -354,7 +365,6 @@ class LawCodifier:
 			articles = law.sentences.keys()
 
 
-
 			for article in articles:
 				for paragraph in law.get_paragraphs(article):
 					try:
@@ -369,7 +379,7 @@ class LawCodifier:
 											 for neighbor in neighbors])
 
 
-								tmp = tokenizer.tokenizer.split(s, ' ')
+								tmp = s.split(' ')
 
 								for u in neighbors:
 									if u not in self.links:
@@ -386,6 +396,7 @@ class LawCodifier:
 
 									if is_modifying:
 										print('found modifying')
+										# exit()
 										self.links[u].add_link(law.identifier, paragraph, link_type='τροποποιητικός')
 									else:
 										self.links[u].add_link(law.identifier, paragraph, link_type='αναφορικός')
@@ -428,10 +439,11 @@ class LawCodifier:
 			self.links[str(l)] = l
 
 	def keys(self):
+		"""Return set of keys for the codifier"""
 		return list(set(self.laws.keys()) | set(self.links.keys()))
 
 	def calculate_links_degrees(self):
-
+		"""Calculate statistics of links"""
 		cursor = self.db.links.find({})
 		max_degree = -1
 		sum_degrees = 0
@@ -448,6 +460,7 @@ class LawCodifier:
 		print('Average Degree', avg_degree)
 
 	def train_word2vec(self):
+		"""Train a word2vec model using the words of the codifier"""
 		params = {'size': 200, 'iter': 20, 'window': 2, 'min_count': 15,
 				  'workers': max(1, multiprocessing.cpu_count() - 1), 'sample': 1E-3, }
 
@@ -513,12 +526,14 @@ class LawCodifier:
 					f.write('# Έκδοση του {} μετά τις τροποποιήσεις του {}'.format(target_law.identifier, source_law.identifier))
 					f.write(output_txt)
 
-def test():
+def build(start=1998, end=2018, data_dir='../data/'):
 	cod = LawCodifier()
-	for i in range(1998, 2019):
-		cod.add_directory('../data/' + str(i))
+	for i in range(start, end + 1):
+		cod.add_directory(data_dir + str(i))
 	cod.codify_new_laws()
 	cod.create_law_links()
+
+	return cod
 
 codifier = LawCodifier()
 

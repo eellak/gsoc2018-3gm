@@ -1109,7 +1109,11 @@ class LawParser:
 		return result
 
 	def apply_links(self, links):
-		links.sort()
+		"""Apply links to the given law
+		:params links : A Link object
+		Returns the serializable object containing all the versions of the
+		current statute and the links themselves
+		"""
 
 		links_hash = collections.defaultdict(list)
 		serializables = []
