@@ -167,7 +167,6 @@ def history():
     for x in history:
         x.content = x.export_law('markdown')
 
-
     return render_template('history.html', **locals())
 
 
@@ -184,9 +183,11 @@ def full_index():
 
     return render_template('full_index.html', full_index=full_index)
 
+
 @app.route('/docs/<page>')
 def docs(page):
     return render_template('docs/' + page + '.html')
+
 
 def color_iterator():
     colors = [
@@ -260,9 +261,11 @@ def to_hyperlink(l, link_type='markdown'):
 def render_md(corpus):
     return Markup(markdown.markdown(corpus))
 
+
 @app.template_filter('listify')
 def listify(s):
     return list(s)
+
 
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)
