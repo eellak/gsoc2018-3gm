@@ -359,14 +359,6 @@ class IssueParser:
 
 		return self.signatories
 
-	def train_word2vec(self):
-
-		self.all_sentences = [sentence for sentence in self.all_sentences()]
-
-		self.model = gensim.models.Word2Vec(self.all_sentences, **params)
-		print('Model train complete!')
-		self.model.wv.save_word2vec_format('model')
-
 	def detect_new_laws(self):
 		"""Detect new laws being added to Greek
 		Legislation. Proceedure includes
@@ -376,7 +368,7 @@ class IssueParser:
 		4. Keep the new laws in a dictionary"""
 
 
-		new_law_regex = r'(NOMOΣ|ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ|ΚΟΙΝΗ ΥΠΟΥΡΓΙΚΗ ΑΠΟΦΑΣΗ|ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ) ΥΠ’ ΑΡΙΘ(|Μ). (\d+)'
+		new_law_regex = entities.LegalEntities.ratification
 		self.new_laws = {}
 		regions_of_interest = []
 
@@ -428,28 +420,6 @@ class UnrecognizedFileException(Exception):
 	def __init__(self, filename):
 		super().__init__('Unrecognized filetype ' + str(filename))
 
-
-def generate_model_from_government_gazette_issues(directory='../data'):
-	cwd = os.getcwd()
-	os.chdir(directory)
-	filelist = glob.glob('*.pdf'.format(directory))
-	issues = []
-	all_sentences = []
-	for filename in filelist:
-		outfile = filename.strip('.pdf') + '.txt'
-		print(outfile)
-		if not os.path.isfile(outfile):
-			os.system('pdf2txt.py {} > {}'.format(filename, outfile))
-		issue = IssueParser(outfile)
-		all_sentences.extend(issue.all_sentences())
-		issues.append(issue)
-	model = gensim.models.Word2Vec(all_sentences, **params)
-
-	os.chdir(cwd)
-
-	return issues, model
-
-
 def get_issues_from_dataset(directory='../data', text_format=False):
 	cwd = os.getcwd()
 	os.chdir(directory)
@@ -473,14 +443,9 @@ def get_issues_from_dataset(directory='../data', text_format=False):
 	return issues
 
 
-def train_word2vec_on_test_data():
-	issues, model = generate_model_from_government_gazette_issues()
-	model.wv.save_word2vec_format('fek.model')
-
-
 class LawParser:
 	"""
-					This class hosts the law parser.The law is provided
+					This class hosts the law parser. The law is provided
 					in a file (if it exists) and is parsed in order to be
 					split in articles and sentences, ready to be stored in
 					the database. This class supports insertions, replacements
@@ -976,18 +941,30 @@ class LawParser:
 
 		return self.serialize()
 
-	def append_period(self, context, article, paragraph):
-		"""Append period to article and paragraph"""
+	def append_period(self, content, article, paragraph):
+		"""Append period to article and paragraph
+		:params context : The period content
+		:params article : Article number
+		:params paragraph : Paragraph number
+		"""
 		assert(article and paragraph)
-		self.sentences[article][paragraph].append(context)
+		article, paragraph = str(article), str(paragraph)
+		self.sentences[article][paragraph].append(content)
 
-	def set_title(self, content, article_id):
-		assert(article_id)
-		self.titles[article_id] = content
+	def set_title(self, content, article):
+		"""Set title of article
+		:params content : Actual title
+		:params article_id : Article number
+		"""
+		assert(article)
+		article = str(article)
+		self.titles[article] = content
 		return self.serialize()
 
 	def query_from_tree(self, tree):
-		"""Returns a serizlizable object from a tree in nested form"""
+		"""Returns a serizlizable object from a tree in nested form
+		:params tree : A query tree generated from syntax.py
+		"""
 		if tree['root']['action'] in [
 			'προστίθεται',
 			'αντικαθίσταται',
@@ -1036,22 +1013,27 @@ class LawParser:
 		return self.serialize()
 
 	def get_paragraph(self, article, paragraph_id):
-		"""Join sentences to paragraph"""
+		"""Join sentences to paragraph
+		:params article : Article number
+		:params paragraph_id : Paragraph ID
+		"""
 		return '. '.join(self.sentences[article][paragraph_id])
 
 	def get_paragraphs(self, article):
-		"""Return Paragraphs via a generator"""
+		"""Return Paragraphs via a generator
+		:params article : The article number
+		"""
 
-		print(self.sentences[article].keys())
+		article = str(article)
 		for paragraph_id in self.sentences[article].keys():
 			yield self.get_paragraph(article, paragraph_id)
 
 	def get_articles_sorted(self):
+		"""Returns the articles of the statute sorted"""
 		return sorted(self.sentences.keys(), key=lambda x: int(x))
 
 	def export_law(self, export_type='markdown'):
-		"""Get law string in LaTeX or Markdown string
-
+		"""Get law string in LaTeX, Markdown, string, plaintext and Issue-like format
 		:param identifier : Law identifier
 		"""
 		if export_type not in ['latex', 'markdown', 'str', 'plaintext', 'issue']:
@@ -1112,8 +1094,10 @@ class LawParser:
 		"""Apply links to the given law
 		:params links : A Link object
 		Returns the serializable object containing all the versions of the
-		current statute and the links themselves
+		current statute and the links themselves.
 		"""
+
+		self.autoincrement_version = False
 
 		links_hash = collections.defaultdict(list)
 		serializables = []
