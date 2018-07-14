@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import tokenizer
 import re
@@ -45,32 +44,41 @@ class IssueParser:
 					4. Detect Signatories of Given Documents
 					5. Train a word2vec model with gensim for further usage."""
 
-	def __init__(self, filename, toTxt=False):
+	def __init__(self, filename, stdin=False, toTxt=False):
 		self.filename = filename
 		self.lines = []
 		tmp_lines = []
 
-		filetype = mimetypes.guess_type(filename)[0]
+		if not stdin:
+			filetype = mimetypes.guess_type(filename)[0]
 
-		# if it is in PDF format convert it to txt
-		if filetype == 'application/pdf':
-			outfile = filename.replace('.pdf', '.txt')
-			if not os.path.isfile(outfile):
-				os.system('pdf2txt.py {} > {}'.format(filename, outfile))
-			filename = outfile
-		elif filetype != 'text/plain':
-			raise UnrecognizedFileException(filename)
+			# if it is in PDF format convert it to txt
+			if filetype == 'application/pdf':
+				outfile = filename.replace('.pdf', '.txt')
+				if not os.path.isfile(outfile):
+					os.system('pdf2txt.py {} > {}'.format(filename, outfile))
+				filename = outfile
+			elif filetype != 'text/plain':
+				raise UnrecognizedFileException(filename)
 
-		with open(filename, 'r') as infile:
-			# remove ugly hyphenthation
-			while 1 == 1:
+		if not stdin:
+			infile = open(filename, 'r')
+
+		# remove ugly hyphenthation
+		while 1 == 1:
+			if not stdin:
 				l = infile.readline()
-				if not l:
-					break
-				l = l.replace('−\n', '')
-				l = l.replace('\n', ' ')
-				l = re.sub(r' +', ' ', l)
-				tmp_lines.append(l)
+			else:
+				l = sys.stdin.readline()
+			if not l:
+				break
+			l = l.replace('−\n', '')
+			l = l.replace('\n', ' ')
+			l = re.sub(r' +', ' ', l)
+			tmp_lines.append(l)
+
+		if not stdin:
+			infile.close()
 
 		for line in tmp_lines:
 			if line == '':
