@@ -188,6 +188,13 @@ def full_index():
 def docs(page):
     return render_template('docs/' + page + '.html')
 
+@app.route('/display_cards/<filename>')
+def display_cards(filename):
+    with open(filename) as f:
+        contents = f.read().splitlines()
+    print(contents)    
+    return render_template('display_cards.html', **locals())
+
 
 def color_iterator():
     colors = [
