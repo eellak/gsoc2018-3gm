@@ -1,10 +1,17 @@
+#!/usr/bin/env python3
+# Train word2vec model and (optioanallly) create document embeddings for the dataset
+# usage: train_doc2vec.py corpus.txt model.bin --embeddings --tokenize > embeddings.txt
+# or (with labeling): train_doc2vec.py corpus.txt model.bin --embeddings --tokenize | label_embeddings.py labels.txt output.pickle
+
 import gensim.models as g
 import logging
 import multiprocessing
 import sys
 import tokenizer
 from gensim.models.doc2vec import TaggedDocument
+from infer_doc2vec import infer
 
+# document cleanup
 def nlp_clean(data):
 	new_data = []
 	for d in data:
@@ -12,7 +19,6 @@ def nlp_clean(data):
 		dlist = tokenizer.tokenizer.split(d, delimiter='. ')
 		new_data.append(dlist)
 	return new_data
-
 
 #doc2vec parameters
 vector_size = 300
@@ -23,8 +29,8 @@ negative_size = 5
 train_epoch = 100
 dm = 0 #0 = dbow; 1 = dmpv
 worker_count = multiprocessing.cpu_count() - 1
-tokenize = False
-create_embeddings = True
+tokenize = '--tokenize' in sys.argv
+create_embeddings = '--embeddings' in sys.argv
 
 #input corpus
 train_corpus = sys.argv[1]
@@ -59,7 +65,7 @@ with open(train_corpus, 'r') as q:
 	lines = q.read().splitlines()
 
 if create_embeddings:
-	with open(sys.argv[3], 'w+') as f:
-		for d in lines:
-			vector =  model.infer_vector(d, alpha=start_alpha, steps=infer_epoch)
-			f.write( " ".join([str(x) for x in vector]) + "\n" )
+	pool = multiprocessing.pool(worker_count)
+	vectors = pool.map(infer, lines)
+	for d in vectors:
+		sys.stdout.write( " ".join([str(x) for x in vector]) + "\n" )
