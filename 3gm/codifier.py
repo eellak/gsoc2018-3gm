@@ -279,50 +279,10 @@ class LawCodifier:
                     pass
 
     def get_law(self, identifier, export_type='latex'):
-        """Get law string in LaTeX or Markdown string
-
+        """Get law string in LaTeX, Markdown, str, plaintext or issue-like format
         :param identifier : Law identifier
         """
-        if export_type not in ['latex', 'markdown', 'str']:
-            raise Exception('Unrecognized export type')
-
-        if export_type == 'latex':
-            cur = self.db.laws.find({'_id': identifier})
-            result = '\chapter*{{ {} }}'.format(identifier)
-            for x in cur:
-                for y in x['versions']:
-                    result = result + \
-                        '\section* {{ Έκδοση  {} }} \n'.format(y['_version'])
-                    for article in sorted(
-                            y['articles'].keys(), key=lambda x: int(x)):
-                        result = result + \
-                            '\subsection*{{ Άρθρο {} }}\n'.format(article)
-                        for paragraph in sorted(y['articles'][article].keys()):
-                            result = result + '\paragraph {{ {}. }} {}\n'.format(
-                                paragraph, '. '.join(y['articles'][article][paragraph]))
-        elif export_type == 'markdown':
-            cur = self.db.laws.find({'_id': identifier})
-            result = '# {}\n'.format(identifier)
-            for x in cur:
-                for y in x['versions']:
-                    result = result + '## Έκδοση  {} \n'.format(y['_version'])
-                    for article in sorted(
-                            y['articles'].keys(), key=lambda x: int(x)):
-                        result = result + '### Άρθρο {} \n'.format(article)
-                        for paragraph in sorted(y['articles'][article].keys()):
-                            result = result + \
-                                ' {}. {}\n'.format(paragraph, '. '.join(y['articles'][article][paragraph]))
-        elif export_type == 'str':
-            cur = self.db.laws.find({'_id': identifier})
-            result = '{} '.format(identifier)
-            for x in cur:
-                for y in x['versions']:
-                    for article in sorted(
-                            y['articles'].keys(), key=lambda x: int(x)):
-                        for paragraph in sorted(y['articles'][article].keys()):
-                            result = result + \
-                                '{} '.format('. '.join(y['articles'][article][paragraph]))
-
+        result = self.laws[law].export_law(export_type=export_type)
         return result
 
     def export_codifier_corpus(self, outfile, labels=None):
