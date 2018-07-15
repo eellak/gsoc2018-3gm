@@ -192,9 +192,12 @@ def docs(page):
 def display_cards(filename):
     with open(filename) as f:
         contents = f.read().splitlines()
-    print(contents)    
+    print(contents)
     return render_template('display_cards.html', **locals())
 
+@app.route('/help')
+def help():
+    return render_template('help.html')
 
 def color_iterator():
     colors = [
