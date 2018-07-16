@@ -30,7 +30,7 @@
 
 <br>
 {% if topics %}
-<p class="sparse">Ετικέτες: {{ topics['keywords'] | render_badges | safe }}</p>
+<p class="sparse">Ετικέτες: {{ topics['keywords'] | render_badges_single('info') | safe }}</p>
 
 <p>Παρόμοια Νομοθετήματα:
 

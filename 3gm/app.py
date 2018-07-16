@@ -79,6 +79,7 @@ def codification():
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
     global autocomplete_laws
+    print(autocomplete_laws)
     search = request.args.get('q')
     match = list(filter(lambda x: x.startswith(search), autocomplete_laws))
     return jsonify(matching_results=match)
@@ -225,6 +226,13 @@ def render_badges(l):
             '<span class="badge badge-{}">{}</span> '.format(next(colors), x)
     return result
 
+@app.template_filter('render_badges_single')
+def render_badges_single(l, color='light'):
+    result = ''
+    for x in l:
+        result = result + \
+            '<span class="badge badge-{}">{}</span> '.format(color, x)
+    return result
 
 @app.template_filter('render_badges_from_tree')
 def render_badges_from_tree(tree):
@@ -279,4 +287,5 @@ def listify(s):
 
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)
-    app.run(debug=True, use_reloader=True, ssl_context='adhoc')
+    #app.run(debug=True, use_reloader=True, ssl_context='adhoc')
+    app.run(host='0.0.0.0')
