@@ -459,10 +459,10 @@ class LawCodifier:
 
     @staticmethod
     def codify_pair(source=None, target=None, outfile=None):
-        if source:
-            source_issue = parser.IssueParser(source)
-        else:
-            source_issue = parser.IssueParser(None, stdin=True)
+        if not source:
+            source = sys.argv[1]
+        source_issue = parser.IssueParser(source)
+
         if target:
             target_issue = parser.IssueParser(target)
         else:
@@ -482,35 +482,23 @@ class LawCodifier:
                 try:
                     trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(
                         paragraph)
-                except BaseException:
-                    continue
+                except BaseException as e:
+                    sys.stderr.write(str(e))
 
                 for tree in trees:
-                    print('Found amendment at: ')
-                    print(paragraph)
                     if tree['law']['_id'] == target_law.identifier:
-                        target_law.query_from_tree(tree)
+                        try:
+                            target_law.query_from_tree(tree)
+                        except BaseException as e:
+                            sys.stderr.write(str(e))
 
         output_txt = target_law.export_law('issue')
-        print('Result')
-        print(output_txt)
 
         if outfile:
-            print('Writing output to ', outfile)
             with open(outfile, 'w+') as f:
-                if input_txt == output_txt:
-                    f.write(input_txt)
-                else:
-                    f.write(
-                        '# Αρχική έκδοση του {}'.format(
-                            target_law.identifier))
-                    f.write(input_txt)
-                    f.write(
-                        '# Έκδοση του {} μετά τις τροποποιήσεις του {}'.format(
-                            target_law.identifier,
-                            source_law.identifier))
-                    f.write(output_txt)
-
+                f.write(output_txt)
+        else:
+            sys.stdout.write(output_txt)
 
 def build(start=1998, end=2018, data_dir='../data/'):
     cod = LawCodifier()
@@ -528,7 +516,6 @@ if __name__ == '__main__':
     argparser = argparse.ArgumentParser(
         description='''This is the command line tool for codifying documents''')
 
-    required = argparser.add_argument_group('required arguments')
     optional = argparser.add_argument_group('optional arguments')
 
     optional.add_argument(
