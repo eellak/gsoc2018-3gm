@@ -33,12 +33,18 @@
 <p class="sparse">Ετικέτες: {{ topics['keywords'] | render_badges_single('info') | safe }}</p>
 
 <p>Παρόμοια Νομοθετήματα:
+<h4>Με χρήση LDA</h4>
 
 <ol>
   {% for ref in topics['statutes'] %}
     <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a></li>
   {% endfor %}
 </ol>
+
+<h4>Με χρήση Doc2Vec</h4>
+  {% for ref, prob in doc2vec_most_similar %}
+  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a>{{ [prob] | render_badges | safe }}</li>
+  {% endfor %}
 {% endif %}
 
 <h1>Τροποποιήσεις</h1>

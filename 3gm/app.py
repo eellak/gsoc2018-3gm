@@ -10,20 +10,16 @@ import sys
 import markdown
 import pymongo
 import collections
+import gensim.models as g
+global doc2vec
 
 sys.path.insert(0, './')
+doc2vec = g.Doc2Vec.load('laws_model.bin')
 from codifier import *
-
 import helpers
 autocomplete_laws = sorted(list(codifier.keys()))
 
-import networkx
-from networkx.readwrite import json_graph
-from networkx import (
-    draw,
-    DiGraph,
-    Graph,
-)
+
 
 try:
     import spacy
@@ -142,6 +138,9 @@ def codify_law(identifier=None):
 
     except IndexError:
         topics = None
+
+    doc2vec_most_similar = doc2vec.docvecs.most_similar(data['law'], topn=5)
+
 
     return render_template('codify_law.html', **locals())
 
