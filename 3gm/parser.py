@@ -75,6 +75,7 @@ class IssueParser:
             l = l.replace('−\n', '')
             l = l.replace('\n', ' ')
             l = re.sub(r' +', ' ', l)
+            l = helpers.fix_par_abbrev(l)
             tmp_lines.append(l)
 
         if not stdin:
@@ -858,7 +859,7 @@ class LawParser:
 
         for article in delegate_articles:
             if search_all:
-                delegate_paragraphs = self.articles[article].keys()
+                delegate_paragraphs = self.sentences[article].keys()
 
             for paragraph in delegate_paragraphs:
                 for i, period in enumerate(self.sentences[article][paragraph]):
@@ -867,30 +868,33 @@ class LawParser:
 
         return self.serialize()
 
-    def remove_period(self, old_period, article=None, paragraph=None):
+    def remove_period(self, old_period, position=None, article=None, paragraph=None):
         """Removal of period"""
 
         search_all = (article is None)
 
-        if article:
-            delegate_articles = [str(article)]
+        if not position:
+            if article:
+                delegate_articles = [str(article)]
 
-            if paragraph:
-                delegate_paragraphs = [str(paragraph)]
+                if paragraph:
+                    delegate_paragraphs = [str(paragraph)]
+                else:
+                    delegate_paragraphs = self.sentences[article].keys()
             else:
-                delegate_paragraphs = self.sentences[article].keys()
+                delegate_articles = self.sentences.keys()
+
+            for article in delegate_articles:
+                if search_all:
+                    delegate_paragraphs = self.sentences[article].keys()
+
+                for paragraph in delegate_paragraphs:
+                    for i, period in enumerate(self.sentences[article][paragraph]):
+                        if old_period == period or old_period == period[:-1]:
+                            del self.sentences[article][paragraph][i]
+                            return self.serialize()
         else:
-            delegate_articles = self.articles.keys()
-
-        for article in delegate_articles:
-            if search_all:
-                delegate_paragraphs = self.articles[article].keys()
-
-            for paragraph in delegate_paragraphs:
-                for i, period in enumerate(self.sentences[article][paragraph]):
-                    if old_period == period or old_period == period[:-1]:
-                        del self.sentences[article][paragraph][i]
-                        return self.serialize()
+            del self.sentences[article][paragraph][int(position)]
 
         return self.serialize()
 
@@ -903,43 +907,49 @@ class LawParser:
             paragraph=None):
         """Insertion of period relative to another period"""
 
-        assert(position in ['start', 'end', 'before', 'after'])
+        assert(position in ['start', 'end', 'before', 'after'] or isinstance(position, int))
 
         if position in ['start', 'end']:
             assert(article and paragraph)
             if position == 'start':
-                self.articles[article][paragraph].insert(0, new_period)
+                self.sentences[article][paragraph].insert(0, new_period)
             else:
                 self.append_period(new_period, article, paragraph)
 
-        search_all = (article is None)
+            return self.serialize()
 
-        if article:
-            delegate_articles = [str(article)]
-
-            if paragraph:
-                delegate_paragraphs = [str(paragraph)]
-            else:
-                delegate_paragraphs = self.sentences[article].keys()
+        elif isinstance(position, int):
+            self.sentences[article][paragraph].insert(position, new_period)
+            return self.serialize()
         else:
-            delegate_articles = self.articles.keys()
+            search_all = (article is None)
 
-        for article in delegate_articles:
-            if search_all:
-                delegate_paragraphs = self.articles[article].keys()
+            if article:
+                delegate_articles = [str(article)]
 
-            for paragraph in delegate_paragraphs:
-                for i, period in enumerate(self.sentences[article][paragraph]):
-                    if period == old_period or old_period == period[:-1]:
-                        if position == 'before':
-                            self.sentences[article][paragraph].insert(
-                                max(0, i - 1), new_period)
-                            return self.serialize()
+                if paragraph:
+                    delegate_paragraphs = [str(paragraph)]
+                else:
+                    delegate_paragraphs = self.sentences[article].keys()
+            else:
+                delegate_articles = self.sentences.keys()
 
-                        elif position == 'after':
-                            self.sentences[article][paragraph].insert(
-                                i + 1, new_period)
-                            return self.serialize()
+            for article in delegate_articles:
+                if search_all:
+                    delegate_paragraphs = self.sentences[article].keys()
+
+                for paragraph in delegate_paragraphs:
+                    for i, period in enumerate(self.sentences[article][paragraph]):
+                        if period == old_period or old_period == period[:-1]:
+                            if position == 'before':
+                                self.sentences[article][paragraph].insert(
+                                    max(0, i - 1), new_period)
+                                return self.serialize()
+
+                            elif position == 'after':
+                                self.sentences[article][paragraph].insert(
+                                    i + 1, new_period)
+                                return self.serialize()
 
         return self.serialize()
 
@@ -963,14 +973,23 @@ class LawParser:
         self.titles[article] = content
         return self.serialize()
 
+    def delete_title(self, article):
+        """Delete the title of an article
+        :param article : The article id
+        """
+        assert(article)
+        article = str(article)
+        del self.titles[article]
+        return self.serialize()
+
     def query_from_tree(self, tree):
         """Returns a serizlizable object from a tree in nested form
         :params tree : A query tree generated from syntax.py
         """
         if tree['root']['action'] in [
-            'προστίθεται',
-            'αντικαθίσταται',
-                'τροποποιείται']:
+            'προστίθεται', 'προστίθενται',
+            'αντικαθίσταται', 'αντικαθίστανται',
+            'τροποποιείται', 'τροποποιούνται']:
 
             try:
                 content = tree['what']['content']
@@ -978,39 +997,68 @@ class LawParser:
             except KeyError:
                 raise Exception('Unable to find content or context in tree')
 
-            if context == 'άρθρο':
+
+
+            # Additive actions
+            if context in ['άρθρο', 'άρθρα']:
                 return self.add_article(tree['law']['article']['_id'], content)
-            elif context == 'παράγραφος':
+
+            elif context in ['παράγραφος', 'παράγραφοι']:
                 return self.add_paragraph(
                     tree['law']['article']['_id'],
                     tree['law']['article']['paragraph']['_id'],
                     content)
-            if context == 'φράση' and tree['root']['action'] == 'προστίθεται':
-                print('Phrase is found!')
-                return self.insert_phrase(
-                    tree['what']['location'],
-                    tree['what']['old_phrase'],
-                    tree['what']['new_phrase'],
-                    tree['law']['article']['_id'],
-                    tree['law']['article']['paragraph']['_id'])
+            elif context in ['εδάφιο', 'εδάφια']:
+                if tree['pediod']['_id']:
+                    pass
+                    #TODO
+            elif context in ['φράση', 'φράσεις']:
+                if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
+                    return self.insert_phrase(
+                        tree['what']['location'],
+                        tree['what']['old_phrase'],
+                        tree['what']['new_phrase'],
+                        tree['law']['article']['_id'],
+                        tree['law']['article']['paragraph']['_id'])
 
-            if context == 'τίτλος':
-                return self.set_title(tree['law']['article']['_id'], content)
+            elif context in ['τίτλος', 'τίτλοι']:
+                return self.set_title(
+                    content,
+                    tree['article']['_id']
+                )
+            elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
+                pass
 
-        elif tree['root']['action'] == 'διαγράφεται':
+
+
+        elif tree['root']['action'] in ['διαγράφεται', 'καταργείται']:
 
             try:
                 context = tree['what']['context']
             except KeyError:
                 raise Exception('Unable to find context in tree')
 
-            if context == 'άρθρο':
+            if context in ['άρθρο', 'άρθρα']:
                 return self.remove_article(tree['law']['article']['_id'])
-            elif context == 'παράγραφος':
-                print('Too')
+            elif context in ['παράγραφος', 'παράγραφοι']:
                 return self.remove_paragraph(
                     tree['law']['article']['_id'],
                     tree['law']['article']['paragraph']['_id'])
+            elif context in ['εδάφιο', 'εδάφια']:
+                if tree['period']['_id']:
+                    return self.remove_period(
+                        old_period='',
+                        position=int(tree['period']['_id']),
+                        article=tree['article']['_id'],
+                        paragraph=tree['paragraph']['_id']
+                    )
+                # TODO upon old period?
+            elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
+                pass
+
+
+
+
 
         return self.serialize()
 
