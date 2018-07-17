@@ -21,7 +21,7 @@ def nlp_clean(data):
 	return new_data
 
 #doc2vec parameters
-vector_size = 300
+vector_size = 150
 window_size = 15
 min_count = 1
 sampling_threshold = 1e-5
@@ -38,34 +38,31 @@ train_corpus = sys.argv[1]
 #output model
 saved_path = sys.argv[2]
 
+#labels
+labels_file = sys.argv[3]
+
+with open(labels_file) as f:
+	labels = f.read().splitlines()
+
 #enable logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
+docs = []
 
 if tokenize:
 	with open(train_corpus, 'r') as f:
 		docs = f.read().splitlines()
 	docs = nlp_clean(docs)
-	docs = [TaggedDocument(doc, [i]) for i, doc in enumerate(docs)]
-else:
-	docs = g.doc2vec.TaggedLineDocument(train_corpus)
 
+for label, doc in zip(labels, docs):
+    td = TaggedDocument(words=line.split(), tags=[label])
+    docs.append(td)
 
-model = g.Doc2Vec(docs, size=vector_size, window=window_size, min_count=min_count, sample=sampling_threshold, workers=worker_count, hs=0, dm=dm, negative=negative_size, dbow_words=1, dm_concat=1, pretrained_emb=None, iter=train_epoch)
+# model = g.Doc2Vec(window=8, dm = 0, hs=0, min_count=2, alpha=0.1, size=200, min_alpha=0.0001, epochs=50, workers=6, sample=1e-5, dbow_words=1, negative=5)
+
+model = g.Doc2Vec(size=vector_size, window=window_size, min_count=min_count, sample=sampling_threshold, workers=worker_count, hs=0, dm=dm, negative=negative_size, dbow_words=1, dm_concat=1, pretrained_emb=None, iter=train_epoch)
+model.build_vocab(docs)
+model.train(docs, total_examples=model.corpus_count, epochs=model.iter)
 
 #save model
 model.save(saved_path)
-
-# infer hyperparams
-start_alpha=0.01
-infer_epoch=1000
-
-#create embeddings
-with open(train_corpus, 'r') as q:
-	lines = q.read().splitlines()
-
-if create_embeddings:
-	pool = multiprocessing.pool(worker_count)
-	vectors = pool.map(infer, lines)
-	for d in vectors:
-		sys.stdout.write( " ".join([str(x) for x in vector]) + "\n" )
