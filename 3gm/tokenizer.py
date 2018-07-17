@@ -15,6 +15,7 @@ class Tokenizer:
 
         self.subordinate_conjuctions = [
             'ότι',
+            'όπως',
             'πως',
             'που',
             'μήπως',
