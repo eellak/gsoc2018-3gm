@@ -9,6 +9,7 @@ import ocr
 import argparse
 import logging
 import glob
+import uploader
 
 # Minimum bytes for a file to considered purely image
 MIN_BYTES = 200
@@ -20,6 +21,7 @@ def job(x):
     global pdf2txt
     global output_dir
     global count
+    global upload
     y = x.replace('.pdf', '.txt')
     if output_dir:
         y = output_dir + y.split('/')[-1]
@@ -27,7 +29,7 @@ def job(x):
         if output_dir:
             os.system('python3 {} {} > {}'.format(pdf2txt, x, y))
         else:
-            os.system('python3 {} {}'.format(pdf2txt, x))    
+            os.system('python3 {} {}'.format(pdf2txt, x))
         if os.stat(y).st_size <= MIN_BYTES:
             logging.info('{}: File Size unsatisfactory. Performing OCR'.format(x))
             ocr.pdfocr2txt(x, y, resolution=resolution, tmp=tmp)
@@ -38,6 +40,9 @@ def job(x):
 
     count.value += 1
     logging.info('Complete {} out of {}'.format(int(count.value), total))
+
+    return y
+
 
 def list_files(input_dir, suffix, recursive=True):
     if recursive:
@@ -84,6 +89,11 @@ optional.add_argument(
     help='Recursive option (default true)',
     action='store_true')
 
+optional.add_argument(
+    '--upload',
+    dest='upload',
+    help='Upload to database',
+    action='store_true')
 
 args = parser.parse_args()
 
@@ -98,6 +108,7 @@ pdf2txt = args.pdf2txt
 tmp = args.tmp
 resolution = args.resolution
 recursive = args.recursive
+upload = args.upload
 
 njobs = args.njobs
 
@@ -114,4 +125,7 @@ count = multiprocessing.Value('d', 0)
 
 # use multiprocessing for multiple jobs
 pool = multiprocessing.Pool(int(njobs))
-pool.map(job, pdfs)
+results = pool.map(job, pdfs)
+if upload:
+    print('Batch upload to database')
+    uploader.upload(results)
