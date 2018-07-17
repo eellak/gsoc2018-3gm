@@ -207,54 +207,36 @@ class ActionTreeGenerator:
 
 							splitted = non_extract.split(' ')
 
-							# second level is article
-
+							# build levels bottom up
 							subtree = ActionTreeGenerator.build_levels(splitted, subtree)
-							# if max_depth >= 2:
-							# 	subtree = ActionTreeGenerator.build_level(splitted, subtree, 2, 'άρθρ')
-
-							# third level is paragraph
-							# if max_depth > 3:
-							# 	if tree['what']['context'] not in ['παράγραφος', 'παράγραφοι']:
-							# 		paragraph = list(
-							# 			filter(
-							# 				lambda x: x != [], [
-							# 					list(
-							# 						re.finditer(
-							# 							a, non_extract)) for a in paragraph_regex]))
-							# 		print(list(helpers.ssconj_doc_iterator(tmp, 1)))
-							# 		subtree['paragraph']['_id'] = int(paragraph[0][0].group().split(' ')[1])
-							# 	else:
-							# 		subtree['paragraph']['_id'] = int(subtree['what']['number'])
-                            #
-							# 	subtree['paragraph']['children'] = [
-							# 		'period'] if max_depth > 4 else []
 
 							# nest into dictionary
 							if nested:
-								try:
-									ActionTreeGenerator.nest_tree(
-										'root', subtree)
 
-									trees.append(subtree)
+								ActionTreeGenerator.nest_tree(
+									'root', subtree)
 
-								except BaseException:
-									pass
+								trees.append(subtree)
+
 
 		return trees
 
 	@staticmethod
 	def nest_tree_helper(vertex, tree):
+		print(vertex)
 		if tree[vertex] == {}:
 			return tree
 		if tree[vertex]['children'] == []:
 			del tree[vertex]['children']
 			return tree
 		if len(tree[vertex]['children']) == 1:
-			c = tree[vertex]['children'][0]
-			del tree[vertex]['children']
-			tree[vertex][c] = tree[c]
-		ActionTreeGenerator.nest_tree(c, tree)
+			try:
+				c = tree[vertex]['children'][0]
+				del tree[vertex]['children']
+				tree[vertex][c] = tree[c]
+				ActionTreeGenerator.nest_tree(c, tree)
+			except:
+				return tree
 
 	@staticmethod
 	def nest_tree(vertex, tree):
@@ -491,19 +473,21 @@ class ActionTreeGenerator:
 			for i, w in enumerate(tmp):
 				if re.search(stem, w):
 					subtree[lookup]['_id'] = next(helpers.ssconj_doc_iterator(tmp, i))
+					subtree[lookup]['children'] = ActionTreeGenerator.children_loopkup[lookup]
 					break
 		else:
 			subtree[lookup]['_id'] = subtree['what']['number']
+			subtree[lookup]['children'] = []
 
-		subtree[lookup]['children'] = ActionTreeGenerator.children_loopkup[lookup]
 
 		return subtree
 
 	@staticmethod
 	def build_levels(tmp, subtree):
-		stems = ['άρθρ', 'παράγραφ', 'εδάφ', 'περίπτωσ', 'υποπερίπτωσ', 'φράσ']
+		stems = list(ActionTreeGenerator.trans_lookup.keys())
 		for i, stem in enumerate(stems):
 			subtree = ActionTreeGenerator.build_level(tmp, subtree, i + 2, stem)
+			print(subtree)
 
 		return subtree
 
