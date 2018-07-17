@@ -282,7 +282,7 @@ class LawCodifier:
         """Get law string in LaTeX, Markdown, str, plaintext or issue-like format
         :param identifier : Law identifier
         """
-        result = self.laws[law].export_law(export_type=export_type)
+        result = self.laws[identifier].export_law(export_type=export_type)
         return result
 
     def export_codifier_corpus(self, outfile, labels=None):
@@ -376,6 +376,7 @@ class LawCodifier:
                                                  for neighbor in neighbors])
 
                                 for u in neighbors:
+                                    u = u.lower()
                                     if u not in self.links:
                                         self.links[u] = Link(u)
 
