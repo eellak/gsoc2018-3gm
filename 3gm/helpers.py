@@ -533,7 +533,8 @@ def ssconj_doc_iterator(l, i, is_plural=False):
             if n != 0:
                 yield n
             else:
-                raise Exception('Invalid use of Iterator')
+                # raise Exception('Invalid use of Iterator')
+                yield 'append'
     else:
         result = []
         n = len(l)
@@ -605,16 +606,16 @@ def fix_hyphenthation(s):
 
 def fix_par_abbrev(s):
     q = {
-        'η παρ.': 'η παράγραφος',
-        'της παρ.': 'της παραγράφου',
-        'την παρ.': 'την παράγραφο',
-        'οι παρ.': 'οι παράγραφοι',
-        'των παρ.': 'των παραγράφων',
-        'τις παρ.': 'τις παραγράφους'
+        r'(η|Η) παρ.': 'η παράγραφος',
+        r'(της|Της) παρ.': 'της παραγράφου',
+        r'(την|Την) παρ.': 'την παράγραφο',
+        r'(οι|Οι) παρ.': 'οι παράγραφοι',
+        r'(των|Των) παρ.': 'των παραγράφων',
+        r'(τις|Τις) παρ.': 'τις παραγράφους'
     }
 
     for x, y in q.items():
-        s = s.replace(x, y)
+        s = re.sub(x, y, s)
     return s
 
 
@@ -630,9 +631,18 @@ def split_index(s, idx_list):
 
 def invert_dict(d): return dict(zip(d.values(), d.keys()))
 
-
 def compare_year(s):
     try:
         return int(s.split('/')[-1])
     except BaseException:
         return int(s.split('.')[-1])
+
+def split_dict(d, key):
+    results = []
+
+    for x in d[key]:
+        r = copy.copy(d)
+        d[key] = x
+        results.append(x)
+
+    return results    
