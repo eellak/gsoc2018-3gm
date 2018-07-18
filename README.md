@@ -6,11 +6,16 @@
 
 # gsoc2018-3gm
 
+Welcome to Government Gazette text mining, cross linking, and codification Project (or 3gm for short) using Natural Language Processing Methods and Practices.
+This project aims to provide with the most recent versions of each law (codex).
+The project is hosted at [3gm.ellak.gr](https://3gm.ellak.gr) and [openlaws.ellak.gr](https://openlaws.ellak.gr)
+
+
 ## Installation & Usage
 
 1. [Installation Instructions](https://github.com/eellak/gsoc2018-3gm/wiki/Installation)
 2. [Fetching Documents](https://github.com/eellak/gsoc2018-3gm/wiki/Fetching-Documents)
-3. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier) (Work in progress)
+3. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier)
 
 For a tutorial on getting started click [here](https://github.com/eellak/gsoc2018-3gm/wiki/Tutorial)
 
@@ -29,17 +34,16 @@ For a tutorial on getting started click [here](https://github.com/eellak/gsoc201
 ##### Working
 
 1. Document **parser** can parse PDFs from Government Gazette Issues (see the  `data` for examples). The documents are split into articles in order to detect amendments.
-2. Parser for existing laws.
+2. **Parser** for existing laws.
 3. **Named Entities** for Legal Acts (e.g. Laws, Legislative Decrees etc.) encoded in regular expressions.
-4. Topic models for finding Government Gazette Issues that have the same topics. We use an unsupervised model to extract the topics and then group Issues by topics for **cross-linking** between Government Gazette Documents. You can then visualize these topic models with `pyLDAvis`. Topic modelling is done with LDA and NMF algorithms as illustrated in the [Wiki Page](https://github.com/eellak/gsoc2018-3gm/wiki/Topic-Modelling). The source code is located at `src/topic_models.py`.
+4. **Similarity analyzer** using topic models for finding Government Gazette Issues that have the same topics. We use an unsupervised model to extract the topics and then group Issues by topics for **cross-linking** between Government Gazette Documents. You can then visualize these topic models with `pyLDAvis`. Topic modelling is done with LDA and NMF algorithms as illustrated in the [Wiki Page](https://github.com/eellak/gsoc2018-3gm/wiki/Topic-Modelling). The source code is located at `3gm/topic_models.py`. There is also a Doc2Vec approach in progress.
 5. Documented end-2-end procedure at [Project Wiki](https://github.com/eellak/gsoc2018-3gm/wiki)
-6. Optionally trained Word2Vec Model for further usage
-7. MongoDB Integration
-8. Fetching Tool for automated fetching of documents from ET
-9. Tool for batch conversion of documents with pdf2txt (for newer documents) or Google Tesseract 4.0 (for performing OCR on older documents)
-10. Digitalized archive of Government Gazette Issues from 1976 - today in plaintext format
-11. Demo Flask application located at `demo/app.py`
-12. Unit tests
+6. **MongoDB** Integration
+7. **Fetching Tool** for automated fetching of documents from ET
+8. Tool for batch conversion of documents with pdf2txt (for newer documents) or Google Tesseract 4.0 (for performing OCR on older documents)
+9. Digitalized archive of Government Gazette Issues from 1976 - today in [PDF](https://archive.org/details/GreekGovernmentGazette) and [plaintext](https://pithos.okeanos.grnet.gr/public/7Z2GQvF0boDbCjYWFnmyc) format. Conversion of documents is done either via `pdfminer.six` or `tesseract` (for OCR on older documents).
+10. **Web application** written in Flask located at `3gm/app.py`
+11. Unit tests
 
 
 ##### In Progress
@@ -76,14 +80,11 @@ The above text signifies the addition of an article to an existing law. We use a
 ```
 * And is translated to a MongoDB operation (in this case insertion into the database). Then the information is stored to the database.
 
-2. Demonstration application
-
+For more information visit the [corresponding Wiki Page](https://github.com/eellak/gsoc2018-3gm/wiki/Algorithms-for-analyzing-Government-Gazette-Documents)
 
 #### Remaining
 
 1. Finish Detection of phrases.
-2. Finish Demonstration Application.
-
 
 #### Challenges
 
