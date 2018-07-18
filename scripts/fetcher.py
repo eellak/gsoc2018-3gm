@@ -33,9 +33,12 @@ def handle_download(download_page, params):
     """Original function"""
 
     global output_dir
-    print(params['issue_date'])
-    filename = str(params['issue_date']).split(' ')[0] + ".pdf"
+    print(params)
+
+    filename = archive_format(params) + ".pdf"
     outfile = '{}/{}'.format(output_dir, filename)
+
+
     if os.path.isfile(outfile):
         return
 
@@ -53,15 +56,29 @@ def handle_download(download_page, params):
         download_link = meta['content'].replace("0;url=", "")
     except RemoteDisconnected as e:
         print(e)
-        return
-
+        return None
+    print(filename)
     Helper.download(download_link, filename, output_dir)
     return filename
+
+def archive_format(params):
+    # Format for Internet Archive
+    volumes = {
+        'Α' : '01',
+        'Β' : '02'
+    }
+
+    num =  params['issue_number']
+    full_num = '{}{}'.format('0' * (4 - len(num)), num)
+    vol = volumes[params['issue_type']]
+    year = params['issue_date'].year
+    archive_format = '{}{}{}'.format(year, vol, full_num)
+    return archive_format
 
 
 def extract_download_links(html, issue_type):
     """Original Function"""
-
+    filenames = []
     beautiful_soup = BeautifulSoup(html, "html.parser")
     result_table = beautiful_soup.find("table", {"id": "result_table"})
     rows = result_table.find_all("tr")
@@ -75,6 +92,9 @@ def extract_download_links(html, issue_type):
 
     # We ignore the first 2 rows if there's pagination or the first row if
     # there's not and the last one
+
+    print(len(rows[start_row:end_row]))
+
     for row in rows[start_row:end_row]:
         cells = row.find_all("td")
         info_cell = cells[1].find("b")
@@ -108,9 +128,10 @@ def extract_download_links(html, issue_type):
             "issue_type": issue_type}
         print('Download Link')
         print(download_link)
-        handle_download(download_link, params)
-        return filename
+        filename = handle_download(download_link, params)
+        filenames.append(filename)
 
+    return filenames
 
 if __name__ == '__main__':
 
@@ -208,10 +229,10 @@ if __name__ == '__main__':
         for current_page in range(0, num_pages):
 
             # Extract and handle download links.
-            filename = extract_download_links(driver.page_source, 'Α')
+            filenames_ = extract_download_links(driver.page_source, 'Α')
 
             if args.upload:
-                filenames.append(filename)
+                filenames.extend(filenames_)
 
             # We have to re-find the pagination list because the DOM has been
             # rebuilt.
