@@ -55,7 +55,10 @@ h3 {
 }
 
 h4 {
-  font-size: 1.5em; }
+  font-size: 1.5em;
+  padding-bottom: 1.5rem;
+  padding-top: 1.5rem;
+}
 
 h5 {
   font-size: 1.25em; }
@@ -215,5 +218,24 @@ textarea {
 p.sparse {
   line-height: 2;
 
+}
 
+.heading {
+  text-align: center;
+  color: 	#505050;
+  padding-bottom: 4rem;
+}
+
+#searchintro {
+  text-align: center;
+  padding: 3rem;
+}
+
+#visit {
+  text-align: center;
+  padding: 2rem;
+}
+
+#alpha {
+  color: #707070;
 }
