@@ -119,9 +119,11 @@ class LawCodifier:
         :param issues_directory : Issues directory
         """
         self.laws = {}
+        self.topics = []
         self.db = database.Database()
         self.populate_laws()
         self.populate_links()
+        self.populate_topics()
         self.issues = []
         if issues_directory:
             self.populate_issues(issues_directory)
@@ -133,6 +135,12 @@ class LawCodifier:
             parser.get_issues_from_dataset(
                 issues_directory,
                 text_format=text_format))
+
+    def populate_topics(self):
+        cur = self.db.topics.find()
+        for x in cur:
+            self.topics.append(x)
+        return self.topics
 
     def populate_laws(self):
         """Populate laws from database and fetch latest versions"""
@@ -311,7 +319,7 @@ class LawCodifier:
     def export_law(self, identifier, outfile, export_type='markdown'):
         """Export a law in markdown or LaTeX"""
 
-        if export_type not in ['latex', 'markdown', 'str']:
+        if export_type not in ['latex', 'markdown', 'str', 'plaintext', 'issue']:
             raise Exception('Unrecognized export type')
 
         result = self.get_law(identifier, export_type=export_type)
@@ -464,10 +472,7 @@ class LawCodifier:
             source = sys.argv[1]
         source_issue = parser.IssueParser(source)
 
-        if target:
-            target_issue = parser.IssueParser(target)
-        else:
-            target_issue = parser.IssueParser(None, stdin=True)
+        target_issue = parser.IssueParser(None, stdin=True)
 
         source_issue.detect_new_laws()
         target_issue.detect_new_laws()
@@ -484,14 +489,14 @@ class LawCodifier:
                     trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(
                         paragraph)
                 except BaseException as e:
-                    sys.stderr.write(str(e))
+                    sys.stderr.write(paragraph)
 
                 for tree in trees:
                     if tree['law']['_id'] == target_law.identifier:
                         try:
                             target_law.query_from_tree(tree)
                         except BaseException as e:
-                            sys.stderr.write(str(e))
+                            pass
 
         output_txt = target_law.export_law('issue')
 
@@ -512,25 +517,3 @@ def build(start=1998, end=2018, data_dir='../data/'):
 
 
 codifier = LawCodifier()
-
-if __name__ == '__main__':
-    argparser = argparse.ArgumentParser(
-        description='''This is the command line tool for codifying documents''')
-
-    optional = argparser.add_argument_group('optional arguments')
-
-    optional.add_argument(
-        '--source',
-        help='Source Statute')
-    optional.add_argument(
-        '--target',
-        help='Target Statute'
-    )
-
-    optional.add_argument(
-        '--output',
-        help='Output file'
-    )
-
-    args = argparser.parse_args()
-    LawCodifier.codify_pair(args.source, args.target, args.output)
