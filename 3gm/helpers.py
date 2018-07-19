@@ -615,7 +615,11 @@ def fix_par_abbrev(s):
     }
 
     for x, y in q.items():
-        s = re.sub(x, y, s)
+        q = re.sub(x, y, s)
+        if q == s:
+            s = q
+        else:
+            return s    
     return s
 
 
@@ -645,4 +649,4 @@ def split_dict(d, key):
         d[key] = x
         results.append(x)
 
-    return results    
+    return results
