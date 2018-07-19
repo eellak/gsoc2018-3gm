@@ -17,6 +17,8 @@ from gensim.models import KeyedVectors
 import logging
 import itertools
 import glob
+import sys
+import phrase_fun
 
 # configuration and parameters
 
@@ -102,7 +104,10 @@ class IssueParser:
         self.find_dates()
         self.articles = {}
         self.articles_as_paragraphs = {}
-        self.name = filename.replace('.pdf', '')
+        if not stdin:
+            self.name = filename.replace('.pdf', '')
+        else:
+            self.name = 'stdin'
         self.sentences = {}
         self.find_articles()
         self.detect_statutes()
@@ -238,7 +243,7 @@ class IssueParser:
                 sentences[par] = list(
                     filter(
                         lambda x: x.rstrip() != '',
-                        val.split('. ')))
+                        tokenizer.tokenizer.split(val, '. ')))
 
             self.articles[article_indices[j][1]] = ''.join(content)
             self.articles_as_paragraphs[article_indices[j][1]] = paragraphs
@@ -692,7 +697,7 @@ class LawParser:
         for key, val in itertools.zip_longest(paragraph_ids, paragraph_corpus):
             if key is None or val is None:
                 break
-            sentences[key] = val.split('. ')
+            sentences[key] = tokenizer.tokenizer.split(val, '. ')
             paragraphs[key] = val
 
         self.sentences[article] = sentences
@@ -734,7 +739,7 @@ class LawParser:
 
         # add in its full form or split into periods
         self.articles[article][paragraph] = content
-        self.sentences[article][paragraph] = content.split('. ')
+        self.sentences[article][paragraph] = tokenizer.tokenizer.split(content, '. ')
 
         return self.serialize()
 
@@ -763,27 +768,11 @@ class LawParser:
         :article optional detect phrase in certain article
         :paragraph optional detect phrase in certain paragraph
         """
-
-        search_all = (article is None)
-
-        if article:
-            delegate_articles = [str(article)]
-
-            if paragraph:
-                delegate_paragraphs = [str(paragraph)]
-            else:
-                delegate_paragraphs = self.sentences[article].keys()
-        else:
-            delegate_articles = self.articles.keys()
-
-        for article in delegate_articles:
-            if search_all:
-                delegate_paragraphs = self.articles[article].keys()
-
-            for paragraph in delegate_paragraphs:
-                for i, period in enumerate(self.sentences[article][paragraph]):
-                    self.sentences[article][paragraph][i] = period.replace(
-                        old_phrase, new_phrase)
+        self.sentences[article][paragraph] = phrase_fun.replace_phrase(
+            self.sentences[article][paragraph],
+            new_phrase=new_phrase,
+            old_phrase=old_phrase
+        )
 
         return self.serialize()
 
@@ -794,47 +783,19 @@ class LawParser:
 
     def insert_phrase(
             self,
-            position,
-            old_phrase,
             new_phrase,
+            position='append',
+            old_phrase='',
             article=None,
             paragraph=None):
         """Phrase insertion with respect to another phrase"""
 
-        assert(position in ['start', 'end', 'before', 'after'])
-
-        if position in ['start', 'end']:
-            assert(article and paragraph)
-
-        search_all = (article is None)
-
-        if article:
-            delegate_articles = [str(article)]
-
-            if paragraph:
-                delegate_paragraphs = [str(paragraph)]
-            else:
-                delegate_paragraphs = self.sentences[article].keys()
-        else:
-            delegate_articles = self.articles.keys()
-
-        for article in delegate_articles:
-            if search_all:
-                delegate_paragraphs = self.articles[article].keys()
-
-            for paragraph in delegate_paragraphs:
-                for i, period in enumerate(self.sentences[article][paragraph]):
-                    span = re.search(old_phrase, period).span()
-                    if not span:
-                        continue
-                    else:
-                        x, y = span
-                    if position == 'before':
-                        new_period = period[:x] + new_phrase + ' ' + period[x:]
-                    elif position == 'after':
-                        new_period = period[:y] + ' ' + new_phrase + period[y:]
-
-                    self.sentences[article][paragraph][i] = new_period
+        self.sentences[article][paragraph] = phrase_fun.insert_phrase(
+            self.sentences[article][paragraph],
+            new_phrase=new_phrase,
+            position=position,
+            old_phrase=old_phrase
+        )
 
         return self.serialize()
 
@@ -986,6 +947,7 @@ class LawParser:
         """Returns a serizlizable object from a tree in nested form
         :params tree : A query tree generated from syntax.py
         """
+        # Additive / Modifying actions
         if tree['root']['action'] in [
             'προστίθεται', 'προστίθενται',
             'αντικαθίσταται', 'αντικαθίστανται',
@@ -997,41 +959,62 @@ class LawParser:
             except KeyError:
                 raise Exception('Unable to find content or context in tree')
 
-
-
-            # Additive actions
             if context in ['άρθρο', 'άρθρα']:
-                return self.add_article(tree['law']['article']['_id'], content)
+                return self.add_article(
+                    article=tree['article']['_id'],
+                    content=content)
 
             elif context in ['παράγραφος', 'παράγραφοι']:
                 return self.add_paragraph(
-                    tree['law']['article']['_id'],
-                    tree['law']['article']['paragraph']['_id'],
-                    content)
+                    article=tree['article']['_id'],
+                    paragraph=tree['paragraph']['_id'],
+                    content=content)
+
             elif context in ['εδάφιο', 'εδάφια']:
-                if tree['pediod']['_id']:
-                    pass
-                    #TODO
+                pass
+                # TODO
+
             elif context in ['φράση', 'φράσεις']:
                 if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
                     return self.insert_phrase(
-                        tree['what']['location'],
-                        tree['what']['old_phrase'],
-                        tree['what']['new_phrase'],
-                        tree['law']['article']['_id'],
-                        tree['law']['article']['paragraph']['_id'])
+                        new_phrase=tree['phrase']['new_phrase'],
+                        position=tree['phrase']['position'],
+                        old_phrase=tree['phrase']['old_phrase'],
+                        article=tree['article']['_id'],
+                        paragraph=tree['paragraph']['_id']
+                    )
 
             elif context in ['τίτλος', 'τίτλοι']:
                 return self.set_title(
-                    content,
-                    tree['article']['_id']
+                    content=content,
+                    article=tree['article']['_id']
                 )
             elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
-                pass
+                if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
+                    return self.insert_phrase(
+                        new_phrase=content,
+                        location='append',
+                        old_phrase='',
+                        article=tree['article']['_id'],
+                        paragraph=tree['paragraph']['_id']
+                    )
+                elif tree['root']['action'] in [
+                        'αντικαθίσταται',
+                        'αντικαθίστανται',
+                        'τροποποιείται',
+                        'τροποποιούνται']:
 
+                    return self.replace_phrase(
+                        new_phrase=content,
+                        old_phrase=tree['case']['old_case'],
+                        article=tree['article']['_id'],
+                        paragraph=tree['paragraph']['_id']
+                    )
 
-
-        elif tree['root']['action'] in ['διαγράφεται', 'καταργείται']:
+        # Deleting Actions
+        elif tree['root']['action'] in [
+            'διαγράφεται', 'διαγράφονται',
+            'καταργείται', 'καταργούνται' ]:
 
             try:
                 context = tree['what']['context']
@@ -1039,11 +1022,14 @@ class LawParser:
                 raise Exception('Unable to find context in tree')
 
             if context in ['άρθρο', 'άρθρα']:
-                return self.remove_article(tree['law']['article']['_id'])
+                return self.remove_article(
+                    article=tree['article']['_id']
+                )
             elif context in ['παράγραφος', 'παράγραφοι']:
                 return self.remove_paragraph(
-                    tree['law']['article']['_id'],
-                    tree['law']['article']['paragraph']['_id'])
+                    article=tree['article']['_id'],
+                    paragraph=['paragraph']['_id']
+                )
             elif context in ['εδάφιο', 'εδάφια']:
                 if tree['period']['_id']:
                     return self.remove_period(
@@ -1054,11 +1040,17 @@ class LawParser:
                     )
                 # TODO upon old period?
             elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
+                # TODO
                 pass
 
+        # Renumbering Actions
+        elif tree['root']['action'] in ['αναριθμείται', 'αναριθμούνται']:
+            try:
+                context = tree['what']['context']
+            except KeyError:
+                raise Exception('Unable to find context in tree')
 
-
-
+            # TODO
 
         return self.serialize()
 
@@ -1141,7 +1133,7 @@ class LawParser:
                     result = '{} ΥΠ’ ΑΡΙΘΜ. {}\n'.format(val, counter)
                     break
 
-            result = result + self.export_type('plaintext')
+            result = result + self.export_law('plaintext')
 
         return result
 
