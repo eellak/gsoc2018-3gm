@@ -108,7 +108,7 @@ class ActionTreeGenerator:
 	@staticmethod
 	def generate_action_tree_from_string(
 			s,
-			nested=True,
+			nested=False,
 			max_what_window=20,
 			max_where_window=30,
 			use_regex=False):
@@ -213,10 +213,9 @@ class ActionTreeGenerator:
 							# nest into dictionary
 							if nested:
 
-								ActionTreeGenerator.nest_tree(
-									'root', subtree)
+								ActionTreeGenerator.nest_tree('root', subtree)
 
-								trees.append(subtree)
+							trees.append(subtree)
 
 
 		return trees
