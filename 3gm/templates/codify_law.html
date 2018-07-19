@@ -43,7 +43,8 @@
 
 <h4>Με χρήση Doc2Vec</h4>
   {% for ref, prob in doc2vec_most_similar %}
-  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a>{{ [prob] | render_badges | safe }}</li>
+  {% set pr = prob | round(3, 'floor') %}
+  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a>{{ [pr] | render_badges | safe }}</li>
   {% endfor %}
 {% endif %}
 

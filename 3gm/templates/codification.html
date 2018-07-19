@@ -21,9 +21,31 @@ $(function() {
 
 </script>
 
-<h1>Κωδικοποίηση Νομοθετημάτων</h1>
+<div class='heading'>
+  <h1>Καλώς ήλθατε στο 3gm</h1>
+  <h3 id="alpha">πειραματική έκδοση</h3>
+  <div class='container'>
+    <div class='row'>
+      <div class='col-4'>
+        <h1>{{ num_laws }}</h1>
+        <br> <h4>ΝΟΜΟΘΕΤΗΜΑΤΑ</h4>
+      </div>
+      <div class='col-4'>
+        <h1>{{ num_links }}</h1>
+        <br> <h4>ΣΥΝΔΕΣΜΟΙ</h4>
+      </div>
 
-<p>Πληκτρολογήστε ένα νομοθέτημα: </p>
+      <div class='col-4'>
+        <h1>{{ num_topics }}</h1>
+        <br> <h4>ΘΕΜΑΤΙΚΕΣ ΕΝΟΤΗΤΕΣ</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<h5 id="searchintro">Πληκτρολογήστε ένα νομοθέτημα </h5>
 
 <form id="codify" action = "/codify_law" method = "POST">
 <input name="law" id="autocomplete"></input>
@@ -31,14 +53,8 @@ $(function() {
 <input type="submit" value="Κωδικοποίηση">
 </form>
 
-<h2>Παραδείγματα</h2>
 
-Μπορείτε να συμβουλευτείτε τα ακόλουθα παραδείγματα
-
-<ol>
-  <li>ν. 4511/2018</li>
-  <li>ν. 4001/2011</li>
-</ol>
+<p id="visit"><a href="/legal_index">Επισκεφθείτε το ευρετήριο</a></p>
 
 
 
