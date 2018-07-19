@@ -5,6 +5,7 @@
 import gensim.models as g
 import logging
 import sys
+sys.path.insert(0, '../')
 import tokenizer
 from gensim.models.doc2vec import TaggedDocument
 from multiprocessing import cpu_count
