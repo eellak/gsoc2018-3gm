@@ -33,7 +33,6 @@ def test_greek_nums():
 	assert(x.value == 11)
 
 # Syntax Tests
-
 # Phrasal operations
 def test_phrase():
 	import codifier
