@@ -103,7 +103,7 @@ def build_data_samples(min_size=4):
 	i = 0
 	for law in codifier.codifier.laws.keys():
 		print(law)
-		corpus = codifier.codifier.get_law(law, export_type='str')
+		corpus = codifier.codifier.laws[law].export_law('str')
 		tmp = corpus.split(' ')
 		corpus = []
 		for j, word in enumerate(tmp):
@@ -121,7 +121,7 @@ def build_data_samples(min_size=4):
 		indices[i] = law
 
 		i += 1
-
+	print(data_samples[0])
 	return data_samples, indices
 
 def build_gg_stoplist(data_samples, greek_stopwords, gg_most_common = 500):
@@ -198,6 +198,9 @@ def main():
 		no_top_words,
 		no_top_data_samples,
 		indices)
+
+	pickle.dump(lda_model, open('lda_model.pickle', 'wb'))
+	pickle.dump(tf, open('tf.pickle', 'wb'))
 
 if __name__ == '__main__':
 	main()

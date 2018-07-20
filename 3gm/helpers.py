@@ -619,7 +619,7 @@ def fix_par_abbrev(s):
         if q == s:
             s = q
         else:
-            return s    
+            return s
     return s
 
 
@@ -650,3 +650,16 @@ def split_dict(d, key):
         results.append(x)
 
     return results
+
+def parse_filename(fn):
+    fn = fn.replace('.txt', '')
+    year = fn[:4]
+    volume_lookup = {
+        '01' : 'Α',
+        '02' : 'Β'
+    }
+
+    vol = volume_lookup[fn[4:6]]
+    number = int(fn[6:])
+    result = 'ΦΕΚ {} {}/{}'.format(vol, number, year)
+    return result

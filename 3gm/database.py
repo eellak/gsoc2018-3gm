@@ -10,14 +10,13 @@ import copy
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from syntax import *
+import gridfs
 
 try:
     global client
     client = MongoClient()
 except pymongo.errors.ConnectionFailure as e:
     print("Could not connect to MongoDB: %s" % e)
-
-
 
 
 class Database:
@@ -30,6 +29,7 @@ class Database:
         self.laws = self.db.laws
         self.links = self.db.links
         self.topics = self.db.topics
+        self.fs = gridfs.GridFS(self.db)
 
     def insert_issue_to_db(self, issue):
         """Inserts issue to database"""
