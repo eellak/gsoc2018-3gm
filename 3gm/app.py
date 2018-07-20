@@ -1,10 +1,13 @@
+# Flask imports
 from flask import Flask
 from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import Markup
 from flask import url_for
+from flask_restful import Resource, Api, output_json
 
+# General Imports
 import json
 import sys
 import markdown
@@ -13,6 +16,7 @@ import collections
 import gensim.models as g
 global doc2vec
 
+# Import local modules
 sys.path.insert(0, './')
 
 from codifier import *
@@ -31,8 +35,33 @@ import syntax
 
 app = Flask(__name__)
 
+class UnicodeApi(Api):
+    def __init__(self, *args, **kwargs):
+        super(UnicodeApi, self).__init__(*args, **kwargs)
+        self.app.config['RESTFUL_JSON'] = { 'ensure_ascii': False }
 
-@app.route('/syntax', defaults={'js': 'plain'})
+        self.representations = {
+            'application/json; charset=utf-8': output_json,
+        }
+
+# RestFUL API
+api = UnicodeApi(app)
+
+class LawResource(Resource):
+    def get(self, identifier):
+        global codifier
+        for x in codifier.db.laws.find({'_id' : identifier}):
+            return x
+
+class SyntaxResource(Resource):
+    def get(self, s):
+        return syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+
+
+api.add_resource(LawResource, '/get_law/<string:identifier>')
+api.add_resource(LawResource, '/syntax/<string:s>')
+
+# Application@app.route('/syntax', defaults={'js': 'plain'})
 @app.route('/syntax<any(plain, jquery, fetch):js>')
 def index(js):
     example = '''Στο τέλος του άρθρου 5 της από 24.12.1990 Πράξης Νομοθετικού Περιεχομένου «Περί Μουσουλμάνων Θρησκευτικών Λειτουργών» (Α΄182) που κυρώθηκε με το άρθρο μόνο του ν. 1920/1991 (Α΄11) προστίθεται παράγραφος 4 ως εξής:  «4.α. Οι υποθέσεις της παραγράφου 2 ρυθμίζονται από τις κοινές διατάξεις και μόνο κατ’ εξαίρεση υπάγονται στη δικαιοδοσία του Μουφτή, εφόσον αμφότερα τα διάδικα μέρη υποβάλουν σχετική αίτησή τους ενώπιόν του για επίλυση της συγκεκριμένης διαφοράς κατά τον Ιερό Μουσουλμανικό Νόμο. Η υπαγωγή της υπόθεσης στη δικαιοδοσία του Μουφτή είναι αμετάκλητη και αποκλείει τη δικαιοδοσία των τακτικών δικαστηρίων για τη συγκεκριμένη διαφορά. Εάν οποιοδήποτε από τα μέρη δεν επιθυμεί την υπαγωγή της υπόθεσής του στη δικαιοδοσία του Μουφτή, δύναται να προσφύγει στα πολιτικά δικαστήρια, κατά τις κοινές ουσιαστικές και δικονομικές διατάξεις, τα οποία σε κάθε περίπτωση έχουν το τεκμήριο της δικαιοδοσίας.  β. Με προεδρικό διάταγμα που εκδίδεται με πρόταση των Υπουργών Παιδείας, Έρευνας και Θρησκευμάτων και Δικαιοσύνης, Διαφάνειας και Ανθρωπίνων Δικαιωμάτων καθορίζονται όλοι οι αναγκαίοι δικονομικοί κανόνες για τη συζήτηση της υπόθεσης ενώπιον του Μουφτή και την έκδοση των αποφάσεών του και ιδίως η διαδικασία υποβολής αιτήσεως των μερών, η οποία πρέπει να περιέχει τα στοιχεία των εισαγωγικών δικογράφων κατά τον Κώδικα Πολιτικής Δικονομίας και, επί ποινή ακυρότητας, ρητή ανέκκλητη δήλωση κάθε διαδίκου περί  επιλογής της συγκεκριμένης δικαιοδοσίας, η παράσταση των πληρεξουσίων δικηγόρων, η διαδικασία κατάθεσης και επίδοσής της στο αντίδικο μέρος, η διαδικασία της συζήτησης και της έκδοσης απόφασης, τα θέματα οργάνωσης, σύστασης και διαδικασίας πλήρωσης θέσεων προσωπικού (μονίμων, ιδιωτικού δικαίου αορίστου χρόνου και μετακλητών υπαλλήλων) και λειτουργίας της σχετικής υπηρεσίας της τήρησης αρχείου, καθώς και κάθε σχετικό θέμα για την εφαρμογή του παρόντος. γ. Οι κληρονομικές σχέσεις των μελών της μουσουλμανικής μειονότητας της Θράκης ρυθμίζονται από τις διατάξεις του Αστικού Κώδικα, εκτός εάν ο διαθέτης συ- ντάξει ενώπιον συμβολαιογράφου δήλωση τελευταίας βούλησης, κατά τον τύπο της δημόσιας διαθήκης, με αποκλειστικό περιεχόμενό της τη ρητή επιθυμία του να υπαχθεί η κληρονομική του διαδοχή στον Ιερό Μουσουλμανικό Νόμο. Η δήλωση αυτή είναι ελεύθερα ανακλητή, είτε με μεταγενέστερη αντίθετη δήλωσή του ενώπιον συμβολαιογράφου είτε με σύνταξη μεταγενέστερης διαθήκης, κατά τους όρους του Αστικού Κώδικα. Ταυτόχρονη εφαρμογή του Αστικού Κώδικα και του Ιερού Μουσουλμανικού Νόμου στην κληρονομική περιουσία ή σε ποσοστό ή και σε διακεκριμένα στοιχεία αυτής απαγορεύεται.»'''
@@ -274,5 +303,6 @@ def listify(s):
 
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)
+    sys.setdefaultencoding('utf-8')
     #app.run(debug=True, use_reloader=True, ssl_context='adhoc')
     app.run(host='0.0.0.0')
