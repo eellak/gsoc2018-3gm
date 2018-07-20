@@ -69,7 +69,7 @@ def archive_format(params):
     }
 
     num =  params['issue_number']
-    full_num = '{}{}'.format('0' * (4 - len(num)), num)
+    full_num = '{}{}'.format('0' * (5 - len(num)), num)
     vol = volumes[params['issue_type']]
     year = params['issue_date'].year
     archive_format = '{}{}{}'.format(year, vol, full_num)
