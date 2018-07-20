@@ -37,14 +37,14 @@ date_regex = re.compile('(\
 
 class IssueParser:
     """
-                                    This is a class for holding information about an issue in
-                                    computer-friendly form. It is responsible for:
-                                    1. Detecting Dates
-                                    2. Split document to articles
-                                    3. Split articles to extracts and non-extracts for assisting
-                                    in construction of the parse tree for each ROI.
-                                    4. Detect Signatories of Given Documents
-                                    5. Train a word2vec model with gensim for further usage."""
+    This is a class for holding information about an issue in
+    computer-friendly form. It is responsible for:
+    1. Detecting Dates
+    2. Split document to articles
+    3. Split articles to extracts and non-extracts for assisting
+    in construction of the parse tree for each ROI.
+    4. Detect Signatories of Given Documents
+    5. Train a word2vec model with gensim for further usage."""
 
     def __init__(self, filename, stdin=False, toTxt=False):
         self.filename = filename
@@ -669,6 +669,10 @@ class LawParser:
         law.titles = x['titles']
         law.sentences = x['articles']
         law.amendee = x['amendee']
+        try:
+            law.issue = x['issue']
+        except:
+            law.issue = ''
         return law, identifier
 
     def add_article(self, article, content, title=None, lemmas=None):
@@ -1108,7 +1112,7 @@ class LawParser:
             for article in self.get_articles_sorted():
                 result = result + 'Άρθρο {} '.format(article)
                 for i, paragraph in enumerate(self.get_paragraphs(article)):
-                    result = result + '{} '.format(i, paragraph)
+                    result = result + '{}'.format(paragraph)
 
         elif export_type == 'plaintext':
 

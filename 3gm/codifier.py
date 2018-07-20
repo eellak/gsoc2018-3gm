@@ -278,6 +278,10 @@ class LawCodifier:
                     serializable = new_laws[k].__dict__()
                     serializable['_version'] = 0
                     serializable['amendee'] = k
+                    try:
+                        serializable['issue'] = helpers.parse_filename(issue.filename)
+                    except:
+                        pass
                     self.db.laws.save({
                         '_id': new_laws[k].identifier,
                         'versions': [
@@ -340,7 +344,7 @@ class LawCodifier:
                 for paragraph in law.get_paragraphs(article):
                     try:
                         extracts, non_extracts = helpers.get_extracts(
-                            paragraph)
+                            paragraph, 0)
 
                         for entity in entities.LegalEntities.entities:
                             # If law found in amendment body then it is

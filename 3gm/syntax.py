@@ -99,7 +99,7 @@ class ActionTreeGenerator:
 
 		laws = [law.group() for law in laws]
 
-		print('Laws are', laws)
+		logging.info('Laws are', laws)
 
 		law = ActionTreeGenerator.get_latest_statute(laws)
 
@@ -120,21 +120,21 @@ class ActionTreeGenerator:
 		# get extracts and non-extracts using helper functions
 		extracts, non_extracts = helpers.get_extracts(s)
 
-		print(extracts)
+		logging.info(extracts)
 
-		print(non_extracts)
+		logging.info(non_extracts)
 
-		print('Joining non_extracts')
+		logging.info('Joining non_extracts')
 
 		non_extracts = ' '.join(non_extracts)
 
-		print(non_extracts)
+		logging.info(non_extracts)
 
-		print('Splitting with tokenizer')
+		logging.info('Splitting with tokenizer')
 
 		non_extracts = tokenizer.tokenizer.split(non_extracts, remove_subordinate=True, delimiter='. ')
 
-		print(non_extracts)
+		logging.info(non_extracts)
 
 		extract_cnt = 0
 
@@ -144,7 +144,6 @@ class ActionTreeGenerator:
 
 			tmp = list(map(lambda s: s.strip(
 				string.punctuation), non_extract.split(' ')))
-			print(tmp)
 
 			for action in actions:
 				for i, w in enumerate(doc):
@@ -176,7 +175,7 @@ class ActionTreeGenerator:
 								tree['what']['number'] = list(
 									helpers.ssconj_doc_iterator(doc, k, is_plural))
 
-							print(tree['what'])
+							logging.info(tree['what'])
 
 						else:
 							found_what, tree, is_plural = ActionTreeGenerator.get_nsubj_fallback(
@@ -222,7 +221,6 @@ class ActionTreeGenerator:
 
 	@staticmethod
 	def nest_tree_helper(vertex, tree):
-		print(vertex)
 		if tree[vertex] == {}:
 			return tree
 		if tree[vertex]['children'] == []:
@@ -269,10 +267,9 @@ class ActionTreeGenerator:
 	def get_nsubj_fallback(tmp, tree, i, max_what_window=20):
 		found_what = False
 		logging.info('Fallback mode')
-		print(tmp)
+		logging.info(tmp)
 		for j in range(1, max_what_window + 1):
 			for what in whats:
-				print(tmp[i + j])
 				if i + j <= len(tmp) - 1 and what == tmp[i + j]:
 					tree['root']['children'].append('law')
 					tree['what'] = {
@@ -281,7 +278,6 @@ class ActionTreeGenerator:
 					}
 
 					if i + j + 1 <= len(tmp):
-						print(tmp[i + j])
 						tree['what']['number'] = list(helpers.ssconj_doc_iterator(tmp, i + j))
 					else:
 						tree['what']['number'] = None
@@ -302,7 +298,6 @@ class ActionTreeGenerator:
 						tree['what']['number'] = None
 
 					is_plural = helpers.is_plural(what)
-					print(what)
 					return found_what, tree, is_plural
 
 
@@ -486,7 +481,6 @@ class ActionTreeGenerator:
 		stems = list(ActionTreeGenerator.trans_lookup.keys())
 		for i, stem in enumerate(stems):
 			subtree = ActionTreeGenerator.build_level(tmp, subtree, i + 2, stem)
-			print(subtree)
 
 		return subtree
 
@@ -500,19 +494,15 @@ class ActionTreeGenerator:
 		for i, p in enumerate(parts):
 			for action in actions:
 				if action == p:
-					print(action)
 					break
 
 		for i, p in enumerate(parts):
 			for what_stem in what_stems:
 				if re.search(what_stem, p):
 					is_plural = helpers.is_plural(p)
-					print(is_plural)
 					it = helpers.ssconj_doc_iterator(parts, i, is_plural=is_plural)
-					print(what_stem, p)
 					lookup = ActionTreeGenerator.trans_lookup[what_stem]
 					tree[lookup]['_id'] = next(it)
-					print(tree)
 
 
 
@@ -520,4 +510,3 @@ class ActionTreeGenerator:
 			print(helpers.get_extracts(x.group(), min_words=0))
 
 		law = ActionTreeGenerator.detect_latest_statute(s)
-		print(law)
