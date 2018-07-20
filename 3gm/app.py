@@ -14,16 +14,14 @@ import gensim.models as g
 global doc2vec
 
 sys.path.insert(0, './')
-doc2vec = g.Doc2Vec.load('laws_model.bin')
+
 from codifier import *
 import helpers
 autocomplete_laws = sorted(list(codifier.keys()))
 
 
-
 try:
     import spacy
-    from spacy import displacy
     import el_unnamed
     nlp = el_unnamed.load()
 except ImportError:
@@ -138,10 +136,6 @@ def codify_law(identifier=None):
     except IndexError:
         topics = None
 
-    try:
-        doc2vec_most_similar = doc2vec.docvecs.most_similar(data['law'], topn=5)
-    except:
-        doc2vec_most_similar = []
 
     return render_template('codify_law.html', **locals())
 

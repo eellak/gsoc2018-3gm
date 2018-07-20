@@ -32,8 +32,7 @@
 {% if topics %}
 <p class="sparse">Ετικέτες: {{ topics['keywords'] | render_badges_single('info') | safe }}</p>
 
-<p>Παρόμοια Νομοθετήματα:
-<h4>Με χρήση LDA</h4>
+<p>Παρόμοια Νομοθετήματα (με χρήση LDA):
 
 <ol>
   {% for ref in topics['statutes'] %}
@@ -41,11 +40,6 @@
   {% endfor %}
 </ol>
 
-<h4>Με χρήση Doc2Vec</h4>
-  {% for ref, prob in doc2vec_most_similar %}
-  {% set pr = prob | round(3, 'floor') %}
-  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a>{{ [pr] | render_badges | safe }}</li>
-  {% endfor %}
 {% endif %}
 
 <h1>Τροποποιήσεις</h1>

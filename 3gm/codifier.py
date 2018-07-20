@@ -119,6 +119,7 @@ class LawCodifier:
         :param issues_directory : Issues directory
         """
         self.laws = {}
+        self.links = {}
         self.topics = []
         self.db = database.Database()
         self.populate_laws()
@@ -332,8 +333,6 @@ class LawCodifier:
     def create_law_links(self):
         """Creates links from existing laws"""
 
-        self.links = {}
-
         for identifier, law in self.laws.items():
             articles = law.sentences.keys()
 
@@ -410,8 +409,7 @@ class LawCodifier:
     def populate_links(self):
         """Populate links from database and fetch latest versions"""
 
-        cursor = self.db.links.find({})
-        self.links = {}
+        cursor = self.db.links.find()
 
         for x in cursor:
             l = Link.from_serialized(x)
