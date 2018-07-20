@@ -136,6 +136,7 @@ td, th {
 /* Buttons, forms and input */
 input, textarea {
   border: 1px solid #4a4a4a;
+  width: 100%;
 }
 input:focus, textarea:focus {
   border: 1px solid #338618;
@@ -143,7 +144,8 @@ input:focus, textarea:focus {
 }
 
 textarea {
-  width: 100%; }
+  width: 100% !important;
+}
 
 .button, button, input[type="submit"], input[type="reset"], input[type="button"] {
   display: inline-block;

@@ -4,13 +4,15 @@
 
 <h1>Ιστορικό του {{ identifier }}</h1>
 
+
 <h3>Ευρετήριο</h3>
 
 <ol>
   {% for law in history | reverse %}
   <li><a href="#heading{{ loop.index }}">
     {% if law.identifier == law.amendee %}
-    Αρχική μορφή του {{ law.identifier }}
+    {% set issue = law.issue %}
+    Αρχική μορφή του {{ law.identifier }}, δημοσιευθείς στο {{ issue }}
     {% else %}
     Εμφάνιση του {{ law.identifier }} μέχρι και τις αλλαγές του {{ law.amendee }}
     {% endif %}
