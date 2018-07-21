@@ -3,10 +3,9 @@
 # usage: exporter.py --markdown < issue.txt > output.md
 import sys
 sys.path.insert(0, '../')
-import parser
+import pparser as parser
 
 export_type = sys.argv[1].strip('--')
-print(export_type)
 issue = parser.IssueParser(None, stdin=True)
 laws = issue.detect_new_laws()
 for i, l in issue.new_laws.items():
