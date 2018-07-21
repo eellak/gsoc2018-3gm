@@ -42,6 +42,7 @@ class Link:
         :param s : Content
         :param link_type : Link type (can be modifying, referential etc.)
         """
+        self.is_sorted = False
         self.links_to |= {other}
         self.actual_links.append({
             'from': other,
@@ -60,14 +61,15 @@ class Link:
 
     def organize_by_text(self):
         """Format for rendering"""
-        result = collections.defaultdict(set)
+        result = []
 
         for x in self.actual_links:
             text = x['text']
             tag = x['link_type']
             fr = x['from']
             status = x['status']
-            result[text] |= {(tag, fr, status)}
+            q = (text, (tag, fr, status))
+            result.append(q)
 
         return result
 
@@ -93,6 +95,7 @@ class Link:
                     x['from']))
         except BaseException:
             self.actual_links.sort(key=lambda x: x['from'])
+
 
     @staticmethod
     def from_serialized(s):
@@ -507,6 +510,24 @@ class LawCodifier:
                 f.write(output_txt)
         else:
             sys.stdout.write(output_txt)
+
+    def apply_all_links(self):
+        sorted_keys = sorted(self.laws.keys(), key=helpers.compare_year)
+
+        for identifier in sorted_keys:
+            links = self.links[identifier]
+
+            # apply links
+            final_serializable, links_hash, links = self.laws[identifier].apply_links(links)
+            self.links[identifier] = links
+
+            # store updated links
+            self.db.links.save(links.serialze())
+
+            # store json to gridfs
+            self.db.put_json_to_fs(final_serializable)
+
+
 
 def build(start=1998, end=2018, data_dir='../data/'):
     cod = LawCodifier()

@@ -1,4 +1,3 @@
-import pytest
 import tokenizer
 import re
 import entities

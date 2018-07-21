@@ -170,4 +170,4 @@ class Database:
             cur = self.fs.find()
             for x in cur:
                 yield self.get_json_from_fs(_id=x._id)
-            return    
+            return

@@ -266,3 +266,8 @@ p.sparse {
   from, to { border-color: transparent }
   50% { border-color: transparent }
 }
+
+.law-options {
+  text-align: center;
+  padding: 1.5rem;
+}

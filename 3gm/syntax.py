@@ -1,4 +1,4 @@
-from entities import *
+import entities
 import re
 import collections
 import logging
@@ -6,6 +6,7 @@ import helpers
 import tokenizer
 import itertools
 import copy
+import string
 
 try:
 	import spacy
@@ -84,13 +85,13 @@ class ActionTreeGenerator:
 
 	@staticmethod
 	def detect_latest_statute(extract):
-		legislative_acts = list(re.finditer(legislative_act_regex, extract))
-		laws = list(re.finditer(law_regex, extract))
+		legislative_acts = list(re.finditer(entities.legislative_act_regex, extract))
+		laws = list(re.finditer(entities.law_regex, extract))
 		presidential_decrees = list(re.finditer(
-			presidential_decree_regex, extract))
+			entities.presidential_decree_regex, extract))
 		legislative_decrees = list(
 			re.finditer(
-				legislative_decree_regex,
+				entities.legislative_decree_regex,
 				extract))
 
 		laws.extend(presidential_decrees)
@@ -112,8 +113,6 @@ class ActionTreeGenerator:
 			max_what_window=20,
 			max_where_window=30,
 			use_regex=False):
-		global actions
-		global whats
 
 		trees = []
 
@@ -145,7 +144,7 @@ class ActionTreeGenerator:
 			tmp = list(map(lambda s: s.strip(
 				string.punctuation), non_extract.split(' ')))
 
-			for action in actions:
+			for action in entities.actions:
 				for i, w in enumerate(doc):
 					if action == w.text:
 						tree = collections.defaultdict(dict)
@@ -241,13 +240,12 @@ class ActionTreeGenerator:
 
 	@staticmethod
 	def get_nsubj(doc, i, tree):
-		global whats
 		found_what = False
 		root_token = doc[i]
 		for child in root_token.children:
 
 			if child.dep_ in ['nsubj', 'obl']:
-				for what in whats:
+				for what in entities.whats:
 					if child.text == what:
 						found_what = True
 						tree['root']['children'].append('law')
@@ -269,7 +267,7 @@ class ActionTreeGenerator:
 		logging.info('Fallback mode')
 		logging.info(tmp)
 		for j in range(1, max_what_window + 1):
-			for what in whats:
+			for what in entities.whats:
 				if i + j <= len(tmp) - 1 and what == tmp[i + j]:
 					tree['root']['children'].append('law')
 					tree['what'] = {
@@ -492,7 +490,7 @@ class ActionTreeGenerator:
 
 		tree = collections.defaultdict(dict)
 		for i, p in enumerate(parts):
-			for action in actions:
+			for action in entities.actions:
 				if action == p:
 					break
 

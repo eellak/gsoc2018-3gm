@@ -5,9 +5,11 @@ import re
 import multiprocessing
 import numpy as np
 from datetime import date, datetime, time
-from entities import *
-from helpers import *
-from syntax import *
+import collections
+import syntax
+import helpers
+import entities
+import string
 import os
 import gensim
 import mimetypes
@@ -569,7 +571,7 @@ class LawParser:
             return name
         else:
             try:
-                return str(Numerals.full_number_to_integer(name))
+                return str(entities.Numerals.full_number_to_integer(name))
             except BaseException:
                 return name
 
@@ -947,6 +949,20 @@ class LawParser:
         del self.titles[article]
         return self.serialize()
 
+    def renumber_article(self, old_id, new_id):
+        """Renumber article to new id"""
+        assert(article)
+        self.sentences[new_id] = copy.copy(self.sentences[old_id])
+        del self.sentences[old_id]
+        return self.serialize()
+
+    def renumber_paragraph(self, article, old_id, new_id):
+        """Renumber paragraph to new id"""
+        assert(article)
+        self.sentences[article][new_id] = copy.copy(self.sentences[article][old_id])
+        del self.sentences[article][old_id]
+        return self.serialize()
+
     def query_from_tree(self, tree):
         """Returns a serizlizable object from a tree in nested form
         :params tree : A query tree generated from syntax.py
@@ -1054,7 +1070,20 @@ class LawParser:
             except KeyError:
                 raise Exception('Unable to find context in tree')
 
-            # TODO
+            if context in ['άρθρο', 'άρθρα']:
+                return self.renumber_article(
+                    tree['article']['_id'],
+                    tree['what']['to']
+                )
+            elif context in ['παράγραφος', 'παράγραφοι']:
+                return self.renumber_paragraph(
+                    tree['article']['_id'],
+                    tree['paragraph']['_id'],
+                    tree['what']['to']
+                )
+            else:
+                # Unsupported actions
+                raise UnsupportedOperationException(tree)
 
         return self.serialize()
 
@@ -1192,3 +1221,7 @@ class LawParser:
         }
 
         return final_serializable, links_hash, links
+
+class UnsupportedOperationException(Exception):
+    def __init__(self, tree):
+        super().__init__('Uncategorized operation on\n', json.dumps(tree, ensure_ascii=False))
