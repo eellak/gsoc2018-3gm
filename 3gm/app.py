@@ -135,6 +135,33 @@ def codify_law(identifier=None):
     except KeyError:
         return render_template('error.html')
 
+    articles = sorted(law.sentences.keys())
+
+    try:
+        topics = list(codifier.db.topics.find({
+            'statutes': data['law']
+        }))[0]
+
+    except IndexError:
+        topics = None
+
+
+    return render_template('codify_law.html', **locals())
+
+@app.route('/amendment', methods=['POST', 'GET'])
+def amendment(identifier=None):
+    if request.method == 'POST':
+        data = request.form
+    elif request.method == 'GET':
+        identifier = request.args.get('identifier')
+        print(identifier)
+        data = {'law': identifier}
+
+    try:
+        law = codifier.laws[data['law']]
+    except KeyError:
+        return render_template('error.html')
+
     # amendments
     amendments = []
 
@@ -157,26 +184,30 @@ def codify_law(identifier=None):
             except BaseException:
                 continue
 
+    return render_template('amendment.html', **locals())
+
+@app.route('/links', methods=['POST', 'GET'])
+def links(identifier=None):
+    if request.method == 'POST':
+        data = request.form
+    elif request.method == 'GET':
+        identifier = request.args.get('identifier')
+        data = {'law': identifier}
+
+    corpus = codifier.get_law(data['law'], export_type='markdown')
+    corpus = render_links(corpus)
     try:
-        refs = codifier.links[data['law']].links_to
+        law = codifier.laws[data['law']]
+    except KeyError:
+        return render_template('error.html')
+
+    try:
+        links = codifier.links[data['law']].sort()
         links = codifier.links[data['law']].organize_by_text()
     except KeyError:
-        links = {}
-        refs = []
+        links = []
 
-    try:
-        topics = list(codifier.db.topics.find({
-            'statutes': data['law']
-        }))[0]
-
-    except IndexError:
-        topics = None
-
-
-    return render_template('codify_law.html', **locals())
-
-
-
+    return render_template('links.html', **locals())
 
 @app.route('/history')
 def history():
@@ -289,7 +320,6 @@ def render_links(content):
 
     return ''.join(splitted)
 
-
 def to_hyperlink(l, link_type='markdown'):
     u = url_for('codify_law', identifier=l)
     if link_type == 'html':
@@ -310,4 +340,4 @@ def listify(s):
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)
     sys.setdefaultencoding('utf-8')
-    app.run(host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')

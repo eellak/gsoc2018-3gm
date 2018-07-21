@@ -25,11 +25,16 @@
   </div>
   </div>
 
-<br>
-  <p><a href="{{ url_for('history', identifier=data['law'] )}}">Δείτε το πλήρες ιστορικό του {{ data['law'] }}</a></p>
+<ul class='law-options'>
+<li><a href="{{ url_for('history', identifier=data['law'] )}}">Δείτε το πλήρες ιστορικό του {{ data['law'] }}</a></li>
+<li><a href="{{ url_for('amendment', identifier=data['law'] )}}">Δείτε τους νόμους που τροποποιεί ο {{ data['law'] }}</a></li>
+<li><a href="{{ url_for('links', identifier=data['law'] )}}">Δείτε του συνδέσμους στον {{ data['law'] }}</a></li>
+</ul>
 
-<br>
+
 {% if topics %}
+<h2>Θεματικές Ενοτητες</h2>
+
 <p class="sparse">Ετικέτες: {{ topics['keywords'] | render_badges_single('info') | safe }}</p>
 
 <p>Παρόμοια Νομοθετήματα (με χρήση LDA):
@@ -42,51 +47,7 @@
 
 {% endif %}
 
-<h1>Τροποποιήσεις</h1>
-
-<h4>Το τρέχον νομοθέτημα τροποπιεί τα εξής νομοθετήματα</h4>
-
-{% for amendment in amendments %}
-  <p>{{ amendment['paragraph'] }}</p>
-
-  {% for b in amendment['badges'] %}
-  <p>{{ b | render_badges_from_tree | safe }}</p>
-
-  {% endfor %}
-
-  <hr>
-
-{% endfor %}
 
 
-{% if refs != [] %}
-<h1>Σύνδεση με Νομοθετήματα</h1>
-
-Τον νόμο αυτό τροποποιούν οι ακόλουθοι νόμοι
-
-<ol>
-  {% for ref in refs %}
-    <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a></li>
-  {% endfor %}
-</ol>
-
-<br>
-
-{% for text, tags in links.items() %}
-
-  <h5>Κείμενο Τροποποίησης</h5>
-  <p>{{ text }}</p>
-
-  <h5>Είδος Τροποποίησης</h5>
-  {% for t in tags %}
-    <p>{{ t | render_badges | safe }}</p>
-  {% endfor %}
-
-
-  <hr>
-
-{% endfor %}
-
-{% endif %}
 
 {% endblock %}
