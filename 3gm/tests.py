@@ -1,5 +1,5 @@
 import pytest
-import parser
+import pparser as parser
 import syntax
 import entities
 import database

@@ -4,7 +4,7 @@ import re
 import sys
 import syntax
 import entities
-import parser
+import pparser as parser
 import helpers
 import database
 import pprint
