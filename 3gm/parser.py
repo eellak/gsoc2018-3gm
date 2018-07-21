@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-
 import tokenizer
 import re
 import multiprocessing
 import numpy as np
 from datetime import date, datetime, time
 import collections
-import syntax
 import helpers
 import entities
 import string
@@ -143,12 +141,12 @@ class IssueParser:
             for extract in self.get_non_extracts(article):
 
                 legislative_acts = list(re.finditer(
-                    legislative_act_regex, extract))
-                laws = list(re.finditer(law_regex, extract))
+                    entities.legislative_act_regex, extract))
+                laws = list(re.finditer(entities.law_regex, extract))
                 presidential_decrees = list(re.finditer(
-                    presidential_decree_regex, extract))
+                    entities.presidential_decree_regex, extract))
                 legislative_decrees = list(re.finditer(
-                    legislative_decree_regex, extract))
+                    entities.legislative_decree_regex, extract))
 
                 self.statutes[article] = []
                 self.statutes[article].extend(laws)
