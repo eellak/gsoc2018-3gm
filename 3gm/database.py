@@ -113,9 +113,9 @@ class Database:
         """Rollback laws
         :param identifier If None rollback everything else rollback certain id"""
         if identifier:
-            cursor = self.laws.find({'_id' : identifier})
+            cursor = self.get_json_from_fs(identifier)
         else:
-            cursor = self.laws.find({})
+            cursor = self.get_json_from_fs()
 
         for x in cursor:
             try:
@@ -157,3 +157,17 @@ class Database:
     def rollback_all():
         """Rollsback everything in the database"""
         self.rollback_links(identifier=None, rollback_laws=True)
+
+    def put_json_to_fs(self, _id, _json):
+        dump = json.dumps(_json, ensure_ascii=False).encode('utf-8')
+        return self.fs.put(dump, _id=_id)
+
+    def get_json_from_fs(self, _id=None):
+        if _id:
+            dump = self.fs.find_one({'_id' : _id})
+            return json.loads(dump.read().decode('utf-8'))
+        else:
+            cur = self.fs.find()
+            for x in cur:
+                yield self.get_json_from_fs(_id=x._id)
+            return    
