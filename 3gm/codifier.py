@@ -89,13 +89,10 @@ class Link:
 
     def sort(self):
         """Sort actual links by year"""
-        try:
-            self.actual_links.sort(
-                key=lambda x: helpers.compare_year(
-                    x['from']))
-        except BaseException:
-            self.actual_links.sort(key=lambda x: x['from'])
+        helpers.quicksort(self.actual_links, self.compare)
 
+    def compare(self, x, y):
+        return helpers.compare_statutes(x['from'], y['from'])
 
     @staticmethod
     def from_serialized(s):

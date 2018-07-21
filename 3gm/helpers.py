@@ -663,3 +663,36 @@ def parse_filename(fn):
     number = int(fn[6:])
     result = 'ΦΕΚ {} {}/{}'.format(vol, number, year)
     return result
+
+def partition(array, begin, end, cmp):
+    pivot = begin
+    for i in range(begin+1, end+1):
+        if cmp(array[i],array[begin]):
+            pivot += 1
+            array[i], array[pivot] = array[pivot], array[i]
+    array[pivot], array[begin] = array[begin], array[pivot]
+    return pivot
+
+def quicksort(array, cmp, begin=0, end=None):
+    if end is None:
+        end = len(array) - 1
+    def _quicksort(array, begin, end):
+        if begin >= end:
+            return
+        pivot = partition(array, begin, end, cmp)
+        _quicksort(array, begin, pivot-1)
+        _quicksort(array, pivot+1, end)
+    return _quicksort(array, begin, end)
+
+def compare_statutes(x, y):
+    x_year, y_year = compare_year(x), compare_year(y)
+
+    if x_year != y_year:
+        return x_year < y_year
+    else:
+        xs = x.split(' ')
+        ys = y.split(' ')
+        if xs[0] == ys[0]:
+            return int(xs[1].split('/')[0]) < int(ys[1].split('/')[0])
+        else:
+            return xs[0] != 'ν.'
