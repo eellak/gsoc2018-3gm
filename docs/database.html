@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module database</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>database</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/marios/workspace/gsoc2018-3gm/3gm/database.py">/home/marios/workspace/gsoc2018-3gm/3gm/database.py</a></font></td></tr></table>
+    <p><tt>Hosts&nbsp;DB&nbsp;related&nbsp;stuff.<br>
+The&nbsp;database&nbsp;used&nbsp;in&nbsp;this&nbsp;project&nbsp;is&nbsp;MongoDB&nbsp;and&nbsp;it&nbsp;has&nbsp;been&nbsp;chosen<br>
+to&nbsp;provide&nbsp;flexibility&nbsp;with&nbsp;handling&nbsp;large&nbsp;documents&nbsp;with&nbsp;text.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.html">collections</a><br>
+<a href="copy.html">copy</a><br>
+<a href="spacy.displacy.html">spacy.displacy</a><br>
+<a href="el_unnamed.html">el_unnamed</a><br>
+</td><td width="25%" valign=top><a href="entities.html">entities</a><br>
+<a href="gridfs.html">gridfs</a><br>
+<a href="helpers.html">helpers</a><br>
+<a href="itertools.html">itertools</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+<a href="pprint.html">pprint</a><br>
+<a href="re.html">re</a><br>
+<a href="spacy.html">spacy</a><br>
+</td><td width="25%" valign=top><a href="string.html">string</a><br>
+<a href="syntax.html">syntax</a><br>
+<a href="tokenizer.html">tokenizer</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="database.html#Database">Database</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Database">class <strong>Database</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Database">Database</a>&nbsp;Wrapper&nbsp;Class.&nbsp;Serves&nbsp;for&nbsp;database&nbsp;wrapping<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Database-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt><a href="#Database">Database</a>&nbsp;wrapper&nbsp;constructor</tt></dd></dl>
+
+<dl><dt><a name="Database-drop_issues"><strong>drop_issues</strong></a>(self)</dt><dd><tt>Drop&nbsp;issues&nbsp;collection</tt></dd></dl>
+
+<dl><dt><a name="Database-drop_laws"><strong>drop_laws</strong></a>(self)</dt><dd><tt>Drop&nbsp;laws&nbsp;collection</tt></dd></dl>
+
+<dl><dt><a name="Database-drop_links"><strong>drop_links</strong></a>(self)</dt><dd><tt>Drop&nbsp;links&nbsp;collection</tt></dd></dl>
+
+<dl><dt><a name="Database-drop_topics"><strong>drop_topics</strong></a>(self)</dt><dd><tt>Drop&nbsp;topics&nbsp;collection</tt></dd></dl>
+
+<dl><dt><a name="Database-get_json_from_fs"><strong>get_json_from_fs</strong></a>(self, _id=None)</dt></dl>
+
+<dl><dt><a name="Database-insert_issue_to_db"><strong>insert_issue_to_db</strong></a>(self, issue)</dt><dd><tt>Inserts&nbsp;issue&nbsp;to&nbsp;database</tt></dd></dl>
+
+<dl><dt><a name="Database-insert_links"><strong>insert_links</strong></a>(self, links)</dt><dd><tt>Insert&nbsp;links&nbsp;to&nbsp;database</tt></dd></dl>
+
+<dl><dt><a name="Database-print_laws"><strong>print_laws</strong></a>(self)</dt><dd><tt>Print&nbsp;laws&nbsp;in&nbsp;the&nbsp;database&nbsp;with&nbsp;pprint</tt></dd></dl>
+
+<dl><dt><a name="Database-push_law_to_db"><strong>push_law_to_db</strong></a>(self, law)</dt><dd><tt>Push&nbsp;law&nbsp;to&nbsp;database&nbsp;via&nbsp;serializing&nbsp;it<br>
+:params&nbsp;law&nbsp;LawParser&nbsp;<a href="builtins.html#object">object</a></tt></dd></dl>
+
+<dl><dt><a name="Database-put_json_to_fs"><strong>put_json_to_fs</strong></a>(self, _id, _json)</dt></dl>
+
+<dl><dt><a name="Database-query_from_tree"><strong>query_from_tree</strong></a>(self, law, tree, issue_name=None)</dt><dd><tt>Apply&nbsp;query&nbsp;from&nbsp;tree</tt></dd></dl>
+
+<dl><dt><a name="Database-rollback_all"><strong>rollback_all</strong></a>()</dt><dd><tt>Rollsback&nbsp;everything&nbsp;in&nbsp;the&nbsp;database</tt></dd></dl>
+
+<dl><dt><a name="Database-rollback_laws"><strong>rollback_laws</strong></a>(self, identifier=None)</dt><dd><tt>Rollback&nbsp;laws<br>
+:param&nbsp;identifier&nbsp;If&nbsp;None&nbsp;rollback&nbsp;everything&nbsp;else&nbsp;rollback&nbsp;certain&nbsp;id</tt></dd></dl>
+
+<dl><dt><a name="Database-rollback_links"><strong>rollback_links</strong></a>(self, identifier=None, rollback_laws=False)</dt><dd><tt>Rollback&nbsp;links<br>
+:param&nbsp;identifier&nbsp;If&nbsp;none&nbsp;rollback&nbsp;everything&nbsp;else&nbsp;rollback&nbsp;certain&nbsp;id<br>
+:param&nbsp;rollback_laws&nbsp;if&nbsp;true&nbsp;rollback&nbsp;laws</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>client</strong> = MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True)<br>
+<strong>nlp</strong> = &lt;spacy.lang.el.Greek object&gt;</td></tr></table>
+</body></html>

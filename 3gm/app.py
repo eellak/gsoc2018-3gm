@@ -207,6 +207,12 @@ def links(identifier=None):
     except KeyError:
         links = []
 
+    refs = set([])
+    for t, r in links:
+        refs |= {r[1]}
+    refs = list(refs)
+    helpers.quicksort(refs, helpers.compare_statutes)
+
     return render_template('links.html', **locals())
 
 @app.route('/history')
@@ -336,6 +342,10 @@ def render_md(corpus):
 @app.template_filter('listify')
 def listify(s):
     return list(s)
+
+@app.template_filter('setify')
+def setify(s):
+    return set(s)
 
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)

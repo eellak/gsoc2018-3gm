@@ -13,8 +13,8 @@
 Τον νόμο αυτό τροποποιούν οι ακόλουθοι νόμοι
 
 <ol>
-  {% for txt, ref in links %}
-    <li><a href="{{ url_for('codify_law', identifier=ref[1] )}}">{{ ref[1] }}</a></li>
+  {% for ref in refs %}
+    <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a></li>
   {% endfor %}
 </ol>
 

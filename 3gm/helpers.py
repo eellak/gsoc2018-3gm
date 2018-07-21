@@ -685,6 +685,8 @@ def quicksort(array, cmp, begin=0, end=None):
     return _quicksort(array, begin, end)
 
 def compare_statutes(x, y):
+    x = x.lower()
+    y = y.lower()
     x_year, y_year = compare_year(x), compare_year(y)
 
     if x_year != y_year:
