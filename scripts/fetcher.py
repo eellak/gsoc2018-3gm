@@ -36,8 +36,16 @@ def handle_download(download_page, params):
     print(params)
 
     filename = archive_format(params) + ".pdf"
-    outfile = '{}/{}'.format(output_dir, filename)
+    volumes = {
+        'Α' : 'A',
+        'Β' : 'B'
+    }
+    vol = volumes[params['issue_type']]
+    year = params['issue_date'].year
 
+    dirs = '{}/{}/{}'.format(year, vol, filename[6:9])
+    os.system('mkdir -p {}'.format(dirs))
+    outfile = '{}/{}/{}'.format(output_dir, dirs, filename)
 
     if os.path.isfile(outfile):
         return
@@ -58,7 +66,7 @@ def handle_download(download_page, params):
         print(e)
         return None
     print(filename)
-    Helper.download(download_link, filename, output_dir)
+    Helper.download(download_link, filename, output_dir + '/' + dirs)
     return filename
 
 def archive_format(params):
