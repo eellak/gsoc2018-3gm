@@ -43,12 +43,13 @@ def handle_download(download_page, params):
     vol = volumes[params['issue_type']]
     year = params['issue_date'].year
 
-    dirs = '{}/{}/{}'.format(year, vol, filename[6:9])
+    dirs = '{}/{}/{}'.format(vol, year, filename[6:9])
     os.system('mkdir -p {}'.format(dirs))
     outfile = '{}/{}/{}'.format(output_dir, dirs, filename)
 
     if os.path.isfile(outfile):
-        return
+       print('Already a file')
+       return
 
     try:
         # First we get the redirect link from the download page
