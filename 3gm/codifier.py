@@ -87,13 +87,13 @@ class Link:
         for x in self.actual_links:
             yield x
 
+    def __len__(self):
+        return len(self.actual_links)
+
     def sort(self):
-        """Sort actual links by year"""
-        if self.is_sorted:
-            return
-        else:
-            helpers.quicksort(self.actual_links, self.compare)
-            self.is_sorted = True
+        """Sort actual links by year"""        
+        helpers.quicksort(self.actual_links, self.compare)
+        self.is_sorted = True
 
     def compare(self, x, y):
         return helpers.compare_statutes(x['from'], y['from'])

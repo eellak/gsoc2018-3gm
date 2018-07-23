@@ -11,8 +11,8 @@ import string
 try:
 	import spacy
 	from spacy import displacy
-	import el_unnamed
-	nlp = el_unnamed.load()
+	import el_small
+	nlp = el_small.load()
 except ImportError:
 	pass
 

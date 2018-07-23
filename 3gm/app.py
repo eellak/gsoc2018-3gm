@@ -32,8 +32,8 @@ autocomplete_laws = sorted(list(codifier.keys()))
 
 try:
     import spacy
-    import el_unnamed
-    nlp = el_unnamed.load()
+    import el_spacy
+    nlp = el_small.load()
 except ImportError:
     pass
 

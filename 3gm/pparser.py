@@ -658,7 +658,8 @@ class LawParser:
             'thesaurus': self.thesaurus,
             'lemmas': self.lemmas,
             'titles': self.titles,
-            'articles': self.sentences
+            'articles': self.sentences,
+            'amendee' : self.amendee
         }
 
     @staticmethod
@@ -753,11 +754,11 @@ class LawParser:
 
         article = str(article)
         paragraph = str(paragraph)
-        assert(article in list(self.articles.keys()))
-        assert(paragraph in list(self.articles[article].keys()))
 
-        del self.articles[article][paragraph]
-        del self.sentences[article][paragraph]
+        try:
+            del self.sentences[article][paragraph]
+        except:
+            pass
 
         return self.serialize()
 
@@ -808,29 +809,34 @@ class LawParser:
             self,
             old_period,
             new_period,
+            position=None,
             article=None,
             paragraph=None):
         """Replacement of a period with new content"""
-        search_all = (article is None)
+        if position == None:
+            search_all = (article is None)
 
-        if article:
-            delegate_articles = [str(article)]
+            if article:
+                delegate_articles = [str(article)]
 
-            if paragraph:
-                delegate_paragraphs = [str(paragraph)]
+                if paragraph:
+                    delegate_paragraphs = [str(paragraph)]
+                else:
+                    delegate_paragraphs = self.sentences[article].keys()
             else:
-                delegate_paragraphs = self.sentences[article].keys()
+                delegate_articles = self.articles.keys()
+
+            for article in delegate_articles:
+                if search_all:
+                    delegate_paragraphs = self.sentences[article].keys()
+
+                for paragraph in delegate_paragraphs:
+                    for i, period in enumerate(self.sentences[article][paragraph]):
+                        if old_period == period:
+                            self.sentences[article][paragraph][i] = new_period
         else:
-            delegate_articles = self.articles.keys()
-
-        for article in delegate_articles:
-            if search_all:
-                delegate_paragraphs = self.sentences[article].keys()
-
-            for paragraph in delegate_paragraphs:
-                for i, period in enumerate(self.sentences[article][paragraph]):
-                    if old_period == period:
-                        self.sentences[article][paragraph][i] = new_period
+            assert(article and paragraph)
+            self.sentences[article][paragraph][position] = new_period
 
         return self.serialize()
 
