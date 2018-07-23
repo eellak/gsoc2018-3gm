@@ -36,3 +36,4 @@ data/2016 filter=lfs diff=lfs merge=lfs -text
 data/2000 filter=lfs diff=lfs merge=lfs -text
 data/2006 filter=lfs diff=lfs merge=lfs -text
 data/2009 filter=lfs diff=lfs merge=lfs -text
+resources/greek_lemmas.py filter=lfs diff=lfs merge=lfs -text
