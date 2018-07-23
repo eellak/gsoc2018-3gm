@@ -350,6 +350,10 @@ def listify(s):
 def setify(s):
     return set(s)
 
+@app.template_filter('archive_link')
+def archive_link(l):
+    return 'https://archive.org/details/GreekGovernmentGazette-{}'.format(l)
+
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)
     sys.setdefaultencoding('utf-8')

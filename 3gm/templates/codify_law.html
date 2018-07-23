@@ -1,9 +1,7 @@
 {% extends 'layout.html' %}
 {% block body %}
 
-<h1>Αποτελέσματα Κωδικοποίησης</h1>
-
-Αποτελέσματα Κωδικοποίησης για το {{ data['law'] }}
+<h3>Αποτελέσματα Κωδικοποίησης για τον {{ data['law'] }}</h3>
 
 <ul class='law-options'>
 <li><a href="{{ url_for('history', identifier=data['law'] )}}">Δείτε το πλήρες ιστορικό του {{ data['law'] }}</a></li>
@@ -12,7 +10,7 @@
 </ul>
 
 
-<h1>Τρέχουσα έκδοση του {{ data['law'] }}</h1>
+<h3>Τρέχουσα έκδοση του {{ data['law'] }}</h3>
 
 <div id="accordion">
   <div class="card">
