@@ -82,10 +82,6 @@ The above text signifies the addition of an article to an existing law. We use a
 
 For more information visit the [corresponding Wiki Page](https://github.com/eellak/gsoc2018-3gm/wiki/Algorithms-for-analyzing-Government-Gazette-Documents)
 
-#### Remaining
-
-1. Finish Detection of phrases.
-
 #### Challenges
 
 1. Government Gazette Issues may not always follow guidelines
