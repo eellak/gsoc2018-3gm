@@ -1,8 +1,6 @@
 {% extends 'layout.html' %}
 {% block body %}
 
-<h1>Βοήθεια</h1>
-
-TBA.
+{{ help | render_md | safe }} .
 
 {% endblock %}

@@ -48,6 +48,7 @@ class ActionTreeGenerator:
 	trans_lookup = {
 		'άρθρ': 'article',
 		'παράγραφ': 'paragraph',
+		'παρ.' : 'paragraph',
 		'εδάφ': 'period',
 		'φράσ': 'phrase',
 		'περίπτωσ' : 'case',

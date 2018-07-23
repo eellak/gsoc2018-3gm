@@ -40,6 +40,7 @@ except ImportError:
 import syntax
 
 app = Flask(__name__)
+application = app # for gunicorn
 
 class UnicodeApi(Api):
     def __init__(self, *args, **kwargs):
@@ -258,7 +259,9 @@ def display_cards(filename):
 
 @app.route('/help')
 def help():
-    return render_template('help.html')
+    with open('templates/help.md', 'r') as f:
+        help = f.read()
+    return render_template('help.html', **locals())
 
 def color_iterator():
     colors = [

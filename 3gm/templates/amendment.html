@@ -3,14 +3,14 @@
 
 <ul class='law-options'>
 <li><a href="{{ url_for('history', identifier=data['law'] )}}">Δείτε το πλήρες ιστορικό του {{ data['law'] }}</a></li>
-<li><a href="{{ url_for('amendment', identifier=data['law'] )}}">Δείτε τους νόμους που τροποποιεί ο {{ data['law'] }}</a></li>
+<li><a href="{{ url_for('codify_law', identifier=data['law'] )}}">Δείτε την τρέχουσα έκδοση του {{ data['law'] }}</a></li>
 <li><a href="{{ url_for('links', identifier=data['law'] )}}">Δείτε του συνδέσμους στον {{ data['law'] }}</a></li>
 </ul>
 
 
 <h1>Τροποποιήσεις</h1>
 
-<h4>Το τρέχον νομοθέτημα τροποπιεί τα εξής νομοθετήματα</h4>
+<h4>Το τρέχον νομοθέτημα τροποπoιεί τα εξής νομοθετήματα</h4>
 
 {% for amendment in amendments %}
   <p>{{ amendment['paragraph'] }}</p>

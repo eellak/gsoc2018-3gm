@@ -5,14 +5,21 @@
 
 Αποτελέσματα Κωδικοποίησης για το {{ data['law'] }}
 
-<h1>Παρούσα έκδοση του {{ data['law'] }}</h1>
+<ul class='law-options'>
+<li><a href="{{ url_for('history', identifier=data['law'] )}}">Δείτε το πλήρες ιστορικό του {{ data['law'] }}</a></li>
+<li><a href="{{ url_for('amendment', identifier=data['law'] )}}">Δείτε τους νόμους που τροποποιεί ο {{ data['law'] }}</a></li>
+<li><a href="{{ url_for('links', identifier=data['law'] )}}">Δείτε του συνδέσμους στον {{ data['law'] }}</a></li>
+</ul>
+
+
+<h1>Τρέχουσα έκδοση του {{ data['law'] }}</h1>
 
 <div id="accordion">
   <div class="card">
     <div class="card-header" id="headingOne">
       <h3 class="lg-0">
         <button class="btn btn-link" data-toggle="collapse" aria-expanded="false" data-target="#collapseOne" aria-controls="collapseOne">
-          <h1>Παρούσα έκδοση {{ data['law'] }}</h1>
+          <h1>Τρέχουσα έκδοση {{ data['law'] }}</h1>
         </button>
       </h3>
     </div>
@@ -25,11 +32,6 @@
   </div>
   </div>
 
-<ul class='law-options'>
-<li><a href="{{ url_for('history', identifier=data['law'] )}}">Δείτε το πλήρες ιστορικό του {{ data['law'] }}</a></li>
-<li><a href="{{ url_for('amendment', identifier=data['law'] )}}">Δείτε τους νόμους που τροποποιεί ο {{ data['law'] }}</a></li>
-<li><a href="{{ url_for('links', identifier=data['law'] )}}">Δείτε του συνδέσμους στον {{ data['law'] }}</a></li>
-</ul>
 
 
 {% if topics %}
