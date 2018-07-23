@@ -89,7 +89,11 @@ class Link:
 
     def sort(self):
         """Sort actual links by year"""
-        helpers.quicksort(self.actual_links, self.compare)
+        if self.is_sorted:
+            return
+        else:
+            helpers.quicksort(self.actual_links, self.compare)
+            self.is_sorted = True
 
     def compare(self, x, y):
         return helpers.compare_statutes(x['from'], y['from'])

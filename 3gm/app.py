@@ -60,12 +60,19 @@ class LawResource(Resource):
         for x in codifier.db.laws.find({'_id' : identifier}):
             return x
 
+class LinkResource(Resource):
+    def get(self, identifier):
+        global codifier
+        for x in codifier.db.links.find({'_id' : identifier}):
+            return x
+
 class SyntaxResource(Resource):
     def get(self, s):
         return syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
 
 
-api.add_resource(LawResource, '/get_law_api/<string:identifier>')
+api.add_resource(LawResource, '/get_law/<string:identifier>')
+api.add_resource(LinkResource, '/get_law_api/<string:identifier>')
 api.add_resource(SyntaxResource, '/syntax_api/<string:s>')
 
 # Application
