@@ -18,6 +18,12 @@ import codifier
 import database
 import math
 import pickle
+import string
+
+# spacy
+import spacy
+import el_small
+nlp = el_small.load(max_length=2000000)
 
 
 sys.path.insert(0, '../resources')
@@ -26,11 +32,7 @@ import greek_lemmas
 
 db = database.Database()
 
-def contains_digit(s):
-	for i in range(len(s)):
-		if s[i].isdigit():
-			return True
-	return False
+contains_digit_or_num = lambda i : any(j.isdigit() or j in string.punctuation for j in i)
 
 
 def process_topics(
@@ -96,7 +98,7 @@ def build_greek_stoplist(cnt_swords = 300):
 	return greek_stopwords
 
 
-def build_data_samples(min_size=4):
+def build_data_samples(min_size=4, use_spacy=True):
 	data_samples = []
 	indices = {}
 
@@ -104,16 +106,21 @@ def build_data_samples(min_size=4):
 	for law in codifier.codifier.laws.keys():
 		print(law)
 		corpus = codifier.codifier.laws[law].export_law('str')
-		tmp = corpus.split(' ')
+		if use_spacy:
+			tmp = nlp(corpus)
+		else:
+			tmp = corpus.split(' ')
 		corpus = []
 		for j, word in enumerate(tmp):
-			if contains_digit(tmp[j]) or len(tmp[j]) < min_size:
+			if contains_digit_or_num(word.text) or len(word.text) < min_size:
 				continue
 			try:
-				# FUTURE: Use spaCy's lemmatizer
-				corpus.append(greek_lemmas.lemmas[word])
+				if use_spacy:
+					corpus.append(word.lemma_)
+				else:
+					corpus.append(greek_lemmas[word])
 			except BaseException:
-				corpus.append(word)
+				corpus.append(str(word))
 
 		corpus = ' '.join(corpus)
 
@@ -121,7 +128,7 @@ def build_data_samples(min_size=4):
 		indices[i] = law
 
 		i += 1
-	print(data_samples[0])
+
 	return data_samples, indices
 
 def build_gg_stoplist(data_samples, greek_stopwords, gg_most_common = 500):
@@ -151,9 +158,9 @@ def display_components(graph_lda):
 	for c in cc_lda:
 		print([codifier.codifier.laws[indices[d]] for d in c])
 
-def main():
+def main(use_spacy=True):
 	greek_stopwords = build_greek_stoplist()
-	data_samples, indices = build_data_samples()
+	data_samples, indices = build_data_samples(use_spacy=use_spacy)
 	greek_stopwords, words = build_gg_stoplist(data_samples, greek_stopwords)
 
 	# Initial Parameters
@@ -203,4 +210,5 @@ def main():
 	pickle.dump(tf, open('tf.pickle', 'wb'))
 
 if __name__ == '__main__':
-	main()
+	use_spacy = '--spacy' in sys.argv[1:]
+	main(use_spacy=use_spacy)
