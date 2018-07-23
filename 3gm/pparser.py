@@ -596,6 +596,7 @@ class LawParser:
                 fixed_lines, title = self.fix_paragraphs(self.corpus[article])
                 self.titles[article] = title
                 self.corpus[article] = fixed_lines
+                self.prune_title(article)
 
         for article in self.corpus.keys():
             for i, line in enumerate(self.corpus[article]):
@@ -1105,7 +1106,7 @@ class LawParser:
         """Returns the articles of the statute sorted"""
         return sorted(self.sentences.keys(), key=lambda x: int(x))
 
-    def export_law(self, export_type='markdown'):
+    def export_law(self, export_type='markdown', add_titles=True):
         """Get law string in LaTeX, Markdown, string, plaintext and Issue-like format
         :param identifier : Law identifier
         """
@@ -1130,6 +1131,8 @@ class LawParser:
             result = '# {}\n'.format(self.identifier)
             for article in self.get_articles_sorted():
                 result = result + '### Άρθρο {} \n'.format(article)
+                if add_titles:
+                    result = result + '#### {}\n'.format(self.titles[article])
                 for i, paragraph in enumerate(self.get_paragraphs(article)):
                     result = result + \
                         ' {}. {}\n'.format(i, paragraph)
@@ -1219,6 +1222,14 @@ class LawParser:
         }
 
         return final_serializable, links_hash, links
+
+    def prune_title(self, article):
+        self.titles[article] = re.sub('Άρθρο \d+', '', self.titles[article]).lstrip()
+        return self.titles[article]
+
+    def prune_titles(self):
+        for title in self.titles:
+            self.prune_title(title)
 
 class UnsupportedOperationException(Exception):
     def __init__(self, tree):
