@@ -10,6 +10,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <body>
+<div class="navbar">
 <ul>
   <li class="{% if js == 'plain' %}active{% endif %}">
     <a class="navbar" href="/codification">Κωδικοποίηση</a>
@@ -30,7 +31,8 @@
     <a class="navbar" href="/help">Βοήθεια</a>
   </li>
 </ul>
-<br>
+</div>
+
 
 {% block body %}{% endblock %}
 

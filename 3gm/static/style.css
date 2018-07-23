@@ -271,3 +271,9 @@ p.sparse {
   text-align: center;
   padding: 1.5rem;
 }
+
+.navbar {
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+}
