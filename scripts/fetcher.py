@@ -22,7 +22,6 @@ import errno
 import glob
 import os.path
 import datetime
-from http.client import RemoteDisconnected
 import platform
 import sys
 sys.path.append('../3gm')
@@ -63,7 +62,7 @@ def handle_download(download_page, params):
             Helper.get_url_contents(download_link), "html.parser")
         meta = beautiful_soup.find("meta", {"http-equiv": "REFRESH"})
         download_link = meta['content'].replace("0;url=", "")
-    except RemoteDisconnected as e:
+    except BaseException as e:
         print(e)
         return None
     print(filename)
