@@ -20,10 +20,6 @@ import logging
 logger = logging.getLogger()
 logger.disabled = True
 
-
-global doc2vec
-
-
 # Import local modules
 sys.path.insert(0, './')
 
@@ -31,19 +27,16 @@ from codifier import *
 import helpers
 autocomplete_laws = sorted(list(codifier.keys()))
 
-
-try:
-    import spacy
-    import el_spacy
-    nlp = el_small.load()
-except ImportError:
-    pass
-
+# NLP Related packages
+import spacy
+import el_small
+nlp = el_small.load()
 import syntax
 
 app = Flask(__name__)
 application = app # for gunicorn
 
+# Unicode API Wrapper
 class UnicodeApi(Api):
     def __init__(self, *args, **kwargs):
         super(UnicodeApi, self).__init__(*args, **kwargs)
@@ -163,6 +156,8 @@ def codify_law(identifier=None):
     except IndexError:
         topics = None
 
+    rank = round(codifier.ranks[ data['law'] ], 7) * 100
+    rank_txt = str(rank) + ' %'
 
     return render_template('codify_law.html', **locals())
 

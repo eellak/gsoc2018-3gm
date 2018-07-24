@@ -14,7 +14,11 @@ import argparse
 import multiprocessing
 import gensim
 from gensim.models import KeyedVectors
-
+from networkx import (
+    DiGraph,
+    Graph,
+    pagerank
+)
 
 class UnrecognizedCodificationAction(Exception):
     """Exception class which is raised when the
@@ -91,7 +95,7 @@ class Link:
         return len(self.actual_links)
 
     def sort(self):
-        """Sort actual links by year"""        
+        """Sort actual links by year"""
         helpers.quicksort(self.actual_links, self.compare)
         self.is_sorted = True
 
@@ -132,6 +136,8 @@ class LawCodifier:
         self.issues = []
         if issues_directory:
             self.populate_issues(issues_directory)
+
+        self.pagerank()    
 
     def add_directory(self, issues_directory, text_format=True):
         """Add additional Directories"""
@@ -528,7 +534,21 @@ class LawCodifier:
             # store json to gridfs
             self.db.put_json_to_fs(final_serializable)
 
+    def build_graph_from_links(self):
+        edges = []
+        for u, link in self.links.items():
+            for v in link:
+                edge = (u, v['from'])
+                edges.append(edge)
 
+        self.graph = Graph()
+        self.graph.add_edges_from(edges)
+        return self.graph
+
+    def pagerank(self):
+        self.graph = self.build_graph_from_links()
+        self.ranks = pagerank(self.graph, alpha=0.9)
+        return self.ranks
 
 def build(start=1998, end=2018, data_dir='../data/'):
     cod = LawCodifier()
