@@ -145,11 +145,11 @@ def codify_law(identifier=None):
         identifier = request.args.get('identifier')
         data = {'law': identifier}
 
-    corpus = codifier.get_law(data['law'], export_type='markdown')
-    corpus = render_links(corpus)
-    content = Markup(markdown.markdown(corpus))
     try:
         law = codifier.laws[data['law']]
+        corpus = codifier.get_law(data['law'], export_type='markdown')
+        corpus = render_links(corpus)
+        content = Markup(markdown.markdown(corpus))
     except KeyError:
         return render_template('error.html')
 
