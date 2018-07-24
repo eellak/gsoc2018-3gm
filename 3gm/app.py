@@ -63,6 +63,15 @@ class LawResource(Resource):
         for x in codifier.db.laws.find({'_id' : _id}):
             return x
 
+class TopicResource(Resource):
+    def get(self, statute_type, identifier, year):
+        global codifier
+        _id = '{} {}/{}'.format(statute_type, identifier, year)
+        topics = list(codifier.db.topics.find({
+            'statutes': _id
+        }))
+        return json.dumps(topics, ensure_ascii=False)
+
 class LinkResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
@@ -78,6 +87,7 @@ class SyntaxResource(Resource):
 
 api.add_resource(LawResource, '/get_law/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(LinkResource, '/get_link/<string:statute_type>/<string:identifier>/<string:year>')
+api.add_resource(TopicResource, '/get_topic/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(SyntaxResource, '/syntax_api/<string:s>')
 
 # Application
