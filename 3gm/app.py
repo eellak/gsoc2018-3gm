@@ -60,7 +60,6 @@ class LawResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
         _id = '{} {}/{}'.format(statute_type, identifier, year)
-        print(_id)
         for x in codifier.db.laws.find({'_id' : _id}):
             return x
 
@@ -68,7 +67,6 @@ class LinkResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
         _id = '{} {}/{}'.format(statute_type, identifier, year)
-        print(_id)
         for x in codifier.db.links.find({'_id' : _id}):
             return x
 
