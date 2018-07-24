@@ -7,14 +7,12 @@ import tokenizer
 import itertools
 import copy
 import string
+import phrase_fun
 
-try:
-	import spacy
-	from spacy import displacy
-	import el_small
-	nlp = el_small.load()
-except ImportError:
-	pass
+
+import spacy
+import el_small
+nlp = el_small.load()
 
 
 class UncategorizedActionException(Exception):
@@ -118,6 +116,7 @@ class ActionTreeGenerator:
 		trees = []
 
 		# get extracts and non-extracts using helper functions
+		parts = tokenizer.tokenizer.split(s, delimiter='. ')
 		extracts, non_extracts = helpers.get_extracts(s)
 
 		logging.info(extracts)
@@ -138,7 +137,7 @@ class ActionTreeGenerator:
 
 		extract_cnt = 0
 
-		for non_extract in non_extracts:
+		for part_cnt, non_extract in enumerate(non_extracts):
 
 			doc = nlp(non_extract)
 
@@ -170,10 +169,10 @@ class ActionTreeGenerator:
 							doc, i, tree)
 						if found_what:
 							k = tree['what']['index']
-							if tree['what']['context'] not in [
-									'φράση', 'φράσεις']:
-								tree['what']['number'] = list(
-									helpers.ssconj_doc_iterator(doc, k, is_plural))
+							if tree['what']['context'] not in ['φράση', 'φράσεις', 'λέξη', 'λέξεις']:
+								tree['what']['number'] = list(helpers.ssconj_doc_iterator(doc, k, is_plural))
+							else:
+								tree = phrase_fun.detect_phrase_components(parts[part_cnt], tree)
 
 							logging.info(tree['what'])
 
@@ -360,8 +359,9 @@ class ActionTreeGenerator:
 	@staticmethod
 	def get_content(tree, extract, s, secondary=False):
 		max_depth = 0
-
-		if tree['what']['context'] in ['άρθρο', 'άρθρα']:
+		if tree['what']['number'] == ['phrase']:
+			return tree
+		elif tree['what']['context'] in ['άρθρο', 'άρθρα']:
 			if tree['root']['action'] != 'διαγράφεται':
 				content = extract if not secondary else tree['what']['content']
 				tree['article']['content'] = content

@@ -69,7 +69,12 @@ def get_cases(s):
 	return cases
 
 def detect_phrase_components(s, tree):
+	'''Detect phrase components given a tree.
+	:params s : The region of interest
+	:params tree : The syntax tree as argument
+	'''
 	tree['what']['content'] = detect_phrase_content(s)
+	tree['what']['number'] = ['phrase']
 
 	if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
 		tree['phrase']['new_phrase'] = detect_phrase_content(s)
@@ -85,6 +90,7 @@ def detect_phrase_components(s, tree):
 	return tree
 
 def detect_phrase_content(s):
+	"""Detect phrasal content at nsubj position"""
 	subj_phr_regex = r' η (ακόλουθη φράση:|ακόλουθη λέξη:|φράση|λέξη)[^«]«[^»]*»'
 	res = re.search(subj_phr_regex, s)
 	if not res:
@@ -93,6 +99,8 @@ def detect_phrase_content(s):
 		return get_phr_content(res.group())
 
 def get_phr_content(q):
+	"""Given a query it returns the portion enclosed in quotes
+	:params q : Query string"""
 	extracts, non_extracts = helpers.get_extracts(q, 0)
 	try:
 		return extracts[0]
@@ -100,6 +108,8 @@ def get_phr_content(q):
 		return ''
 
 def detect_phr_replacement(s):
+	"""Detect the phrase that will replace another phrase
+	:params s : Query string"""
 	subj_rep_phr = r'(με |από )(τη φράση|τη λέξη|τις λέξεις)[^«]«[^»]*»'
 	res = re.search(subj_rep_phr, s)
 	if not res:
@@ -108,6 +118,7 @@ def detect_phr_replacement(s):
 		return get_phr_content(res.group())
 
 def detect_prhase_locations(s, tree):
+	"""Detect new phrase placement location"""
 	subj_before_phr = r'πριν (από |)(τη φράση|τη λέξη|τις λέξεις)[^«]«[^»]*»'
 	subj_after_phr = r'μετά (από |)(τη φράση|τη λέξη|τις λέξεις)[^«]«[^»]*»'
 
