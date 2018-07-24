@@ -6,10 +6,21 @@
 
 # gsoc2018-3gm
 
-Welcome to Government Gazette text mining, cross linking, and codification Project (or 3gm for short) using Natural Language Processing Methods and Practices.
+Welcome to _Government Gazette text mining, cross linking, and codification Project_ (or 3gm for short) using Natural Language Processing Methods and Practices.
 This project aims to provide with the most recent versions of each law (codex).
 The project is hosted at [3gm.ellak.gr](https://3gm.ellak.gr) and [openlaws.ellak.gr](https://openlaws.ellak.gr)
 
+### Google Summer of Code 2018
+
+ * Google Summer of Code participant: Marios Papachristou
+
+#### Mentors (alphabetically)
+
+* Mentor: Alexios Zavras (zvr)
+* Mentor: Sarantos Kapidakis
+* Mentor: Diomidis Spinellis ([dsplinellis](https://github.com/dspinellis))
+
+---
 
 ## Installation & Usage
 
@@ -19,15 +30,6 @@ The project is hosted at [3gm.ellak.gr](https://3gm.ellak.gr) and [openlaws.ella
 
 For a tutorial on getting started click [here](https://github.com/eellak/gsoc2018-3gm/wiki/Tutorial)
 
-## Google Summer of Code 2018
-
- * Google Summer of Code participant: Marios Papachristou
-
-#### Mentors (alphabetically)
-
-* Mentor: Alexios Zavras (zvr)
-* Mentor: Sarantos Kapidakis
-* Mentor: Diomidis Spinellis
 
 #### Current Progress
 
@@ -36,14 +38,18 @@ For a tutorial on getting started click [here](https://github.com/eellak/gsoc201
 1. Document **parser** can parse PDFs from Government Gazette Issues (see the  `data` for examples). The documents are split into articles in order to detect amendments.
 2. **Parser** for existing laws.
 3. **Named Entities** for Legal Acts (e.g. Laws, Legislative Decrees etc.) encoded in regular expressions.
-4. **Similarity analyzer** using topic models for finding Government Gazette Issues that have the same topics. We use an unsupervised model to extract the topics and then group Issues by topics for **cross-linking** between Government Gazette Documents. You can then visualize these topic models with `pyLDAvis`. Topic modelling is done with LDA and NMF algorithms as illustrated in the [Wiki Page](https://github.com/eellak/gsoc2018-3gm/wiki/Topic-Modelling). The source code is located at `3gm/topic_models.py`. There is also a Doc2Vec approach in progress.
+4. **Similarity analyzer** using topic models for finding Government Gazette Issues that have the same topics.
+    1. We use an _unsupervised model_ to extract the topics and then group Issues by topics for **cross-linking** between Government Gazette Documents. Topic modelling is done with the [LDA](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) algorithm as illustrated in the [Wiki Page](https://github.com/eellak/gsoc2018-3gm/wiki/Topic-Modelling). The source code is located at `3gm/topic_models.py`.
+    2. There is also a [Doc2Vec approach](https://github.com/eellak/gsoc2018-3gm/wiki/Document-Embeddings-with-Doc2Vec).
 5. Documented end-2-end procedure at [Project Wiki](https://github.com/eellak/gsoc2018-3gm/wiki)
 6. **MongoDB** Integration
 7. **Fetching Tool** for automated fetching of documents from ET
-8. Tool for batch conversion of documents with pdf2txt (for newer documents) or Google Tesseract 4.0 (for performing OCR on older documents)
-9. Digitalized archive of Government Gazette Issues from 1976 - today in [PDF](https://archive.org/details/GreekGovernmentGazette) and [plaintext](https://pithos.okeanos.grnet.gr/public/7Z2GQvF0boDbCjYWFnmyc) format. Conversion of documents is done either via `pdfminer.six` or `tesseract` (for OCR on older documents).
+8. Parallelized tool for **batch conversion of documents with pdf2txt** (for newer documents) or Google Tesseract 4.0 (for performing OCR on older documents)
+9. **Digitalized archive** of Government Gazette Issues from 1976 - today in [PDF](https://archive.org/details/GreekGovernmentGazette) and [plaintext](https://pithos.okeanos.grnet.gr/public/7Z2GQvF0boDbCjYWFnmyc) format. Conversion of documents is done either via `pdfminer.six` or `tesseract` (for OCR on older documents).
 10. **Web application** written in Flask located at `3gm/app.py`
-11. Unit tests
+11. **RESTful API** written in `flask-restful` for providing versions of the laws and
+12. Unit tests
+
 
 
 ##### In Progress
