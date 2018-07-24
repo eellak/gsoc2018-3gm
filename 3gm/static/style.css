@@ -246,8 +246,8 @@ p.sparse {
   margin: 0 auto; /* Gives that scrolling effect as the typing happens */
   letter-spacing: .15em; /* Adjust as needed */
   animation:
-    typing 3.5s steps(30, end),
-    blink-caret .5s step-end infinite;
+    typing 4.5s steps(40, end),
+    blink-caret .75s step-end infinite;
 }
 
 /* The typing effect */
@@ -276,3 +276,32 @@ p.sparse {
 textarea {
   width: 100%;
 }
+.searchContainer {
+  display: inline-flex;
+  flex: 1 1 300px;
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.searchIcon {
+  padding: 0.5rem;
+  margin-right: 1%;
+}
+
+.searchBox {
+  border: 0;
+  padding: 0.5rem 0.5rem 0.5rem 0;
+  flex: 1;
+  width: 75%;
+}
+
+.searchButton {
+  background: #538AC5;
+  border: 0;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0;
+  width: 15%;
+  margin-left: 5%;

@@ -50,12 +50,14 @@ $(function() {
   <div class="typewriter">
     <h5 id="searchintro">Πληκτρολογήστε ένα νομοθέτημα (π.χ. ν. 4009/2011) </h5>
   </div>
-<form id="codify" action = "/codify_law" method = "POST">
-<input name="law" id="autocomplete"></input>
-<br>
-<input type="submit" value="Κωδικοποίηση">
-</form>
 
+  <form id="codify" action = "/codify_law" method = "POST">
+  <div class="searchContainer">
+    <i class="fa fa-search searchIcon"></i>
+    <input class="searchBox" type="search" name="law" id="autocomplete" placeholder="Πληκτρολογήστε ένα νομοθέτημα...">
+    <input type="submit" value="Κωδικοποίηση" class="searchButton">
+  </div>
+</form>
 
 <p id="visit"><a href="/legal_index">Επισκεφθείτε το ευρετήριο</a></p>
 <p id="visit"><a href="https://github.com/eellak/gsoc2018-3gm">GitHub Repository</a></p>
