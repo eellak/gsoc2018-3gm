@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Flask imports
 from flask import Flask
 from flask import jsonify
@@ -95,10 +97,7 @@ def index(js):
 def analyze():
     a = request.form.get('a', '', type=str)
     result = syntax.ActionTreeGenerator.generate_action_tree_from_string(a, nested=False)
-    print(result)
     json_string = json.dumps(result, ensure_ascii=False)
-    print(json_string)
-
     return jsonify(result=json_string)
 
 
