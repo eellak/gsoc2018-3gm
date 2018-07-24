@@ -74,7 +74,7 @@ class SyntaxResource(Resource):
 
 
 api.add_resource(LawResource, '/get_law/<string:identifier>')
-api.add_resource(LinkResource, '/get_law_api/<string:identifier>')
+api.add_resource(LinkResource, '/get_link/<string:identifier>')
 api.add_resource(SyntaxResource, '/syntax_api/<string:s>')
 
 # Application
@@ -119,7 +119,6 @@ def codification():
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
     global autocomplete_laws
-    print(autocomplete_laws)
     search = request.args.get('q')
     match = list(filter(lambda x: x.startswith(search), autocomplete_laws))
     return jsonify(matching_results=match)
@@ -131,7 +130,6 @@ def codify_law(identifier=None):
         data = request.form
     elif request.method == 'GET':
         identifier = request.args.get('identifier')
-        print(identifier)
         data = {'law': identifier}
 
     corpus = codifier.get_law(data['law'], export_type='markdown')
@@ -161,7 +159,6 @@ def amendment(identifier=None):
         data = request.form
     elif request.method == 'GET':
         identifier = request.args.get('identifier')
-        print(identifier)
         data = {'law': identifier}
 
     try:
@@ -173,7 +170,6 @@ def amendment(identifier=None):
     amendments = []
 
     articles = sorted(law.sentences.keys())
-    print(articles)
 
     for article in articles:
         for paragraph in law.get_paragraphs(article):
@@ -258,9 +254,8 @@ def docs(page):
 
 @app.route('/display_cards/<filename>')
 def display_cards(filename):
-    with open(filename) as f:
+    with open(filename, encoding='utf-8') as f:
         contents = f.read().splitlines()
-    print(contents)
     return render_template('display_cards.html', **locals())
 
 @app.route('/help')
