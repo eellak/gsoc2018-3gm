@@ -57,24 +57,29 @@ class UnicodeApi(Api):
 api = UnicodeApi(app)
 
 class LawResource(Resource):
-    def get(self, identifier):
+    def get(self, statute_type, identifier, year):
         global codifier
-        for x in codifier.db.laws.find({'_id' : identifier}):
+        _id = '{} {}/{}'.format(statute_type, identifier, year)
+        print(_id)
+        for x in codifier.db.laws.find({'_id' : _id}):
             return x
 
 class LinkResource(Resource):
-    def get(self, identifier):
+    def get(self, statute_type, identifier, year):
         global codifier
-        for x in codifier.db.links.find({'_id' : identifier}):
+        _id = '{} {}/{}'.format(statute_type, identifier, year)
+        print(_id)
+        for x in codifier.db.links.find({'_id' : _id}):
             return x
 
 class SyntaxResource(Resource):
+
     def get(self, s):
         return syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
 
 
-api.add_resource(LawResource, '/get_law/<string:identifier>')
-api.add_resource(LinkResource, '/get_link/<string:identifier>')
+api.add_resource(LawResource, '/get_law/<string:statute_type>/<string:identifier>/<string:year>')
+api.add_resource(LinkResource, '/get_link/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(SyntaxResource, '/syntax_api/<string:s>')
 
 # Application
