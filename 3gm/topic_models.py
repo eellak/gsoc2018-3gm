@@ -116,7 +116,10 @@ def build_data_samples(min_size=4, use_spacy=True):
 				continue
 			try:
 				if use_spacy:
-					corpus.append(word.lemma_)
+					try:
+						corpus.append(greek_lemmas[word.lemma_])
+					except:
+						corpus.append(greek_lemmas[word])
 				else:
 					corpus.append(greek_lemmas[word])
 			except BaseException:
