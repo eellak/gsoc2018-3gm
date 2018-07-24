@@ -209,7 +209,7 @@ textarea {
   right: 0;
   padding: 1rem;
   text-align: center;
-  font-style: italic;
+  font-size: 0.9em;
 }
 
 p.sparse {

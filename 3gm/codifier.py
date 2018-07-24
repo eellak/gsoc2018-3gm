@@ -137,7 +137,7 @@ class LawCodifier:
         if issues_directory:
             self.populate_issues(issues_directory)
 
-        self.pagerank()    
+        self.pagerank()
 
     def add_directory(self, issues_directory, text_format=True):
         """Add additional Directories"""
@@ -381,8 +381,6 @@ class LawCodifier:
                                             break
 
                                     if is_modifying:
-                                        print('found modifying')
-                                        # exit()
                                         self.links[u].add_link(
                                             law.identifier, paragraph, link_type='τροποποιητικός')
                                     else:
