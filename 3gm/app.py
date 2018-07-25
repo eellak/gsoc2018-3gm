@@ -17,6 +17,7 @@ import pymongo
 import collections
 import gensim.models as g
 import logging
+import pprint
 logger = logging.getLogger()
 logger.disabled = True
 
@@ -103,7 +104,7 @@ def index(js):
 def analyze():
     a = request.form.get('a', '', type=str)
     result = syntax.ActionTreeGenerator.generate_action_tree_from_string(a, nested=False)
-    json_string = json.dumps(result, ensure_ascii=False)
+    json_string = pprint.pformat(result)
     return jsonify(result=json_string)
 
 
@@ -160,7 +161,7 @@ def codify_law(identifier=None):
         rank = round(codifier.ranks[ data['law'] ], 7) * 100
         rank_txt = str(rank) + ' %'
     except:
-        rank_txt = ''    
+        rank_txt = ''
 
     return render_template('codify_law.html', **locals())
 
