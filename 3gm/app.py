@@ -156,8 +156,11 @@ def codify_law(identifier=None):
     except IndexError:
         topics = None
 
-    rank = round(codifier.ranks[ data['law'] ], 7) * 100
-    rank_txt = str(rank) + ' %'
+    try:
+        rank = round(codifier.ranks[ data['law'] ], 7) * 100
+        rank_txt = str(rank) + ' %'
+    except:
+        rank_txt = ''    
 
     return render_template('codify_law.html', **locals())
 
