@@ -305,3 +305,11 @@ textarea {
   border-radius: 0;
   width: 15%;
   margin-left: 5%;
+}
+
+#quote {
+  font-style: italic;
+  text-align: center;
+  padding-top: 1rem;
+  padding: 2rem;
+}
