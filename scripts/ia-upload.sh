@@ -5,7 +5,7 @@
 # The file should be named as [path/]YYYYPPNNNNN.pdf
 # where YYYY is the issuea year, PP is the part (01 is part A), and NNNNN is
 # the number.
-# The uploaded must have admin access to the collection
+# The uploader must have admin access to the collection
 #
 # Diomidis Spinellis, July 2018
 #
@@ -24,7 +24,7 @@ number=$(expr $number : '0*\(.*\)')
 ia upload GreekGovernmentGazette-$id "$1" \
   --retries=20 --sleep=60 \
   -m collection:greekgovernmentgazette \
-  -m contributor:'Diomidis Spinellis' \
+  -m contributor:'Marios Papachristou' \
   -m creator:'The Government of the Hellenic Republic' \
   -m date:$year \
   -m language:gre \
