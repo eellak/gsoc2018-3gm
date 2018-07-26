@@ -303,11 +303,12 @@ def render_badges(l):
     return result
 
 @app.template_filter('render_badges_single')
-def render_badges_single(l, color='light'):
+def render_badges_single(l, color='light', label_url=True):
     result = ''
     for x in l:
+        url = url_for('label', label=x)
         result = result + \
-            '<span class="badge badge-{}">{}</span> '.format(color, x)
+            '<span class="badge badge-{}"><a class="no-linter" href="{}">{}</a></span> '.format(color, url, x)
     return result
 
 @app.template_filter('render_badges_from_tree')
@@ -341,6 +342,23 @@ def render_links(content):
         i += 1
 
     return ''.join(splitted)
+
+
+@app.route('/label/<label>')
+def label(label):
+
+    topics = codifier.db.topics.find({
+        'keywords': label
+    })
+
+    refs = []
+    for t in topics:
+        print(t)
+        refs.extend(t['statutes'])
+
+    helpers.quicksort(refs, helpers.compare_statutes)
+    return render_template('label.html', **locals())
+
 
 def to_hyperlink(l, link_type='markdown'):
     u = url_for('codify_law', identifier=l)

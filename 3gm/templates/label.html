@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<h1>Νομοθετήματα με την ετικέτα {{ [label] | render_badges_single('dark') | safe }}</h1>
+
+{% if refs == [] %}
+<p>Δεν βρέθηκαν νομοθετήματα για αυτή την ετικέτα</p>
+{% endif %}
+<ol>
+  {% for ref in refs %}
+  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a></li>
+  {% endfor %}
+</ol>
+
+{% endblock %}

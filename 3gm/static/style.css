@@ -313,3 +313,8 @@ textarea {
   padding-top: 1rem;
   padding: 2rem;
 }
+
+.no-linter {
+  color: white;
+
+}
