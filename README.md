@@ -60,17 +60,17 @@ Through the case of analyzing, categorizing and codifying Government Gazette art
 
 ## Project Features
 
-1. Document [**parser**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/parser.py) can parse PDFs from Government Gazette Issues (see the  `data` for examples). The documents are split into articles in order to detect amendments.
-2. [**Parser**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/parser.py) for existing laws.
+1. Document [**parser**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/pparser.py) can parse PDFs from Government Gazette Issues (see the  `data` for examples). The documents are split into articles in order to detect amendments.
+2. [**Parser**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/pparser.py) for existing laws.
 3. [**Named Entities**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/entities.py) for Legal Acts (e.g. Laws, Legislative Decrees etc.) encoded in regular expressions.
 4. [**Similarity analyzer**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/topic_models.py) using topic models for finding Government Gazette Issues that have the same topics.
-    1. We use an _unsupervised model_ to extract the topics and then group Issues by topics for **cross-linking** between Government Gazette Documents. Topic modelling is done with the [LDA](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) algorithm as illustrated in the [Wiki Page](https://github.com/eellak/gsoc2018-3gm/wiki/Topic-Modelling). The source code is located at `3gm/topic_models.py`.
+    1. We use an _unsupervised model_ to extract the topics and then group Issues by topics for **cross-linking** between Government Gazette Documents. Topic modelling is done with the [LDA](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation) algorithm as illustrated in the [Wiki Page](https://github.com/eellak/gsoc2018-3gm/wiki/Topic-Modelling). The source code is located at [`3gm/topic_models.py`](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/topic_models.py).
     2. There is also a [Doc2Vec approach](https://github.com/eellak/gsoc2018-3gm/wiki/Document-Embeddings-with-Doc2Vec).
 5. Documented end-2-end procedure at **[Project Wiki](https://github.com/eellak/gsoc2018-3gm/wiki)**
 6. [**MongoDB**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/database.py) Integration
 7. [**Fetching Tool**](https://github.com/eellak/gsoc2018-3gm/blob/master/scripts/fetcher.py) for automated fetching of documents from ET
 8. Parallelized tool for [**batch conversion of documents with pdf2txt**](https://github.com/eellak/gsoc2018-3gm/blob/master/scripts/converter.py) (for newer documents) or Google Tesseract 4.0 (for performing OCR on older documents) with `pdfminer.six`, `tesseract` and `pyocr`
-9. **Digitalized archive** of Government Gazette Issues from 1976 - today in [PDF](https://archive.org/details/GreekGovernmentGazette) and [plaintext](https://pithos.okeanos.grnet.gr/public/7Z2GQvF0boDbCjYWFnmyc) format. Conversion of documents is done either via `pdfminer.six` or `tesseract` (for OCR on older documents).
+9. **Digitalized archive** of Government Gazette Issues from 1976 - today in [PDF](https://archive.org/details/greekgovernmentgazette) and [plaintext](https://pithos.okeanos.grnet.gr/public/7Z2GQvF0boDbCjYWFnmyc) format. Conversion of documents is done either via `pdfminer.six` or `tesseract` (for OCR on older documents).
 10. [**Web application**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/app.py) written in Flask located at `3gm/app.py` hosted at [3gm.ellak.gr](http://snf-829516.vm.okeanos.grnet.gr/)
 11. [**RESTful API**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/app.py) written in `flask-restful` for providing versions of the laws and
 12. [**Unit tests**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/tests.py) integrated to Travis CI.
