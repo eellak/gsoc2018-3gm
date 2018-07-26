@@ -1,43 +1,49 @@
-import os 
+#!/usr/bin/env python3
+# Batch upload to Internet Archive Script
+# usage: batch_ia_upload.py -d /home/repos/GGG/pdf/A --w 3
+
+import os
 import sys
 from internetarchive import search_items
 import logging
 import glob
+import argparse
 import multiprocessing
-
-def list_files(input_dir, suffix, recursive=True):
-    if recursive:
-        result = []
-        for root, dirs, files in os.walk(input_dir):
-            for file in files:
-                if file.endswith(suffix):
-                    result.append(os.path.join(root, file))
-    else:
-        result = glob.glob('*{}'.format(suffix))
-    return result
+from converter import list_files
 
 def ia_upload(pdf):
         global pfs
         global uploaded
         filename = basename(pdf, '.pdf')
-        logging.info(pdf)
+        print(pdf)
         ia_id = 'GreekGovernmentGazette-' + filename
         if ia_id not in uploaded:
                 os.system('./ia-upload.sh {}'.format(pdf))
-        logging.info('Uploaded ' + filename)
+                print('Uploaded ' + filename)
 
 basename = lambda x, ext: x.replace(ext,"").split('/')[-1]
 
-# frozenset for O(logn) lookup
-uploaded = frozenset([x['identifier'] for x in search_items('collection:greekgovernmentgazette')])
+if __name__ == '__main__':
+    # argument parser
+    argparser = argparse.ArgumentParser(description='''
+    Tool for batch upload to Internet Archive for the greekgovernmentgazette collection.
+    https://archive.org/details/greekGovernmentgazette''')
+    required = parser.add_argument_group('required arguments')
+    optional = parser.add_argument_group('optional arguments')
 
-pdfs = list_files(sys.argv[1], '.pdf', recursive=True)
+    # arguments
+    required.add_argument('-d', help='Input directory', required=True)
+    optional.add_argument('--w', help='Number of workers', type=int, default=1)
 
-try:
-	workers = int(sys.argv[2])
-except:
-	workers = 1
+    args = argparser.parse_args()
 
-# pool for multiprocessing
-pool = multiprocessing.Pool(workers)
-pool.map(ia_upload, pdfs)
+    # pdfs listed recursively
+    pdfs = list_files(args.d, '.pdf', recursive=True)
+
+    # frozenset for faster lookup
+    # returns uploaded files
+    uploaded = frozenset([x['identifier'] for x in search_items('collection:greekgovernmentgazette')])
+
+    # pool for multiprocessing
+    pool = multiprocessing.Pool(args.w)
+    pool.map(ia_upload, pdfs)
