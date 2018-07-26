@@ -5,6 +5,7 @@ from flask import Flask
 from flask import jsonify
 from flask import render_template
 from flask import request
+from flask import redirect
 from flask import Markup
 from flask import url_for
 from flask_restful import Resource, Api, output_json
@@ -27,6 +28,8 @@ sys.path.insert(0, './')
 from codifier import *
 import helpers
 autocomplete_laws = sorted(list(codifier.keys()))
+autocomplete_topics = codifier.topic_keys()
+autocomplete_ = autocomplete_laws + autocomplete_topics
 
 # NLP Related packages
 import spacy
@@ -78,7 +81,7 @@ class SyntaxResource(Resource):
     def get(self, s):
         return syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
 
-
+# Endpoints
 api.add_resource(LawResource, '/get_law/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(LinkResource, '/get_link/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(TopicResource, '/get_topic/<string:statute_type>/<string:identifier>/<string:year>')
@@ -88,15 +91,12 @@ api.add_resource(SyntaxResource, '/syntax_api/<string:s>')
 @app.route('/syntax', defaults={'js': 'plain'})
 @app.route('/syntax<any(plain, jquery, fetch):js>')
 def index(js):
-    example = '''Στο τέλος του άρθρου 5 της από 24.12.1990 Πράξης Νομοθετικού Περιεχομένου «Περί Μουσουλμάνων Θρησκευτικών Λειτουργών» (Α΄182) που κυρώθηκε με το άρθρο μόνο του ν. 1920/1991 (Α΄11) προστίθεται παράγραφος 4 ως εξής:  «4.α. Οι υποθέσεις της παραγράφου 2 ρυθμίζονται από τις κοινές διατάξεις και μόνο κατ’ εξαίρεση υπάγονται στη δικαιοδοσία του Μουφτή, εφόσον αμφότερα τα διάδικα μέρη υποβάλουν σχετική αίτησή τους ενώπιόν του για επίλυση της συγκεκριμένης διαφοράς κατά τον Ιερό Μουσουλμανικό Νόμο. Η υπαγωγή της υπόθεσης στη δικαιοδοσία του Μουφτή είναι αμετάκλητη και αποκλείει τη δικαιοδοσία των τακτικών δικαστηρίων για τη συγκεκριμένη διαφορά. Εάν οποιοδήποτε από τα μέρη δεν επιθυμεί την υπαγωγή της υπόθεσής του στη δικαιοδοσία του Μουφτή, δύναται να προσφύγει στα πολιτικά δικαστήρια, κατά τις κοινές ουσιαστικές και δικονομικές διατάξεις, τα οποία σε κάθε περίπτωση έχουν το τεκμήριο της δικαιοδοσίας.  β. Με προεδρικό διάταγμα που εκδίδεται με πρόταση των Υπουργών Παιδείας, Έρευνας και Θρησκευμάτων και Δικαιοσύνης, Διαφάνειας και Ανθρωπίνων Δικαιωμάτων καθορίζονται όλοι οι αναγκαίοι δικονομικοί κανόνες για τη συζήτηση της υπόθεσης ενώπιον του Μουφτή και την έκδοση των αποφάσεών του και ιδίως η διαδικασία υποβολής αιτήσεως των μερών, η οποία πρέπει να περιέχει τα στοιχεία των εισαγωγικών δικογράφων κατά τον Κώδικα Πολιτικής Δικονομίας και, επί ποινή ακυρότητας, ρητή ανέκκλητη δήλωση κάθε διαδίκου περί  επιλογής της συγκεκριμένης δικαιοδοσίας, η παράσταση των πληρεξουσίων δικηγόρων, η διαδικασία κατάθεσης και επίδοσής της στο αντίδικο μέρος, η διαδικασία της συζήτησης και της έκδοσης απόφασης, τα θέματα οργάνωσης, σύστασης και διαδικασίας πλήρωσης θέσεων προσωπικού (μονίμων, ιδιωτικού δικαίου αορίστου χρόνου και μετακλητών υπαλλήλων) και λειτουργίας της σχετικής υπηρεσίας της τήρησης αρχείου, καθώς και κάθε σχετικό θέμα για την εφαρμογή του παρόντος. γ. Οι κληρονομικές σχέσεις των μελών της μουσουλμανικής μειονότητας της Θράκης ρυθμίζονται από τις διατάξεις του Αστικού Κώδικα, εκτός εάν ο διαθέτης συ- ντάξει ενώπιον συμβολαιογράφου δήλωση τελευταίας βούλησης, κατά τον τύπο της δημόσιας διαθήκης, με αποκλειστικό περιεχόμενό της τη ρητή επιθυμία του να υπαχθεί η κληρονομική του διαδοχή στον Ιερό Μουσουλμανικό Νόμο. Η δήλωση αυτή είναι ελεύθερα ανακλητή, είτε με μεταγενέστερη αντίθετη δήλωσή του ενώπιον συμβολαιογράφου είτε με σύνταξη μεταγενέστερης διαθήκης, κατά τους όρους του Αστικού Κώδικα. Ταυτόχρονη εφαρμογή του Αστικού Κώδικα και του Ιερού Μουσουλμανικού Νόμου στην κληρονομική περιουσία ή σε ποσοστό ή και σε διακεκριμένα στοιχεία αυτής απαγορεύεται.»'''
-
     with open('../examples/examples.md', encoding='utf-8') as f:
         examples = Markup(markdown.markdown(f.read()))
 
     return render_template(
         '{0}.html'.format(js),
         js=js,
-        example=example,
         examples=examples)
 
 
@@ -125,9 +125,9 @@ def codification():
 
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
-    global autocomplete_laws
+    global autocomplete_
     search = request.args.get('q')
-    match = list(filter(lambda x: x.startswith(search), autocomplete_laws))
+    match = list(filter(lambda x: x.startswith(search), autocomplete_))
     return jsonify(matching_results=match)
 
 
@@ -135,6 +135,9 @@ def autocomplete():
 def codify_law(identifier=None):
     if request.method == 'POST':
         data = request.form
+        identifier = data['law'].lower()
+        if identifier in autocomplete_topics:
+            return redirect('/label/{}'.format(identifier))
     elif request.method == 'GET':
         identifier = request.args.get('identifier')
         data = {'law': identifier}
@@ -353,7 +356,6 @@ def label(label):
 
     refs = []
     for t in topics:
-        print(t)
         refs.extend(t['statutes'])
 
     helpers.quicksort(refs, helpers.compare_statutes)

@@ -431,6 +431,12 @@ class LawCodifier:
         """Return set of keys for the codifier"""
         return list(set(self.laws.keys()) | set(self.links.keys()))
 
+    def topic_keys(self):
+        topic_k = set([])
+        for topic in self.topics:
+            topic_k |= set(topic['keywords'])
+        return list(topic_k)
+
     def calculate_links_degrees(self):
         """Calculate statistics of links"""
         cursor = self.db.links.find({})
