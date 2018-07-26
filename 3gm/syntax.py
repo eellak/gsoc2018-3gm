@@ -113,7 +113,11 @@ class ActionTreeGenerator:
 			max_where_window=30,
 			use_regex=False):
 
+		# results are stored here
+
 		trees = []
+		# fix par abbrev
+		s = helpers.fix_par_abbrev(s)
 
 		# get extracts and non-extracts using helper functions
 		parts = tokenizer.tokenizer.split(s, delimiter='. ')
@@ -359,7 +363,7 @@ class ActionTreeGenerator:
 	@staticmethod
 	def get_content(tree, extract, s, secondary=False):
 		max_depth = 0
-		if tree['what']['number'] == ['phrase']:
+		if tree['what']['context'] in ['φράση', 'φράσεις', 'λέξη', 'λέξεις']:
 			return tree
 		elif tree['what']['context'] in ['άρθρο', 'άρθρα']:
 			if tree['root']['action'] != 'διαγράφεται':
