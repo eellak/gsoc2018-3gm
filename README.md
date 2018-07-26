@@ -75,7 +75,7 @@ Through the case of analyzing, categorizing and codifying Government Gazette art
 11. [**RESTful API**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/app.py) written in `flask-restful` for providing versions of the laws and
 12. [**Unit tests**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/tests.py) integrated to Travis CI.
 13. [**Versioning**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/database.py) system for laws with support for _checkouts_, _rollbacks_ etc. 
-14. **Ranking** of laws using PageRank provided by the `networkx` package. 
+14. [**Ranking**](https://github.com/eellak/gsoc2018-3gm/wiki/Ranking-Laws-using-PageRank) of laws using PageRank provided by the `networkx` package. 
 15. **[Amendment Detection Algorithm](https://github.com/eellak/gsoc2018-3gm/wiki/Algorithms-for-analyzing-Government-Gazette-Documents)**. For example (taken from Greek Government Gazette):
 
 > Μετά το άρθρο 9Α του ν. 4170/2013, που προστέθηκε με το άρθρο 3 του ν. 4474/2017, **προστίθεται** _άρθρο 9ΑΑ_, ως εξής:
