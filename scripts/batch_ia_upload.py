@@ -11,17 +11,20 @@ import argparse
 import multiprocessing
 from converter import list_files
 
-def ia_upload(pdf):
-        global pfs
-        global uploaded
-        filename = basename(pdf, '.pdf')
-        print(pdf)
-        ia_id = 'GreekGovernmentGazette-' + filename
-        if ia_id not in uploaded:
-                os.system('./ia-upload.sh {}'.format(pdf))
-                print('Uploaded ' + filename)
 
-basename = lambda x, ext: x.replace(ext,"").split('/')[-1]
+def ia_upload(pdf):
+    global pfs
+    global uploaded
+    filename = basename(pdf, '.pdf')
+    print(pdf)
+    ia_id = 'GreekGovernmentGazette-' + filename
+    if ia_id not in uploaded:
+        os.system('./ia-upload.sh {}'.format(pdf))
+        print('Uploaded ' + filename)
+
+
+def basename(x, ext): return x.replace(ext, "").split('/')[-1]
+
 
 if __name__ == '__main__':
     # argument parser
@@ -42,7 +45,8 @@ if __name__ == '__main__':
 
     # frozenset for faster lookup
     # returns uploaded files
-    uploaded = frozenset([x['identifier'] for x in search_items('collection:greekgovernmentgazette')])
+    uploaded = frozenset([x['identifier'] for x in search_items(
+        'collection:greekgovernmentgazette')])
 
     # pool for multiprocessing
     pool = multiprocessing.Pool(args.w)
