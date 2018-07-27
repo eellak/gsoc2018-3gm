@@ -14,6 +14,10 @@ This project aims to provide with the most recent versions of each law, i.e. an 
 
 The project is hosted at [snf-829516.vm.okeanos.grnet.gr](http://snf-829516.vm.okeanos.grnet.gr/),  [3gm.ellak.gr](https://3gm.ellak.gr) or [openlaws.ellak.gr](https://openlaws.ellak.gr)
 
+## Timeline
+
+You can view the detailed timeline [here](https://docs.google.com/document/d/1AnbAzqE2HCsJy2q2zWHcRBvtmBbimoYIqm8AQ4bQrZA/edit?usp=sharing). 
+
 ---
 
 ## Google Summer of Code 2018
