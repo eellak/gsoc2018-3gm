@@ -42,13 +42,20 @@
     
 <tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="Tokenizer-__init__"><strong>__init__</strong></a>(self, exceptions)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+<dl><dt><a name="Tokenizer-__init__"><strong>__init__</strong></a>(self, exceptions)</dt><dd><tt>Costructor&nbsp;function<br>
+:params&nbsp;exceptions&nbsp;:&nbsp;A&nbsp;list&nbsp;of&nbsp;tokenizer&nbsp;exceptions</tt></dd></dl>
 
-<dl><dt><a name="Tokenizer-add_exception"><strong>add_exception</strong></a>(self, e)</dt></dl>
+<dl><dt><a name="Tokenizer-add_exception"><strong>add_exception</strong></a>(self, e)</dt><dd><tt>Add&nbsp;exception&nbsp;to&nbsp;tokeinzer<br>
+:params&nbsp;e&nbsp;:&nbsp;The&nbsp;exception&nbsp;to&nbsp;be&nbsp;added</tt></dd></dl>
 
-<dl><dt><a name="Tokenizer-remove_subordinate"><strong>remove_subordinate</strong></a>(self, q)</dt></dl>
+<dl><dt><a name="Tokenizer-remove_subordinate"><strong>remove_subordinate</strong></a>(self, q)</dt><dd><tt>Remove&nbsp;subordinate&nbsp;conjuctions&nbsp;from&nbsp;a&nbsp;string<br>
+:params&nbsp;q&nbsp;:&nbsp;String&nbsp;to&nbsp;be&nbsp;cleaned</tt></dd></dl>
 
-<dl><dt><a name="Tokenizer-split"><strong>split</strong></a>(self, q, remove_subordinate=False, delimiter='.')</dt></dl>
+<dl><dt><a name="Tokenizer-split"><strong>split</strong></a>(self, q, remove_subordinate=False, *delimiter)</dt><dd><tt>Split&nbsp;a&nbsp;string&nbsp;using&nbsp;the&nbsp;tokenizer<br>
+:params&nbsp;q&nbsp;:&nbsp;The&nbsp;string&nbsp;to&nbsp;be&nbsp;split<br>
+:params&nbsp;remove_subordinate&nbsp;:&nbsp;True&nbsp;if&nbsp;subordinate&nbsp;conjuctions<br>
+are&nbsp;going&nbsp;to&nbsp;be&nbsp;removed<br>
+:params&nbsp;*delimiter&nbsp;:&nbsp;A&nbsp;list&nbsp;of&nbsp;delimiters&nbsp;to&nbsp;split&nbsp;on</tt></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>

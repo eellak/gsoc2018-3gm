@@ -7,6 +7,7 @@ import pprint
 import helpers
 import tokenizer
 import re
+import copy
 import phrase_fun
 
 global db
@@ -21,7 +22,7 @@ def _test_law_parsing_from_government_gazette_issue():
 
 def test_operations():
 	import codifier
-	law = codifier.codifier.laws['ν. 4511/2018']
+	law = copy.copy(codifier.codifier.laws['ν. 4511/2018'])
 
 	law.remove_paragraph('1', '2')
 	assert('2' not in law.sentences['1'])

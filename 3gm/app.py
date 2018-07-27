@@ -60,6 +60,12 @@ class LawResource(Resource):
         for x in codifier.db.laws.find({'_id' : _id}):
             return x
 
+class HistoryResource(Resource):
+    def get(self, statute_type, identifier, year):
+        global codifier
+        _id = '{} {}/{}'.format(statute_type, identifier, year)
+        return next(codifier.db.get_json_from_fs(_id))
+
 class TopicResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
@@ -83,6 +89,7 @@ class SyntaxResource(Resource):
 
 # Endpoints
 api.add_resource(LawResource, '/get_law/<string:statute_type>/<string:identifier>/<string:year>')
+api.add_resource(HistoryResource, '/get_history/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(LinkResource, '/get_link/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(TopicResource, '/get_topic/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(SyntaxResource, '/syntax_api/<string:s>')
