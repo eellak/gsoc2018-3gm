@@ -243,7 +243,7 @@ class IssueParser:
                 sentences[par] = list(
                     filter(
                         lambda x: x.rstrip() != '',
-                        tokenizer.tokenizer.split(val, '. ')))
+                        tokenizer.tokenizer.split(val, False, '. ')))
 
             self.articles[article_indices[j][1]] = ''.join(content)
             self.articles_as_paragraphs[article_indices[j][1]] = paragraphs
@@ -627,7 +627,7 @@ class LawParser:
                             filter(
                                 lambda x: x.rstrip() != '',
                                 tokenizer.tokenizer.split(
-                                    val, delimiter='. ')
+                                    val, False, '. ')
                             )
                         )
 
@@ -703,7 +703,7 @@ class LawParser:
         for key, val in itertools.zip_longest(paragraph_ids, paragraph_corpus):
             if key is None or val is None:
                 break
-            sentences[key] = tokenizer.tokenizer.split(val, '. ')
+            sentences[key] = tokenizer.tokenizer.split(val, False, '. ')
             paragraphs[key] = val
 
         self.sentences[article] = sentences
@@ -745,7 +745,7 @@ class LawParser:
 
         # add in its full form or split into periods
         self.articles[article][paragraph] = content
-        self.sentences[article][paragraph] = tokenizer.tokenizer.split(content, '. ')
+        self.sentences[article][paragraph] = tokenizer.tokenizer.split(content, False, '. ')
 
         return self.serialize()
 

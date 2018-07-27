@@ -120,7 +120,7 @@ class ActionTreeGenerator:
 		s = helpers.fix_par_abbrev(s)
 
 		# get extracts and non-extracts using helper functions
-		parts = tokenizer.tokenizer.split(s, delimiter='. ')
+		parts = tokenizer.tokenizer.split(s, False, '. ')
 		extracts, non_extracts = helpers.get_extracts(s)
 
 		logging.info(extracts)
@@ -135,7 +135,7 @@ class ActionTreeGenerator:
 
 		logging.info('Splitting with tokenizer')
 
-		non_extracts = tokenizer.tokenizer.split(non_extracts, remove_subordinate=True, delimiter='. ')
+		non_extracts = tokenizer.tokenizer.split(non_extracts, True, '. ')
 
 		logging.info(non_extracts)
 

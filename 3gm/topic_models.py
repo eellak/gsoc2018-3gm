@@ -1,7 +1,6 @@
 from multiprocessing import cpu_count
 
-# Matplotlib and scikit
-import matplotlib.pyplot as plt
+# sklearn
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.model_selection import GridSearchCV
 from sklearn.decomposition import NMF, LatentDirichletAllocation

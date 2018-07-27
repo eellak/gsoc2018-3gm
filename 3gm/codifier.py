@@ -326,7 +326,7 @@ class LawCodifier:
             for l, lobj in self.links.items():
                 for x in lobj:
                     periods = tokenizer.tokenizer.split(
-                        x['text'], delimiter='. ')
+                        x['text'], False, '. ')
                     for p in periods:
                         if re.search(r'(φράση|φράσεις)', p):
                             f.write(p + '\n')
