@@ -554,12 +554,49 @@ class LawCodifier:
         self.ranks = pagerank(self.graph, alpha=0.9)
         return self.ranks
 
-def build(start=1998, end=2018, data_dir='../data/'):
+def build(start=1998, end=2018, data_dir='../data/', pipeline=['laws', 'links', 'topics', 'versions'], drop=True):
+    """Build codifier object
+    :params start : Start year
+    :params end : End year
+    :params data_dir : Text files directory
+    :params pipeline : Pipeline to build
+    Full pipeline ['laws', 'links', 'topics', 'versions']
+    laws: Build laws
+    links: Build links
+    topics: Build topics
+    versions: Build versions
+    """
+    # Import here for performance
+    import topic_models
+
+    # Create object to be returned
     cod = LawCodifier()
+
+    # Add build dirs
     for i in range(start, end + 1):
         cod.add_directory(data_dir + str(i))
-    cod.codify_new_laws()
-    cod.create_law_links()
+
+    # Build Lookup
+    build_lookup = {
+        'laws' : cod.codify_new_laws,
+        'links' : cod.create_law_links,
+        'topics' : topic_models.build_topics,
+        'versions' : cod.apply_all_links
+    }
+
+    # Drop Lookup
+    drop_lookup = {
+        'laws' : cod.db.drop_laws,
+        'links' : cod.db.drop_links,
+        'topics' : cod.db.drop_topics,
+        'versions' : cod.db.rollback_all
+    }
+
+    # Apply stages
+    for stage in pipeline:
+        if drop:
+            drop_lookup[stage]()
+        build_lookup[stage]()
 
     return cod
 

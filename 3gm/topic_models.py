@@ -160,7 +160,7 @@ def display_components(graph_lda):
 	for c in cc_lda:
 		print([codifier.codifier.laws[indices[d]] for d in c])
 
-def main(use_spacy=True):
+def build_topics(use_spacy=True):
 	greek_stopwords = build_greek_stoplist()
 	data_samples, indices = build_data_samples(use_spacy=use_spacy)
 	greek_stopwords, words = build_gg_stoplist(data_samples, greek_stopwords)
@@ -213,4 +213,4 @@ def main(use_spacy=True):
 
 if __name__ == '__main__':
 	use_spacy = '--spacy' in sys.argv[1:]
-	main(use_spacy=use_spacy)
+	build_topics(use_spacy=use_spacy)
