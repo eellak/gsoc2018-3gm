@@ -5,14 +5,20 @@ import re
 class Tokenizer:
 
     def __init__(self, exceptions):
+        """Costructor function
+        :params exceptions : A list of tokenizer exceptions
+        """
         self.exceptions = exceptions
         self.hashmap = {}
         self.inv_hashmap = {}
+
+        # hash exceptions
         for e in self.exceptions:
             h = str(hash(e))
             self.hashmap[h] = e
             self.inv_hashmap[e] = h
 
+        # subordinate conjuctions
         self.subordinate_conjuctions = [
             'ότι',
             'όπως',
@@ -36,14 +42,24 @@ class Tokenizer:
             'παρά'
         ]
 
+        # construct subordinate conjuctions regex
         self.subordinate_conjuctions_regex = r', ({})[^,]*, '.format(
             '|'.join(self.subordinate_conjuctions))
 
     def add_exception(self, e):
+        """Add exception to tokeinzer
+        :params e : The exception to be added
+        """
         self.exceptions.append(e)
         hashmap[str(hash(e))] = e
 
     def split(self, q, remove_subordinate=False, *delimiter):
+        """Split a string using the tokenizer
+        :params q : The string to be split
+        :params remove_subordinate : True if subordinate conjuctions
+        are going to be removed
+        :params *delimiter : A list of delimiters to split on
+        """
         if remove_subordinate:
             q = self.remove_subordinate(q)
 
@@ -61,9 +77,12 @@ class Tokenizer:
         return q
 
     def remove_subordinate(self, q):
+        """Remove subordinate conjuctions from a string
+        :params q : String to be cleaned
+        """
         return re.sub(self.subordinate_conjuctions_regex, ' ', q)
 
-
+# Common Tokenizer Exceptions in Legal Texts
 global TOKENIZER_EXCEPTIONS
 TOKENIZER_EXCEPTIONS = [
     'χλμ.',
@@ -96,5 +115,6 @@ TOKENIZER_EXCEPTIONS = [
     'βλ.',
     'δισ.']
 
+# Tokenizer object
 global tokenizer
 tokenizer = Tokenizer(TOKENIZER_EXCEPTIONS)
