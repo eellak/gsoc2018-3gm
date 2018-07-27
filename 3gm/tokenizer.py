@@ -43,14 +43,16 @@ class Tokenizer:
         self.exceptions.append(e)
         hashmap[str(hash(e))] = e
 
-    def split(self, q, remove_subordinate=False, delimiter='.'):
+    def split(self, q, remove_subordinate=False, *delimiter):
         if remove_subordinate:
             q = self.remove_subordinate(q)
 
         for e in self.exceptions:
             q = q.replace(e, self.inv_hashmap[e])
 
-        q = q.split(delimiter)
+        splitting_regex =  '|'.join(map(re.escape, delimiter))
+        print(splitting_regex)
+        q = re.split(splitting_regex, q)
 
         for i, x in enumerate(q):
             for h, e in self.hashmap.items():
