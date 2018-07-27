@@ -136,7 +136,9 @@ def codify_law(identifier=None):
     if request.method == 'POST':
         data = request.form
         identifier = data['law'].lower()
-        if identifier in autocomplete_topics:
+        if identifier not in autocomplete_laws:
+            doc = nlp(identifier)
+            identifier = doc[0].lemma_
             return redirect('/label/{}'.format(identifier))
     elif request.method == 'GET':
         identifier = request.args.get('identifier')

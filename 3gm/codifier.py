@@ -30,23 +30,25 @@ class UnrecognizedCodificationAction(Exception):
 
 
 class Link:
-    """Link representation"""
+    """Link representation Class"""
 
     def __init__(self, name=''):
         """Initialize an Empty Link
         :param name : Name of link
         """
+
+        self.is_sorted = 0
         self.name = name
         self.links_to = set([])
         self.actual_links = []
 
     def add_link(self, other, s, link_type='general'):
         """Add linking
-        :param other : Neighbor
-        :param s : Content
-        :param link_type : Link type (can be modifying, referential etc.)
+        :params other : Neighbor
+        :params s : Content
+        :params link_type : Link type (can be modifying, referential etc.)
         """
-        self.is_sorted = False
+
         self.links_to |= {other}
         self.actual_links.append({
             'from': other,
@@ -57,14 +59,17 @@ class Link:
 
     def serialize(self):
         """Serialize link to dictionary"""
+
         return {
             '_id': self.name,
             'links_to': list(self.links_to),
-            'actual_links': self.actual_links
+            'actual_links': self.actual_links,
+            'is_sorted' : self.is_sorted
         }
 
     def organize_by_text(self):
         """Format for rendering"""
+
         result = []
 
         for x in self.actual_links:
@@ -78,36 +83,56 @@ class Link:
         return result
 
     def __dict__(self):
+        """Serialize object"""
+
         return self.serialize()
 
     def __str__(self):
+        """Return link name"""
+
         return self.name
 
     def __repr__(self):
+        """Return link name"""
+
         return self.name
 
     def __iter__(self):
         """Yields actual_links elements"""
+
         for x in self.actual_links:
             yield x
 
     def __len__(self):
+        """Returns number of edges"""
+
         return len(self.actual_links)
 
     def sort(self):
         """Sort actual links by year"""
-        helpers.quicksort(self.actual_links, self.compare)
-        self.is_sorted = True
+
+        if self.is_sorted == 0:
+            helpers.quicksort(self.actual_links, self.compare)
+        self.is_sorted = 1
 
     def compare(self, x, y):
+        """Comparator function by year, identifier and type
+        params x, y: Items of self.actual_links
+        """
+
         return helpers.compare_statutes(x['from'], y['from'])
 
     @staticmethod
     def from_serialized(s):
         """Create a link from a serialized object"""
+
         l = Link(s['_id'])
         l.links_to = set(s['links_to'])
         l.actual_links = s['actual_links']
+        try:
+            l.is_sorted = int(s['is_sorted'])
+        except:
+            l.is_sorted = 0    
         return l
 
 
@@ -126,6 +151,7 @@ class LawCodifier:
         """Constructor for LawCodifier class
         :param issues_directory : Issues directory
         """
+
         self.laws = {}
         self.links = {}
         self.topics = []
@@ -148,6 +174,8 @@ class LawCodifier:
                 text_format=text_format))
 
     def populate_topics(self):
+        """Populate topics in codifier object"""
+
         cur = self.db.topics.find()
         for x in cur:
             self.topics.append(x)
@@ -172,6 +200,7 @@ class LawCodifier:
 
     def get_history(self, law):
         """Return the history and links of a certain law"""
+
         history = []
 
         cursor = self.db.laws.find({
@@ -202,7 +231,7 @@ class LawCodifier:
 
     def codify_issue(self, filename):
         """Codify certain issue (legacy)
-        :param filename : Issue filename
+        :params filename : Issue filename
         """
 
         trees = {}
@@ -239,7 +268,6 @@ class LawCodifier:
     def codify_law(self, identifier):
         """
         Codify certain law. Search all issues within self.issues
-
         :param identifier : The law identifier e.g. ν. 1234/5678
         """
         trees = {}
@@ -432,6 +460,7 @@ class LawCodifier:
         return list(set(self.laws.keys()) | set(self.links.keys()))
 
     def topic_keys(self):
+        """Return topic keywords in a set"""
         topic_k = set([])
         for topic in self.topics:
             topic_k |= set(topic['keywords'])
@@ -484,6 +513,12 @@ class LawCodifier:
 
     @staticmethod
     def codify_pair(source=None, target=None, outfile=None):
+        """Codify a pair of issues. Used at the CLI tool
+        params: source : Source file. If None then read from stdin
+        params: target : Target file. If None then read from stdin
+        params: outfile : Output file. If None then output to stdout
+        Errors go to stderr
+        """
         if not source:
             source = sys.argv[1]
         source_issue = parser.IssueParser(source)
@@ -523,6 +558,7 @@ class LawCodifier:
             sys.stdout.write(output_txt)
 
     def apply_all_links(self):
+        """Apply all links in the codifier object"""
         sorted_keys = sorted(self.laws.keys(), key=helpers.compare_year)
 
         for identifier in sorted_keys:
@@ -538,18 +574,23 @@ class LawCodifier:
             # store json to gridfs
             self.db.put_json_to_fs(final_serializable)
 
-    def build_graph_from_links(self):
+    def build_graph_from_links(self, link_type=None):
+        """Build nx.Graph from links of a certain type
+        :params link_type : The link type (e.g. αναφορικός) for
+        building the graph (default is None to use all links)"""
         edges = []
         for u, link in self.links.items():
             for v in link:
-                edge = (u, v['from'])
-                edges.append(edge)
+                if not link_type or (link_type and v['link_type'] == link_type):
+                    edge = (u, v['from'])
+                    edges.append(edge)
 
         self.graph = Graph()
         self.graph.add_edges_from(edges)
         return self.graph
 
     def pagerank(self):
+        """Run pagerank on graph built from links"""
         self.graph = self.build_graph_from_links()
         self.ranks = pagerank(self.graph, alpha=0.9)
         return self.ranks
@@ -600,5 +641,5 @@ def build(start=1998, end=2018, data_dir='../data/', pipeline=['laws', 'links', 
 
     return cod
 
-
+# Codifier object
 codifier = LawCodifier()
