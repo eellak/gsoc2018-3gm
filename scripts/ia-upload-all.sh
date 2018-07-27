@@ -18,4 +18,4 @@ fgrep -v -f <(
   # Convert output to file name
   sed 's/GreekGovernmentGazette-//;s/$/.pdf/') |
 # Upload each file
-xargs -n 1 ./upload.sh
+xargs -n 1 ./ia-upload.sh
