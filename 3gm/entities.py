@@ -231,6 +231,30 @@ class Numerals:
         'ρ' : 100
     }
 
+    greek_nums_inv = {
+        1 : 'α',
+        2 : 'β',
+        3 : 'γ',
+        4 : 'δ',
+        5 : 'ε',
+        6 : 'στ',
+        7 :'ζ',
+        8 : 'η',
+        9 : 'θ',
+        10 : 'ι',
+        20 : 'κ',
+        30 : 'λ',
+        40 : 'μ',
+        50 : 'ν',
+        60 :'ξ',
+        70 : 'ο',
+        80 : 'π',
+        90 :'Ϟ',
+        100 : 'ρ'
+    }
+
+    GREEK_NUM_MAX = 199
+
     @staticmethod
     def full_number_to_integer(s):
         result = 0
@@ -274,6 +298,26 @@ class Numerals:
 
         return r
 
+    @staticmethod
+    def int_to_greek_num(n):
+        result = []
+        n = str(n)[::-1]
+        for i, w in enumerate(n):
+            if w != '0':
+                result.append(str(Numerals.greek_nums_inv[int(w) * 10**(i)]))
+        return ''.join(result[::-1])
+
+    @staticmethod
+    def greek_num_generator(n=None, suffix=')'):
+        if not n:
+            n = Numerals.GREEK_NUM_MAX
+        else:
+            n = min(Numerals.GREEK_NUM_MAX, n)
+
+        for i in range(1, n + 1):
+            yield Numerals.int_to_greek_num(i) + suffix
+
+
     class GreekNum:
 
         def __init__(self, s):
@@ -316,3 +360,7 @@ class Numerals:
 
         def __repr__(self):
             return self.s
+
+if __name__ == '__main__':
+    for i in Numerals.greek_num_generator(100):
+        print(i)
