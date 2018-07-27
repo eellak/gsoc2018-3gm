@@ -319,10 +319,15 @@ class Numerals:
 
 
     class GreekNum:
+        """Support for greek numerals"""
 
-        def __init__(self, s):
-            self._s = s
-            self.value = Numerals.greek_nums_to_int(s)
+        def __init__(self, s='α'):
+            if isinstance(s, str):
+                self._s = s
+                self._value = Numerals.greek_nums_to_int(s)
+            elif isinstance(s, int):
+                self._value = s
+                self._s = Numerals.int_to_greek_num(s)
 
         @property
         def s(self):
@@ -335,7 +340,20 @@ class Numerals:
         @s.setter
         def s(self, v):
             self._s = v
-            self.value = Numerals.greek_nums_to_int(v)
+            self._value = Numerals.greek_nums_to_int(v)
+
+        @property
+        def value(self):
+            return self._value
+
+        @value.getter
+        def value(self):
+            return self._value
+
+        @value.setter
+        def value(self, x):
+            self._value = x
+            self._s = Numerals.int_to_greek_num(x)
 
         def __eq__(self, other):
             return self.value == other.value
@@ -360,6 +378,21 @@ class Numerals:
 
         def __repr__(self):
             return self.s
+
+        def __add__(self, other):
+            x = Numerals.GreekNum()
+            x.value = self.value + other.value
+            return x
+
+        def __sub__(self, other):
+            x = Numerals.GreekNum()
+            x.value = self.value - other.value
+            return x
+
+        def __mul__(self, other):
+            x = Numerals.GreekNum()
+            x.value = self.value * other.value
+            return x
 
 if __name__ == '__main__':
     for i in Numerals.greek_num_generator(100):
