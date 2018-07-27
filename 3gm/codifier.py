@@ -132,7 +132,7 @@ class Link:
         try:
             l.is_sorted = int(s['is_sorted'])
         except:
-            l.is_sorted = 0    
+            l.is_sorted = 0
         return l
 
 
@@ -635,6 +635,7 @@ def build(start=1998, end=2018, data_dir='../data/', pipeline=['laws', 'links', 
 
     # Apply stages
     for stage in pipeline:
+        print('Building {}'.format(stage))
         if drop:
             drop_lookup[stage]()
         build_lookup[stage]()
