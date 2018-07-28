@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+# Author: Marios Papachristou
 # CLI Tool for codification
-# 
+# Example Usage: python3 law_codifier.py ../../examples/20180100102.txt initial-out.txt  <../../examples/initial-version.txt > final-version.txt
+# Diff versions: diff initial-out.txt final-version.txt
 
 import sys
 sys.path.insert(0, '../')
@@ -8,6 +10,7 @@ import pparser as parser
 import logging
 import syntax
 
+# Disable logging due to stdout usage
 logger = logging.getLogger()
 logger.disabled = True
 
@@ -18,6 +21,7 @@ def codify_pair(source=None, target=None, outfile=None):
     params: outfile : Output file. If None then output to stdout
     Errors go to stderr
     """
+    # Parse issues
     if not source:
         source = sys.argv[1]
         print(source)
@@ -26,9 +30,8 @@ def codify_pair(source=None, target=None, outfile=None):
 
     target_issue = parser.IssueParser(None, stdin=True)
 
-
+    # Detect laws
     target_issue.detect_new_laws()
-
     source_law = list(source_issue.new_laws.items())[0][1]
     target_law = list(target_issue.new_laws.items())[0][1]
 
@@ -40,13 +43,15 @@ def codify_pair(source=None, target=None, outfile=None):
             try:
                 target_law.apply_amendment(paragraph)
             except:
-                pass
+                # If failing write to stderr
+                sys.stderr.write(paragraph)
 
-    with open('initial.txt', 'w+') as f:
+    # Write initial version to stdout in pretty format
+    with open(sys.argv[2], 'w+') as f:
         f.write(initial_text)
 
+    # Write formatted output to stdout
     sys.stdout.write(target_law.export_law('issue'))
-
 
 if __name__ == '__main__':
     codify_pair()
