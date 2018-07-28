@@ -123,21 +123,9 @@ class ActionTreeGenerator:
 		parts = tokenizer.tokenizer.split(s, False, '. ')
 		extracts, non_extracts = helpers.get_extracts(s)
 
-		logging.info(extracts)
-
-		logging.info(non_extracts)
-
-		logging.info('Joining non_extracts')
-
 		non_extracts = ' '.join(non_extracts)
-
-		logging.info(non_extracts)
-
-		logging.info('Splitting with tokenizer')
-
 		non_extracts = tokenizer.tokenizer.split(non_extracts, True, '. ')
 
-		logging.info(non_extracts)
 
 		extract_cnt = 0
 
@@ -177,16 +165,19 @@ class ActionTreeGenerator:
 								tree['what']['number'] = list(helpers.ssconj_doc_iterator(doc, k, is_plural))
 							else:
 								tree = phrase_fun.detect_phrase_components(parts[part_cnt], tree)
-
+								tree['what']['context'] = 'φράση'
 							logging.info(tree['what'])
 
 						else:
 							found_what, tree, is_plural = ActionTreeGenerator.get_nsubj_fallback(
 								tmp, tree, i)
 
+						print(tree)
 						# get content
-						tree, max_depth = ActionTreeGenerator.get_content(
-							tree, extract, s)
+						if action not in ['διαγράφεται', 'διαγράφονται', 'αναριθμείται', 'αναριθμούνται']:
+							tree, max_depth = ActionTreeGenerator.get_content(
+									tree, extract, s)
+
 
 						# split to subtrees
 						subtrees = ActionTreeGenerator.split_tree(tree)
@@ -198,8 +189,11 @@ class ActionTreeGenerator:
 								subtree, extract, s, secondary=True)
 
 							# get latest statute
-							law = ActionTreeGenerator.detect_latest_statute(
-								non_extract)
+							try:
+								law = ActionTreeGenerator.detect_latest_statute(
+									non_extract)
+							except:
+								law = ''
 
 							# first level are laws
 							subtree['law'] = {
@@ -214,7 +208,6 @@ class ActionTreeGenerator:
 
 							# nest into dictionary
 							if nested:
-
 								ActionTreeGenerator.nest_tree('root', subtree)
 
 							trees.append(subtree)
@@ -364,7 +357,7 @@ class ActionTreeGenerator:
 	def get_content(tree, extract, s, secondary=False):
 		max_depth = 0
 		if tree['what']['context'] in ['φράση', 'φράσεις', 'λέξη', 'λέξεις']:
-			return tree
+			return tree, 6
 		elif tree['what']['context'] in ['άρθρο', 'άρθρα']:
 			if tree['root']['action'] != 'διαγράφεται':
 				content = extract if not secondary else tree['what']['content']
@@ -397,57 +390,7 @@ class ActionTreeGenerator:
 				tree['what']['content'] = content
 			max_depth = 5
 
-
-
-		elif tree['what']['context'] in ['φράση', 'φράσεις']:
-			location = 'end'
-			max_depth = 6
-
-			# get old phrase
-			before_phrase = re.search(' μετά τη φράση «', s)
-			after_phrase = re.search(' πριν τη φράση «', s)
-			old_phrase = None
-			if before_phrase or after_phrase:
-				if before_phrase:
-					start_of_phrase = before_phrase.span()[1]
-					end_of_phrase = re.search('»', s[start_of_phrase:]).span()[
-						0] + start_of_phrase
-					location = 'before'
-					old_phrase = s[start_of_phrase: end_of_phrase]
-				elif after_phrase:
-					start_of_phrase = after_phrase.span()[1]
-					end_of_phrase = re.search(
-						'»', s[start_of_phrase:]).span()[0]
-					location = 'after'
-					old_phrase = s[start_of_phrase: end_of_phrase]
-
-			new_phrase = None
-			phrase_index = re.search(' η φράση(|,) «', s)
-
-			if phrase_index:
-				start_of_phrase = phrase_index.span()[1]
-				end_of_phrase = re.search('»', s[start_of_phrase:]).span()[
-					0] + start_of_phrase
-				new_phrase = s[start_of_phrase + 2: end_of_phrase - 2]
-
-			if old_phrase and new_phrase:
-				tree['what']['location'] = location
-				tree['what']['old_phrase'] = old_phrase
-				tree['what']['new_phrase'] = new_phrase
-				tree['what']['content'] = new_phrase
-
-
 		return tree, max_depth
-
-	@staticmethod
-	def detect_from_regex(non_extract, regex):
-		roi = list(
-			filter(
-				lambda x: x != [], [
-					list(
-						re.finditer(
-							a, non_extract)) for a in regex]))
-		return int(paragraph[0][0].group().split(' ')[1])
 
 	@staticmethod
 	def detect_with_iterator(non_extract_split, words):
