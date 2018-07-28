@@ -37,6 +37,7 @@ Google Summer of Code participant: Marios Papachristou ([papachristoumarios](htt
 1. [Installation Instructions](https://github.com/eellak/gsoc2018-3gm/wiki/Installation)
 2. [Fetching Documents](https://github.com/eellak/gsoc2018-3gm/wiki/Fetching-Documents)
 3. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier)
+4. [Testing](https://github.com/eellak/gsoc2018-3gm/wiki/Testing)
 
 For a tutorial on getting started click [here](https://github.com/eellak/gsoc2018-3gm/wiki/Tutorial)
 
@@ -60,9 +61,14 @@ Through the case of analyzing, categorizing and codifying Government Gazette art
 
 **Keywords:** _text mining, government gazette, machine learning, law codification_
 
+## Technologies used
+
+1. The project is written in **Python 3.x** using the following libraries: _spaCy, gensim, selenium, pdfminer.six, networkx, Flask_RESTful, Flask, pytest, numpy, pymongo, sklearn, pyocr, bs4, pillow_ and _wand_.
+2. The information is stored in **MongoDB** (document-oriented database schema) and is accessible through a **RESTful API**.
+
 ---
 
-## Project Features
+## Project Features & Production Ready Tools
 
 1. Document [**parser**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/pparser.py) can parse PDFs from Government Gazette Issues (see the  `data` for examples). The documents are split into articles in order to detect amendments.
 2. [**Parser**](https://github.com/eellak/gsoc2018-3gm/blob/master/3gm/pparser.py) for existing laws.
