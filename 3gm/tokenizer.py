@@ -1,6 +1,6 @@
 import copy
 import re
-
+import entities
 
 class Tokenizer:
 
@@ -67,7 +67,6 @@ class Tokenizer:
             q = q.replace(e, self.inv_hashmap[e])
 
         splitting_regex =  '|'.join(map(re.escape, delimiter))
-        print(splitting_regex)
         q = re.split(splitting_regex, q)
 
         for i, x in enumerate(q):
@@ -75,6 +74,23 @@ class Tokenizer:
                 q[i] = q[i].replace(h, e)
 
         return q
+
+    def split_cases(self, q, ncases, suffix=')'):
+        """Split into cases provided by Greek Numerals
+        e.g. α) Αλφα β) Βήτα yields ['Αλφα', 'Βήτα']
+        params: q : String query
+        params ncases : Number of cases
+        params suffix : Suffix"""
+        cases = entities.Numerals.greek_num_generator(ncases, suffix=suffix)
+        return self.split(q, False, *cases)
+
+    def join_cases(self, l, suffix = ')'):
+        ncases = len(l)
+        cases = entities.Numerals.greek_num_generator(ncases, suffix=suffix)
+        result = []
+        for c, w in zip(cases, l):
+            result.append(c + w)
+        return ' '.join(result)
 
     def remove_subordinate(self, q):
         """Remove subordinate conjuctions from a string
