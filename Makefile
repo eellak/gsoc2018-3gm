@@ -89,12 +89,20 @@ install_nlp_tools:
 	rm -rf nlp_tools
 
 run_web_application_debug:
+	echo "Running web application"
 	cd 3gm/
 	pkill flask
 	./run.sh
 	cd ..
 
 build_codifier_pipeline:
+	echo "Building codifier full pipeline"
 	python3 build_pipeline.py laws links topics versions
 
-# TODO add make install
+run_codifier_tests:
+	echo "Running codifier tests"
+	cd 3gm/
+	pytest tests.py -v
+	cd ..
+
+# TODO add make install and make run
