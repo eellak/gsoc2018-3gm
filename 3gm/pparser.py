@@ -19,6 +19,7 @@ import itertools
 import glob
 import sys
 import phrase_fun
+import syntax
 
 # configuration and parameters
 
@@ -395,8 +396,10 @@ class IssueParser:
                     try:
                         year, month, day = str(self.issue_date).split('-')
                     except BaseException:
-                        year = self.filename.split('/')[-1][:4]
-
+                        if self.filename != None:
+                            year = self.filename.split('/')[-1][:4]
+                        else:
+                            year = 2011
                     abbreviation = 'ν.'
 
                     if result[0] == 'ΠΡΟΕΔΡΙΚΟ':
@@ -707,7 +710,6 @@ class LawParser:
             paragraphs[key] = val
 
         self.sentences[article] = sentences
-        self.articles[article] = paragraphs
 
         if title:
             self.titles[article] = title
@@ -722,12 +724,23 @@ class LawParser:
         """
 
         article = str(article)
-        assert(article in list(self.articles.keys()))
-        del self.sentences[article]
-        del self.articles[article]
-        del self.corpus[article]
-        del self.lemmas[article]
-        del self.titles[article]
+        try:
+            del self.sentences[article]
+        except:
+            logging.warning('Could not find sentences')
+        try:
+            del self.corpus[article]
+        except:
+            logging.warning('Could not find corpus')
+        try:
+            del self.lemmas[article]
+        except:
+            logging.warning('Could not find lemmas')
+        try:
+            del self.titles[article]
+        except:
+            logging.warning('Could not find titles')
+
         return self.serialize()
 
     def add_paragraph(self, article, paragraph, content):
@@ -836,7 +849,7 @@ class LawParser:
                             self.sentences[article][paragraph][i] = new_period
         else:
             assert(article and paragraph)
-            self.sentences[article][paragraph][position] = new_period
+            self.sentences[article][paragraph][int(position)] = new_period
 
         return self.serialize()
 
@@ -845,7 +858,7 @@ class LawParser:
 
         search_all = (article is None)
 
-        if not position:
+        if position == None:
             if article:
                 delegate_articles = [str(article)]
 
@@ -968,6 +981,19 @@ class LawParser:
         del self.sentences[article][old_id]
         return self.serialize()
 
+    def apply_amendment(self, s, throw_exceptions=False):
+        """Applies amendment given a string s
+        params s: Query string
+        params throw_exceptions: Throw exceptions upon unsucessfull operations
+        """
+        trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+        for t in trees:
+            try:
+                self.query_from_tree(t)
+            except:
+                if throw_exceptions:
+                    raise UnrecognizedAmendmentException(t)
+
     def query_from_tree(self, tree):
         """Returns a serizlizable object from a tree in nested form
         :params tree : A query tree generated from syntax.py
@@ -996,24 +1022,42 @@ class LawParser:
                     content=content)
 
             elif context in ['εδάφιο', 'εδάφια']:
-                pass
-                # TODO
-
+                if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
+                    return self.insert_period(
+                            position=int(tree['period']['_id']) - 1,
+                            old_period='',
+                            new_period=content,
+                            article=tree['article']['_id'],
+                            paragraph=tree['paragraph']['_id'])
+                elif tree['root']['action'] in ['αντικαθίσταται', 'αντικαθίστανται', 'τροποποιείται', 'τροποποιούνται']:
+                    return self.replace_period(
+                            old_period='',
+                            new_period=content,
+                            position=int(tree['period']['_id']) - 1,
+                            article=tree['article']['_id'],
+                            paragraph=tree['paragraph']['_id'])
             elif context in ['φράση', 'φράσεις']:
                 if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
                     return self.insert_phrase(
                         new_phrase=tree['phrase']['new_phrase'],
-                        position=tree['phrase']['position'],
+                        position=tree['phrase']['location'],
                         old_phrase=tree['phrase']['old_phrase'],
                         article=tree['article']['_id'],
                         paragraph=tree['paragraph']['_id']
                     )
+                elif tree['root']['action'] in ['αντικαθίσταται', 'αντικαθίστανται']:
+                    return self.replace_phrase(
+                        old_phrase=tree['phrase']['old_phrase'],
+                        new_phrase=tree['phrase']['new_phrase'],
+                        article=tree['article']['_id'],
+                        paragraph=tree['paragraph']['_id'])
 
             elif context in ['τίτλος', 'τίτλοι']:
                 return self.set_title(
                     content=content,
                     article=tree['article']['_id']
                 )
+            # TODO improve
             elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
                 if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
                     return self.insert_phrase(
@@ -1057,13 +1101,20 @@ class LawParser:
                 )
             elif context in ['εδάφιο', 'εδάφια']:
                 if tree['period']['_id']:
+                    print(int(tree['period']['_id']) - 1)
                     return self.remove_period(
                         old_period='',
-                        position=int(tree['period']['_id']),
+                        position=int(tree['period']['_id']) - 1,
                         article=tree['article']['_id'],
                         paragraph=tree['paragraph']['_id']
                     )
-                # TODO upon old period?
+            elif context in ['φράση', 'φράσεις', 'λέξη', 'λέξεις']:
+                    return self.remove_phrase(
+                        old_phrase=tree['phrase']['old_phrase'],
+                        article=tree['article']['_id'],
+                        paragraph=tree['paragraph']['_id']
+                    )
+
             elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
                 # TODO
                 pass
@@ -1240,3 +1291,7 @@ class LawParser:
 class UnsupportedOperationException(Exception):
     def __init__(self, tree):
         super().__init__('Uncategorized operation on\n', json.dumps(tree, ensure_ascii=False))
+
+class UnrecognizedAmendmentException(Exception):
+    def __init__(self, tree):
+        super().__init__('Uncategorized amendment on\n', json.dumps(tree, ensure_ascii=False))

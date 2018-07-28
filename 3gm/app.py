@@ -64,7 +64,10 @@ class HistoryResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
         _id = '{} {}/{}'.format(statute_type, identifier, year)
-        return next(codifier.db.get_json_from_fs(_id))
+        return json.dumps(
+                next(codifier.db.get_json_from_fs(_id)),
+                ensure_ascii=False
+                )
 
 class TopicResource(Resource):
     def get(self, statute_type, identifier, year):

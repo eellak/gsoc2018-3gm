@@ -16,7 +16,7 @@ def replace_phrase(
 
 	joined = '. '.join(s)
 	joined = re.sub(old_phrase, new_phrase, joined)
-	splitted = tokenizer.tokenizer.split(joined, delimiter='. ')
+	splitted = tokenizer.tokenizer.split(joined, False, '. ')
 
 	return splitted
 
@@ -48,7 +48,7 @@ def insert_phrase(
 		q = replace_phrase(s, old_phrase, rep)
 		joined = '. '.join(q)
 
-	splitted = tokenizer.tokenizer.split(joined, delimiter='. ')
+	splitted = tokenizer.tokenizer.split(joined, False, '. ')
 
 	return splitted
 
