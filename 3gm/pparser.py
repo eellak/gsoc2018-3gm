@@ -129,7 +129,6 @@ class IssueParser:
                     r'\d+. ',
                     self.articles[article])))
         paragraph_corpus = [p.rstrip().lstrip() for p in paragraph_corpus]
-        print(paragraph_ids)
         return paragraph_corpus
 
     def detect_statutes(self):
@@ -359,7 +358,7 @@ class IssueParser:
                     self.signatories |= set([minister])
 
         for signatory in self.signatories:
-            print(signatory)
+            logging.info(signatory)
 
         self.signatories = list(self.signatories)
 
@@ -411,7 +410,7 @@ class IssueParser:
 
                     identifier = '{} {}/{}'.format(abbreviation,
                                                    result[-1], year)
-                    print('Issue: ', self.name, 'Identifier: ', identifier)
+                    logging.info('Issue: ' + self.name + 'Identifier: ' + identifier)
 
                     ignore = True
 
@@ -442,7 +441,7 @@ def get_issues_from_dataset(directory='../data', text_format=False):
         filelist = glob.glob('*.pdf')
         for filename in filelist:
             outfile = filename.strip('.pdf') + '.txt'
-            print(outfile)
+            logging.info(outfile)
             if not os.path.isfile(outfile):
                 os.system('pdf2txt.py {} > {}'.format(filename, outfile))
             issue = IssueParser(outfile)
@@ -454,13 +453,13 @@ def get_issues_from_dataset(directory='../data', text_format=False):
 
 class LawParser:
     """
-                                    This class hosts the law parser. The law is provided
-                                    in a file (if it exists) and is parsed in order to be
-                                    split in articles and sentences, ready to be stored in
-                                    the database. This class supports insertions, replacements
-                                    and deletions of articles, paragraphs, phrases and periods.
-                                    It can also provide a serializable object for updating the
-                                    database with its contents.
+    This class hosts the law parser. The law is provided
+    in a file (if it exists) and is parsed in order to be
+    split in articles and sentences, ready to be stored in
+    the database. This class supports insertions, replacements
+    and deletions of articles, paragraphs, phrases and periods.
+    It can also provide a serializable object for updating the
+    database with its contents.
     """
 
     def __init__(self, identifier, filename=None, autoincrement_version=False):
@@ -500,6 +499,7 @@ class LawParser:
         self.titles = {}
         self.corpus = {}
         self.sentences = collections.defaultdict(dict)
+        self.amendee = None
 
         self.find_corpus(fix_paragraphs=False)
 
@@ -989,7 +989,8 @@ class LawParser:
         trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
         for t in trees:
             try:
-                self.query_from_tree(t)
+                if t['law']['_id'] == self.identifier:
+                    self.query_from_tree(t)
             except:
                 if throw_exceptions:
                     raise UnrecognizedAmendmentException(t)
@@ -1101,7 +1102,6 @@ class LawParser:
                 )
             elif context in ['εδάφιο', 'εδάφια']:
                 if tree['period']['_id']:
-                    print(int(tree['period']['_id']) - 1)
                     return self.remove_period(
                         old_period='',
                         position=int(tree['period']['_id']) - 1,
@@ -1139,8 +1139,7 @@ class LawParser:
                 )
             else:
                 # Unsupported actions
-                raise UnsupportedOperationException(tree)
-
+                pass
         return self.serialize()
 
     def get_paragraph(self, article, paragraph_id):
@@ -1156,7 +1155,7 @@ class LawParser:
         """
 
         article = str(article)
-        for paragraph_id in self.sentences[article].keys():
+        for paragraph_id in sorted(self.sentences[article].keys(), key=lambda x: int(x)):
             yield self.get_paragraph(article, paragraph_id)
 
     def get_articles_sorted(self):
@@ -1250,7 +1249,6 @@ class LawParser:
         for k in sorted_links_keys:
             links_groups.append(links_hash[k])
 
-        print([len(k) for k in links_groups])
 
         initial = self.serialize()
         initial['_version'] = self.version_index
@@ -1270,7 +1268,6 @@ class LawParser:
             s['amendee'] = link_group[0]['from']
             versions.append(s)
 
-            print(s['_version'], s['amendee'])
             input()
 
         final_serializable = {

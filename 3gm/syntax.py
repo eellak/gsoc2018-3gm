@@ -172,7 +172,6 @@ class ActionTreeGenerator:
 							found_what, tree, is_plural = ActionTreeGenerator.get_nsubj_fallback(
 								tmp, tree, i)
 
-						print(tree)
 						# get content
 						if action not in ['διαγράφεται', 'διαγράφονται', 'αναριθμείται', 'αναριθμούνται']:
 							tree, max_depth = ActionTreeGenerator.get_content(
