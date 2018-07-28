@@ -2,6 +2,7 @@ APT_INSTALL_Y = apt-get install -y
 export CWD := $(shell pwd)
 export PATH := $(CWD)/bin:$(PATH)
 export 3GM_SCRIPTS := $(CWD)/scripts
+export 3GM_TOOLS := $(CWD)/3gm/tools
 
 install_scripts_requirements: scripts/requirements.txt
 	pip3 install -r scripts/requirements.txt
@@ -104,6 +105,13 @@ run_codifier_tests:
 	cd 3gm/
 	pytest tests.py -v
 	cd ..
+
+symlink_tools:
+	echo "Symlinking tools"
+	ln -s $(3GM_TOOLS)/law_codifier.py /usr/local/bin/law_codifier.py
+	ln -s $(3GM_TOOLS)/exporter.py /usr/local/bin/exporter.py
+	echo "Symlinking done"
+
 
 # Core functionality
 core: install_app_requirements install_nlp_tools

@@ -511,23 +511,6 @@ class LawCodifier:
 
         return self.model
 
-    def apply_all_links(self):
-        """Apply all links in the codifier object"""
-        sorted_keys = sorted(self.laws.keys(), key=helpers.compare_year)
-
-        for identifier in sorted_keys:
-            links = self.links[identifier]
-
-            # apply links
-            final_serializable, links_hash, links = self.laws[identifier].apply_links(links)
-            self.links[identifier] = links
-
-            # store updated links
-            self.db.links.save(links.serialze())
-
-            # store json to gridfs
-            self.db.put_json_to_fs(final_serializable)
-
     def build_graph_from_links(self, link_type=None):
         """Build nx.Graph from links of a certain type
         :params link_type : The link type (e.g. αναφορικός) for
@@ -563,20 +546,22 @@ def build(start=1998, end=2018, data_dir='../data/', pipeline=['laws', 'links', 
     """
     # Import here for performance
     import topic_models
+    import apply_links
 
     # Create object to be returned
     cod = LawCodifier()
 
     # Add build dirs
-    for i in range(start, end + 1):
-        cod.add_directory(data_dir + str(i))
+    if 'laws' in pipeline:
+        for i in range(start, end + 1):
+            cod.add_directory(data_dir + str(i))
 
     # Build Lookup
     build_lookup = {
         'laws' : cod.codify_new_laws,
         'links' : cod.create_law_links,
         'topics' : topic_models.build_topics,
-        'versions' : cod.apply_all_links
+        'versions' : apply_links.apply_all_links
     }
 
     # Drop Lookup

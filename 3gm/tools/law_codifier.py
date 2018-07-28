@@ -44,7 +44,8 @@ def codify_pair(source=None, target=None, outfile=None):
                 target_law.apply_amendment(paragraph)
             except:
                 # If failing write to stderr
-                sys.stderr.write(paragraph)
+                #sys.stderr.write(paragraph)
+                pass
 
     # Write initial version to stdout in pretty format
     with open(sys.argv[2], 'w+') as f:

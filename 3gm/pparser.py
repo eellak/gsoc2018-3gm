@@ -986,14 +986,19 @@ class LawParser:
         params s: Query string
         params throw_exceptions: Throw exceptions upon unsucessfull operations
         """
+        detected = 0
+        applied = 0
         trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+        detected = 1
         for t in trees:
             try:
                 if t['law']['_id'] == self.identifier:
                     self.query_from_tree(t)
+                    applied = 1
             except:
                 if throw_exceptions:
                     raise UnrecognizedAmendmentException(t)
+        return detected, applied
 
     def query_from_tree(self, tree):
         """Returns a serizlizable object from a tree in nested form
@@ -1207,7 +1212,7 @@ class LawParser:
                 result = result + 'Άρθρο {} \n'.format(article)
                 for i, paragraph in enumerate(self.get_paragraphs(article)):
                     result = result + \
-                        ' {}. {}\n'.format(i, paragraph)
+                        ' {}. {}\n'.format(i+1, paragraph)
 
         elif export_type == 'issue':
             abbreviations = {

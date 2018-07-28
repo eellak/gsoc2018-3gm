@@ -287,8 +287,6 @@ def display_cards(filename):
 
 @app.route('/help')
 def help():
-    with open('templates/help.md', encoding='utf-8') as f:
-        help = f.read()
     return render_template('help.html', **locals())
 
 def color_iterator():
