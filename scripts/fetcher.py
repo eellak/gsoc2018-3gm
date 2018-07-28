@@ -232,8 +232,8 @@ if __name__ == '__main__':
 							  'Ο.Π.Κ.', 'Υ.Ο.Δ.Δ.', 'Α.Α.Π.'],
 							   range(1, 16)))
 
-	# Get correct checkbox						   
-	checkbox_id = 'chbIssue_' + possible_issues[args.type]
+	# Get correct checkbox
+	checkbox_id = 'chbIssue_' + str(possible_issues[args.type])
 
 	driver.find_element_by_name(checkbox_id).click()
 	driver.find_element_by_id("search").click()
