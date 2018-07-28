@@ -160,10 +160,18 @@ class Database:
         self.rollback_links(identifier=None, rollback_laws=True)
 
     def put_json_to_fs(self, _id, _json):
+        """Put a json to GridFS"""
         dump = json.dumps(_json, ensure_ascii=False).encode('utf-8')
         return self.fs.put(dump, _id=_id)
 
+    def save_json_to_fs(self, _id, _json):
+        """Save a json to GridFS"""
+        self.fs.delete(_id)
+        logging.info('File nonexistent')
+        self.put_json_to_fs(_id, _json)
+
     def get_json_from_fs(self, _id=None):
+        """Get json from GridFS"""
         if _id:
             dump = self.fs.find_one({'_id' : _id})
             return json.loads(dump.read().decode('utf-8'))
