@@ -168,8 +168,6 @@ def test_codifier():
 	law.apply_amendment(s)
 	assert(law.sentences['15'])
 
-
-
 	s = 'Στην παράγραφο 1 του άρθρου 15 ν. 4511/2018 προστίθεται δεύτερο εδάφιο ως εξής «This is a period being added»'
 	trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
 	law.apply_amendment(s)
@@ -189,10 +187,3 @@ def test_codifier():
 		law.query_from_tree(t)
 
 	assert('15' not in law.sentences.keys())
-
-
-
-
-
-if __name__ == '__main__':
-	test_codifier()
