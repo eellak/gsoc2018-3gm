@@ -105,4 +105,10 @@ run_codifier_tests:
 	pytest tests.py -v
 	cd ..
 
-# TODO add make install and make run
+# Core functionality
+core: install_app_requirements install_nlp_tools
+
+# Scripts
+scripts: install_scripts_requirements install_tesseract_4 install_chromedriver install_mongodb
+
+all: core scripts
