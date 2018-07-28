@@ -511,52 +511,6 @@ class LawCodifier:
 
         return self.model
 
-    @staticmethod
-    def codify_pair(source=None, target=None, outfile=None):
-        """Codify a pair of issues. Used at the CLI tool
-        params: source : Source file. If None then read from stdin
-        params: target : Target file. If None then read from stdin
-        params: outfile : Output file. If None then output to stdout
-        Errors go to stderr
-        """
-        if not source:
-            source = sys.argv[1]
-        source_issue = parser.IssueParser(source)
-
-        target_issue = parser.IssueParser(None, stdin=True)
-
-        source_issue.detect_new_laws()
-        target_issue.detect_new_laws()
-
-        source_law = list(source_issue.new_laws.items())[0][1]
-        target_law = list(target_issue.new_laws.items())[0][1]
-
-        source_articles = source_law.get_articles_sorted()
-        input_txt = target_law.export_law('issue')
-
-        for article in source_articles:
-            for paragraph in source_law.get_paragraphs(article):
-                try:
-                    trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(
-                        paragraph)
-                except BaseException as e:
-                    sys.stderr.write(paragraph)
-
-                for tree in trees:
-                    if tree['law']['_id'] == target_law.identifier:
-                        try:
-                            target_law.query_from_tree(tree)
-                        except BaseException as e:
-                            pass
-
-        output_txt = target_law.export_law('issue')
-
-        if outfile:
-            with open(outfile, 'w+') as f:
-                f.write(output_txt)
-        else:
-            sys.stdout.write(output_txt)
-
     def apply_all_links(self):
         """Apply all links in the codifier object"""
         sorted_keys = sorted(self.laws.keys(), key=helpers.compare_year)
