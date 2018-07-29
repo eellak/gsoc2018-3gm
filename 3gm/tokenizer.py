@@ -75,22 +75,25 @@ class Tokenizer:
 
         return q
 
-    def split_cases(self, q, ncases, suffix=')'):
+    def split_cases(self, q, ncases, suffix=')', prefix=''):
         """Split into cases provided by Greek Numerals
         e.g. α) Αλφα β) Βήτα yields ['Αλφα', 'Βήτα']
         params: q : String query
         params ncases : Number of cases
         params suffix : Suffix"""
-        cases = entities.Numerals.greek_num_generator(ncases, suffix=suffix)
+        cases = list(entities.Numerals.greek_num_generator(ncases, suffix=suffix))
+        for i in range(len(cases)):
+            cases[i] = prefix + cases[i]
+
         return self.split(q, False, *cases)
 
-    def join_cases(self, l, suffix = ')'):
-        ncases = len(l)
-        cases = entities.Numerals.greek_num_generator(ncases, suffix=suffix)
+    def join_cases(self, l, suffix = ')', prefix=''):
+        ncases = len(l) + 1
+        cases = [''] + list(entities.Numerals.greek_num_generator(ncases, suffix=suffix))
         result = []
         for c, w in zip(cases, l):
-            result.append(c + w)
-        return ' '.join(result)
+            result.append(prefix + c + w)
+        return ' '.join(result).lstrip()
 
     def remove_subordinate(self, q):
         """Remove subordinate conjuctions from a string
