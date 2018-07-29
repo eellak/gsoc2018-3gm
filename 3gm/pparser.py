@@ -818,6 +818,77 @@ class LawParser:
 
         return self.serialize()
 
+    def insert_case(
+            self,
+            case_letter,
+            content,
+            article,
+            paragraph,
+            suffix=')'):
+
+        """Insertion of a case (of arbitrary depth) in the document
+        params case_letter: The greek case letter
+        params content : Content to be inserted
+        params suffix : ending suffix
+        params article : article number
+        params paragraph : paragraph number
+        """
+
+        tmp = phrase_fun.insert_case(
+            s=self.sentences[article][paragraph],
+            case_letter=case_letter,
+            content=content,
+            suffix=suffix
+        )
+
+        return self.serialize()
+
+    def replace_case(
+        self,
+        case_letter,
+        new_content,
+        article,
+        paragraph,
+        suffix=')'):
+
+        """Replacement of a case (of arbitrary depth) in the document
+        params case_letter: The greek case letter
+        params content : Content to be inserted
+        params suffix : ending suffix
+        params article : article number
+        params paragraph : paragraph number
+        """
+
+        self.sentences[article][paragraph] = phrase_fun.replace_case(
+            s=self.sentences[article][paragraph],
+            case_letter=case_letter,
+            new_content=new_content,
+            suffix=suffix
+        )
+
+        return self.serialize()
+
+    def delete_case(
+        self,
+        case_letter,
+        article,
+        paragraph):
+
+        """Deletion of a case (of arbitrary depth) in the document
+        params case_letter: The greek case letter
+        params content : Content to be inserted
+        params suffix : ending suffix
+        params article : article number
+        params paragraph : paragraph number
+        """
+
+        self.sentences[article][paragraph] = phrase_fun.delete_case(
+            s=self.sentences[article][paragraph],
+            case_letter=case_letter,
+        )
+
+        return self.serialize()
+
     def replace_period(
             self,
             old_period,
@@ -989,8 +1060,8 @@ class LawParser:
         detected = 0
         applied = 0
         trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
-        detected = 1
         for t in trees:
+            detected = 1
             try:
                 if t['law']['_id'] == self.identifier:
                     self.query_from_tree(t)
