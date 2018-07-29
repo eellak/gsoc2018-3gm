@@ -4,7 +4,6 @@ import helpers
 from statistics import mean, stdev
 
 def apply_links(identifier):
-    global codifier.codifier
 
     law = codifier.codifier.laws[identifier]
     links = codifier.codifier.links[identifier]
@@ -65,11 +64,16 @@ def apply_links(identifier):
         print(v['_version'])
         print(v['amendee'])
 
-    detection_accurracy = 100 * detected / total
-    query_accuracy = 100 * applied / detected
+    try:
+        detection_accurracy = 100 * detected / total
+        query_accuracy = 100 * applied / detected
+    except:
+        detection_accurracy = 100
+        query_accuracy = 100
 
-    print('Detection accuracy: ' + detection_accurracy + '%')
-    print('Querying from Detection accuracy: ' + query_accuracy + '%')
+
+    print('Detection accuracy: ' + str(detection_accurracy) + '%')
+    print('Querying from Detection accuracy: ' + str(query_accuracy) + '%')
 
     return detection_accurracy, query_accuracy, final_serializable, links
 
@@ -103,3 +107,6 @@ def apply_all_links(identifiers=None):
 
     print('Mean Detection accuracy: {}%. Std: {}%'.format(mean(detection_accurracy), stdev(detection_accurracy)))
     print('Mean Query accuracy: {}%. Std: {}%'.format(mean(query_accuracy), stdev(query_accuracy)))
+
+if __name__ == '__main__':
+    apply_links('ν. 4009/2011')
