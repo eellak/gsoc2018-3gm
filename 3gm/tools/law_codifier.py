@@ -24,7 +24,6 @@ def codify_pair(source=None, target=None, outfile=None):
     # Parse issues
     if not source:
         source = sys.argv[1]
-        print(source)
     source_issue = parser.IssueParser(source)
     source_issue.detect_new_laws()
 
