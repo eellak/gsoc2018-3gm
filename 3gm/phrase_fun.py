@@ -118,7 +118,9 @@ def detect_phr_replacement(s):
 		return get_phr_content(res.group())
 
 def detect_prhase_locations(s, tree):
-	"""Detect new phrase placement location"""
+	"""Detect new phrase placement location
+	params s : Query string
+	params tree : Already constructed syntax tree"""
 	subj_before_phr = r'πριν (από |)(τη φράση|τη λέξη|τις λέξεις)[^«]«[^»]*»'
 	subj_after_phr = r'μετά (από |)(τη φράση|τη λέξη|τις λέξεις)[^«]«[^»]*»'
 
@@ -140,3 +142,63 @@ def detect_prhase_locations(s, tree):
 		tree['phrase']['old_phrase'] = ''
 
 	return tree
+
+def insert_case(s, case_letter, content, suffix=')'):
+	if not content.startswith(case_letter):
+		content = case_letter + suffix + content
+
+	return self.insert_phrase(s, content)
+
+def replace_case(s, case_letter, new_content, suffix=')'):
+	"""Replaces a case (περίπτωση, υποπερίπτωση) of arbitrary depth"""
+
+	# find depth of splitting
+	case_letter = case_letter.strip(')').strip('΄')
+	depth = len(case_letter)
+
+	prefix = case_letter[:len(case_letter) - 1]
+	case_letter = case_letter[-1]
+
+	case_numeral = entities.Numerals.GreekNum(case_letter)
+
+	# split cases
+	s = tokenizer.tokenizer.split_cases(s, case_numeral.value + 1, prefix=prefix, suffix=suffix)
+
+	# replace content
+	s[case_numeral.value] = ' ' + new_content
+
+	joined = tokenizer.tokenizer.join_cases(s, prefix=prefix)
+
+	return tokenizer.tokenizer.split(joined, False, '. ')
+
+def renumber_case(s, case_letter, new_letter, suffix=')'):
+	"""Renumbers a case of arbitrary depth"""
+
+	case_letter = ' ' + case_letter.strip(')').strip('΄') + suffix + ' '
+	new_letter = ' ' + new_leter.strip(')').strip('΄')
+	s = re.sub(case_letter, new_letter, s)
+
+	return tokenizer.tokenizer.split(s, False, '. ')
+
+def delete_case(s, case_letter):
+	"""Deletes a case of arbitrary depth
+	Performs auto-renumbering"""
+
+	# find depth of splitting
+	case_letter = case_letter.strip(')').strip('΄')
+	depth = len(case_letter)
+
+	prefix = case_letter[:len(case_letter) - 1]
+	case_letter = case_letter[-1]
+
+	case_numeral = entities.Numerals.GreekNum(case_letter)
+
+	# split cases
+	s = tokenizer.tokenizer.split_cases(s, case_numeral.value + 1, prefix=prefix)
+
+	# delete content
+	del s[case_numeral.value]
+
+	joined = tokenizer.tokenizer.join_cases(s, prefix=prefix)
+
+	return tokenizer.tokenizer.split(joined, False, '. ')
