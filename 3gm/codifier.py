@@ -313,6 +313,7 @@ class LawCodifier:
             new_laws = issue.detect_new_laws()
             print(new_laws)
             for k in new_laws.keys():
+                new_laws[k].amendee = k
                 try:
                     serializable = new_laws[k].__dict__()
                     serializable['_version'] = 0
@@ -328,8 +329,8 @@ class LawCodifier:
                             serializable
                         ]
                     })
-                except BaseException:
-                    pass
+                except BaseException as e:
+                    logging.warning(str(e))
 
     def get_law(self, identifier, export_type='latex'):
         """Get law string in LaTeX, Markdown, str, plaintext or issue-like format
