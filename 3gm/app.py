@@ -376,9 +376,9 @@ def label(label, sorting='rank'):
 
     for l in refs:
         try:
-            ranks[l] = str(round(100 * ranks[l], 5))
+            ranks[l] = ranks[l] * 100
         except:
-            ranks[l] = '0'
+            ranks[l] = 0
 
     if sorting == 'rank':
         def _rank(x):
@@ -390,6 +390,7 @@ def label(label, sorting='rank'):
         refs.sort(key=lambda x: _rank(x))
     elif sorting == 'chronological':
         helpers.quicksort(refs, helpers.compare_statutes)
+
     return render_template('label.html', **locals())
 
 
