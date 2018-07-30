@@ -818,6 +818,28 @@ class LawParser:
 
         return self.serialize()
 
+    def renumber_case(
+        self,
+        case_letter,
+        new_letter,
+        article,
+        paragraph,
+        suffix=')'):
+        """Renumbering of a case in a paragraph
+        :params case_letter : Old case letter
+        :params new_letter : New case letter
+        :params article : Article Number
+        :params paragraph : Paragraph Number
+        """
+
+        self.sentence[article][paragraph] = phrase_fun.renumber_case(
+            s=self.sentences[article][paragraph],
+            case_letter=case_letter,
+            new_letter=new_letter,
+            suffix=suffix)
+
+        return self.serialize()
+
     def insert_case(
             self,
             case_letter,
@@ -1134,25 +1156,29 @@ class LawParser:
                     content=content,
                     article=tree['article']['_id']
                 )
-            # TODO improve
             elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
+                if context in ['περίπτωση', 'περιπτώσεις']:
+                    case_letter=tree['case']['_id']
+                else:
+                    case_letter=tree['subcase']['_id']
+
                 if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
-                    return self.insert_phrase(
-                        new_phrase=content,
-                        location='append',
-                        old_phrase='',
+                    return self.insert_case(
+                        case_letter=case_letter,
+                        content=content,
                         article=tree['article']['_id'],
                         paragraph=tree['paragraph']['_id']
                     )
+
                 elif tree['root']['action'] in [
                         'αντικαθίσταται',
                         'αντικαθίστανται',
                         'τροποποιείται',
                         'τροποποιούνται']:
 
-                    return self.replace_phrase(
-                        new_phrase=content,
-                        old_phrase=tree['case']['old_case'],
+                    return self.replace_case(
+                        case_letter=case_letter,
+                        new_content=content,
                         article=tree['article']['_id'],
                         paragraph=tree['paragraph']['_id']
                     )
@@ -1192,8 +1218,18 @@ class LawParser:
                     )
 
             elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
-                # TODO
-                pass
+                if context in ['περίπτωση', 'περιπτώσεις']:
+                    case_letter=tree['case']['_id']
+                else:
+                    case_letter=tree['subcase']['_id']
+
+                return self.delete_case(
+                    case_letter=case_letter,
+                    article=tree['article']['_id'],
+                    paragraph=tree['paragraph']['_id']
+                )
+            else:
+                raise UnsupportedOperationException(tree)
 
         # Renumbering Actions
         elif tree['root']['action'] in ['αναριθμείται', 'αναριθμούνται']:
@@ -1213,9 +1249,20 @@ class LawParser:
                     tree['paragraph']['_id'],
                     tree['what']['to']
                 )
+            elif context in ['περίπτωση', 'περιπτώσεις', 'υποπεριπτώση', 'υποπεριπτώσεις']:
+                if context in ['περίπτωση', 'περιπτώσεις']:
+                    case_letter = tree['case']['_id']
+                else:
+                    case_letter = tree['subcase']['_id']
+
+                return self.renumber_case(
+                    case_letter=case_letter,
+                    article=tree['article']['_id'],
+                    paragraph=tree['paragraph']['_id'],
+                    new_letter=tree['what']['to'])
             else:
-                # Unsupported actions
-                pass
+                raise UnsupportedOperationException(tree)
+
         return self.serialize()
 
     def get_paragraph(self, article, paragraph_id):
