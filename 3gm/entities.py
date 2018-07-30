@@ -394,6 +394,10 @@ class Numerals:
             x.value = self.value * other.value
             return x
 
-if __name__ == '__main__':
-    for i in Numerals.greek_num_generator(100):
-        print(i)
+        def __floordiv__(self, other):
+            x = Numerals.GreekNum()
+            try:
+                x.value = self.value // other.value
+            except:
+                raise ValueError
+            return x
