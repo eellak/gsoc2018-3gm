@@ -20,6 +20,7 @@ from networkx import (
     pagerank
 )
 
+
 class UnrecognizedCodificationAction(Exception):
     """Exception class which is raised when the
     codification action is not well-formed.
@@ -64,7 +65,7 @@ class Link:
             '_id': self.name,
             'links_to': list(self.links_to),
             'actual_links': self.actual_links,
-            'is_sorted' : self.is_sorted
+            'is_sorted': self.is_sorted
         }
 
     def organize_by_text(self):
@@ -131,7 +132,7 @@ class Link:
         l.actual_links = s['actual_links']
         try:
             l.is_sorted = int(s['is_sorted'])
-        except:
+        except BaseException:
             l.is_sorted = 0
         return l
 
@@ -317,8 +318,9 @@ class LawCodifier:
                     serializable['_version'] = 0
                     serializable['amendee'] = k
                     try:
-                        serializable['issue'] = helpers.parse_filename(issue.filename)
-                    except:
+                        serializable['issue'] = helpers.parse_filename(
+                            issue.filename)
+                    except BaseException:
                         pass
                     self.db.laws.save({
                         '_id': new_laws[k].identifier,
@@ -362,7 +364,12 @@ class LawCodifier:
     def export_law(self, identifier, outfile, export_type='markdown'):
         """Export a law in markdown or LaTeX"""
 
-        if export_type not in ['latex', 'markdown', 'str', 'plaintext', 'issue']:
+        if export_type not in [
+            'latex',
+            'markdown',
+            'str',
+            'plaintext',
+                'issue']:
             raise Exception('Unrecognized export type')
 
         result = self.get_law(identifier, export_type=export_type)
@@ -518,7 +525,8 @@ class LawCodifier:
         edges = []
         for u, link in self.links.items():
             for v in link:
-                if not link_type or (link_type and v['link_type'] == link_type):
+                if not link_type or (
+                        link_type and v['link_type'] == link_type):
                     edge = (u, v['from'])
                     edges.append(edge)
 
@@ -532,7 +540,17 @@ class LawCodifier:
         self.ranks = pagerank(self.graph, alpha=0.9)
         return self.ranks
 
-def build(start=1998, end=2018, data_dir='../data/', pipeline=['laws', 'links', 'topics', 'versions'], drop=True):
+
+def build(
+        start=1998,
+        end=2018,
+        data_dir='../data/',
+        pipeline=[
+            'laws',
+            'links',
+            'topics',
+            'versions'],
+        drop=True):
     """Build codifier object
     :params start : Start year
     :params end : End year
@@ -558,18 +576,18 @@ def build(start=1998, end=2018, data_dir='../data/', pipeline=['laws', 'links', 
 
     # Build Lookup
     build_lookup = {
-        'laws' : cod.codify_new_laws,
-        'links' : cod.create_law_links,
-        'topics' : topic_models.build_topics,
-        'versions' : apply_links.apply_all_links
+        'laws': cod.codify_new_laws,
+        'links': cod.create_law_links,
+        'topics': topic_models.build_topics,
+        'versions': apply_links.apply_all_links
     }
 
     # Drop Lookup
     drop_lookup = {
-        'laws' : cod.db.drop_laws,
-        'links' : cod.db.drop_links,
-        'topics' : cod.db.drop_topics,
-        'versions' : cod.db.rollback_all
+        'laws': cod.db.drop_laws,
+        'links': cod.db.drop_links,
+        'topics': cod.db.drop_topics,
+        'versions': cod.db.rollback_all
     }
 
     # Apply stages
@@ -580,6 +598,7 @@ def build(start=1998, end=2018, data_dir='../data/', pipeline=['laws', 'links', 
         build_lookup[stage]()
 
     return cod
+
 
 # Codifier object
 codifier = LawCodifier()

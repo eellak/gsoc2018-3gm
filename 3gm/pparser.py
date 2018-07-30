@@ -395,7 +395,7 @@ class IssueParser:
                     try:
                         year, month, day = str(self.issue_date).split('-')
                     except BaseException:
-                        if self.filename != None:
+                        if self.filename is not None:
                             year = self.filename.split('/')[-1][:4]
                         else:
                             year = 2011
@@ -410,7 +410,11 @@ class IssueParser:
 
                     identifier = '{} {}/{}'.format(abbreviation,
                                                    result[-1], year)
-                    logging.info('Issue: ' + self.name + 'Identifier: ' + identifier)
+                    logging.info(
+                        'Issue: ' +
+                        self.name +
+                        'Identifier: ' +
+                        identifier)
 
                     ignore = True
 
@@ -662,7 +666,7 @@ class LawParser:
             'lemmas': self.lemmas,
             'titles': self.titles,
             'articles': self.sentences,
-            'amendee' : self.amendee
+            'amendee': self.amendee
         }
 
     @staticmethod
@@ -676,7 +680,7 @@ class LawParser:
         law.amendee = x['amendee']
         try:
             law.issue = x['issue']
-        except:
+        except BaseException:
             law.issue = ''
         return law, identifier
 
@@ -726,19 +730,19 @@ class LawParser:
         article = str(article)
         try:
             del self.sentences[article]
-        except:
+        except BaseException:
             logging.warning('Could not find sentences')
         try:
             del self.corpus[article]
-        except:
+        except BaseException:
             logging.warning('Could not find corpus')
         try:
             del self.lemmas[article]
-        except:
+        except BaseException:
             logging.warning('Could not find lemmas')
         try:
             del self.titles[article]
-        except:
+        except BaseException:
             logging.warning('Could not find titles')
 
         return self.serialize()
@@ -758,7 +762,8 @@ class LawParser:
 
         # add in its full form or split into periods
         self.articles[article][paragraph] = content
-        self.sentences[article][paragraph] = tokenizer.tokenizer.split(content, False, '. ')
+        self.sentences[article][paragraph] = tokenizer.tokenizer.split(
+            content, False, '. ')
 
         return self.serialize()
 
@@ -770,7 +775,7 @@ class LawParser:
 
         try:
             del self.sentences[article][paragraph]
-        except:
+        except BaseException:
             pass
 
         return self.serialize()
@@ -819,12 +824,12 @@ class LawParser:
         return self.serialize()
 
     def renumber_case(
-        self,
-        case_letter,
-        new_letter,
-        article,
-        paragraph,
-        suffix=')'):
+            self,
+            case_letter,
+            new_letter,
+            article,
+            paragraph,
+            suffix=')'):
         """Renumbering of a case in a paragraph
         :params case_letter : Old case letter
         :params new_letter : New case letter
@@ -847,7 +852,6 @@ class LawParser:
             article,
             paragraph,
             suffix=')'):
-
         """Insertion of a case (of arbitrary depth) in the document
         params case_letter: The greek case letter
         params content : Content to be inserted
@@ -866,13 +870,12 @@ class LawParser:
         return self.serialize()
 
     def replace_case(
-        self,
-        case_letter,
-        new_content,
-        article,
-        paragraph,
-        suffix=')'):
-
+            self,
+            case_letter,
+            new_content,
+            article,
+            paragraph,
+            suffix=')'):
         """Replacement of a case (of arbitrary depth) in the document
         params case_letter: The greek case letter
         params content : Content to be inserted
@@ -891,11 +894,10 @@ class LawParser:
         return self.serialize()
 
     def delete_case(
-        self,
-        case_letter,
-        article,
-        paragraph):
-
+            self,
+            case_letter,
+            article,
+            paragraph):
         """Deletion of a case (of arbitrary depth) in the document
         params case_letter: The greek case letter
         params content : Content to be inserted
@@ -919,7 +921,7 @@ class LawParser:
             article=None,
             paragraph=None):
         """Replacement of a period with new content"""
-        if position == None:
+        if position is None:
             search_all = (article is None)
 
             if article:
@@ -937,7 +939,8 @@ class LawParser:
                     delegate_paragraphs = self.sentences[article].keys()
 
                 for paragraph in delegate_paragraphs:
-                    for i, period in enumerate(self.sentences[article][paragraph]):
+                    for i, period in enumerate(
+                            self.sentences[article][paragraph]):
                         if old_period == period:
                             self.sentences[article][paragraph][i] = new_period
         else:
@@ -946,12 +949,17 @@ class LawParser:
 
         return self.serialize()
 
-    def remove_period(self, old_period, position=None, article=None, paragraph=None):
+    def remove_period(
+            self,
+            old_period,
+            position=None,
+            article=None,
+            paragraph=None):
         """Removal of period"""
 
         search_all = (article is None)
 
-        if position == None:
+        if position is None:
             if article:
                 delegate_articles = [str(article)]
 
@@ -967,7 +975,8 @@ class LawParser:
                     delegate_paragraphs = self.sentences[article].keys()
 
                 for paragraph in delegate_paragraphs:
-                    for i, period in enumerate(self.sentences[article][paragraph]):
+                    for i, period in enumerate(
+                            self.sentences[article][paragraph]):
                         if old_period == period or old_period == period[:-1]:
                             del self.sentences[article][paragraph][i]
                             return self.serialize()
@@ -985,7 +994,14 @@ class LawParser:
             paragraph=None):
         """Insertion of period relative to another period"""
 
-        assert(position in ['start', 'end', 'before', 'after'] or isinstance(position, int))
+        assert(
+            position in [
+                'start',
+                'end',
+                'before',
+                'after'] or isinstance(
+                position,
+                int))
 
         if position in ['start', 'end']:
             assert(article and paragraph)
@@ -1017,7 +1033,8 @@ class LawParser:
                     delegate_paragraphs = self.sentences[article].keys()
 
                 for paragraph in delegate_paragraphs:
-                    for i, period in enumerate(self.sentences[article][paragraph]):
+                    for i, period in enumerate(
+                            self.sentences[article][paragraph]):
                         if period == old_period or old_period == period[:-1]:
                             if position == 'before':
                                 self.sentences[article][paragraph].insert(
@@ -1070,7 +1087,8 @@ class LawParser:
     def renumber_paragraph(self, article, old_id, new_id):
         """Renumber paragraph to new id"""
         assert(article)
-        self.sentences[article][new_id] = copy.copy(self.sentences[article][old_id])
+        self.sentences[article][new_id] = copy.copy(
+            self.sentences[article][old_id])
         del self.sentences[article][old_id]
         return self.serialize()
 
@@ -1088,7 +1106,7 @@ class LawParser:
                 if t['law']['_id'] == self.identifier:
                     self.query_from_tree(t)
                     applied = 1
-            except:
+            except BaseException:
                 if throw_exceptions:
                     raise UnrecognizedAmendmentException(t)
         return detected, applied
@@ -1101,7 +1119,7 @@ class LawParser:
         if tree['root']['action'] in [
             'προστίθεται', 'προστίθενται',
             'αντικαθίσταται', 'αντικαθίστανται',
-            'τροποποιείται', 'τροποποιούνται']:
+                'τροποποιείται', 'τροποποιούνται']:
 
             try:
                 content = tree['what']['content']
@@ -1123,18 +1141,18 @@ class LawParser:
             elif context in ['εδάφιο', 'εδάφια']:
                 if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
                     return self.insert_period(
-                            position=int(tree['period']['_id']) - 1,
-                            old_period='',
-                            new_period=content,
-                            article=tree['article']['_id'],
-                            paragraph=tree['paragraph']['_id'])
+                        position=int(tree['period']['_id']) - 1,
+                        old_period='',
+                        new_period=content,
+                        article=tree['article']['_id'],
+                        paragraph=tree['paragraph']['_id'])
                 elif tree['root']['action'] in ['αντικαθίσταται', 'αντικαθίστανται', 'τροποποιείται', 'τροποποιούνται']:
                     return self.replace_period(
-                            old_period='',
-                            new_period=content,
-                            position=int(tree['period']['_id']) - 1,
-                            article=tree['article']['_id'],
-                            paragraph=tree['paragraph']['_id'])
+                        old_period='',
+                        new_period=content,
+                        position=int(tree['period']['_id']) - 1,
+                        article=tree['article']['_id'],
+                        paragraph=tree['paragraph']['_id'])
             elif context in ['φράση', 'φράσεις']:
                 if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
                     return self.insert_phrase(
@@ -1158,9 +1176,9 @@ class LawParser:
                 )
             elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
                 if context in ['περίπτωση', 'περιπτώσεις']:
-                    case_letter=tree['case']['_id']
+                    case_letter = tree['case']['_id']
                 else:
-                    case_letter=tree['subcase']['_id']
+                    case_letter = tree['subcase']['_id']
 
                 if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
                     return self.insert_case(
@@ -1186,7 +1204,7 @@ class LawParser:
         # Deleting Actions
         elif tree['root']['action'] in [
             'διαγράφεται', 'διαγράφονται',
-            'καταργείται', 'καταργούνται' ]:
+                'καταργείται', 'καταργούνται']:
 
             try:
                 context = tree['what']['context']
@@ -1211,17 +1229,17 @@ class LawParser:
                         paragraph=tree['paragraph']['_id']
                     )
             elif context in ['φράση', 'φράσεις', 'λέξη', 'λέξεις']:
-                    return self.remove_phrase(
-                        old_phrase=tree['phrase']['old_phrase'],
-                        article=tree['article']['_id'],
-                        paragraph=tree['paragraph']['_id']
-                    )
+                return self.remove_phrase(
+                    old_phrase=tree['phrase']['old_phrase'],
+                    article=tree['article']['_id'],
+                    paragraph=tree['paragraph']['_id']
+                )
 
             elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
                 if context in ['περίπτωση', 'περιπτώσεις']:
-                    case_letter=tree['case']['_id']
+                    case_letter = tree['case']['_id']
                 else:
-                    case_letter=tree['subcase']['_id']
+                    case_letter = tree['subcase']['_id']
 
                 return self.delete_case(
                     case_letter=case_letter,
@@ -1278,7 +1296,9 @@ class LawParser:
         """
 
         article = str(article)
-        for paragraph_id in sorted(self.sentences[article].keys(), key=lambda x: int(x)):
+        for paragraph_id in sorted(
+                self.sentences[article].keys(),
+                key=lambda x: int(x)):
             yield self.get_paragraph(article, paragraph_id)
 
     def get_articles_sorted(self):
@@ -1330,7 +1350,7 @@ class LawParser:
                 result = result + 'Άρθρο {} \n'.format(article)
                 for i, paragraph in enumerate(self.get_paragraphs(article)):
                     result = result + \
-                        ' {}. {}\n'.format(i+1, paragraph)
+                        ' {}. {}\n'.format(i + 1, paragraph)
 
         elif export_type == 'issue':
             abbreviations = {
@@ -1372,7 +1392,6 @@ class LawParser:
         for k in sorted_links_keys:
             links_groups.append(links_hash[k])
 
-
         initial = self.serialize()
         initial['_version'] = self.version_index
 
@@ -1401,17 +1420,24 @@ class LawParser:
         return final_serializable, links_hash, links
 
     def prune_title(self, article):
-        self.titles[article] = re.sub('Άρθρο \d+', '', self.titles[article]).lstrip()
+        self.titles[article] = re.sub(
+            'Άρθρο \d+', '', self.titles[article]).lstrip()
         return self.titles[article]
 
     def prune_titles(self):
         for title in self.titles:
             self.prune_title(title)
 
+
 class UnsupportedOperationException(Exception):
     def __init__(self, tree):
-        super().__init__('Uncategorized operation on\n', json.dumps(tree, ensure_ascii=False))
+        super().__init__(
+            'Uncategorized operation on\n', json.dumps(
+                tree, ensure_ascii=False))
+
 
 class UnrecognizedAmendmentException(Exception):
     def __init__(self, tree):
-        super().__init__('Uncategorized amendment on\n', json.dumps(tree, ensure_ascii=False))
+        super().__init__(
+            'Uncategorized amendment on\n', json.dumps(
+                tree, ensure_ascii=False))

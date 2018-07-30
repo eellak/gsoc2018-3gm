@@ -14,6 +14,7 @@ import syntax
 logger = logging.getLogger()
 logger.disabled = True
 
+
 def codify_pair(source=None, target=None, outfile=None):
     """Codify a pair of issues. Used at the CLI tool
     params: source : Source file. If None then read from stdin
@@ -41,9 +42,9 @@ def codify_pair(source=None, target=None, outfile=None):
         for paragraph in source_law.get_paragraphs(article):
             try:
                 target_law.apply_amendment(paragraph)
-            except:
+            except BaseException:
                 # If failing write to stderr
-                #sys.stderr.write(paragraph)
+                # sys.stderr.write(paragraph)
                 pass
 
     # Write initial version to stdout in pretty format
@@ -52,6 +53,7 @@ def codify_pair(source=None, target=None, outfile=None):
 
     # Write formatted output to stdout
     sys.stdout.write(target_law.export_law('issue'))
+
 
 if __name__ == '__main__':
     codify_pair()

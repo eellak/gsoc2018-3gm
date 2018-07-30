@@ -12,6 +12,6 @@ for i, l in issue.new_laws.items():
     try:
         result = l.export_law(export_type)
         sys.stdout.write(result)
-    except:
+    except BaseException:
         sys.stderr.write('Error in exporting')
 sys.stdout.flush()

@@ -3,12 +3,11 @@ import syntax
 import helpers
 from statistics import mean, stdev
 
+
 def apply_links(identifier):
 
     law = codifier.codifier.laws[identifier]
-    links = codifier.codifier.links[identifier]
-
-    links.sort()
+    links = sorted(codifier.codifier.links[identifier])
 
     initial = law.serialize()
     initial['_version'] = 0
@@ -39,7 +38,7 @@ def apply_links(identifier):
 
                     # Update link status
                     links.actual_links[i]['status'] = 'εφαρμοσμένος'
-                except:
+                except BaseException:
                     pass
 
         else:
@@ -56,7 +55,7 @@ def apply_links(identifier):
 
     # JSON holding all versions to be stored to GridFS
     final_serializable = {
-        '_id': 'ν. 4009/2011',
+        '_id': identifier,
         'versions': versions
     }
 
@@ -64,34 +63,33 @@ def apply_links(identifier):
         print(v['_version'])
         print(v['amendee'])
 
-    try:
-        detection_accurracy = 100 * detected / total
-        query_accuracy = 100 * applied / detected
-    except:
-        detection_accurracy = 100
-        query_accuracy = 100
-
+    detection_accurracy = 100 * detected / total
+    query_accuracy = 100 * applied / detected
 
     print('Detection accuracy: ' + str(detection_accurracy) + '%')
     print('Querying from Detection accuracy: ' + str(query_accuracy) + '%')
 
     return detection_accurracy, query_accuracy, final_serializable, links
 
+
 def apply_all_links(identifiers=None):
     """Apply all links in the codifier object"""
-    if identifiers == None:
+    if identifiers is None:
         codifier_keys = list(codifier.codifier.laws.keys())
-        sorted_keys = helpers.quicksort(codifier_keys, key=helpers.compare_year)
+        sorted_keys = helpers.quicksort(
+            codifier_keys, key=helpers.compare_year)
     else:
         sorted_keys = helpers.quicksort(identifiers, helpers.compare_statutes)
-
 
     detection_accurracy = []
     query_accuracy = []
 
     for identifier in sorted_keys:
 
-        d, q, final_serializable, links = apply_links(identifier)
+        try:
+            d, q, final_serializable, links = apply_links(identifier)
+        except KeyError:
+            continue
 
         # Update links
         codifier.codifier.links[identifier] = links
@@ -104,9 +102,11 @@ def apply_all_links(identifiers=None):
         detection_accurracy.append(d)
         query_accuracy.append(q)
 
+    print('Mean Detection accuracy: {}%. Std: {}%'.format(
+        mean(detection_accurracy), stdev(detection_accurracy)))
+    print('Mean Query accuracy: {}%. Std: {}%'.format(
+        mean(query_accuracy), stdev(query_accuracy)))
 
-    print('Mean Detection accuracy: {}%. Std: {}%'.format(mean(detection_accurracy), stdev(detection_accurracy)))
-    print('Mean Query accuracy: {}%. Std: {}%'.format(mean(query_accuracy), stdev(query_accuracy)))
 
 if __name__ == '__main__':
     apply_links('ν. 4009/2011')
