@@ -89,21 +89,21 @@ install_nlp_tools:
 	cd ..
 	rm -rf nlp_tools
 
-run_web_application_debug:
+run_web_application:
 	echo "Running web application"
 	cd 3gm/
 	pkill flask
 	./run.sh
 	cd ..
 
-build_codifier_pipeline:
+codifier_pipeline:
 	echo "Building codifier full pipeline"
 	python3 build_pipeline.py laws links topics versions
 
 run_codifier_tests:
 	echo "Running codifier tests"
 	cd 3gm/
-	pytest tests.py -v
+	pytest tests.py -vv
 	cd ..
 
 symlink_tools:
