@@ -65,7 +65,7 @@ class HistoryResource(Resource):
         global codifier
         _id = '{} {}/{}'.format(statute_type, identifier, year)
         return json.dumps(
-                next(codifier.db.get_json_from_fs(_id)),
+                codifier.db.get_json_from_fs(_id),
                 ensure_ascii=False
                 )
 
@@ -250,9 +250,6 @@ def history():
     global codifier
     identifier = request.args.get('identifier')
     history, links = codifier.get_history(identifier)
-
-    if links:
-        links = links.organize_by_text()
 
     # Get as markdown
     for x in history:
