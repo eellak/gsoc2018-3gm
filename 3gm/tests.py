@@ -10,7 +10,9 @@ import re
 from copy import deepcopy
 import phrase_fun
 import codifier
-
+import logging
+logger = logging.getLogger()
+logger.disabled = True
 
 global db
 db = database.Database()
@@ -141,22 +143,39 @@ def test_codifier():
 
 	print(law.sentences['1']['3'])
 	s = 'Στην παράγραφο 3 του άρθρου 1 η φράση «Lorem» αντικαθίσταται από τη φράση «Lorem Lorem»'
-	law.apply_amendment(s)
+
+	tree = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+
+	for t in tree:
+		law.query_from_tree(t)
+
+
 	assert(law.sentences['1']['3'] == ['Lorem Lorem Ipsum '])
 
-
 	s = 'Στην παράγραφο 3 του άρθρου 1 μετά τη φράση «Ipsum» προστίθεται η φράση «Amet»'
-	law.apply_amendment(s)
+	tree = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+
+	for t in tree:
+		law.query_from_tree(t)
+
 	assert(law.sentences['1']['3'] == ['Lorem Lorem Ipsum Amet '])
 
 
 	s = 'Στην παράγραφο 3 του άρθρου 1 διαγράφεται η φράση «Ipsum Amet»'
-	law.apply_amendment(s)
+	tree = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+
+	for t in tree:
+		law.query_from_tree(t)
+
 	assert(law.sentences['1']['3'] == ['Lorem Lorem  '])
 
 	k = len(law.sentences['1']['5'])
 	s = 'Στην παράγραφο 5 του άρθρου 1 διαγράφεται το εδάφιο 1 .'
-	law.apply_amendment(s)
+	tree = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+
+	for t in tree:
+		law.query_from_tree(t)
+
 	assert(len(law.sentences['1']['5']) < k)
 	print(law.sentences['1']['5'])
 
@@ -165,18 +184,29 @@ def test_codifier():
 	print(law.sentences['1']['5'])
 
 	s = 'Στο ν. 4511/2018 προστίθεται άρθρο 15 ως εξής: « 1. This is a paragraph 2. This is another paragraph»'
-	law.apply_amendment(s)
+	tree = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+
+	for t in tree:
+		law.query_from_tree(t)
+
 	assert(law.sentences['15'])
 
 	s = 'Στην παράγραφο 1 του άρθρου 15 ν. 4511/2018 προστίθεται δεύτερο εδάφιο ως εξής «This is a period being added»'
-	trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
-	law.apply_amendment(s)
+
+	tree = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+
+	for t in tree:
+		law.query_from_tree(t)
 
 	assert(law.sentences['15']['1'][1] == 'This is a period being added')
 
 	s = 'Στην παράγραφο 1 του άρθρου 15 ν. 4511/2018 το πρώτο εδάφιο αντικαθίσταται ως εξής «This is a period being replaced»'
-	trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
-	law.apply_amendment(s)
+
+	tree = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+
+	for t in tree:
+		law.query_from_tree(t)
+
 
 	assert(law.sentences['15']['1'][0] == 'This is a period being replaced')
 
@@ -187,3 +217,7 @@ def test_codifier():
 		law.query_from_tree(t)
 
 	assert('15' not in law.sentences.keys())
+
+
+if __name__ == '__main__':
+	test_codifier()
