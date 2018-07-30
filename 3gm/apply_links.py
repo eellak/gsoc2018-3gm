@@ -64,13 +64,13 @@ def apply_links(identifier):
         print(v['_version'])
         print(v['amendee'])
 
-    detection_accurracy = 100 * detected / total
-    query_accuracy = 100 * applied / detected
+    # detection_accurracy = 100 * detected / total
+    # query_accuracy = 100 * applied / detected
 
-    print('Detection accuracy: ' + str(detection_accurracy) + '%')
-    print('Querying from Detection accuracy: ' + str(query_accuracy) + '%')
+    # print('Detection accuracy: ' + str(detection_accurracy) + '%')
+    # print('Querying from Detection accuracy: ' + str(query_accuracy) + '%')
 
-    return detection_accurracy, query_accuracy, final_serializable, links
+    return 0, 0, final_serializable, links
 
 
 def apply_all_links(identifiers=None):
