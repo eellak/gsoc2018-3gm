@@ -187,11 +187,21 @@ class IssueParser:
 
     def find_dates(self):
         """Detect all dates withing the given document"""
+        year_regex = r'([1-2][0-9][0-9][0-9])'
+        now = datetime.now()
 
         for i, line in enumerate(self.lines):
             result = date_regex.findall(line)
             if result != []:
                 self.dates.append((i, result))
+
+        for line in self.lines:
+            res = re.search(year_regex, line)
+            if res:
+                result = int(res.group())
+                if 1976 <= result <= now.year:
+                    self.year = result
+                    break
 
         if self.dates == []:
             logging.warning('Could not find dates!')
@@ -392,13 +402,7 @@ class IssueParser:
                 result = re.search(new_law_regex, line + self.lines[i + 1])
                 if result:
                     result = result.group().rstrip().split(' ')
-                    try:
-                        year, month, day = str(self.issue_date).split('-')
-                    except BaseException:
-                        if self.filename is not None:
-                            year = self.filename.split('/')[-1][:4]
-                        else:
-                            year = 2011
+
                     abbreviation = 'ν.'
 
                     if result[0] == 'ΠΡΟΕΔΡΙΚΟ':
@@ -409,7 +413,7 @@ class IssueParser:
                         abbreviation = 'ν.δ.'
 
                     identifier = '{} {}/{}'.format(abbreviation,
-                                                   result[-1], year)
+                                                   result[-1], self.year)
                     logging.info(
                         'Issue: ' +
                         self.name +

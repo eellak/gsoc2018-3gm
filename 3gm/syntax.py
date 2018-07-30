@@ -183,12 +183,17 @@ class ActionTreeGenerator:
                             'διαγράφεται',
                             'διαγράφονται',
                             'αναριθμείται',
-                                'αναριθμούνται']:
+                            'αναριθμούνται']:
                             tree, max_depth = ActionTreeGenerator.get_content(
                                 tree, extract, s)
+                        if action in ['αναριθμείται', 'αναριθμούνται']:
+                            # get renumbering
+                            tree = ActionTreeGenerator.get_renumbering(tree, doc)
+                            subtrees = ActionTreeGenerator.split_renumbering_tree(tree)
 
                         # split to subtrees
-                        subtrees = ActionTreeGenerator.split_tree(tree)
+                        if action not in ['αναριθμείται', 'αναριθμούνται']:
+                            subtrees = ActionTreeGenerator.split_tree(tree)
 
                         # iterate over subtrees
                         for subtree in subtrees:
@@ -335,13 +340,24 @@ class ActionTreeGenerator:
         return result
 
     @staticmethod
+    def split_renumbering_tree(tree):
+        results = []
+        for x, y in zip(tree['what']['number'], tree['what']['to']):
+            r = copy.copy(tree)
+            r['what']['number'] = x
+            r['what']['to'] = y
+            results.append(r)
+
+        return results
+
+    @staticmethod
     def split_tree(tree):
 
         try:
             idx_list = tree['what']['number']
             extract = tree['what']['content']
             what = tree['what']['context']
-        except BaseException:
+        except BaseException as e:
             tree['what']['number'] = tree['what']['number'][0]
             return [tree]
 
@@ -357,9 +373,22 @@ class ActionTreeGenerator:
                 tmp = copy.deepcopy(tree)
                 tmp['what']['number'] = idx
                 tmp['what']['content'] = s
+
                 result.append(tmp)
 
         return result
+
+    @staticmethod
+    def get_renumbering(tree, doc):
+        start = tree['root']['_id']
+        is_plural = helpers.is_plural(tree['what']['context'])
+
+        for i in range(start, len(doc)):
+            if doc[i].text == 'σε':
+                tree['what']['to'] = list(helpers.ssconj_doc_iterator(doc, i, is_plural))
+                break
+
+        return tree
 
     @staticmethod
     def get_content(tree, extract, s, secondary=False):
@@ -437,29 +466,3 @@ class ActionTreeGenerator:
                 tmp, subtree, i + 2, stem)
 
         return subtree
-
-    @staticmethod
-    def phrase_analyze(s):
-        s = tokenizer.tokenizer.remove_subordinate(s)
-        parts = s.split(' ')
-        phrase_regex = r'φράση «[^»]*»'
-
-        tree = collections.defaultdict(dict)
-        for i, p in enumerate(parts):
-            for action in entities.actions:
-                if action == p:
-                    break
-
-        for i, p in enumerate(parts):
-            for what_stem in what_stems:
-                if re.search(what_stem, p):
-                    is_plural = helpers.is_plural(p)
-                    it = helpers.ssconj_doc_iterator(
-                        parts, i, is_plural=is_plural)
-                    lookup = ActionTreeGenerator.trans_lookup[what_stem]
-                    tree[lookup]['_id'] = next(it)
-
-        for x in re.finditer(phrase_regex, s):
-            print(helpers.get_extracts(x.group(), min_words=0))
-
-        law = ActionTreeGenerator.detect_latest_statute(s)
