@@ -204,23 +204,20 @@ class LawCodifier:
 
         history = []
 
-        cursor = self.db.laws.find({
-            "_id": law,
-            "versions": {"$ne": None}
-        })
-        for x in cursor:
+        x = self.db.get_json_from_fs(_id = law)
 
-            for v in x['versions']:
-                current_version = int(v['_version'])
-                current_instance = v
-                instance, identifier = parser.LawParser.from_serialized(v)
-                instance.version_index = current_version
-                history.append(instance)
+        for v in x['versions']:
+            current_version = int(v['_version'])
+            current_instance = v
+            instance, identifier = parser.LawParser.from_serialized(v)
+            instance.version_index = current_version
+            history.append(instance)
 
         try:
-            history_links = sorted(self.links[law])
+            self.links[law].sort()
+            history_links = self.links[law].organize_by_text()
         except BaseException:
-            history_links = {}
+            history_links = []
 
         return history, history_links
 
