@@ -3,12 +3,33 @@
 
 <h1>Νομοθετήματα με την ετικέτα {{ [label] | render_badges_single('dark') | safe }}</h1>
 
+<p class="sparse">Κατάταξη αποτελεσμάτων με βάση τη
+<strong>
+{% if sorting == 'rank' %}
+σημαντικότητα
+{% elif sorting == 'chronological' %}
+χρονολογία
+{% endif %}
+</strong>
+</p>
+
+<p class="sparse">Κατάταξη με βάση
+{% if sorting != 'rank' %}
+<a href="{{ url_for('label', label=label, sorting='rank') }}">σημαντικότητα
+{% elif sorting != 'chronological' %}
+<a href="{{ url_for('label', label=label, sorting='chronological') }}">χρονολογία
+{% endif %}
+</a>
+</p>
+
+
+
 {% if refs == [] %}
 <p>Δεν βρέθηκαν νομοθετήματα για αυτή την ετικέτα</p>
 {% endif %}
 <ol>
   {% for ref in refs %}
-  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a></li>
+  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a> Σημαντικότητα: {{ [ranks[ref] + ' %'] | render_badges_single('secondary', False) | safe }}</li>
   {% endfor %}
 </ol>
 

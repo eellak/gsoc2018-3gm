@@ -2,12 +2,14 @@ import codifier
 import syntax
 import helpers
 from statistics import mean, stdev
-
+import logging
+logger = logging.getLogger()
+logger.disabled = True
 
 def apply_links(identifier):
 
     law = codifier.codifier.laws[identifier]
-    links = codifier.codifier.links[identifiegr]
+    links = codifier.codifier.links[identifier]
     links.sort()
 
     initial = law.serialize()
@@ -60,17 +62,17 @@ def apply_links(identifier):
         'versions': versions
     }
 
-    for v in final_serializable['versions']:
-        print(v['_version'])
-        print(v['amendee'])
+    try:
+        detection_accurracy = 100 * detected / total
+        query_accuracy = 100 * applied / detected
+    except:
+        detection_accurracy = 100
+        query_accuracy = 100
 
-    # detection_accurracy = 100 * detected / total
-    # query_accuracy = 100 * applied / detected
+    print('Detection accuracy: ' + str(detection_accurracy) + '%')
+    print('Querying from Detection accuracy: ' + str(query_accuracy) + '%')
 
-    # print('Detection accuracy: ' + str(detection_accurracy) + '%')
-    # print('Querying from Detection accuracy: ' + str(query_accuracy) + '%')
-
-    return 0, 0, final_serializable, links
+    return detection_accurracy, query_accuracy, final_serializable, links
 
 
 def apply_all_links(identifiers=None):
@@ -87,23 +89,25 @@ def apply_all_links(identifiers=None):
 
         try:
             d, q, final_serializable, links = apply_links(identifier)
+            # Update links
+            codifier.codifier.links[identifier] = links
+            codifier.codifier.db.links.save(links.serialize())
+
+            # Update accuracy metrics
+            detection_accurracy.append(d)
+            query_accuracy.append(q)
         except KeyError:
-            continue
+            initial = codifier.codifier.laws[identifier].serialize()
+            final_serializable = {
+                '_id' : identifier,
+                'versions' : [initial]
+            }
+        finally:
+            # Store to fs
+            codifier.codifier.db.save_json_to_fs(identifier, final_serializable)
+            print('Complete {}/{} {}%'.format(i + 1, total, (i + 1) / total * 100))
 
-        # Update links
-        codifier.codifier.links[identifier] = links
-        codifier.codifier.db.links.save(links.serialize())
-
-        # Store to fs
-        codifier.codifier.db.save_json_to_fs(identifier, final_serializable)
-
-        # Update accuracy metrics
-        detection_accurracy.append(d)
-        query_accuracy.append(q)
-
-        print('Complete {}/{} {}%'.format(i, total, i / total * 100))
-
-    if total >= 2:
+    if len(detection_accurracy) >= 2:
         print('Mean Detection accuracy: {}%. Std: {}%'.format(
             mean(detection_accurracy), stdev(detection_accurracy)))
         print('Mean Query accuracy: {}%. Std: {}%'.format(
@@ -111,7 +115,4 @@ def apply_all_links(identifiers=None):
 
 
 if __name__ == '__main__':
-    apply_all_links(['ν. 4009/2011'])
-
-    f = codifier.codifier.db.get_json_from_fs(_id='ν. 4009/2011')
-    print(len(f['versions']))
+    apply_all_links(['ν. 4009/2011', 'ν. 4547/2018', 'ν. 4548/2018'])

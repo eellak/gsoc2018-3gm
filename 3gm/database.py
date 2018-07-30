@@ -172,11 +172,5 @@ class Database:
 
     def get_json_from_fs(self, _id=None):
         """Get json from GridFS"""
-        if _id:
-            dump = self.fs.find_one({'_id' : _id})
-            return json.loads(dump.read().decode('utf-8'))
-        else:
-            cur = self.fs.find()
-            for x in cur:
-                yield self.get_json_from_fs(_id=x._id)
-            return
+        dump = self.fs.find_one({'_id' : _id})
+        return json.loads(dump.read().decode('utf-8'))

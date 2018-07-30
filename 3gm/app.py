@@ -19,6 +19,7 @@ import collections
 import gensim.models as g
 import logging
 import pprint
+import copy
 logger = logging.getLogger()
 logger.disabled = True
 
@@ -149,7 +150,7 @@ def codify_law(identifier=None):
         if identifier not in autocomplete_laws:
             doc = nlp(identifier)
             identifier = doc[0].lemma_
-            return redirect('/label/{}'.format(identifier))
+            return redirect('/label/{}/rank'.format(identifier))
     elif request.method == 'GET':
         identifier = request.args.get('identifier')
         data = {'law': identifier}
@@ -316,9 +317,13 @@ def render_badges(l):
 def render_badges_single(l, color='light', label_url=True):
     result = ''
     for x in l:
-        url = url_for('label', label=x)
-        result = result + \
-            '<span class="badge badge-{}"><a class="no-linter" href="{}">{}</a></span> '.format(color, url, x)
+        if label_url:
+            url = url_for('label', label=x, sorting='rank')
+            result = result + \
+                '<span class="badge badge-{}"><a class="no-linter" href="{}">{}</a></span> '.format(color, url, x)
+        else:
+            result = result + \
+                '<span class="badge badge-{}">{}</span> '.format(color, x)
     return result
 
 @app.template_filter('render_badges_from_tree')
@@ -354,8 +359,8 @@ def render_links(content):
     return ''.join(splitted)
 
 
-@app.route('/label/<label>')
-def label(label):
+@app.route('/label/<label>/<sorting>')
+def label(label, sorting='rank'):
 
     topics = codifier.db.topics.find({
         'keywords': label
@@ -365,7 +370,26 @@ def label(label):
     for t in topics:
         refs.extend(t['statutes'])
 
-    helpers.quicksort(refs, helpers.compare_statutes)
+    ranks = copy.copy(codifier.ranks)
+
+    #format ranks
+
+    for l in refs:
+        try:
+            ranks[l] = str(round(100 * ranks[l], 5))
+        except:
+            ranks[l] = '0'
+
+    if sorting == 'rank':
+        def _rank(x):
+            try:
+                return -codifier.ranks[x]
+            except:
+                return 0
+
+        refs.sort(key=lambda x: _rank(x))
+    elif sorting == 'chronological':
+        helpers.quicksort(refs, helpers.compare_statutes)
     return render_template('label.html', **locals())
 
 

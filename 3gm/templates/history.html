@@ -52,18 +52,13 @@
         {% if law.amendee != law.identifier %}
         <h5>Σύνδεσμοι</h5>
 
-        {% for text, tags in links.items() %}
-        {% set tags = tags | listify %}
-        {% if tags[0][1] == law.amendee %}
+        {% for text, tags in links %}
+        {% if tags[1] == law.amendee %}
         <h5>Κείμενο Τροποποίησης</h5>
         <p>{{ text }}</p>
 
         <h5>Είδος Τροποποίησης </h5>
-        {% for t in tags %}
-        <p>{{ t | render_badges | safe }}</p>
-        {% endfor %}
-
-
+        <p>{{ tags | render_badges | safe }}</p>
         <hr>
 
         {% endif %}
