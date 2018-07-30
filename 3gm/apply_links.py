@@ -7,7 +7,8 @@ from statistics import mean, stdev
 def apply_links(identifier):
 
     law = codifier.codifier.laws[identifier]
-    links = sorted(codifier.codifier.links[identifier])
+    links = codifier.codifier.links[identifiegr]
+    links.sort()
 
     initial = law.serialize()
     initial['_version'] = 0
@@ -74,17 +75,15 @@ def apply_links(identifier):
 
 def apply_all_links(identifiers=None):
     """Apply all links in the codifier object"""
-    if identifiers is None:
-        codifier_keys = list(codifier.codifier.laws.keys())
-        sorted_keys = helpers.quicksort(
-            codifier_keys, key=helpers.compare_year)
-    else:
-        sorted_keys = helpers.quicksort(identifiers, helpers.compare_statutes)
+    if identifiers == None:
+        identifiers = list(codifier.codifier.laws.keys())
+
+    helpers.quicksort(identifiers, helpers.compare_statutes)
 
     detection_accurracy = []
     query_accuracy = []
-
-    for identifier in sorted_keys:
+    total = len(identifiers)
+    for i, identifier in enumerate(identifiers):
 
         try:
             d, q, final_serializable, links = apply_links(identifier)
@@ -102,11 +101,17 @@ def apply_all_links(identifiers=None):
         detection_accurracy.append(d)
         query_accuracy.append(q)
 
-    print('Mean Detection accuracy: {}%. Std: {}%'.format(
-        mean(detection_accurracy), stdev(detection_accurracy)))
-    print('Mean Query accuracy: {}%. Std: {}%'.format(
-        mean(query_accuracy), stdev(query_accuracy)))
+        print('Complete {}/{} {}%'.format(i, total, i / total * 100))
+
+    if total >= 2:
+        print('Mean Detection accuracy: {}%. Std: {}%'.format(
+            mean(detection_accurracy), stdev(detection_accurracy)))
+        print('Mean Query accuracy: {}%. Std: {}%'.format(
+            mean(query_accuracy), stdev(query_accuracy)))
 
 
 if __name__ == '__main__':
-    apply_links('ν. 4009/2011')
+    apply_all_links(['ν. 4009/2011'])
+
+    f = codifier.codifier.db.get_json_from_fs(_id='ν. 4009/2011')
+    print(len(f['versions']))
