@@ -370,23 +370,12 @@ def label(label, sorting='rank'):
     for t in topics:
         refs.extend(t['statutes'])
 
-    ranks = copy.copy(codifier.ranks)
-
-    #format ranks
-
-    for l in refs:
-        try:
-            ranks[l] = ranks[l] * 100
-        except:
-            ranks[l] = 0
-
     if sorting == 'rank':
         def _rank(x):
             try:
                 return -codifier.ranks[x]
             except:
                 return 0
-
         refs.sort(key=lambda x: _rank(x))
     elif sorting == 'chronological':
         helpers.quicksort(refs, helpers.compare_statutes)

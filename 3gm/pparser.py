@@ -686,6 +686,7 @@ class LawParser:
             law.issue = x['issue']
         except BaseException:
             law.issue = ''
+
         return law, identifier
 
     def add_article(self, article, content, title=None, lemmas=None):
@@ -1292,7 +1293,15 @@ class LawParser:
         :params article : Article number
         :params paragraph_id : Paragraph ID
         """
-        return '. '.join(self.sentences[article][paragraph_id])
+        try:
+            return '. '.join(self.sentences[article][paragraph_id])
+        except:
+            self.sentences[article][paragraph_id] = list(filter(
+                lambda p: p != None, self.sentences[article][paragraph_id]
+            ))
+        finally:
+            return '. '.join(self.sentences[article][paragraph_id])
+
 
     def get_paragraphs(self, article):
         """Return Paragraphs via a generator
@@ -1302,7 +1311,7 @@ class LawParser:
         article = str(article)
         for paragraph_id in sorted(
                 self.sentences[article].keys(),
-                key=lambda x: int(x)):
+                key=lambda x: int(x.strip(')'))):
             yield self.get_paragraph(article, paragraph_id)
 
     def get_articles_sorted(self):

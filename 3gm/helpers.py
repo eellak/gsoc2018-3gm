@@ -525,7 +525,8 @@ def ssconj_doc_iterator(l, i, is_plural=False):
             l[j]).isdigit() or str(
             l[j]).endswith("'") or str(
             l[j]).endswith('΄') or str(
-                l[j]).endswith(','):
+            l[j]).endswith(',') or str(
+            l[j]).endswith(')')):
             yield str(l[j])
         else:
             j = i - 1

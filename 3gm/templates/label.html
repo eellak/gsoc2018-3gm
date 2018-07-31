@@ -29,7 +29,7 @@
 {% endif %}
 <ol>
   {% for ref in refs %}
-  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a> Σημαντικότητα: {{ [ranks[ref]] | render_badges_single('secondary', False) | safe }}</li>
+  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a></li>
   {% endfor %}
 </ol>
 

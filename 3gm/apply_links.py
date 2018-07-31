@@ -3,10 +3,23 @@ import syntax
 import helpers
 from statistics import mean, stdev
 import logging
+import pparser as parser
 logger = logging.getLogger()
 logger.disabled = True
 
 def apply_links(identifier):
+    try:
+        print('Rolling back...')
+        init = codifier.codifier.db.rollback_laws(identifier)
+        codifier.codifier.laws[identifier] = paraser.LawParser.from_serialized(init)
+    except:
+        print('No history on filesystem')
+
+    try:
+        init = codifier.codifier.db.rollback_links(identifier=identifier)
+        codifier.codifier.links[identifier] = codifier.Link.from_serialized(init)
+    except:
+        print('No links found')
 
     # Get information from codifier object
     law = codifier.codifier.laws[identifier]
@@ -44,9 +57,9 @@ def apply_links(identifier):
                     applied += a
 
                     # Update link status
-                    links.actual_links[i]['status'] = 'εφαρμοσμένος'
-
-                except BaseException:
+                    if a == 1:
+                        links.actual_links[i]['status'] = 'εφαρμοσμένος'
+                except BaseException as e:
                     pass
 
         else:
@@ -72,6 +85,7 @@ def apply_links(identifier):
         detection_accurracy = 100 * detected / total
         query_accuracy = 100 * applied / detected
     except:
+        print('das')
         detection_accurracy = 100
         query_accuracy = 100
 
@@ -105,6 +119,7 @@ def apply_all_links(identifiers=None):
         except KeyError:
             # Law is never amended
             initial = codifier.codifier.laws[identifier].serialize()
+            initial['_version'] = 0
             final_serializable = {
                 '_id' : identifier,
                 'versions' : [initial]
@@ -113,7 +128,7 @@ def apply_all_links(identifiers=None):
             # Store current version to mongo
             latest = {
                 '_id' : identifier,
-                'versions' : final_serializable['versions'][-1]
+                'versions' : [final_serializable['versions'][-1]]
             }
             codifier.codifier.db.laws.save(latest)
 
@@ -132,4 +147,4 @@ def apply_all_links(identifiers=None):
 
 
 if __name__ == '__main__':
-    apply_all_links(['ν. 4009/2011', 'ν. 4547/2018', 'ν. 4548/2018'])
+    apply_all_links()

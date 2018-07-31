@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import logging
 import re
 import sys
 import syntax
@@ -187,7 +188,6 @@ class LawCodifier:
 
         cursor = self.db.laws.find({"versions": {"$ne": None}})
         for x in cursor:
-
             current_version = 0
             current_instance = None
             for v in x['versions']:
@@ -563,6 +563,9 @@ def build(
     # Import here for performance
     import topic_models
     import apply_links
+
+    if not data_dir[-1] == '/':
+        data_dir = data_dir + '/'
 
     # Create object to be returned
     cod = LawCodifier()

@@ -113,34 +113,35 @@ class Database:
     def checkout_laws(self, identifier=None, version=0):
         """Checkout to certain version
         :param identifier Law to apply checkout"""
-        if identifier:
-            cursor = self.get_json_from_fs(identifier)
-        else:
-            cursor = self.get_json_from_fs()
+        x = self.get_json_from_fs(identifier)
 
-        for x in cursor:
-            try:
-                y = {
-                    '_id' : x['_id'],
-                    'versions' : [x['versions'][version]]
-                }
+        try:
+            for v in x['versions']:
+                if int(v['_version']) == version:
+                    y = {
+                        '_id' : identifier,
+                        'versions' : [v]
+                    }
+                    break
 
-                self.laws.save(y)
-            # Version 0 does not exist
-            except IndexError:
-                pass
+            self.laws.save(y)
+        # Version 0 does not exist
+        except IndexError:
+            pass
+
+        return y
 
     def rollback_laws(self, identifier=None):
         """Rollback laws
         :param identifier If None rollback everything else rollback certain id"""
-        self.checkout_laws(identifier=identifier, version=0)
+        return self.checkout_laws(identifier=identifier, version=0)
 
     def rollback_links(self, identifier=None, rollback_laws=False):
         """Rollback links
         :param identifier If none rollback everything else rollback certain id
         :param rollback_laws if true rollback laws
         """
-        if identifier:
+        if identifier != None:
             cursor = self.links.find({
                 '_id' : identifier,
                 'actual_links.status' : 'εφαρμοσμένος'
@@ -159,6 +160,8 @@ class Database:
 
         if rollback_laws:
             self.rollback_laws(identifier=identifier)
+
+        return tmp
 
     def rollback_all():
         """Rollsback everything in the database"""
