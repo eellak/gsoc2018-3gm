@@ -251,7 +251,6 @@ def history():
     global codifier
     identifier = request.args.get('identifier')
     history, links = codifier.get_history(identifier)
-    cur = codifier.db.archive_links.find('_id' : identifier)
 
     # Get as markdown
     for x in history:
@@ -407,7 +406,7 @@ def setify(s):
 
 @app.template_filter('archive_link')
 def archive_link(identifier):
-    cur = codfier.db.archive_links.find(
+    cur = codifier.db.archive_links.find({
             '_id' : identifier
     })
     for x in cur:

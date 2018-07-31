@@ -313,7 +313,7 @@ class LawCodifier:
                 new_laws[k].amendee = k
                 archive_link = {
                     '_id' : k,
-                    'issue' : issue.filename
+                    'issue' : issue.filename.replace('.txt', '')
                 }
                 self.db.archive_links.save(archive_link)
                 try:
