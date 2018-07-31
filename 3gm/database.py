@@ -30,6 +30,7 @@ class Database:
         self.laws = self.db.laws
         self.links = self.db.links
         self.topics = self.db.topics
+        self.archive_links = self.db.archive_links
         self.fs = gridfs.GridFS(self.db)
 
     def insert_issue_to_db(self, issue):
@@ -61,6 +62,10 @@ class Database:
     def drop_laws(self):
         """Drop laws collection"""
         self.db.drop_collection('laws')
+
+    def drop_archive_links(self):
+        """Drop archive links"""
+        self.db.drop_collection('archive_links')
 
     def drop_issues(self):
         """Drop issues collection"""
