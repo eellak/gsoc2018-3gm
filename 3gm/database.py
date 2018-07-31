@@ -187,3 +187,8 @@ class Database:
         """Get json from GridFS"""
         dump = self.fs.find_one({'_id' : _id})
         return json.loads(dump.read().decode('utf-8'))
+
+    def drop_fs(self):
+        """Drop GridFS"""
+        self.db.drop_collection('fs.files')
+        self.db.drop_collection('fs.chunks')
