@@ -8,15 +8,18 @@ logger.disabled = True
 
 def apply_links(identifier):
 
+    # Get information from codifier object
     law = codifier.codifier.laws[identifier]
     links = codifier.codifier.links[identifier]
     links.sort()
 
+    # Initialize
     initial = law.serialize()
     initial['_version'] = 0
 
     versions = [initial]
 
+    # Stats
     total = 0
     detected = 0
     applied = 0
@@ -24,6 +27,7 @@ def apply_links(identifier):
     version_index = 0
     increase_flag = False
 
+    # Apply amendments
     for i, l in enumerate(links):
         if l['from'] == tmp_index:
             # Non applied modifying links trigger amendments
@@ -41,6 +45,7 @@ def apply_links(identifier):
 
                     # Update link status
                     links.actual_links[i]['status'] = 'εφαρμοσμένος'
+
                 except BaseException:
                     pass
 
@@ -62,6 +67,7 @@ def apply_links(identifier):
         'versions': versions
     }
 
+    # Calculate accuracy
     try:
         detection_accurracy = 100 * detected / total
         query_accuracy = 100 * applied / detected
@@ -97,16 +103,27 @@ def apply_all_links(identifiers=None):
             detection_accurracy.append(d)
             query_accuracy.append(q)
         except KeyError:
+            # Law is never amended
             initial = codifier.codifier.laws[identifier].serialize()
             final_serializable = {
                 '_id' : identifier,
                 'versions' : [initial]
             }
         finally:
-            # Store to fs
-            codifier.codifier.db.save_json_to_fs(identifier, final_serializable)
-            print('Complete {}/{} {}%'.format(i + 1, total, (i + 1) / total * 100))
+            # Store current version to mongo
+            latest = {
+                '_id' : identifier,
+                'versions' : final_serializable['versions'][-1]
+            }
+            codifier.codifier.db.laws.save(latest)
 
+            # Store versioning history to fs
+            codifier.codifier.db.save_json_to_fs(identifier, final_serializable)
+            print('Complete {} Progress: {}/{} {}%'.format(
+                identifier, i + 1,
+                total, (i + 1) / total * 100))
+
+    # Extract statistics
     if len(detection_accurracy) >= 2:
         print('Mean Detection accuracy: {}%. Std: {}%'.format(
             mean(detection_accurracy), stdev(detection_accurracy)))

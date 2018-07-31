@@ -110,9 +110,9 @@ class Database:
         """Drop topics collection"""
         self.db.drop_collection('topics')
 
-    def rollback_laws(self, identifier=None):
-        """Rollback laws
-        :param identifier If None rollback everything else rollback certain id"""
+    def checkout_laws(self, identifier=None, version=0):
+        """Checkout to certain version
+        :param identifier Law to apply checkout"""
         if identifier:
             cursor = self.get_json_from_fs(identifier)
         else:
@@ -122,13 +122,18 @@ class Database:
             try:
                 y = {
                     '_id' : x['_id'],
-                    'versions' : [x['versions'][0]]
+                    'versions' : [x['versions'][version]]
                 }
 
                 self.laws.save(y)
             # Version 0 does not exist
             except IndexError:
                 pass
+
+    def rollback_laws(self, identifier=None):
+        """Rollback laws
+        :param identifier If None rollback everything else rollback certain id"""
+        self.checkout_laws(identifier=identifier, version=0)
 
     def rollback_links(self, identifier=None, rollback_laws=False):
         """Rollback links
