@@ -85,7 +85,7 @@ def apply_links(identifier):
         detection_accurracy = 100 * detected / total
         query_accuracy = 100 * applied / detected
     except:
-        print('das')
+        print('No amendments')
         detection_accurracy = 100
         query_accuracy = 100
 
@@ -144,7 +144,7 @@ def apply_all_links(identifiers=None):
                 codifier.codifier.db.save_json_to_fs(identifier, final_serializable)
             except:
                 print('GridFS Error in storing history')
-                
+
             print('Complete {} Progress: {}/{} {}%'.format(
                 identifier, i + 1,
                 total, (i + 1) / total * 100))

@@ -702,19 +702,32 @@ class LawParser:
 
         paragraph_ids = [par_id.group().strip('. ')
                          for par_id in re.finditer(r'\d+. ', content)]
+
+        # filter ids
+        filtered_ids = []
+        current = 1
+        for i, x in enumerate(paragraph_ids):
+            if int(x) == current:
+                filtered_ids.append(x + '. ')
+                current += 1
+
+        if len(paragraph_ids) == 0:
+            filtered_ids = ['1']        
+
+        filtered_ids_regex = '|'.join(map(re.escape, filtered_ids))
         paragraph_corpus = list(
             filter(
                 lambda x: x.rstrip() != '',
                 re.split(
-                    r'\d+. ',
+                    filtered_ids_regex,
                     content)))
         paragraph_corpus = [p.rstrip().lstrip() for p in paragraph_corpus]
-
         sentences = {}
         paragraphs = {}
-        for key, val in itertools.zip_longest(paragraph_ids, paragraph_corpus):
-            if key is None or val is None:
+        for kkey, val in itertools.zip_longest(filtered_ids, paragraph_corpus):
+            if kkey is None or val is None:
                 break
+            key = kkey.strip('. ')
             sentences[key] = tokenizer.tokenizer.split(val, False, '. ')
             paragraphs[key] = val
 
