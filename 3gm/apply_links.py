@@ -111,7 +111,11 @@ def apply_all_links(identifiers=None):
             d, q, final_serializable, links = apply_links(identifier)
             # Update links
             codifier.codifier.links[identifier] = links
-            codifier.codifier.db.links.save(links.serialize())
+            try:
+                codifier.codifier.db.links.save(links.serialize())
+            except:
+                print('MongoDB Error in storing Links')
+
 
             # Update accuracy metrics
             detection_accurracy.append(d)
@@ -130,10 +134,17 @@ def apply_all_links(identifiers=None):
                 '_id' : identifier,
                 'versions' : [final_serializable['versions'][-1]]
             }
-            codifier.codifier.db.laws.save(latest)
+            try:
+                codifier.codifier.db.laws.save(latest)
+            except:
+                print('MongoDB Error in storing current version')
 
             # Store versioning history to fs
-            codifier.codifier.db.save_json_to_fs(identifier, final_serializable)
+            try:
+                codifier.codifier.db.save_json_to_fs(identifier, final_serializable)
+            except:
+                print('GridFS Error in storing history')
+                
             print('Complete {} Progress: {}/{} {}%'.format(
                 identifier, i + 1,
                 total, (i + 1) / total * 100))
