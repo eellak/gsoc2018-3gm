@@ -16,7 +16,7 @@
     {% else %}
     Εμφάνιση του {{ law.identifier }} μέχρι και τις αλλαγές του {{ law.amendee }}
     {% endif %}
-    <a href="{{ '19790100001' | archive_link }} ">
+    <a href="{{ law.amendee | archive_link }} ">
       (Δεσμός στο Internet Archive)
     </a>
   </a></li>
