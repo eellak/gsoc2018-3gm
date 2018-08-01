@@ -156,6 +156,11 @@ def apply_all_links(identifiers=None):
         print('Mean Query accuracy: {}%. Std: {}%'.format(
             mean(query_accuracy), stdev(query_accuracy)))
 
+def apply_links_between(start, end):
+    identifiers = list(codifier.codifier.laws.keys())
+    identifiers = list(filter(lambda x: start <= int(x[-4:]) <= end, identifiers))
+    print(len(identifiers))
+    apply_all_links(list(identifiers))
 
 if __name__ == '__main__':
-    apply_all_links()
+    apply_all_links(['ν. 4009/2011'])

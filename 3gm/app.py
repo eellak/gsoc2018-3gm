@@ -53,27 +53,37 @@ class UnicodeApi(Api):
 
 # RestFUL API
 api = UnicodeApi(app)
+api_lookup = {
+    'l' : 'ν.',
+    'pd' : 'π.δ.'
+}
+
+# Get id for API
+def get_id(statute_type, identifier, year):
+    try:
+        return '{} {}/{}'.format(api_lookup[statute_type], identifier, year)
+    except:
+        return '{} {}/{}'.format(statute_type, identifier, year)
 
 class LawResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
-        _id = '{} {}/{}'.format(statute_type, identifier, year)
+        _id = get_id(statute_type, identifier, year)
         for x in codifier.db.laws.find({'_id' : _id}):
             return x
 
 class HistoryResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
-        _id = '{} {}/{}'.format(statute_type, identifier, year)
+        _id = get_id(statute_type, identifier, year)
         return json.dumps(
                 codifier.db.get_json_from_fs(_id),
-                ensure_ascii=False
-                )
+                ensure_ascii=False)
 
 class TopicResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
-        _id = '{} {}/{}'.format(statute_type, identifier, year)
+        _id = get_id(statute_type, identifier, year)
         topics = list(codifier.db.topics.find({
             'statutes': _id
         }))
@@ -82,12 +92,11 @@ class TopicResource(Resource):
 class LinkResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
-        _id = '{} {}/{}'.format(statute_type, identifier, year)
+        _id = get_id(statute_type, identifier, year)
         for x in codifier.db.links.find({'_id' : _id}):
             return x
 
 class SyntaxResource(Resource):
-
     def get(self, s):
         return syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
 
@@ -96,7 +105,7 @@ api.add_resource(LawResource, '/get_law/<string:statute_type>/<string:identifier
 api.add_resource(HistoryResource, '/get_history/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(LinkResource, '/get_link/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(TopicResource, '/get_topic/<string:statute_type>/<string:identifier>/<string:year>')
-api.add_resource(SyntaxResource, '/syntax_api/<string:s>')
+api.add_resource(SyntaxResource, '/get_syntax/<string:s>')
 
 # Application
 @app.route('/syntax', defaults={'js': 'plain'})

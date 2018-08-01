@@ -2,9 +2,9 @@
 {% block body %}
 
 <ul class='law-options'>
-<li><a href="{{ url_for('codify_law', identifier=data['law'] )}}">Δείτε την τρέχουσα έκδοση του {{ data['law'] }}</a></li>
-<li><a href="{{ url_for('amendment', identifier=data['law'] )}}">Δείτε τους νόμους που τροποποιεί ο {{ data['law'] }}</a></li>
-<li><a href="{{ url_for('links', identifier=data['law'] )}}">Δείτε του συνδέσμους στον {{ data['law'] }}</a></li>
+<li><a href="{{ url_for('codify_law', identifier=identifier )}}">Δείτε την τρέχουσα έκδοση του {{ identifier }}</a></li>
+<li><a href="{{ url_for('amendment', identifier=identifier )}}">Δείτε τους νόμους που τροποποιεί ο {{ identifier }}</a></li>
+<li><a href="{{ url_for('links', identifier=identifier )}}">Δείτε του συνδέσμους στον {{ identifier }}</a></li>
 </ul>
 
 
@@ -57,19 +57,32 @@
         <br>
         {% if law.amendee != law.identifier %}
         <h5>Σύνδεσμοι</h5>
-
+        <h5>Εφαρσμοσμένοι</h5>
         {% for text, tags in links %}
-        {% if tags[1] == law.amendee %}
+        {% if tags[0] == 'τροποποιητικός' and tags[1] == law.amendee and tags[2] == 'εφαρμοσμένος'%}
         <h5>Κείμενο Τροποποίησης</h5>
         <p>{{ text }}</p>
 
         <h5>Είδος Τροποποίησης </h5>
         <p>{{ tags | render_badges | safe }}</p>
         <hr>
+        {% endif %}
+        {% endfor %}
 
+        <h5><br>Μη Εφαρσμοσμένοι</h5>
+        {% for text, tags in links %}
+        {% if tags[0] == 'τροποποιητικός' and tags[1] == law.amendee and tags[2] == 'μη εφαρμοσμένος'%}
+        <h5>Κείμενο Τροποποίησης</h5>
+        <p>{{ text }}</p>
+
+        <h5>Είδος Τροποποίησης </h5>
+        <p>{{ tags | render_badges | safe }}</p>
+        <hr>
         {% endif %}
         {% endfor %}
         {% endif %}
+
+
       </div>
     </div>
   </div>
