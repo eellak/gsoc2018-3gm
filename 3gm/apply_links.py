@@ -8,6 +8,10 @@ logger = logging.getLogger()
 logger.disabled = True
 
 def apply_links(identifier):
+    """Apply all modifying links on a law
+    :params identifier The identifier of the law
+    """
+    # rollback laws
     try:
         print('Rolling back...')
         init = codifier.codifier.db.rollback_laws(identifier)
@@ -15,6 +19,7 @@ def apply_links(identifier):
     except:
         print('No history on filesystem')
 
+    # rollback links
     try:
         init = codifier.codifier.db.rollback_links(identifier=identifier)
         codifier.codifier.links[identifier] = codifier.Link.from_serialized(init)
@@ -51,6 +56,7 @@ def apply_links(identifier):
                 # Detect amendment
                 try:
                     d, a = law.apply_amendment(l['text'])
+                    
 
                     # Increase accuracy bits
                     detected += d
@@ -102,9 +108,12 @@ def apply_all_links(identifiers=None):
 
     helpers.quicksort(identifiers, helpers.compare_statutes)
 
+    # initialize stats
     detection_accurracy = []
     query_accuracy = []
     total = len(identifiers)
+
+    # apply all links
     for i, identifier in enumerate(identifiers):
 
         try:
@@ -163,4 +172,4 @@ def apply_links_between(start, end):
     apply_all_links(list(identifiers))
 
 if __name__ == '__main__':
-    apply_all_links(['ν. 4009/2011'])
+    apply_all_links()
