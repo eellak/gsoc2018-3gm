@@ -55,8 +55,9 @@ def apply_links(identifier):
 
                 # Detect amendment
                 try:
-                    d, a = law.apply_amendment(l['text'])
-                    
+                    d, a, law = law.apply_amendment(l['text'])
+                    with open(str(version_index) + '.txt', 'w+') as f:
+                        f.write(law.export_law('markdown'))
 
                     # Increase accuracy bits
                     detected += d
@@ -64,6 +65,7 @@ def apply_links(identifier):
 
                     # Update link status
                     if a == 1:
+                        print('applied sucessfully')
                         links.actual_links[i]['status'] = 'εφαρμοσμένος'
                 except BaseException as e:
                     pass
@@ -158,7 +160,7 @@ def apply_all_links(identifiers=None):
                 identifier, i + 1,
                 total, (i + 1) / total * 100))
 
-    # Extract statistics
+    # Extract statisticsapply_am
     if len(detection_accurracy) >= 2:
         print('Mean Detection accuracy: {}%. Std: {}%'.format(
             mean(detection_accurracy), stdev(detection_accurracy)))
@@ -172,4 +174,4 @@ def apply_links_between(start, end):
     apply_all_links(list(identifiers))
 
 if __name__ == '__main__':
-    apply_all_links()
+    apply_all_links(['ν. 4009/2011'])

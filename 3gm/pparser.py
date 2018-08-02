@@ -712,7 +712,7 @@ class LawParser:
                 current += 1
 
         if len(paragraph_ids) == 0:
-            filtered_ids = ['1']        
+            filtered_ids = ['1']
 
         filtered_ids_regex = '|'.join(map(re.escape, filtered_ids))
         paragraph_corpus = list(
@@ -1127,7 +1127,7 @@ class LawParser:
             except BaseException:
                 if throw_exceptions:
                     raise UnrecognizedAmendmentException(t)
-        return detected, applied
+        return detected, applied, self
 
     def query_from_tree(self, tree):
         """Returns a serizlizable object from a tree in nested form

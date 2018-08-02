@@ -156,7 +156,7 @@ def codify_law(identifier=None):
     if request.method == 'POST':
         data = request.form
         identifier = data['law'].lower()
-        if identifier not in autocomplete_laws:
+        if (identifier not in autocomplete_laws) and (not (identifier.startswith('ν.') or identifier.startswith('π.δ.'))):
             doc = nlp(identifier)
             identifier = doc[0].lemma_
             return redirect('/label/{}/rank'.format(identifier))
