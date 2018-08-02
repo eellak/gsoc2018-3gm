@@ -32,6 +32,7 @@ class Database:
         self.topics = self.db.topics
         self.archive_links = self.db.archive_links
         self.fs = gridfs.GridFS(self.db)
+        self.summaries = self.db.summaries
 
     def insert_issue_to_db(self, issue):
         """Inserts issue to database"""
@@ -192,3 +193,7 @@ class Database:
         """Drop GridFS"""
         self.db.drop_collection('fs.files')
         self.db.drop_collection('fs.chunks')
+
+    def drop_summaries(self):
+        """Drop summaries"""
+        self.db.drop_collection('summaries')

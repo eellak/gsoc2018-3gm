@@ -389,6 +389,11 @@ def label(label, sorting='rank'):
     elif sorting == 'chronological':
         helpers.quicksort(refs, helpers.compare_statutes)
 
+    summaries = {}
+    for identifier in refs:
+        for x in codifier.db.summaries.find({'_id' : identifier}):
+            summaries[identifier] = x['summary']
+
     return render_template('label.html', **locals())
 
 
