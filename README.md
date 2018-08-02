@@ -34,7 +34,7 @@ Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 
 ---
 
-## Installation & Usage
+## Overview
 
 1. [Installation Instructions](https://github.com/eellak/gsoc2018-3gm/wiki/Installation)
 2. [Operation](https://github.com/eellak/gsoc2018-3gm/wiki/Installation)
@@ -42,6 +42,7 @@ Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 4. [Fetching Documents](https://github.com/eellak/gsoc2018-3gm/wiki/Fetching-Documents)
 5. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier)
 6. [Testing](https://github.com/eellak/gsoc2018-3gm/wiki/Testing)
+7. [Evaluation and Metrics](https://github.com/eellak/gsoc2018-3gm/wiki/Evaluation-and-Metrics)
 
 ---
 
