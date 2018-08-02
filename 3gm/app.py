@@ -378,6 +378,7 @@ def label(label, sorting='rank'):
     refs = []
     for t in topics:
         refs.extend(t['statutes'])
+    refs = list(set(refs))
 
     if sorting == 'rank':
         def _rank(x):
@@ -388,6 +389,7 @@ def label(label, sorting='rank'):
         refs.sort(key=lambda x: _rank(x))
     elif sorting == 'chronological':
         helpers.quicksort(refs, helpers.compare_statutes)
+        refs = list(reversed(refs))
 
     summaries = {}
     for identifier in refs:

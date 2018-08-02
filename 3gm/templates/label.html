@@ -29,7 +29,11 @@
 {% endif %}
 <ol>
   {% for ref in refs %}
-  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a><p>{{ summaries[ref] }}</p></li>
+  <li><a href="{{ url_for('codify_law', identifier=ref )}}">{{ ref }}</a>
+    {% if summaries[ref] != '' %}
+    <p>{{ summaries[ref] }}</p>
+    {% endif %}
+  </li>
   {% endfor %}
 </ol>
 
