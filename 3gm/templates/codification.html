@@ -25,22 +25,22 @@ $(function() {
 
 
 <div class='heading'>
-  <h1>Καλώς ήλθατε στο 3gm</h1>
+  <h1>Αυτόματη κωδικοποίηση ελληνικής νομοθεσίας</h1>
   <h3 id="alpha">πειραματική έκδοση</h3>
   <div class='container'>
     <div class='row'>
       <div class='col-4'>
         <h1>{{ num_laws }}</h1>
-        <br> <h4>ΝΟΜΟΘΕΤΗΜΑΤΑ</h4>
+        <br> <h4><a class="headlink" href="/legal_index">ΝΟΜΟΘΕΤΗΜΑΤΑ</a></h4>
       </div>
       <div class='col-4'>
         <h1>{{ num_links }}</h1>
-        <br> <h4>ΣΥΝΔΕΣΜΟΙ</h4>
+        <br> <h4><a class="headlink" href="/full_index">ΣΥΝΔΕΣΜΟΙ</a></h4>
       </div>
 
       <div class='col-4'>
         <h1>{{ num_topics }}</h1>
-        <br> <h4>ΘΕΜΑΤΙΚΕΣ ΕΝΟΤΗΤΕΣ</h4>
+        <br> <h4><a class="headlink" href="/topics">ΘΕΜΑΤΙΚΕΣ ΕΝΟΤΗΤΕΣ</a></h4>
       </div>
     </div>
   </div>
@@ -54,7 +54,7 @@ $(function() {
   <form id="codify" action = "/codify_law" method = "POST">
   <div class="searchContainer">
     <i class="fa fa-search searchIcon"></i>
-    <input class="searchBox" type="search" name="law" id="autocomplete" placeholder="Πληκτρολογήστε ένα νομοθέτημα...">
+    <input class="searchBox" type="search" name="law" id="autocomplete" placeholder="Πληκτρολογήστε ένα νομοθέτημα ή μια θεματική ενότητα...">
     <input type="submit" value="Κωδικοποίηση" class="searchButton">
   </div>
 </form>
@@ -64,7 +64,6 @@ $(function() {
 &mdash; Αριστοτέλης, 384-322 π.Χ., Αρχαίος Έλληνας φιλόσοφος</div>
 
 
-<p id="visit"><a href="/legal_index">Επισκεφθείτε το ευρετήριο</a></p>
 <p id="visit"><a href="https://github.com/eellak/gsoc2018-3gm">GitHub Repository</a></p>
 <p style="text-align: center;">
 <a class="github-button" href="https://github.com/eellak/gsoc2018-3gm/fork" data-icon="octicon-repo-forked" data-size="large" data-show-count="true" aria-label="Fork ellak/gsoc2018-3gm on GitHub">Fork</a>

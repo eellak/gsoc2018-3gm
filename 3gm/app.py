@@ -398,6 +398,11 @@ def label(label, sorting='rank'):
 
     return render_template('label.html', **locals())
 
+@app.route('/topics')
+def topics():
+    topics = codifier.topics
+    return render_template('topics.html', **locals())
+
 
 def to_hyperlink(l, link_type='markdown'):
     u = url_for('codify_law', identifier=l)
