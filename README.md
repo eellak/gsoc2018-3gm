@@ -4,7 +4,7 @@
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
 
-# gsoc2018-3gm
+# :rocket: Google Summer Of Code 2018 - 3gm
 
 Welcome to _Government Gazette text mining, cross linking, and codification Project_ (or 3gm for short) using [Natural Language Processing Methods](https://en.wikipedia.org/wiki/Natural_language_processing) and Practices on **Greek Legislation**.
 
@@ -37,11 +37,11 @@ Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 ## Installation & Usage
 
 1. [Installation Instructions](https://github.com/eellak/gsoc2018-3gm/wiki/Installation)
-2. [Fetching Documents](https://github.com/eellak/gsoc2018-3gm/wiki/Fetching-Documents)
-3. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier)
-4. [Testing](https://github.com/eellak/gsoc2018-3gm/wiki/Testing)
-
-For a tutorial on getting started click [here](https://github.com/eellak/gsoc2018-3gm/wiki/Tutorial)
+2. [Operation](https://github.com/eellak/gsoc2018-3gm/wiki/Installation)
+3. [Architecture](https://github.com/eellak/gsoc2018-3gm/wiki/Architecture)
+4. [Fetching Documents](https://github.com/eellak/gsoc2018-3gm/wiki/Fetching-Documents)
+5. [Codifying Laws](https://github.com/eellak/gsoc2018-3gm/wiki/Codifier)
+6. [Testing](https://github.com/eellak/gsoc2018-3gm/wiki/Testing)
 
 ---
 
