@@ -320,6 +320,6 @@ textarea {
 
 }
 
-a.headlink {
-  color: #4a4a4a; 
+a.headlink:before {
+  color: #4a4a4a;
 }

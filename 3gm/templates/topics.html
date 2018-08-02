@@ -6,7 +6,7 @@
 
 <ol>
   {% for k in topics %}
-  <li id="{{ k['_id'] }}"><strong>Θεματική ενότητα {{ k['_id'] + 1 }} <br>Ετικέτες<br> </strong><p class="sparse">{{ k['keywords'] | render_badges_single('dark') | safe }}</p><br><strong>Νομοθετήματα</strong></li>
+  <li id="{{ k['_id'] }}"><strong>Θεματική ενότητα {{ k['_id'] + 1 }}</strong><p>Ετικέτες</p>{{ k['keywords'] | render_badges_single('dark') | safe }}<br><p>Νομοθετήματα</p></li>
   <ol>
     {% for l in k['statutes'] %}
       <li><a href="{{ url_for('codify_law', identifier=l )}}">{{ l }}</a></li>
