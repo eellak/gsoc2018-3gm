@@ -8,8 +8,6 @@ import itertools
 import copy
 import string
 import phrase_fun
-
-
 import spacy
 import el_small
 nlp = el_small.load()
@@ -43,6 +41,7 @@ class ActionTreeGenerator:
     def __call__(self, s):
         return ActionTreeGenerator.generate_action_tree_from_string(s)
 
+    # Stem lookup
     trans_lookup = {
         'άρθρ': 'article',
         'παράγραφ': 'paragraph',
@@ -53,6 +52,7 @@ class ActionTreeGenerator:
         'υποπερίπτωσ': 'subcase'
     }
 
+    # Children Lookup (needed for nesting)
     children_loopkup = {
         'law': ['article'],
         'article': ['paragraph'],
@@ -84,6 +84,11 @@ class ActionTreeGenerator:
 
     @staticmethod
     def detect_latest_statute(extract):
+        """Detects the latest statute of any type
+        in a given string.
+        :params extract : Query String
+        """
+
         legislative_acts = list(
             re.finditer(
                 entities.legislative_act_regex,
@@ -115,6 +120,11 @@ class ActionTreeGenerator:
             max_what_window=20,
             max_where_window=30,
             use_regex=False):
+        """Main algorithm for amendment detection
+        The approach followed is hybrid
+        The procedure is outlined here:
+        https://github.com/eellak/gsoc2018-3gm/wiki/Algorithms-for-analyzing-Government-Gazette-Documents
+        """
 
         # results are stored here
 
@@ -138,6 +148,7 @@ class ActionTreeGenerator:
             tmp = list(map(lambda s: s.strip(
                 string.punctuation), non_extract.split(' ')))
 
+            # Detect amendment action
             for action in entities.actions:
                 for i, w in enumerate(doc):
                     if action == w.text:
@@ -160,6 +171,7 @@ class ActionTreeGenerator:
                             except IndexError:
                                 extract = None
 
+                        # Detect what is amended
                         found_what, tree, is_plural = ActionTreeGenerator.get_nsubj(
                             doc, i, tree)
                         if found_what:
@@ -230,6 +242,11 @@ class ActionTreeGenerator:
 
     @staticmethod
     def nest_tree_helper(vertex, tree):
+        """Nest a dict to a new one. (helper function)
+        Each value must have a children attribute
+        :params vertex : Root vertex
+        :params tree : Tree as dictionary
+        """
         if tree[vertex] == {}:
             return tree
         if tree[vertex]['children'] == []:
@@ -246,10 +263,20 @@ class ActionTreeGenerator:
 
     @staticmethod
     def nest_tree(vertex, tree):
+        """Nest a dict to a new one. (helper function)
+        Each value must have a children attribute
+        :params vertex : Root vertex
+        :params tree : Tree as dictionary
+        """
         ActionTreeGenerator.nest_tree_helper(vertex, tree)
 
     @staticmethod
     def get_nsubj(doc, i, tree):
+        """Get nsubj dependency, in order to find what is
+        amended, using spaCy Greek Language model
+        :params doc : A spaCy doc object
+        :params i: The action position
+        :params tree : The JSON tree"""
         found_what = False
         root_token = doc[i]
         for child in root_token.children:
@@ -313,6 +340,11 @@ class ActionTreeGenerator:
 
     @staticmethod
     def get_rois_from_extract(q, what, idx_list):
+        """Get ROIs from extracts
+        :params q : Extract
+        :params what : Type of amendment
+        :params idx_list : List of numeric/alphabetic indices
+        """
         queries = []
         for idx in idx_list:
             if what in ['παράγραφος', 'παράγραφοι']:
@@ -341,6 +373,8 @@ class ActionTreeGenerator:
 
     @staticmethod
     def split_renumbering_tree(tree):
+        """Splits tree in case of renumbering
+        :params tree : The given tree to be split"""
         results = []
         for x, y in zip(tree['what']['number'], tree['what']['to']):
             r = copy.copy(tree)
@@ -352,7 +386,10 @@ class ActionTreeGenerator:
 
     @staticmethod
     def split_tree(tree):
-
+        """Splits tree into subtrees if multiple
+        amendmets are detected in the same sentence.
+        For example amending paragraphs 3 and 4 would
+        yield two subtrees"""
         try:
             idx_list = tree['what']['number']
             extract = tree['what']['content']
@@ -380,6 +417,7 @@ class ActionTreeGenerator:
 
     @staticmethod
     def get_renumbering(tree, doc):
+        """Get renumbering content"""
         start = tree['root']['_id']
         is_plural = helpers.is_plural(tree['what']['context'])
 
@@ -392,6 +430,12 @@ class ActionTreeGenerator:
 
     @staticmethod
     def get_content(tree, extract, s, secondary=False):
+        """Get content of amendment
+        :params tree : The dict tree
+        :params extract : The given content / extract
+        :params secondary : Set to true after splitting
+        """
+
         max_depth = 0
         if tree['what']['context'] in ['φράση', 'φράσεις', 'λέξη', 'λέξεις']:
             return tree, 6
@@ -430,19 +474,8 @@ class ActionTreeGenerator:
         return tree, max_depth
 
     @staticmethod
-    def detect_with_iterator(non_extract_split, words):
-        for i, w in enumerate(non_extract_split):
-            if w in words:
-                try:
-                    iters = list(
-                        helpers.ssconj_doc_iterator(
-                            non_extract_split, i))
-                    return iters[0]
-                except BaseException:
-                    continue
-
-    @staticmethod
     def build_level(tmp, subtree, max_depth, stem):
+        """Builds a level of the tree using the stems lookup"""
         lookup = ActionTreeGenerator.trans_lookup[stem]
 
         if not re.search(stem, subtree['what']['context']):
@@ -460,6 +493,7 @@ class ActionTreeGenerator:
 
     @staticmethod
     def build_levels(tmp, subtree):
+        """Build all levels using the stems"""
         stems = list(ActionTreeGenerator.trans_lookup.keys())
         for i, stem in enumerate(stems):
             subtree = ActionTreeGenerator.build_level(
