@@ -107,7 +107,7 @@ api.add_resource(LinkResource, '/get_link/<string:statute_type>/<string:identifi
 api.add_resource(TopicResource, '/get_topic/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(SyntaxResource, '/get_syntax/<string:s>')
 
-# Application
+# Application Routes
 @app.route('/syntax', defaults={'js': 'plain'})
 @app.route('/syntax<any(plain, jquery, fetch):js>')
 def index(js):
@@ -132,10 +132,10 @@ def analyze():
 def visualize():
     return app.send_static_file('templates/graph.html')
 
-
 @app.route('/')
 @app.route('/codification')
 def codification():
+    """Main route used for search"""
     global codifier
     num_laws = len(codifier.laws)
     num_links = len(codifier.links)
@@ -145,6 +145,7 @@ def codification():
 
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
+    """Autocomplete in searchbar"""
     global autocomplete_
     search = request.args.get('q')
     match = list(filter(lambda x: x.startswith(search), autocomplete_))
@@ -153,6 +154,7 @@ def autocomplete():
 
 @app.route('/codify_law', methods=['POST', 'GET'])
 def codify_law(identifier=None):
+    """Displays the current version of the law"""
     if request.method == 'POST':
         data = request.form
         identifier = data['law'].lower()
@@ -195,6 +197,7 @@ def codify_law(identifier=None):
 
 @app.route('/amendment', methods=['POST', 'GET'])
 def amendment(identifier=None):
+    """Route to demonstrate what laws does the law amend"""
     if request.method == 'POST':
         data = request.form
     elif request.method == 'GET':
@@ -231,6 +234,7 @@ def amendment(identifier=None):
 
 @app.route('/links', methods=['POST', 'GET'])
 def links(identifier=None):
+    """Route to demonstrate links to the existing law"""
     if request.method == 'POST':
         data = request.form
     elif request.method == 'GET':
@@ -260,6 +264,7 @@ def links(identifier=None):
 
 @app.route('/history')
 def history():
+    """Displays the versioning history of a law"""
     global codifier
     identifier = request.args.get('identifier')
     history, links = codifier.get_history(identifier)
@@ -273,6 +278,7 @@ def history():
 
 @app.route('/legal_index')
 def legal_index():
+    """Displays the index containing only statutes"""
     global autocomplete_laws
     indexed_list = autocomplete_laws
     helpers.quicksort(indexed_list, helpers.compare_statutes)
@@ -289,6 +295,7 @@ def legal_index():
 
 @app.route('/full_index')
 def full_index():
+    """Displays full linking index"""
     global codifier
     full_index = codifier.db.links.find().sort('_id', pymongo.ASCENDING)
 
@@ -302,19 +309,48 @@ def full_index():
     return render_template('full_index.html', full_index=full_index)
 
 
-@app.route('/docs/<page>')
-def docs(page):
-    return render_template('docs/' + page + '.html')
+@app.route('/label/<label>/<sorting>')
+def label(label, sorting='rank'):
+    """Label search results"""
+    topics = codifier.db.topics.find({
+        'keywords': label
+    })
 
-@app.route('/display_cards/<filename>')
-def display_cards(filename):
-    with open(filename, encoding='utf-8') as f:
-        contents = f.read().splitlines()
-    return render_template('display_cards.html', **locals())
+    refs = []
+    for t in topics:
+        refs.extend(t['statutes'])
+    refs = list(set(refs))
+
+    if sorting == 'rank':
+        def _rank(x):
+            try:
+                return -codifier.ranks[x]
+            except:
+                return 0
+        refs.sort(key=lambda x: _rank(x))
+    elif sorting == 'chronological':
+        helpers.quicksort(refs, helpers.compare_statutes)
+        refs = list(reversed(refs))
+
+    summaries = {}
+    for identifier in refs:
+        for x in codifier.db.summaries.find({'_id' : identifier}):
+            summaries[identifier] = x['summary']
+
+    return render_template('label.html', **locals())
+
+@app.route('/topics')
+def topics():
+    """Topics page"""
+    topics = codifier.topics
+    return render_template('topics.html', **locals())
+
 
 @app.route('/help')
 def help():
+    """Help page"""
     return render_template('help.html', **locals())
+
 
 def color_iterator():
     colors = [
@@ -342,6 +378,7 @@ def render_badges(l):
             '<span class="badge badge-{}">{}</span> '.format(next(colors), x)
     return result
 
+
 @app.template_filter('render_badges_single')
 def render_badges_single(l, color='light', label_url=True):
     result = ''
@@ -354,6 +391,7 @@ def render_badges_single(l, color='light', label_url=True):
             result = result + \
                 '<span class="badge badge-{}">{}</span> '.format(color, x)
     return result
+
 
 @app.template_filter('render_badges_from_tree')
 def render_badges_from_tree(tree):
@@ -387,43 +425,7 @@ def render_links(content):
 
     return ''.join(splitted)
 
-
-@app.route('/label/<label>/<sorting>')
-def label(label, sorting='rank'):
-
-    topics = codifier.db.topics.find({
-        'keywords': label
-    })
-
-    refs = []
-    for t in topics:
-        refs.extend(t['statutes'])
-    refs = list(set(refs))
-
-    if sorting == 'rank':
-        def _rank(x):
-            try:
-                return -codifier.ranks[x]
-            except:
-                return 0
-        refs.sort(key=lambda x: _rank(x))
-    elif sorting == 'chronological':
-        helpers.quicksort(refs, helpers.compare_statutes)
-        refs = list(reversed(refs))
-
-    summaries = {}
-    for identifier in refs:
-        for x in codifier.db.summaries.find({'_id' : identifier}):
-            summaries[identifier] = x['summary']
-
-    return render_template('label.html', **locals())
-
-@app.route('/topics')
-def topics():
-    topics = codifier.topics
-    return render_template('topics.html', **locals())
-
-
+# Template filters
 def to_hyperlink(l, link_type='markdown'):
     u = url_for('codify_law', identifier=l)
     if link_type == 'html':
