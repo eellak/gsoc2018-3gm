@@ -34,6 +34,8 @@ Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 
 ---
 
+## Overview
+
 - **Getting started**
   - [Home](https://github.com/eellak/gsoc2018-3gm/wiki)
   - [Installation](https://github.com/eellak/gsoc2018-3gm/wiki/Installation)
