@@ -160,6 +160,9 @@ def codify_law(identifier=None):
             doc = nlp(identifier)
             identifier = doc[0].lemma_
             return redirect('/label/{}/rank'.format(identifier))
+        else:
+            # Redirect to GET request
+            return redirect(url_for('codify_law', identifier=identifier))
     elif request.method == 'GET':
         identifier = request.args.get('identifier')
         data = {'law': identifier}
@@ -271,13 +274,30 @@ def history():
 @app.route('/legal_index')
 def legal_index():
     global autocomplete_laws
-    return render_template('index.html', indexed_list=autocomplete_laws)
+    indexed_list = autocomplete_laws
+    helpers.quicksort(indexed_list, helpers.compare_statutes)
+
+    current = None
+    toc = []
+    for law in indexed_list:
+        if current == None or helpers.compare_year(law) != current:
+            current = helpers.compare_year(law)
+            toc.append((current, law))
+
+    return render_template('index.html', indexed_list=indexed_list, toc=toc)
 
 
 @app.route('/full_index')
 def full_index():
     global codifier
     full_index = codifier.db.links.find().sort('_id', pymongo.ASCENDING)
+
+    # current = None
+    # toc = []
+    # for law in full_index:
+    #     if current == None or helpers.compare_year(law['_id']) != current:
+    #         current = helpers.compare_year(law['_id'])
+    #         toc.append((current, law['_id']))
 
     return render_template('full_index.html', full_index=full_index)
 
@@ -434,6 +454,20 @@ def archive_link(identifier):
         l = x['issue']
 
     return 'https://archive.org/details/GreekGovernmentGazette-{}'.format(l)
+
+@app.template_filter('gg_link')
+def gg_link(identifier):
+    cur = codifier.db.archive_links.find({
+            '_id' : identifier
+    })
+    for x in cur:
+        l = x['issue']
+
+    return 'ΦΕΚ Α {}/{}'.format(int(l[-4:]), l[:4])
+
+@app.template_filter('lower')
+def lower(s):
+    return s.lower()
 
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)

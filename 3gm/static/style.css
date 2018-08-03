@@ -190,7 +190,11 @@ label, legend, fieldset {
   font-size: 2rem !important;
 }
 
-ul { margin: 0; padding: 0; display: flex; list-style-type: none; }
+ul.navbar-ul { margin: 0; padding: 0; display: flex; list-style-type: none; }
+ul {
+  list-style-type: none;
+}
+
 li > * { padding: 1em; }
 li.active > a { color: #5e5e5e; border-bottom: 2px solid #4a4a4a; }
 form > * { padding-right: 1em; }

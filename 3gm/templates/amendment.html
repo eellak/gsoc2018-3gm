@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block body %}
 
-<ul class='law-options'>
+<ul class='law-options navbar-ul'>
 <li><a href="{{ url_for('history', identifier=data['law'] )}}">Δείτε το πλήρες ιστορικό του {{ data['law'] }}</a></li>
 <li><a href="{{ url_for('codify_law', identifier=data['law'] )}}">Δείτε την τρέχουσα έκδοση του {{ data['law'] }}</a></li>
 <li><a href="{{ url_for('links', identifier=data['law'] )}}">Δείτε του συνδέσμους στον {{ data['law'] }}</a></li>

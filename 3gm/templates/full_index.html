@@ -1,15 +1,27 @@
 {% extends 'layout.html' %}
 {% block body %}
 
-<h1>Πλήρες Ευρετήριο Νομοθετημάτων</h1>
+<h1>Πλήρες Ευρετήριο Συνδέσμων</h1>
+
+<p>Σε αυτή τη σελίδα μπορείτε να διερευνήσετε τις διασυνδέσεις μεταξύ των νομοθετημάτων.
+  Στο πρώτο επίπεδο φαίνονται τα νομοθετήματα και στο δεύτερο επίπεδο οι <strong>τροποποιήσεις/αναφορές</strong> αυτών από νεότερα νομοθετήματα.</p>
+
+<!-- <h5>Περιεχόμενα</h5>
+<ul>
+  {% for c, h in toc | reverse %}
+  <li id="{{ c }}"><a href="#{{ h }}">{{ c }}</a></li>
+  {% endfor %}
+</ul> -->
+
+<h5>Σύνδεσμοι</h5>
 
 
 <ol>
   {% for k in full_index %}
-  <li id="{{ k['_id'] }}"><a href="{{ url_for('codify_law', identifier=k['_id'] )}}">{{ k['_id'] }}</a></li>
+  <li id="{{ k['_id'] }}"><a href="{{ url_for('codify_law', identifier=k['_id'] )}}">{{ k['_id'] | lower }}</a></li>
   <ol>
     {% for l in k['links_to'] %}
-      <li><a href="{{ url_for('codify_law', identifier=l )}}">{{ l }}</a></li>
+      <li><a href="{{ url_for('codify_law', identifier=l )}}">{{ l | lower }}</a></li>
     {% endfor %}
   </ol>
   {% endfor %}
