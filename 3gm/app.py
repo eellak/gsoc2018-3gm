@@ -20,6 +20,7 @@ import gensim.models as g
 import logging
 import pprint
 import copy
+import difflib
 logger = logging.getLogger()
 logger.disabled = True
 
@@ -346,6 +347,37 @@ def topics():
     return render_template('topics.html', **locals())
 
 
+@app.route('/diff', methods=['POST', 'GET'])
+def diff():
+    """Diffs page"""
+    if request.method == 'POST':
+        data = request.form
+        print(data)
+        return redirect(url_for('diff',
+            identifier=data['identifier'],
+            final=data['final'],
+            initial=data['initial']))
+
+    global codifier
+    differ = difflib.Differ()
+
+    # Parse args
+    identifier = request.args.get('identifier')
+    final = request.args.get('final')
+    initial = request.args.get('initial')
+    history, links = codifier.get_history(identifier)
+
+    # Get as markdown
+    for x in history:
+        if x.amendee == final:
+            final_text = x.export_law('issue').splitlines()
+        elif x.amendee == initial:
+            initial_text = x.export_law('issue').splitlines()
+
+    diffs = differ.compare(final_text, initial_text)
+
+    return render_template('diff.html', **locals())
+
 @app.route('/help')
 def help():
     """Help page"""
@@ -470,6 +502,19 @@ def gg_link(identifier):
 @app.template_filter('lower')
 def lower(s):
     return s.lower()
+
+@app.template_filter('highlight_diff')
+def highlight_diff(d):
+    lookup = {
+        '+' : 'rgba(0, 255, 0, 0.3)',
+        '-' : 'rgba(255, 0, 0, 0.3)',
+        '?' :  'rgba(0, 0, 255, 0.3)'
+    }
+
+    try:
+        return "<p style='background-color: {};'>{}</p>".format(lookup[d[0]], d)
+    except:
+        return '<p>{}</p>'.format(d)
 
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)

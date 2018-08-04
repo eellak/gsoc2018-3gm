@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<ul class='law-options navbar-ul'>
+<li><a href="{{ url_for('codify_law', identifier=identifier )}}">Δείτε την τρέχουσα έκδοση του {{ identifier }}</a></li>
+<li><a href="{{ url_for('amendment', identifier=identifier )}}">Δείτε τους νόμους που τροποποιεί ο {{ identifier }}</a></li>
+<li><a href="{{ url_for('links', identifier=identifier )}}">Δείτε του συνδέσμους στον {{ identifier }}</a></li>
+</ul>
+
+<form id="diff" action = "/diff" method="POST">
+  <div class="container">
+    <div class="row">
+      <div class="col-4">
+        <label for="initial">Αρχική Έκδοση</label>
+        <select id="initial" name="initial">
+          {% for law in history | reverse %}
+            <option>{{ law.amendee }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-4">
+        <label for="final">Τελική Έκδοση</label>
+        <select id="final" name="final">
+          {% for law in history | reverse %}
+            <option>{{ law.amendee }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-4 vcenter">
+        <input type="submit" id="submit" value="Εύρεση Διαφορών">
+      </div>
+    </div>
+  </div>
+</form>
+
+<h1>Διαφορές του {{ identifier }}</h1>
+
+<div class="container">
+  <div class="row">
+    <div class="col-6 text-center">
+      <h4>Αρχική Έκδοση: {{ initial }}</h4>
+    </div>
+
+    <div class="col-6 text-center">
+      <h4>Τελική Έκδοση: {{ final }}</h4>
+    </div>
+  </div>
+</div>
+
+{% for d in diffs %}
+  {{ d | highlight_diff | safe }}
+{% endfor %}
+
+{% endblock %}
