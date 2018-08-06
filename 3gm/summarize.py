@@ -18,17 +18,20 @@ def job(identifier):
     punct = str.maketrans('', '', string.punctuation)
     try:
         l = codifier.codifier.laws[identifier]
-        titles = filter(lambda x: len(x.split()) <= MAX_TITLE_WORDS, [x.lstrip().rstrip().translate(punct) for x in l.titles.values()])
+        titles = filter(lambda x: len(x.split()) <= MAX_TITLE_WORDS,
+            [x.lstrip().rstrip().translate(punct) for x in l.titles.values()])
         titles = filter(lambda x: x.rstrip() != '', titles)
         titles = '. '.join(titles)
         summary = summarize_textrank(titles, ratio=0.1)
+    except BaseException as e:
+        logging.warning(str(e))
+        summary = titles
+    finally:
         summary_obj = {
             '_id' : identifier,
             'summary' : summary
         }
         db.summaries.save(summary_obj)
-    except BaseException as e:
-        logging.warning(str(e))
 
 # Summarize
 def summarize(identifiers=[]):
