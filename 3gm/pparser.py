@@ -1307,13 +1307,13 @@ class LawParser:
         :params paragraph_id : Paragraph ID
         """
         try:
-            return '. '.join(self.sentences[article][paragraph_id])
+            return '. '.join(self.sentences[article][paragraph_id]) + '.'
         except:
             self.sentences[article][paragraph_id] = list(filter(
                 lambda p: p != None, self.sentences[article][paragraph_id]
             ))
         finally:
-            return '. '.join(self.sentences[article][paragraph_id])
+            return '. '.join(self.sentences[article][paragraph_id]) + '.'
 
 
     def get_paragraphs(self, article):

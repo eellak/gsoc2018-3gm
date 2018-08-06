@@ -327,3 +327,9 @@ textarea {
 a.headlink:before {
   color: #4a4a4a;
 }
+
+.vcenter {
+  display: flex;
+  align-items: center;
+  top: 100%;
+}
