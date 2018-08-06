@@ -2,9 +2,9 @@
 {% block body %}
 
 <ul class='law-options navbar-ul'>
-<li><a href="{{ url_for('codify_law', identifier=identifier )}}">Δείτε την τρέχουσα έκδοση του {{ identifier }}</a></li>
-<li><a href="{{ url_for('amendment', identifier=identifier )}}">Δείτε τους νόμους που τροποποιεί ο {{ identifier }}</a></li>
-<li><a href="{{ url_for('links', identifier=identifier )}}">Δείτε του συνδέσμους στον {{ identifier }}</a></li>
+  <li><a href="{{ url_for('codify_law', identifier=identifier )}}">Δείτε την τρέχουσα έκδοση του {{ identifier }}</a></li>
+  <li><a href="{{ url_for('amendment', identifier=identifier )}}">Δείτε τους νόμους που τροποποιεί ο {{ identifier }}</a></li>
+  <li><a href="{{ url_for('links', identifier=identifier )}}">Δείτε του συνδέσμους στον {{ identifier }}</a></li>
 </ul>
 
 
@@ -45,6 +45,7 @@
             Αρχική μορφή του {{ law.identifier }}
             {% else %}
             Εμφάνιση του {{ law.identifier }} μέχρι και τις αλλαγές του {{ law.amendee }}
+            <a class="btn btn-link" href="{{ url_for('diff', identifier=identifier, initial=identifier, final=law.amendee) }}"><h3>Διαφορές</h3></a>
             {% endif %}
           </h1>
         </button>

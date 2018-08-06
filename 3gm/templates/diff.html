@@ -7,14 +7,22 @@
 <li><a href="{{ url_for('links', identifier=identifier )}}">Δείτε του συνδέσμους στον {{ identifier }}</a></li>
 </ul>
 
-<form id="diff" action = "/diff" method="POST">
+<h1>Διαφορές του {{ identifier }}</h1>
+
+<form action = "/diff" method="POST">
   <div class="container">
     <div class="row">
+      <div class="col-4">
+        <label for="identifier">Βασική Έκδοση</label>
+        <select id="identifier" name="identifier">
+            <option value="{{ identifier }}">{{ identifier }}</option>
+        </select>
+      </div>
       <div class="col-4">
         <label for="initial">Αρχική Έκδοση</label>
         <select id="initial" name="initial">
           {% for law in history | reverse %}
-            <option>{{ law.amendee }}</option>
+            <option value="{{ law.amendee }}">{{ law.amendee }}</option>
           {% endfor %}
         </select>
       </div>
@@ -22,18 +30,19 @@
         <label for="final">Τελική Έκδοση</label>
         <select id="final" name="final">
           {% for law in history | reverse %}
-            <option>{{ law.amendee }}</option>
+            <option value="{{ law.amendee }}">{{ law.amendee }}</option>
           {% endfor %}
         </select>
       </div>
-      <div class="col-4 vcenter">
+    </div>
+    <div class="row">
+      <div class="col-12">
         <input type="submit" id="submit" value="Εύρεση Διαφορών">
       </div>
-    </div>
   </div>
+</div>
 </form>
 
-<h1>Διαφορές του {{ identifier }}</h1>
 
 <div class="container">
   <div class="row">

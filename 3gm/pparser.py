@@ -1122,7 +1122,6 @@ class LawParser:
             detected = 1
             try:
                 if t['law']['_id'] == self.identifier:
-                    print(t)
                     self.query_from_tree(t)
                     applied = 1
             except BaseException:
@@ -1361,7 +1360,7 @@ class LawParser:
                     try:
                         result = result + '#### {}\n'.format(self.titles[article])
                     except:
-                        pass    
+                        pass
                 for i, paragraph in enumerate(self.get_paragraphs(article)):
                     result = result + \
                         ' {}. {}\n'.format(i, paragraph)

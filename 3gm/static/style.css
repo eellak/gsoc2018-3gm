@@ -333,3 +333,7 @@ a.headlink:before {
   align-items: center;
   top: 100%;
 }
+
+select {
+  width: 100%;
+}

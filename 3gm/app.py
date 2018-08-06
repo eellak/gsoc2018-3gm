@@ -376,7 +376,7 @@ def diff():
         elif x.amendee == initial:
             initial_text = x.export_law('issue').splitlines()
 
-    diffs = differ.compare(final_text, initial_text)
+    diffs = differ.compare(initial_text, final_text)
 
     return render_template('diff.html', **locals())
 
