@@ -175,8 +175,9 @@ def codify_law(identifier=None):
         corpus = codifier.get_law(data['law'], export_type='markdown')
         corpus = render_links(corpus)
         content = Markup(markdown.markdown(corpus))
-    except KeyError:
-        return render_template('error.html')
+    except BaseException as e:
+        err = str(e)
+        return render_template('error.html', **locals())
 
     articles = sorted(law.sentences.keys())
 

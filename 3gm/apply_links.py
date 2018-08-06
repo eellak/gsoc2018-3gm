@@ -1,5 +1,7 @@
+import copy
 import codifier
 import syntax
+# import pdb
 import helpers
 from statistics import mean, stdev
 import logging
@@ -32,10 +34,12 @@ def apply_links(identifier):
     links.sort()
 
     # Initialize
+    # pdb.set_trace()
     initial = law.serialize()
     initial['_version'] = 0
 
-    versions = [initial]
+    versions = []
+    versions.append(copy.deepcopy(initial))
 
     # Stats
     total = 0
@@ -56,8 +60,6 @@ def apply_links(identifier):
                 # Detect amendment
                 try:
                     d, a, law = law.apply_amendment(l['text'])
-                    with open(str(version_index) + '.txt', 'w+') as f:
-                        f.write(law.export_law('markdown'))
 
                     # Increase accuracy bits
                     detected += d
@@ -74,7 +76,7 @@ def apply_links(identifier):
             if increase_flag:
                 # If it indeed modifies law then increase version
                 version_index += 1
-                s = law.serialize()
+                s = copy.deepcopy(law.serialize())
                 s['_version'] = version_index
                 s['amendee'] = tmp_index
                 versions.append(s)
@@ -174,4 +176,4 @@ def apply_links_between(start, end):
     apply_all_links(list(identifiers))
 
 if __name__ == '__main__':
-    apply_all_links(['ν. 4009/2011'])
+    apply_all_links(['π.δ. 213/2005'])

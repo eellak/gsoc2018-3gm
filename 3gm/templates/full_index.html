@@ -17,7 +17,7 @@
 
 
 <ol>
-  {% for k in full_index %}
+  {% for k in full_index | reverse %}
   <li id="{{ k['_id'] }}"><a href="{{ url_for('codify_law', identifier=k['_id'] )}}">{{ k['_id'] | lower }}</a></li>
   <ol>
     {% for l in k['links_to'] %}
