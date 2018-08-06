@@ -143,7 +143,7 @@ class LegalEntities:
 class Numerals:
 
     units = {
-        'μόνο', 1,
+        'μόνο': 1,
         'πρώτ': 1,
         'δεύτερ': 2,
         'τρίτ': 3,
