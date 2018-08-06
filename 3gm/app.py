@@ -298,16 +298,17 @@ def legal_index():
 def full_index():
     """Displays full linking index"""
     global codifier
-    full_index = codifier.db.links.find().sort('_id', pymongo.ASCENDING)
+    full_index = list(codifier.db.links.find())
+    helpers.quicksort(full_index, lambda x, y: helpers.compare_statutes(x['_id'], y['_id']))
 
-    # current = None
-    # toc = []
-    # for law in full_index:
-    #     if current == None or helpers.compare_year(law['_id']) != current:
-    #         current = helpers.compare_year(law['_id'])
-    #         toc.append((current, law['_id']))
+    current = None
+    toc = []
+    for law in full_index:
+        if current == None or helpers.compare_year(law['_id']) != current:
+            current = helpers.compare_year(law['_id'])
+            toc.append((current, law['_id']))
 
-    return render_template('full_index.html', full_index=full_index)
+    return render_template('full_index.html', full_index=full_index, toc=toc)
 
 
 @app.route('/label/<label>/<sorting>')

@@ -121,12 +121,12 @@ class IssueParser:
 
         paragraph_ids = [
             par_id.group().strip('. ') for par_id in re.finditer(
-                r'\d+.', self.articles[article])]
+                r'\d+. ', self.articles[article])]
         paragraph_corpus = list(
             filter(
                 lambda x: x.rstrip() != '',
                 re.split(
-                    r'\d+.',
+                    r'\d+. ',
                     self.articles[article])))
         paragraph_corpus = [p.rstrip().lstrip() for p in paragraph_corpus]
         return paragraph_corpus
@@ -240,7 +240,7 @@ class IssueParser:
             paragraphs = collections.defaultdict(list)
             current = '0'
             for t in content:
-                x = re.search(r'\d+.', t)
+                x = re.search(r'\d+. ', t)
                 if x and x.span() in [(0, 3), (0, 4)]:
                     current = x.group().strip('. ')
                 paragraphs[current].append(t)
@@ -532,7 +532,7 @@ class LawParser:
         start = 0
 
         for i, t in enumerate(lines):
-            x = re.search(r'\d+.', t)
+            x = re.search(r'\d+. ', t)
             if x and x.span() in [(0, 3), (0, 4)]:
                 try:
                     number = int(x.group().split('.')[0])
@@ -621,7 +621,7 @@ class LawParser:
                     paragraphs = collections.defaultdict(list)
                     current = '0'
                     for t in self.articles[article]:
-                        x = re.search(r'\d+.', t)
+                        x = re.search(r'\d+. ', t)
                         if x and x.span() in [(0, 3), (0, 4)]:
                             current = x.group().strip('. ')
                         paragraphs[current].append(t)
@@ -701,7 +701,7 @@ class LawParser:
         paragraphs = collections.defaultdict(list)
 
         paragraph_ids = [par_id.group().strip('. ')
-                         for par_id in re.finditer(r'\d+.', content)]
+                         for par_id in re.finditer(r'\d+. ', content)]
 
         # filter ids
         filtered_ids = []
@@ -776,7 +776,7 @@ class LawParser:
         paragraph = str(paragraph)
 
         # prepare content for modification
-        content = re.sub(r'\d+.', '', content)
+        content = re.sub(r'\d+. ', '', content)
 
         # add in its full form or split into periods
         self.articles[article][paragraph] = content

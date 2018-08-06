@@ -454,7 +454,10 @@ class LawCodifier:
                                 law.identifier, paragraph, link_type='γενικός')
 
         for link in self.links.values():
-            self.db.links.save(link.serialize())
+            try:
+                self.db.links.save(link.serialize())
+            except:
+                pass    
 
     def populate_links(self):
         """Populate links from database and fetch latest versions"""

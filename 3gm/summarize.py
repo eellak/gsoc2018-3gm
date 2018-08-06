@@ -25,8 +25,11 @@ def job(identifier):
         summary = summarize_textrank(titles, ratio=0.1)
     except BaseException as e:
         logging.warning(str(e))
-        summary = titles
+
     finally:
+        if summary == '':
+            summary = titles
+            
         summary_obj = {
             '_id' : identifier,
             'summary' : summary
