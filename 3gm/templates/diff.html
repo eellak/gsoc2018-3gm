@@ -57,7 +57,9 @@
 </div>
 
 {% for d in diffs %}
-{{ d | highlight_diff(initial_gg_link, final_gg_link, initial_archive_link, final_archive_link) | safe }}
+  {% if d[0] != '?' %}
+    {{ d | highlight_diff(initial_gg_link, final_gg_link, initial_archive_link, final_archive_link) | safe }}
+  {% endif %}  
 {% endfor %}
 
 {% endblock %}
