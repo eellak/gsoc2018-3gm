@@ -13,24 +13,39 @@
 
 <h3>Ευρετήριο</h3>
 
-<ol>
-  {% for law in history | reverse %}
-  <li><a href="#heading{{ loop.index }}">
-    {% if law.identifier == law.amendee %}
-    {% set issue = law.issue %}
-    Αρχική μορφή του {{ law.identifier }}, δημοσιευθείς στο {{ law.amendee | gg_link }}
-    {% else %}
-    Εμφάνιση του {{ law.identifier }} μέχρι και τις αλλαγές του {{ law.amendee }}
-    {% endif %}
-    <a href="{{ law.amendee | archive_link }} ">
-      (Δεσμός στο Internet Archive)
-    </a>
-  </a></li>
-
-  {% endfor %}
-</ol>
-
-<h3>Σύγκριση Εκδόσεων</h3>
+<div class="container">
+    <ul class="timeline">
+      {% for law in history | reverse %}
+        {% if loop.index % 2 == 1 %}
+        <li class="wow bounceInLeft">
+          <div class="timeline-badge danger"><i class="glyphicon glyphicon-check"></i></div>
+        {% else %}
+        <li class="timeline-inverted wow bounceInRight">
+          <div class="timeline-badge dark"><i class="glyphicon glyphicon-credit-card"></i></div>
+        {% endif %}
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h4 class="timeline-title">
+                <a href="#heading{{ loop.index }}">
+                {% if law.identifier == law.amendee %}
+                {% set issue = law.issue %}
+                Αρχική μορφή του {{ law.identifier }}, δημοσιευθείς στο {{ law.amendee | gg_link }}
+                {% else %}
+                Εμφάνιση του {{ law.identifier }} μέχρι και τις αλλαγές του {{ law.amendee }}
+                {% endif %}
+              </a></h4>
+            </div>
+            <div class="timeline-body">
+                <p>{{ law.summary }}</p>
+                <p><a href="{{ law.amendee | archive_link }} ">
+                  Δεσμός στο Internet Archive
+                </a></p>
+            </div>
+          </div>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
 
 <h3>Πλήρες Ιστορικό</h3>
 

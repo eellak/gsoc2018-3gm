@@ -274,6 +274,8 @@ def history():
     # Get as markdown
     for x in history:
         x.content = x.export_law('markdown')
+        for y in codifier.db.summaries.find({'_id' : x.amendee}):
+            x.summary = y['summary']
 
     return render_template('history.html', **locals())
 
