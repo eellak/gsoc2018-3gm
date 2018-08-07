@@ -369,6 +369,12 @@ def diff():
     initial = request.args.get('initial')
     history, links = codifier.get_history(identifier)
 
+    initial_gg_link = gg_link(initial)
+    final_gg_link = gg_link(final)
+
+    initial_archive_link = archive_link(initial)
+    final_archive_link = archive_link(final)
+
     # Get as markdown
     for x in history:
         if x.amendee == final:
@@ -506,16 +512,34 @@ def lower(s):
     return s.lower()
 
 @app.template_filter('highlight_diff')
-def highlight_diff(d):
+def highlight_diff(d, initial, final, initial_archive, final_archive):
     lookup = {
         '+' : 'rgba(0, 255, 0, 0.3)',
         '-' : 'rgba(255, 0, 0, 0.3)',
         '?' :  'rgba(0, 0, 255, 0.3)'
     }
 
+    gg_lookup = {
+        '+' : final,
+        '-' : initial,
+        '?' : 'Δεν βρίσκεται σε κανένα από τα δύο'
+    }
+
+    archive_lookup = {
+        '+' : final_archive,
+        '-' : initial_archive,
+        '?' : 'Δεν βρίσκεται σε κανένα από τα δύο'
+    }
+
     try:
-        return "<p style='background-color: {};'>{}</p>".format(lookup[d[0]], d)
-    except:
+        pref = "<a href='{}' class='no-linter'><p style='background-color: {};' data-toggle='tooltip' data-placement='right' data-html='true' title='<h3>{}</h3>' >{}</p></a>".format(archive_lookup[d[0]], lookup[d[0]], gg_lookup[d[0]], d)
+        script = '''<script>
+                    $(document).ready(function(){
+                        $('[data-toggle="tooltip"]').tooltip();
+                    });
+                    </script>'''
+        return pref + script
+    except BaseException:
         return '<p>{}</p>'.format(d)
 
 if __name__ == '__main__':

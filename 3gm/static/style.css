@@ -337,3 +337,8 @@ a.headlink:before {
 select {
   width: 100%;
 }
+
+a.no-linter {
+  text-decoration: none;
+  color: inherit;
+}

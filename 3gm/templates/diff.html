@@ -9,17 +9,6 @@
 
 <h1>Διαφορές του {{ identifier }}</h1>
 
-<div class="container">
-  <h3>Tooltip Example</h3>
-  <p href="#" data-toggle="tooltip" title="Hooray!">Hover over me</p>
-</div>
-
-<script>
-$(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();
-});
-</script>
-
 <form action = "/diff" method="POST">
   <div class="container">
     <div class="row">
@@ -68,7 +57,7 @@ $(document).ready(function(){
 </div>
 
 {% for d in diffs %}
-  {{ d | highlight_diff | safe }}
+{{ d | highlight_diff(initial_gg_link, final_gg_link, initial_archive_link, final_archive_link) | safe }}
 {% endfor %}
 
 {% endblock %}
