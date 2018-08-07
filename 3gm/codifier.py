@@ -457,7 +457,7 @@ class LawCodifier:
             try:
                 self.db.links.save(link.serialize())
             except:
-                pass    
+                pass
 
     def populate_links(self):
         """Populate links from database and fetch latest versions"""
@@ -544,6 +544,13 @@ class LawCodifier:
         """Run pagerank on graph built from links"""
         self.graph = self.build_graph_from_links()
         self.ranks = pagerank(self.graph, alpha=0.9)
+        ranking = list(zip(self.ranks.keys(), self.ranks.values()))
+        ranking.sort(key=lambda x: x[1])
+        self.ranking = {}
+        for i, rr in enumerate(ranking):
+            l, r = rr
+            self.ranking[l] = i
+
         return self.ranks
 
 

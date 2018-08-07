@@ -190,8 +190,7 @@ def codify_law(identifier=None):
         topics = None
 
     try:
-        rank = round(codifier.ranks[ data['law'] ], 7) * 100
-        rank_txt = str(rank) + ' %'
+        rank_txt = str(codifier.ranking[ data['law'] ]) + 'ος'
     except:
         rank_txt = ''
 
