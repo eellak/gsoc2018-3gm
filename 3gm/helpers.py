@@ -647,16 +647,6 @@ def compare_year(s):
     except BaseException:
         return int(s.split('.')[-1])
 
-def split_dict(d, key):
-    results = []
-
-    for x in d[key]:
-        r = copy.copy(d)
-        d[key] = x
-        results.append(x)
-
-    return results
-
 def parse_filename(fn):
     fn = fn.replace('.txt', '')
     year = fn[:4]

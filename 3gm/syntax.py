@@ -474,15 +474,19 @@ class ActionTreeGenerator:
         return tree, max_depth
 
     @staticmethod
-    def build_level(tmp, subtree, max_depth, stem):
+    def build_level(tmp, subtree, max_depth, stem, list_iter=False):
         """Builds a level of the tree using the stems lookup"""
         lookup = ActionTreeGenerator.trans_lookup[stem]
 
         if not re.search(stem, subtree['what']['context']):
             for i, w in enumerate(tmp):
                 if re.search(stem, w):
-                    subtree[lookup]['_id'] = next(
-                        helpers.ssconj_doc_iterator(tmp, i))
+                    if not list_iter:
+                        subtree[lookup]['_id'] = next(
+                            helpers.ssconj_doc_iterator(tmp, i))
+                    else:
+                        subtree[lookup]['_id'] = list(
+                            helpers.ssconj_doc_iterator(tmp, i))
                     subtree[lookup]['children'] = ActionTreeGenerator.children_loopkup[lookup]
                     break
         else:
@@ -492,11 +496,100 @@ class ActionTreeGenerator:
         return subtree
 
     @staticmethod
-    def build_levels(tmp, subtree):
+    def build_levels(tmp, subtree, list_iter=False):
         """Build all levels using the stems"""
         stems = list(ActionTreeGenerator.trans_lookup.keys())
         for i, stem in enumerate(stems):
             subtree = ActionTreeGenerator.build_level(
-                tmp, subtree, i + 2, stem)
+                tmp, subtree, i + 2, stem, list_iter=list_iter)
+
+        return subtree
+
+    @staticmethod
+    def get_smallest(tree):
+        for key in tree:
+            try:
+                for child in ActionTreeGenerator.children_loopkup[key]:
+                    if child not in tree:
+                        return key
+            except KeyError:
+                pass
+        raise IndexError()
+
+    @staticmethod
+    def break_smallest(tree):
+        smallest = ActionTreeGenerator.get_smallest(tree)
+
+        for key in tree:
+            if key != smallest:
+                try:
+                    if isinstance(tree[key]['_id'], list):
+                        tree[key]['_id'] = tree[key]['_id'][0]
+                except:
+                    pass
+
+        subtrees = ActionTreeGenerator.split_dict_subkey(tree, smallest, subkey='_id')
+        return subtrees, smallest
+
+    @staticmethod
+    def split_dict(d, key):
+        results = []
+
+        for x in d[key]:
+            r = copy.deepcopy(d)
+            r[key] = x
+            results.append(r)
+
+        return results
+
+    @staticmethod
+    def split_dict_subkey(d, key, subkey):
+        results = []
+
+        for x in d[key][subkey]:
+            r = copy.deepcopy(d)
+            r[key][subkey] = x
+            results.append(r)
+
+        return results
+
+    @staticmethod
+    def detect_removals(s):
+        tmp = s.split(' ')
+
+        tree = collections.defaultdict(dict)
+        tree['root']['action'] = 'διαγράφεται'
+
+        tree['law']['_id'] = ActionTreeGenerator.detect_latest_statute(s)
+        tree = ActionTreeGenerator.build_levels_helper(tmp, tree, list_iter=True)
+
+        subtrees, smallest = ActionTreeGenerator.break_smallest(tree)
+        return subtrees, smallest
+
+    @staticmethod
+    def build_level_helper(tmp, subtree, max_depth, stem, list_iter=False):
+        """Builds a level of the tree using the stems lookup"""
+        lookup = ActionTreeGenerator.trans_lookup[stem]
+
+        for i, w in enumerate(tmp):
+            if re.search(stem, w):
+                is_plural = helpers.is_plural(w)
+                if not list_iter:
+                    subtree[lookup]['_id'] = next(
+                        helpers.ssconj_doc_iterator(tmp, i))
+                else:
+                    subtree[lookup]['_id'] = list(
+                        helpers.ssconj_doc_iterator(tmp, i, is_plural=is_plural))
+                subtree[lookup]['children'] = ActionTreeGenerator.children_loopkup[lookup]
+
+        return subtree
+
+    @staticmethod
+    def build_levels_helper(tmp, subtree, list_iter=False):
+        """Build all levels using the stems"""
+        stems = list(ActionTreeGenerator.trans_lookup.keys())
+        for i, stem in enumerate(stems):
+            subtree = ActionTreeGenerator.build_level_helper(
+                tmp, subtree, i + 2, stem, list_iter=list_iter)
 
         return subtree
