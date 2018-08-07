@@ -12,7 +12,7 @@ This project aims to provide with the most recent versions of each law, i.e. an 
 
 ## Demo
 
-The project is hosted at [3gm.papachristoumarios.me](http://3gm.papachristoumarios.me),  [3gm.ellak.gr](https://3gm.ellak.gr) or [openlaws.ellak.gr](https://openlaws.ellak.gr).
+The project is hosted at [3gm.ellak.gr](https://3gm.ellak.gr) or [openlaws.ellak.gr](https://openlaws.ellak.gr).
 
 ## Timeline
 
