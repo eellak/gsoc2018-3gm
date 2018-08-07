@@ -545,6 +545,27 @@ def ssconj_doc_iterator(l, i, is_plural=False):
                                                   ).endswith("'") or str(l[j + 1]).endswith('΄'):
                     yield str(l[min(j + 1, n)]).strip(',')
                     return
+            elif str(l[j]) in ['ως', 'έως']:
+                if str(l[j + 1]).isdigit():
+                    start = int(l[j - 1])
+                    end = int(l[j + 1])
+                    print(start, end)
+                    for i in range(start + 1, end):
+                        print(i)
+                        yield i
+                    return
+                elif str(l[j + 1]).endswith("'") or str(l[j + 1]).endswith('΄'):
+                    start = str(l[j - 1]).strip('΄').strip("'")
+                    end = str(l[j + 1]).strip('΄').strip("'")
+                    start_num = entities.Numerals.GreekNum(start)
+                    end_num = entities.Numerals.GreekNum(end)
+
+                    while True:
+                        yield start_num.s
+                        if start_num.value == end_num.value:
+                            return
+                        start_num.value += 1
+
             elif str(l[j]).isdigit() or str(l[j]).endswith(
                     "'") or str(l[j]).endswith('΄') or str(l[j]).endswith(','):
                 yield str(l[j]).strip(',')
