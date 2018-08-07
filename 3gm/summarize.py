@@ -27,9 +27,6 @@ def job(identifier):
         logging.warning(str(e))
 
     finally:
-        if summary == '':
-            summary = titles
-            
         summary_obj = {
             '_id' : identifier,
             'summary' : summary
