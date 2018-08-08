@@ -1110,6 +1110,11 @@ class LawParser:
         del self.sentences[article][old_id]
         return self.serialize()
 
+    def delete(self):
+        self.sentences = {}
+        self.titles = {}
+        return self.serialize()    
+
     def apply_amendment(self, s, throw_exceptions=False):
         """Applies amendment given a string s
         params s: Query string
