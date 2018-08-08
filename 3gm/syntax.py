@@ -1,4 +1,5 @@
 import entities
+import json
 import re
 import collections
 import logging
@@ -106,8 +107,6 @@ class ActionTreeGenerator:
         laws.extend(legislative_decrees)
 
         laws = [law.group() for law in laws]
-
-        logging.info('Laws are', laws)
 
         law = ActionTreeGenerator.get_latest_statute(laws)
 
@@ -476,6 +475,7 @@ class ActionTreeGenerator:
     @staticmethod
     def build_level(tmp, subtree, max_depth, stem, list_iter=False):
         """Builds a level of the tree using the stems lookup"""
+        
         lookup = ActionTreeGenerator.trans_lookup[stem]
 
         if not re.search(stem, subtree['what']['context']):
@@ -498,6 +498,7 @@ class ActionTreeGenerator:
     @staticmethod
     def build_levels(tmp, subtree, list_iter=False):
         """Build all levels using the stems"""
+
         stems = list(ActionTreeGenerator.trans_lookup.keys())
         for i, stem in enumerate(stems):
             subtree = ActionTreeGenerator.build_level(
@@ -507,6 +508,8 @@ class ActionTreeGenerator:
 
     @staticmethod
     def get_smallest(tree):
+        """Detect smallest (μικρότερο μόριο) part of given a tree"""
+
         for key in tree:
             try:
                 for child in ActionTreeGenerator.children_loopkup[key]:
@@ -514,11 +517,20 @@ class ActionTreeGenerator:
                         return key
             except KeyError:
                 pass
-        raise IndexError()
+        if 'law' in tree:
+            return 'law'
+        else:
+            raise IndexError()
 
     @staticmethod
     def break_smallest(tree):
+        """Break a tree into subtrees on the smallest node"""
+
         smallest = ActionTreeGenerator.get_smallest(tree)
+        tree['what']['context'] = smallest
+
+        if smallest == 'law':
+            return [tree], smallest
 
         for key in tree:
             if key != smallest:
@@ -532,38 +544,38 @@ class ActionTreeGenerator:
         return subtrees, smallest
 
     @staticmethod
-    def split_dict(d, key):
-        results = []
-
-        for x in d[key]:
-            r = copy.deepcopy(d)
-            r[key] = x
-            results.append(r)
-
-        return results
-
-    @staticmethod
     def split_dict_subkey(d, key, subkey):
+        """Split a dict of dicts on a subkey of a given key
+        :params d : Dictionary to be split
+        :params key : Dictionary Key
+        :params subkey : Dictionary subkey"""
         results = []
 
         for x in d[key][subkey]:
             r = copy.deepcopy(d)
-            r[key][subkey] = x
+            r[key][subkey] = str(x)
             results.append(r)
 
         return results
 
     @staticmethod
-    def detect_removals(s):
+    def detect_removals_helper(s, law=None):
+        """Removals detection helper function"""
         tmp = s.split(' ')
 
         tree = collections.defaultdict(dict)
         tree['root']['action'] = 'διαγράφεται'
-
-        tree['law']['_id'] = ActionTreeGenerator.detect_latest_statute(s)
+        if law == None:
+            try:
+                tree['law']['_id'] = ActionTreeGenerator.detect_latest_statute(s)
+            except:
+                return []
+        else:
+            tree['law']['_id'] = law
         tree = ActionTreeGenerator.build_levels_helper(tmp, tree, list_iter=True)
 
         subtrees, smallest = ActionTreeGenerator.break_smallest(tree)
+
         return subtrees, smallest
 
     @staticmethod
@@ -593,3 +605,36 @@ class ActionTreeGenerator:
                 tmp, subtree, i + 2, stem, list_iter=list_iter)
 
         return subtree
+
+    @staticmethod
+    def detect_removals(q):
+        """Detect removals (καραργούμενες διατάξεις) on a string
+        :params q : Query string"""
+        split_regex = r'[^0-9],|[0-9], [^0-9]|καθώς και'
+        q = tokenizer.tokenizer.remove_subordinate(q)
+
+        removals = []
+        exceptions = []
+
+        try:
+            law = ActionTreeGenerator.detect_latest_statute(q)
+        except:
+            return removals, exceptions
+        exceptions_regex = r'εκτός|εξαίρεση|εξαιρείται|εξαιρούνται'
+
+        splitted = re.split(split_regex, q)
+        for s in splitted:
+            if re.search(exceptions_regex, s):
+                subtrees, smallest = ActionTreeGenerator.detect_removals_helper(s, law)
+                exceptions.extend(subtrees)
+            else:
+                subtrees, smallest = ActionTreeGenerator.detect_removals_helper(s, law)
+                removals.extend(subtrees)
+
+        for exc in exceptions:
+            try:
+                removals.remove(exc)
+            except ValueError:
+                pass
+
+        return removals, exceptions
