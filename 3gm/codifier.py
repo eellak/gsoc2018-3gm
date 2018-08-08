@@ -400,12 +400,12 @@ class LawCodifier:
                             for s in non_extracts:
 
                                 neighbors = re.finditer(entity, s)
-                                neighbors = set([neighbor.group()
+                                neighbors = set([neighbor.group().lower()
                                                  for neighbor in neighbors])
 
                                 tmp = s.split(' ')
 
-                                for u in neighbors:
+                                for u in map(lambda x: x.lower(), neighbors):
                                     if u not in self.links:
                                         self.links[u] = Link(u)
                                     is_modifying = False
@@ -429,10 +429,10 @@ class LawCodifier:
                             # referential
                             for s in extracts:
                                 neighbors = re.finditer(entity, s)
-                                neighbors = set([neighbor.group()
+                                neighbors = set([neighbor.group().lower()
                                                  for neighbor in neighbors])
 
-                                for u in neighbors:
+                                for u in map(lambda x: x.lower(), neighbors):
                                     u = u.lower()
                                     if u not in self.links:
                                         self.links[u] = Link(u)
@@ -442,10 +442,10 @@ class LawCodifier:
                     # except there are Unmatched brackets
                     except Exception as e:
                         neighbors = re.finditer(entity, paragraph)
-                        neighbors = set([neighbor.group()
+                        neighbors = set([neighbor.group().lower()
                                          for neighbor in neighbors])
 
-                        for u in neighbors:
+                        for u in map(lambda x: x.lower(), neighbors):
 
                             if u not in self.links:
                                 self.links[u] = Link(u)
