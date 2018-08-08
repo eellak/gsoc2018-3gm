@@ -43,7 +43,7 @@ def handle_download(download_page, params):
 	year = params['issue_date'].year
 
 	dirs = '{}/{}/{}'.format(vol, year, filename[6:9])
-	os.system('mkdir -p {}'.format(dirs))
+	os.system('mkdir -p {}/{}'.format(output_dir, dirs))
 	outfile = '{}/{}/{}'.format(output_dir, dirs, filename)
 
 	if os.path.isfile(outfile):
