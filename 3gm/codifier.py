@@ -553,6 +553,38 @@ class LawCodifier:
 
         return self.ranks
 
+    def detect_and_apply_removals(self, identifier):
+        """Apply removals, if any, of a given law"""
+        articles = self.laws[identifier].get_articles_sorted()
+        removals_regex = r'καταργο(ύ|υ)μενες διατ(ά|α)ξεις'
+        removing_articles = []
+
+        # detect removal region
+        for article in articles:
+            try:
+                if re.search(removals_regex, self.laws[identifier].titles[article].lower()):
+                    removing_articles.append(article)
+            except:
+                continue
+
+        # detect and apply removals
+        for article in removing_articles:
+            for i, paragraph in enumerate(self.laws[identifier].get_paragraphs(article)):
+                removals, exceptions = syntax.ActionTreeGenerator.detect_removals(paragraph)
+
+                for subtree in removals:
+                    target = subtree['law']['_id']
+                    try:
+                        self.laws[target].query_from_tree(subtree)
+                        logging.info('Applied removal on ' + target)
+                    except KeyError as e:
+                        logging.warning('Statute nonexistent ' + target)
+
+    def detect_and_apply_all_removals(self):
+        """Detect and apply all removals in the codifier"""
+        for identifier in self.laws:
+            self.detect_and_apply_removals(identifier=identifier)
+
 
 def build(
         start=1998,
