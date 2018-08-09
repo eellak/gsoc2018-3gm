@@ -1329,11 +1329,16 @@ class LawParser:
         """Return Paragraphs via a generator
         :params article : The article number
         """
+        def _get_par(x):
+            try:
+                return int(x.strip(')'))
+            except:
+                return 100
 
         article = str(article)
         for paragraph_id in sorted(
                 self.sentences[article].keys(),
-                key=lambda x: int(x.strip(')'))):
+                key=_get_par):
             yield self.get_paragraph(article, paragraph_id)
 
     def get_articles_sorted(self):
