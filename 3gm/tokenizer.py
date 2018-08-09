@@ -20,6 +20,9 @@ class Tokenizer:
 
         # subordinate conjuctions
         self.subordinate_conjuctions = [
+            'ο οποίος',
+            'η οποία',
+            'το οποίο',
             'ότι',
             'όπως',
             'πως',

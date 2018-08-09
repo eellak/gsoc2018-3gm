@@ -1,6 +1,11 @@
 {% extends 'layout.html' %}
 {% block body %}
 
+
+<script>
+  new WOW().init();
+</script>
+
 <ul class='law-options navbar-ul'>
   <li><a href="{{ url_for('codify_law', identifier=identifier )}}">Δείτε την τρέχουσα έκδοση του {{ identifier }}</a></li>
   <li><a href="{{ url_for('amendment', identifier=identifier )}}">Δείτε τους νόμους που τροποποιεί ο {{ identifier }}</a></li>

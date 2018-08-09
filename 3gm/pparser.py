@@ -20,6 +20,7 @@ import glob
 import sys
 import phrase_fun
 import syntax
+import json
 
 # configuration and parameters
 
@@ -120,13 +121,13 @@ class IssueParser:
         paragraphs = collections.defaultdict(list)
 
         paragraph_ids = [
-            par_id.group().strip('. ') for par_id in re.finditer(
-                r'\d+. ', self.articles[article])]
+            par_id.group().strip('.') for par_id in re.finditer(
+                r'\d+.', self.articles[article])]
         paragraph_corpus = list(
             filter(
                 lambda x: x.rstrip() != '',
                 re.split(
-                    r'\d+. ',
+                    r'\d+.',
                     self.articles[article])))
         paragraph_corpus = [p.rstrip().lstrip() for p in paragraph_corpus]
         return paragraph_corpus
@@ -240,9 +241,9 @@ class IssueParser:
             paragraphs = collections.defaultdict(list)
             current = '0'
             for t in content:
-                x = re.search(r'\d+. ', t)
-                if x and x.span() in [(0, 3), (0, 4)]:
-                    current = x.group().strip('. ')
+                x = re.search(r'\d+.', t)
+                if x and x.span() in [(0, 2), (0, 3)]:
+                    current = x.group().strip('.')
                 paragraphs[current].append(t)
 
             sentences = {}
@@ -532,8 +533,8 @@ class LawParser:
         start = 0
 
         for i, t in enumerate(lines):
-            x = re.search(r'\d+. ', t)
-            if x and x.span() in [(0, 3), (0, 4)]:
+            x = re.search(r'\d+.', t)
+            if x and x.span() in [(0, 2), (0, 3)]:
                 try:
                     number = int(x.group().split('.')[0])
                 except BaseException:
@@ -621,9 +622,9 @@ class LawParser:
                     paragraphs = collections.defaultdict(list)
                     current = '0'
                     for t in self.articles[article]:
-                        x = re.search(r'\d+. ', t)
-                        if x and x.span() in [(0, 3), (0, 4)]:
-                            current = x.group().strip('. ')
+                        x = re.search(r'\d+.', t)
+                        if x and x.span() in [(0, 2), (0, 3)]:
+                            current = x.group().strip('.')
                         paragraphs[current].append(t)
 
                     sentences = {}
@@ -700,15 +701,15 @@ class LawParser:
         article = str(article)
         paragraphs = collections.defaultdict(list)
 
-        paragraph_ids = [par_id.group().strip('. ')
-                         for par_id in re.finditer(r'\d+. ', content)]
+        paragraph_ids = [par_id.group().strip('.')
+                         for par_id in re.finditer(r'\d+.', content)]
 
         # filter ids
         filtered_ids = []
         current = 1
         for i, x in enumerate(paragraph_ids):
             if int(x) == current:
-                filtered_ids.append(x + '. ')
+                filtered_ids.append(x + '.')
                 current += 1
 
         if len(paragraph_ids) == 0:
@@ -776,7 +777,7 @@ class LawParser:
         paragraph = str(paragraph)
 
         # prepare content for modification
-        content = re.sub(r'\d+. ', '', content)
+        content = re.sub(r'\d+.', '', content)
 
         # add in its full form or split into periods
         self.articles[article][paragraph] = content
@@ -1113,7 +1114,7 @@ class LawParser:
     def delete(self):
         self.sentences = {}
         self.titles = {}
-        return self.serialize()    
+        return self.serialize()
 
     def apply_amendment(self, s, throw_exceptions=False):
         """Applies amendment given a string s
@@ -1150,12 +1151,12 @@ class LawParser:
             except KeyError:
                 raise Exception('Unable to find content or context in tree')
 
-            if context in ['άρθρο', 'άρθρα']:
+            if context in ['άρθρο', 'άρθρα', 'article']:
                 return self.add_article(
                     article=tree['article']['_id'],
                     content=content)
 
-            elif context in ['παράγραφος', 'παράγραφοι']:
+            elif context in ['παράγραφος', 'παράγραφοι', 'paragraph']:
                 return self.add_paragraph(
                     article=tree['article']['_id'],
                     paragraph=tree['paragraph']['_id'],
@@ -1176,7 +1177,7 @@ class LawParser:
                         position=int(tree['period']['_id']) - 1,
                         article=tree['article']['_id'],
                         paragraph=tree['paragraph']['_id'])
-            elif context in ['φράση', 'φράσεις']:
+            elif context in ['φράση', 'φράσεις', 'phrase']:
                 if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
                     return self.insert_phrase(
                         new_phrase=tree['phrase']['new_phrase'],
@@ -1192,13 +1193,13 @@ class LawParser:
                         article=tree['article']['_id'],
                         paragraph=tree['paragraph']['_id'])
 
-            elif context in ['τίτλος', 'τίτλοι']:
+            elif context in ['τίτλος', 'τίτλοι', 'title']:
                 return self.set_title(
                     content=content,
                     article=tree['article']['_id']
                 )
-            elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
-                if context in ['περίπτωση', 'περιπτώσεις']:
+            elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις', 'case']:
+                if context in ['περίπτωση', 'περιπτώσεις', 'case']:
                     case_letter = tree['case']['_id']
                 else:
                     case_letter = tree['subcase']['_id']
@@ -1234,16 +1235,19 @@ class LawParser:
             except KeyError:
                 raise Exception('Unable to find context in tree')
 
-            if context in ['άρθρο', 'άρθρα']:
+            if context == 'law':
+                return self.delete()
+
+            elif context in ['άρθρο', 'άρθρα', 'article']:
                 return self.remove_article(
                     article=tree['article']['_id']
                 )
-            elif context in ['παράγραφος', 'παράγραφοι']:
+            elif context in ['παράγραφος', 'παράγραφοι', 'paragraph']:
                 return self.remove_paragraph(
                     article=tree['article']['_id'],
-                    paragraph=['paragraph']['_id']
+                    paragraph=tree['paragraph']['_id']
                 )
-            elif context in ['εδάφιο', 'εδάφια']:
+            elif context in ['εδάφιο', 'εδάφια', 'period']:
                 if tree['period']['_id']:
                     return self.remove_period(
                         old_period='',
@@ -1251,14 +1255,14 @@ class LawParser:
                         article=tree['article']['_id'],
                         paragraph=tree['paragraph']['_id']
                     )
-            elif context in ['φράση', 'φράσεις', 'λέξη', 'λέξεις']:
+            elif context in ['φράση', 'φράσεις', 'λέξη', 'λέξεις', 'phrase']:
                 return self.remove_phrase(
                     old_phrase=tree['phrase']['old_phrase'],
                     article=tree['article']['_id'],
                     paragraph=tree['paragraph']['_id']
                 )
 
-            elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']:
+            elif context in ['περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις', 'case', 'subcase']:
                 if context in ['περίπτωση', 'περιπτώσεις']:
                     case_letter = tree['case']['_id']
                 else:
@@ -1279,18 +1283,18 @@ class LawParser:
             except KeyError:
                 raise Exception('Unable to find context in tree')
 
-            if context in ['άρθρο', 'άρθρα']:
+            if context in ['άρθρο', 'άρθρα', 'article']:
                 return self.renumber_article(
                     tree['article']['_id'],
                     tree['what']['to']
                 )
-            elif context in ['παράγραφος', 'παράγραφοι']:
+            elif context in ['παράγραφος', 'παράγραφοι', 'paragraph']:
                 return self.renumber_paragraph(
                     tree['article']['_id'],
                     tree['paragraph']['_id'],
                     tree['what']['to']
                 )
-            elif context in ['περίπτωση', 'περιπτώσεις', 'υποπεριπτώση', 'υποπεριπτώσεις']:
+            elif context in ['περίπτωση', 'περιπτώσεις', 'υποπεριπτώση', 'υποπεριπτώσεις', 'case', 'subcase']:
                 if context in ['περίπτωση', 'περιπτώσεις']:
                     case_letter = tree['case']['_id']
                 else:
