@@ -22,7 +22,11 @@
         <label for="initial">Αρχική Έκδοση</label>
         <select id="initial" name="initial">
           {% for law in history | reverse %}
-            <option value="{{ law.amendee }}">{{ law.amendee }}</option>
+            {% if law.amendee == initial %}
+              <option value="{{ law.amendee }}" selected>{{ law.amendee }}</option>
+            {% else %}
+              <option value="{{ law.amendee }}">{{ law.amendee }}</option>
+            {% endif %}
           {% endfor %}
         </select>
       </div>
@@ -30,7 +34,11 @@
         <label for="final">Τελική Έκδοση</label>
         <select id="final" name="final">
           {% for law in history | reverse %}
-            <option value="{{ law.amendee }}">{{ law.amendee }}</option>
+            {% if law.amendee == final %}
+              <option value="{{ law.amendee }}" selected>{{ law.amendee }}</option>
+            {% else %}
+              <option value="{{ law.amendee }}">{{ law.amendee }}</option>
+            {% endif %}
           {% endfor %}
         </select>
       </div>
@@ -59,7 +67,7 @@
 {% for d in diffs %}
   {% if d[0] != '?' %}
     {{ d | highlight_diff(initial_gg_link, final_gg_link, initial_archive_link, final_archive_link) | safe }}
-  {% endif %}  
+  {% endif %}
 {% endfor %}
 
 {% endblock %}

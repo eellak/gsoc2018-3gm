@@ -74,36 +74,41 @@
 
     <div id="collapse{{ loop.index }}" class="collapse" aria-labelledby="heading{{ loop.index }}" data-parent="#accordion">
       <div class="card-body">
-        <h5>Κείμενο</h5>
-        {{ law.content | render_md | safe }}
+        {% if not law.is_empty %}
+          <h5>Κείμενο</h5>
+          {{ law.content | render_md | safe }}
+          <br>
+          {% if law.amendee != law.identifier %}
+          <h5>Σύνδεσμοι</h5>
+          <h5>Εφαρσμοσμένοι</h5>
+          {% for text, tags in links %}
+          {% if tags[0] == 'τροποποιητικός' and tags[1] == law.amendee and tags[2] == 'εφαρμοσμένος'%}
+          <h5>Κείμενο Τροποποίησης</h5>
+          <p>{{ text }}</p>
 
-        <br>
-        {% if law.amendee != law.identifier %}
-        <h5>Σύνδεσμοι</h5>
-        <h5>Εφαρσμοσμένοι</h5>
-        {% for text, tags in links %}
-        {% if tags[0] == 'τροποποιητικός' and tags[1] == law.amendee and tags[2] == 'εφαρμοσμένος'%}
-        <h5>Κείμενο Τροποποίησης</h5>
-        <p>{{ text }}</p>
+          <h5>Είδος Τροποποίησης </h5>
+          <p>{{ tags | render_badges | safe }}</p>
+          <hr>
+          {% endif %}
+          {% endfor %}
 
-        <h5>Είδος Τροποποίησης </h5>
-        <p>{{ tags | render_badges | safe }}</p>
-        <hr>
+          <h5><br>Μη Εφαρσμοσμένοι</h5>
+          {% for text, tags in links %}
+          {% if tags[0] == 'τροποποιητικός' and tags[1] == law.amendee and tags[2] == 'μη εφαρμοσμένος'%}
+          <h5>Κείμενο Τροποποίησης</h5>
+          <p>{{ text }}</p>
+
+          <h5>Είδος Τροποποίησης </h5>
+          <p>{{ tags | render_badges | safe }}</p>
+          <hr>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+
+        {% else %}
+          <p class="warning">Το νομοθέτημα έχει καραργηθεί</p>
         {% endif %}
-        {% endfor %}
 
-        <h5><br>Μη Εφαρσμοσμένοι</h5>
-        {% for text, tags in links %}
-        {% if tags[0] == 'τροποποιητικός' and tags[1] == law.amendee and tags[2] == 'μη εφαρμοσμένος'%}
-        <h5>Κείμενο Τροποποίησης</h5>
-        <p>{{ text }}</p>
-
-        <h5>Είδος Τροποποίησης </h5>
-        <p>{{ tags | render_badges | safe }}</p>
-        <hr>
-        {% endif %}
-        {% endfor %}
-        {% endif %}
 
 
       </div>

@@ -173,6 +173,7 @@ def codify_law(identifier=None):
     try:
         law = codifier.laws[data['law']]
         corpus = codifier.get_law(data['law'], export_type='markdown')
+        is_empty = is_empty_statute(corpus)
         corpus = render_links(corpus)
         content = Markup(markdown.markdown(corpus))
     except BaseException as e:
@@ -273,6 +274,7 @@ def history():
     # Get as markdown
     for x in history:
         x.content = x.export_law('markdown')
+        x.is_empty = is_empty_statute(x.content)
         for y in codifier.db.summaries.find({'_id' : x.amendee}):
             x.summary = y['summary']
 
@@ -542,6 +544,9 @@ def highlight_diff(d, initial, final, initial_archive, final_archive):
         return pref + script
     except BaseException:
         return '<p>{}</p>'.format(d)
+
+def is_empty_statute(s):
+    return len(s.splitlines()) == 1
 
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)

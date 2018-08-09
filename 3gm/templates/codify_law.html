@@ -24,7 +24,11 @@
 
     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
       <div class="card-body">
-        {{ content | safe }}
+        {% if not is_empty %}
+          {{ content | safe }}
+        {% else %}
+          <p class="warning">Το νομοθέτημα έχει καραργηθεί</p>
+        {% endif %}
       </div>
     </div>
   </div>

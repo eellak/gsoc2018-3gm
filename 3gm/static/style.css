@@ -471,3 +471,7 @@ a.no-linter {
 .timeline-body > p + p {
   margin-top: 5px;
 }
+
+p.warning {
+  color: red;
+}
