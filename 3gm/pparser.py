@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import tokenizer
+import copy
 import re
 import multiprocessing
 import numpy as np
@@ -777,7 +778,10 @@ class LawParser:
         paragraph = str(paragraph)
 
         # prepare content for modification
-        content = helpers.remove_front_num(content).rstrip('.')
+        try:
+            content = helpers.remove_front_num(content).rstrip('.')
+        except BaseException:
+            content = content.rstrip('.')
 
         # add in its full form or split into periods
         self.articles[article][paragraph] = content
@@ -962,8 +966,9 @@ class LawParser:
                             self.sentences[article][paragraph]):
                         if old_period == period:
                             self.sentences[article][paragraph][i] = new_period
+        elif position == 'append':
+            self.sentences[article][paragraph][-1] = new_period
         else:
-            assert(article and paragraph)
             self.sentences[article][paragraph][int(position)] = new_period
 
         return self.serialize()
@@ -1099,14 +1104,14 @@ class LawParser:
     def renumber_article(self, old_id, new_id):
         """Renumber article to new id"""
         assert(article)
-        self.sentences[new_id] = copy.copy(self.sentences[old_id])
+        self.sentences[new_id] = copy.deepcopy(self.sentences[old_id])
         del self.sentences[old_id]
         return self.serialize()
 
     def renumber_paragraph(self, article, old_id, new_id):
         """Renumber paragraph to new id"""
         assert(article)
-        self.sentences[article][new_id] = copy.copy(
+        self.sentences[article][new_id] = copy.deepcopy(
             self.sentences[article][old_id])
         del self.sentences[article][old_id]
         return self.serialize()
@@ -1164,17 +1169,26 @@ class LawParser:
 
             elif context in ['εδάφιο', 'εδάφια']:
                 if tree['root']['action'] in ['προστίθεται', 'προστίθενται']:
+                    try:
+                        pos = int(tree['period']['_id']) - 1
+                    except:
+                        pos = tree['period']['_id']
                     return self.insert_period(
-                        position=int(tree['period']['_id']) - 1,
+                        position=pos,
                         old_period='',
                         new_period=content,
                         article=tree['article']['_id'],
                         paragraph=tree['paragraph']['_id'])
                 elif tree['root']['action'] in ['αντικαθίσταται', 'αντικαθίστανται', 'τροποποιείται', 'τροποποιούνται']:
+                    try:
+                        pos = int(tree['period']['_id']) - 1
+                    except:
+                        pos = tree['period']['_id']
+
                     return self.replace_period(
                         old_period='',
                         new_period=content,
-                        position=int(tree['period']['_id']) - 1,
+                        position=pos,
                         article=tree['article']['_id'],
                         paragraph=tree['paragraph']['_id'])
             elif context in ['φράση', 'φράσεις', 'phrase']:

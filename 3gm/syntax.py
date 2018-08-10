@@ -439,33 +439,33 @@ class ActionTreeGenerator:
         if tree['what']['context'] in ['φράση', 'φράσεις', 'λέξη', 'λέξεις']:
             return tree, 6
         elif tree['what']['context'] in ['άρθρο', 'άρθρα']:
-            if tree['root']['action'] != 'διαγράφεται':
+            if tree['root']['action'] not in ['διαγράφεται', 'διαγράφονται', 'αναριθμείται', 'αναριθμούνται']:
                 content = extract if not secondary else tree['what']['content']
                 tree['article']['content'] = content
                 tree['what']['content'] = content
             max_depth = 3
 
         elif tree['what']['context'] in ['παράγραφος', 'παράγραφοι']:
-            if tree['root']['action'] != 'διαγράφεται':
+            if tree['root']['action'] not in ['διαγράφεται', 'διαγράφονται', 'αναριθμείται', 'αναριθμούνται']:
                 content = extract if not secondary else tree['what']['content']
                 tree['paragraph']['content'] = content
                 tree['what']['content'] = content
             max_depth = 4
 
         elif tree['what']['context'] in ['εδάφιο', 'εδάφια']:
-            if tree['root']['action'] != 'διαγράφεται':
+            if tree['root']['action'] not in ['διαγράφεται', 'διαγράφονται', 'αναριθμείται', 'αναριθμούνται']:
                 content = extract if not secondary else tree['what']['content']
                 tree['what']['content'] = content
             max_depth = 5
 
         elif tree['what']['context'] in ['περίπτωση', 'περιπτώσεις']:
-            if tree['root']['action'] != 'διαγράφεται':
+            if tree['root']['action'] not in ['διαγράφεται', 'διαγράφονται', 'αναριθμείται', 'αναριθμούνται']:
                 content = extract
                 tree['what']['content'] = content
             max_depth = 5
 
         elif tree['what']['context'] in ['υποπερίπτωση', 'υποπεριπτώσεις']:
-            if tree['root']['action'] != 'διαγράφεται':
+            if tree['root']['action'] not in ['διαγράφεται', 'διαγράφονται', 'αναριθμείται', 'αναριθμούνται']:
                 content = extract
                 tree['what']['content'] = content
             max_depth = 5
@@ -475,7 +475,7 @@ class ActionTreeGenerator:
     @staticmethod
     def build_level(tmp, subtree, max_depth, stem, list_iter=False):
         """Builds a level of the tree using the stems lookup"""
-        
+
         lookup = ActionTreeGenerator.trans_lookup[stem]
 
         if not re.search(stem, subtree['what']['context']):

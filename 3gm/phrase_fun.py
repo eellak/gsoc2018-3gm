@@ -147,7 +147,7 @@ def insert_case(s, case_letter, content, suffix=')'):
 	if not content.startswith(case_letter):
 		content = case_letter + suffix + content
 
-	return self.insert_phrase(s, content)
+	return insert_phrase(s, content)
 
 def replace_case(s, case_letter, new_content, suffix=')'):
 	"""Replaces a case (περίπτωση, υποπερίπτωση) of arbitrary depth"""
