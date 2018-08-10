@@ -2,7 +2,7 @@
 {% block body %}
 
 <ul class='law-options navbar-ul'>
-<li><a href="{{ url_for('history', identifier=identifier )}}"><i class="fas fa-chevron-left"></i> Πίσω στο ιστορικό</a></li>
+<li><a href="{{ url_for('history', identifier=identifier )}}"><i class="fas fa-chevron-left"></i> Πίσω</a></li>
 <li><a href="{{ url_for('codify_law', identifier=identifier )}}">Δείτε την τρέχουσα έκδοση του {{ identifier }}</a></li>
 <li><a href="{{ url_for('amendment', identifier=identifier )}}">Δείτε τους νόμους που τροποποιεί ο {{ identifier }}</a></li>
 <li><a href="{{ url_for('links', identifier=identifier )}}">Δείτε του συνδέσμους στον {{ identifier }}</a></li>
