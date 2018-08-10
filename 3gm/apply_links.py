@@ -9,6 +9,7 @@ import pparser as parser
 logger = logging.getLogger()
 logger.disabled = True
 
+
 def apply_links(identifier):
     """Apply all modifying links on a law
     :params identifier The identifier of the law
@@ -17,21 +18,22 @@ def apply_links(identifier):
     try:
         print('Rolling back...')
         init = codifier.codifier.db.rollback_laws(identifier)
-        codifier.codifier.laws[identifier] = paraser.LawParser.from_serialized(init)
-    except:
+        codifier.codifier.laws[identifier] = paraser.LawParser.from_serialized(
+            init)
+    except BaseException:
         print('No history on filesystem')
 
     # rollback links
     try:
         init = codifier.codifier.db.rollback_links(identifier=identifier)
-        codifier.codifier.links[identifier] = codifier.Link.from_serialized(init)
-    except:
+        codifier.codifier.links[identifier] = codifier.Link.from_serialized(
+            init)
+    except BaseException:
         print('No links found')
 
     # Get information from codifier object
     law = codifier.codifier.laws[identifier]
-    links = codifier.codifier.links[identifier]
-    links.sort()
+    links = sorted(codifier.codifier.links[identifier])
 
     # Initialize
     # pdb.set_trace()
@@ -94,7 +96,7 @@ def apply_links(identifier):
     try:
         detection_accurracy = 100 * detected / total
         query_accuracy = 100 * applied / detected
-    except:
+    except BaseException:
         print('No amendments')
         detection_accurracy = 100
         query_accuracy = 100
@@ -107,7 +109,7 @@ def apply_links(identifier):
 
 def apply_all_links(identifiers=None):
     """Apply all links in the codifier object"""
-    if identifiers == None:
+    if identifiers is None:
         identifiers = list(codifier.codifier.laws.keys())
 
     helpers.quicksort(identifiers, helpers.compare_statutes)
@@ -126,9 +128,8 @@ def apply_all_links(identifiers=None):
             codifier.codifier.links[identifier] = links
             try:
                 codifier.codifier.db.links.save(links.serialize())
-            except:
+            except BaseException:
                 print('MongoDB Error in storing Links')
-
 
             # Update accuracy metrics
             detection_accurracy.append(d)
@@ -138,24 +139,25 @@ def apply_all_links(identifiers=None):
             initial = codifier.codifier.laws[identifier].serialize()
             initial['_version'] = 0
             final_serializable = {
-                '_id' : identifier,
-                'versions' : [initial]
+                '_id': identifier,
+                'versions': [initial]
             }
         finally:
             # Store current version to mongo
             latest = {
-                '_id' : identifier,
-                'versions' : [final_serializable['versions'][-1]]
+                '_id': identifier,
+                'versions': [final_serializable['versions'][-1]]
             }
             try:
                 codifier.codifier.db.laws.save(latest)
-            except:
+            except BaseException:
                 print('MongoDB Error in storing current version')
 
             # Store versioning history to fs
             try:
-                codifier.codifier.db.save_json_to_fs(identifier, final_serializable)
-            except:
+                codifier.codifier.db.save_json_to_fs(
+                    identifier, final_serializable)
+            except BaseException:
                 print('GridFS Error in storing history')
 
             print('Complete {} Progress: {}/{} {}%'.format(
@@ -169,12 +171,15 @@ def apply_all_links(identifiers=None):
         print('Mean Query accuracy: {}%. Std: {}%'.format(
             mean(query_accuracy), stdev(query_accuracy)))
 
+
 def apply_links_between(start, end):
     """Apply links between two years"""
     identifiers = list(codifier.codifier.laws.keys())
-    identifiers = list(filter(lambda x: start <= int(x[-4:]) <= end, identifiers))
+    identifiers = list(
+        filter(lambda x: start <= int(x[-4:]) <= end, identifiers))
     print(len(identifiers))
     apply_all_links(list(identifiers))
+
 
 if __name__ == '__main__':
     # parse cmd line arguments
@@ -183,7 +188,10 @@ if __name__ == '__main__':
     required = argparser.add_argument_group('required arguments')
     optional = argparser.add_argument_group('optional arguments')
 
-    optional.add_argument('--test', help='Run test on example', action='store_true')
+    optional.add_argument(
+        '--test',
+        help='Run test on example',
+        action='store_true')
     optional.add_argument('--start', help='Year from which to start', type=int)
     optional.add_argument('--end', help='Year to end', type=int)
 
@@ -191,7 +199,7 @@ if __name__ == '__main__':
 
     if args.test:
         apply_all_links(['ν. 4009/2011'])
-    elif args.start != None and args.end != None:
+    elif args.start is not None and args.end is not None:
         apply_links_between(args.start, args.end)
     else:
         apply_all_links()
