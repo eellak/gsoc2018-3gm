@@ -717,3 +717,12 @@ def compare_statutes(x, y):
             return int(xs[1].split('/')[0]) < int(ys[1].split('/')[0])
         else:
             return xs[0] != 'ν.'
+
+def remove_front_num(s, max_span=4):
+    """Remove front number if exists.
+    e.g. '1. Lorem Ipsum' becomes 'Lorem Ipsum'"""
+    res = re.search(r'\d+.', s)
+    last_span = res.span()[1]
+    if last_span <= max_span:
+        s = s[last_span:].lstrip()
+    return s

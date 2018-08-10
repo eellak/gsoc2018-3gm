@@ -777,7 +777,7 @@ class LawParser:
         paragraph = str(paragraph)
 
         # prepare content for modification
-        content = re.sub(r'\d+.', '', content)
+        content = helpers.remove_front_num(content)
 
         # add in its full form or split into periods
         self.articles[article][paragraph] = content
