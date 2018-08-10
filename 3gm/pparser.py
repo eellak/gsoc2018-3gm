@@ -777,7 +777,7 @@ class LawParser:
         paragraph = str(paragraph)
 
         # prepare content for modification
-        content = helpers.remove_front_num(content)
+        content = helpers.remove_front_num(content).rstrip('.')
 
         # add in its full form or split into periods
         self.articles[article][paragraph] = content
@@ -1316,13 +1316,13 @@ class LawParser:
         :params paragraph_id : Paragraph ID
         """
         try:
-            return '. '.join(self.sentences[article][paragraph_id]) + '.'
+            return '. '.join(self.sentences[article][paragraph_id]).rstrip('.') + '.'
         except:
             self.sentences[article][paragraph_id] = list(filter(
                 lambda p: p != None, self.sentences[article][paragraph_id]
             ))
         finally:
-            return '. '.join(self.sentences[article][paragraph_id]) + '.'
+            return '. '.join(self.sentences[article][paragraph_id]).rstrip('.') + '.'
 
 
     def get_paragraphs(self, article):
