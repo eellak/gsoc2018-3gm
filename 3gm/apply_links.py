@@ -1,7 +1,7 @@
+import argparse
 import copy
 import codifier
 import syntax
-# import pdb
 import helpers
 from statistics import mean, stdev
 import logging
@@ -170,10 +170,28 @@ def apply_all_links(identifiers=None):
             mean(query_accuracy), stdev(query_accuracy)))
 
 def apply_links_between(start, end):
+    """Apply links between two years"""
     identifiers = list(codifier.codifier.laws.keys())
     identifiers = list(filter(lambda x: start <= int(x[-4:]) <= end, identifiers))
     print(len(identifiers))
     apply_all_links(list(identifiers))
 
 if __name__ == '__main__':
-    apply_all_links(['ν. 4009/2011'])
+    # parse cmd line arguments
+    argparser = argparse.ArgumentParser()
+
+    required = argparser.add_argument_group('required arguments')
+    optional = argparser.add_argument_group('optional arguments')
+
+    optional.add_argument('--test', help='Run test on example', action='store_true')
+    optional.add_argument('--start', help='Year from which to start', type=int)
+    optional.add_argument('--end', help='Year to end', type=int)
+
+    args = argparser.parse_args()
+
+    if args.test:
+        apply_all_links(['ν. 4009/2011'])
+    elif args.start != None and args.end != None:
+        apply_links_between(args.start, args.end)
+    else:
+        apply_all_links()
