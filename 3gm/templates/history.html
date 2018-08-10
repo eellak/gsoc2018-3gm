@@ -43,7 +43,10 @@
             <div class="timeline-body">
                 <p>{{ law.summary }}</p>
                 <p><a href="{{ law.amendee | archive_link }} ">
-                  Δεσμός στο Internet Archive
+                  <i class="fas fa-link"></i> Δεσμός στο Internet Archive
+                </a></p>
+                <p><a href="{{ url_for('diff', identifier=identifier, initial=identifier, final=law.amendee) }}">
+                  <i class="fas fa-history"></i> Εμφάνιση διαφορών σε σχέση με την αρχική έκδοση
                 </a></p>
             </div>
           </div>
@@ -76,29 +79,31 @@
       <div class="card-body">
         {% if not law.is_empty %}
           <h5>Κείμενο</h5>
+          <a href='#links{{ loop.index }}'>Δείτε τους συνδέσμους</a>
           {{ law.content | render_md | safe }}
           <br>
           {% if law.amendee != law.identifier %}
-          <h5>Σύνδεσμοι</h5>
-          <h5>Εφαρσμοσμένοι</h5>
+          <hr>
+          <h5 id="links{{ loop.index }}">Σύνδεσμοι</h5>
+          <h6>Εφαρσμοσμένοι</h6>
           {% for text, tags in links %}
           {% if tags[0] == 'τροποποιητικός' and tags[1] == law.amendee and tags[2] == 'εφαρμοσμένος'%}
-          <h5>Κείμενο Τροποποίησης</h5>
+          <strong>Κείμενο Τροποποίησης</strong>
           <p>{{ text }}</p>
 
-          <h5>Είδος Τροποποίησης </h5>
+          <strong>Είδος Τροποποίησης </strong>
           <p>{{ tags | render_badges | safe }}</p>
           <hr>
           {% endif %}
           {% endfor %}
 
-          <h5><br>Μη Εφαρσμοσμένοι</h5>
+          <h6><br>Μη Εφαρσμοσμένοι</h6>
           {% for text, tags in links %}
           {% if tags[0] == 'τροποποιητικός' and tags[1] == law.amendee and tags[2] == 'μη εφαρμοσμένος'%}
-          <h5>Κείμενο Τροποποίησης</h5>
+          <strong>Κείμενο Τροποποίησης</strong>
           <p>{{ text }}</p>
 
-          <h5>Είδος Τροποποίησης </h5>
+          <strong>Είδος Τροποποίησης </strong>
           <p>{{ tags | render_badges | safe }}</p>
           <hr>
           {% endif %}
