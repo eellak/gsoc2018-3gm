@@ -33,7 +33,7 @@ def apply_links(identifier):
 
     # Get information from codifier object
     law = codifier.codifier.laws[identifier]
-    links = sorted(codifier.codifier.links[identifier])
+    links = codifier.codifier.links[identifier].sort()
 
     # Initialize
     # pdb.set_trace()
