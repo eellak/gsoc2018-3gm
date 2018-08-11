@@ -388,6 +388,8 @@ class LawCodifier:
         for identifier, law in self.laws.items():
             articles = law.sentences.keys()
 
+            self.detect_and_apply_removals(identifier=identifier, generate_links=True)
+
             for article in articles:
                 for paragraph in law.get_paragraphs(article):
                     try:
@@ -553,7 +555,7 @@ class LawCodifier:
 
         return self.ranks
 
-    def detect_and_apply_removals(self, identifier):
+    def detect_and_apply_removals(self, identifier, generate_links=True):
         """Apply removals, if any, of a given law"""
         articles = self.laws[identifier].get_articles_sorted()
         removals_regex = r'καταργο(ύ|υ)μενες διατ(ά|α)ξεις'
@@ -575,8 +577,14 @@ class LawCodifier:
                 for subtree in removals:
                     target = subtree['law']['_id']
                     try:
-                        self.laws[target].query_from_tree(subtree)
-                        logging.info('Applied removal on ' + target)
+                        if generate_links:
+                            if target not in self.links:
+                                self.links[target] = Link(target)
+                            self.links[target].add_link(identifier, paragraph, link_type='απαλειπτικός')
+                            self.db.links.save(self.links[target].serialize())
+                        else:
+                            self.laws[target].query_from_tree(subtree)
+                            logging.info('Applied removal on ' + target)
                     except KeyError as e:
                         logging.warning('Statute nonexistent ' + target)
 

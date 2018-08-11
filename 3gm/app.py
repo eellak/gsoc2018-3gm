@@ -381,9 +381,15 @@ def diff():
     # Get as markdown
     for x in history:
         if x.amendee == final:
-            final_text = x.export_law('issue').splitlines()
+            try:
+                final_text = x.export_law('issue').splitlines()
+            except:
+                final_text = ['']
         elif x.amendee == initial:
-            initial_text = x.export_law('issue').splitlines()
+            try:
+                initial_text = x.export_law('issue').splitlines()
+            except:
+                initial_text = ['']
 
     diffs = differ.compare(initial_text, final_text)
 

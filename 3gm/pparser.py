@@ -1121,14 +1121,18 @@ class LawParser:
         self.titles = {}
         return self.serialize()
 
-    def apply_amendment(self, s, throw_exceptions=False):
+    def apply_amendment(self, s, is_removal=False, throw_exceptions=False):
         """Applies amendment given a string s
         params s: Query string
         params throw_exceptions: Throw exceptions upon unsucessfull operations
         """
         detected = 0
         applied = 0
-        trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+
+        if is_removal:
+            trees, exc = syntax.ActionTreeGenerator.detect_removals(s)
+        else:
+            trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
         for t in trees:
             detected = 1
             try:
@@ -1250,6 +1254,7 @@ class LawParser:
                 raise Exception('Unable to find context in tree')
 
             if context == 'law':
+                print('delete self')
                 return self.delete()
 
             elif context in ['άρθρο', 'άρθρα', 'article']:

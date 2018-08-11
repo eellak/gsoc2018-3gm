@@ -537,10 +537,11 @@ def ssconj_doc_iterator(l, i, is_plural=False, recursive=False):
                 yield 'append'
     else:
         n = len(l)
-        result = []
+        forward = False
         while j < n:
             if str(l[j]).strip(',').isdigit() or str(l[j]).endswith(
                     "'") or str(l[j]).endswith('΄') or str(l[j]).endswith(','):
+                forward = True
                 yield str(l[j]).strip(',')
 
             elif str(l[j]) == 'και':
@@ -586,7 +587,7 @@ def ssconj_doc_iterator(l, i, is_plural=False, recursive=False):
 
             j += 1
 
-        if result == []:
+        if not forward:
             j = i - 1
             while j >= 0:
                 n = entities.Numerals.full_number_to_integer(

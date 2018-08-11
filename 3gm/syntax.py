@@ -572,14 +572,14 @@ class ActionTreeGenerator:
                 return []
         else:
             tree['law']['_id'] = law
-        tree = ActionTreeGenerator.build_levels_helper(tmp, tree, list_iter=True)
+        tree = ActionTreeGenerator.build_levels_helper(tmp, tree, list_iter=True, recursive=True)
 
         subtrees, smallest = ActionTreeGenerator.break_smallest(tree)
 
         return subtrees, smallest
 
     @staticmethod
-    def build_level_helper(tmp, subtree, max_depth, stem, list_iter=False):
+    def build_level_helper(tmp, subtree, max_depth, stem, list_iter=False, recursive=True):
         """Builds a level of the tree using the stems lookup"""
         lookup = ActionTreeGenerator.trans_lookup[stem]
 
@@ -590,19 +590,22 @@ class ActionTreeGenerator:
                     subtree[lookup]['_id'] = next(
                         helpers.ssconj_doc_iterator(tmp, i))
                 else:
-                    subtree[lookup]['_id'] = list(
-                        helpers.ssconj_doc_iterator(tmp, i, is_plural=is_plural))
+                    try:
+                        subtree[lookup]['_id'] = list(
+                            helpers.ssconj_doc_iterator(tmp, i, is_plural=is_plural, recursive=recursive))
+                    except:
+                        continue        
                 subtree[lookup]['children'] = ActionTreeGenerator.children_loopkup[lookup]
 
         return subtree
 
     @staticmethod
-    def build_levels_helper(tmp, subtree, list_iter=False):
+    def build_levels_helper(tmp, subtree, list_iter=False, recursive=True):
         """Build all levels using the stems"""
         stems = list(ActionTreeGenerator.trans_lookup.keys())
         for i, stem in enumerate(stems):
             subtree = ActionTreeGenerator.build_level_helper(
-                tmp, subtree, i + 2, stem, list_iter=list_iter)
+                tmp, subtree, i + 2, stem, list_iter=list_iter, recursive=recursive)
 
         return subtree
 

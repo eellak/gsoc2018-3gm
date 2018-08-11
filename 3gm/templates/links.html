@@ -36,6 +36,22 @@
 
 {% endfor %}
 
+<h3>Απαλειπτικοί Σύνδεσμοι</h3>
+{% for text, tags in links %}
+  {% if tags[0] == 'απαλειπτικός' %}
+
+  <h5>Κείμενο</h5>
+  <p>{{ text }}</p>
+
+  <h5>Είδος</h5>
+
+  {{ tags | render_badges | safe}}
+  <hr>
+  {% endif %}
+
+
+{% endfor %}
+
 <h3>Αναφορικοί Σύνδεσμοι</h3>
 {% for text, tags in links %}
   {% if tags[0] == 'αναφορικός' %}

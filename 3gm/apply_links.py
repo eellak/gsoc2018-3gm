@@ -1,4 +1,3 @@
-import argparse
 import copy
 import codifier
 import syntax
@@ -26,7 +25,7 @@ def apply_links(identifier):
         init = codifier.codifier.db.rollback_links(identifier=identifier)
         codifier.codifier.links[identifier] = codifier.Link.from_serialized(init)
     except:
-        print('No links found')
+        print('No applied links found')
 
     # Get information from codifier object
     law = codifier.codifier.laws[identifier]
@@ -53,13 +52,16 @@ def apply_links(identifier):
     for i, l in enumerate(links):
         if l['from'] == tmp_index:
             # Non applied modifying links trigger amendments
-            if l['status'] == 'μη εφαρμοσμένος' and l['link_type'] == 'τροποποιητικός':
+            if l['status'] == 'μη εφαρμοσμένος' and l['link_type'] in ['τροποποιητικός', 'απαλειπτικός']:
                 increase_flag = True
                 total += 1
 
+                # Detect if removal
+                is_removal = (l['link_type'] == 'απαλειπτικός')
+
                 # Detect amendment
                 try:
-                    d, a, law = law.apply_amendment(l['text'])
+                    d, a, law = law.apply_amendment(l['text'], is_removal=is_removal)
 
                     # Increase accuracy bits
                     detected += d
@@ -162,7 +164,7 @@ def apply_all_links(identifiers=None):
                 identifier, i + 1,
                 total, (i + 1) / total * 100))
 
-    # Extract statisticsapply_am
+    # Extract statistics
     if len(detection_accurracy) >= 2:
         print('Mean Detection accuracy: {}%. Std: {}%'.format(
             mean(detection_accurracy), stdev(detection_accurracy)))
@@ -170,28 +172,9 @@ def apply_all_links(identifiers=None):
             mean(query_accuracy), stdev(query_accuracy)))
 
 def apply_links_between(start, end):
-    """Apply links between two years"""
     identifiers = list(codifier.codifier.laws.keys())
     identifiers = list(filter(lambda x: start <= int(x[-4:]) <= end, identifiers))
-    print(len(identifiers))
     apply_all_links(list(identifiers))
 
 if __name__ == '__main__':
-    # parse cmd line arguments
-    argparser = argparse.ArgumentParser()
-
-    required = argparser.add_argument_group('required arguments')
-    optional = argparser.add_argument_group('optional arguments')
-
-    optional.add_argument('--test', help='Run test on example', action='store_true')
-    optional.add_argument('--start', help='Year from which to start', type=int)
-    optional.add_argument('--end', help='Year to end', type=int)
-
-    args = argparser.parse_args()
-
-    if args.test:
-        apply_all_links(['ν. 4009/2011'])
-    elif args.start != None and args.end != None:
-        apply_links_between(args.start, args.end)
-    else:
-        apply_all_links()
+    apply_all_links(['π.δ. 160/2008'])

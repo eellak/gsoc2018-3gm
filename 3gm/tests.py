@@ -218,6 +218,8 @@ def test_codifier():
 
 	assert('15' not in law.sentences.keys())
 
-
-if __name__ == '__main__':
-	test_codifier()
+def test_iterator():
+	s = 'παράγραφοι 6, 7, 8 και 9, 10 και 11, 18 έως 25, 26 και 27'
+	z = helpers.ssconj_doc_iterator(s.split(' '), 0, True, True)
+	assert(list(z) == ['6', '7', '8', '9', '10', '11', '18', '19',
+		'20', '21', '22', '23', '24', '25', '27', '25', '26', '27'])
