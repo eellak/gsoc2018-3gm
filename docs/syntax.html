@@ -19,22 +19,17 @@
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.html">collections</a><br>
 <a href="copy.html">copy</a><br>
-<a href="datetime.html">datetime</a><br>
-<a href="spacy.displacy.html">spacy.displacy</a><br>
-<a href="el_unnamed.html">el_unnamed</a><br>
-</td><td width="25%" valign=top><a href="entities.html">entities</a><br>
-<a href="helpers.html">helpers</a><br>
+<a href="el_small.html">el_small</a><br>
+<a href="entities.html">entities</a><br>
+</td><td width="25%" valign=top><a href="helpers.html">helpers</a><br>
 <a href="itertools.html">itertools</a><br>
 <a href="json.html">json</a><br>
 <a href="logging.html">logging</a><br>
-</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
-<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="phrase_fun.html">phrase_fun</a><br>
 <a href="re.html">re</a><br>
-<a href="shutil.html">shutil</a><br>
 <a href="spacy.html">spacy</a><br>
-</td><td width="25%" valign=top><a href="string.html">string</a><br>
-<a href="tokenizer.html">tokenizer</a><br>
-<a href="urllib.html">urllib</a><br>
+<a href="string.html">string</a><br>
+</td><td width="25%" valign=top><a href="tokenizer.html">tokenizer</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
@@ -69,34 +64,83 @@ The&nbsp;action&nbsp;tree&nbsp;consists&nbsp;of:<br>
 2.&nbsp;on&nbsp;what&nbsp;to&nbsp;act&nbsp;(i.e.&nbsp;add&nbsp;a&nbsp;paragraph)<br>
 3.&nbsp;where&nbsp;to&nbsp;do&nbsp;it&nbsp;(i.e.&nbsp;on&nbsp;which&nbsp;law&nbsp;after&nbsp;which&nbsp;section)<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
-<td width="100%">Static methods defined here:<br>
-<dl><dt><a name="ActionTreeGenerator-detect_from_regex"><strong>detect_from_regex</strong></a>(non_extract, regex)</dt></dl>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ActionTreeGenerator-__call__"><strong>__call__</strong></a>(self, s)</dt><dd><tt>Call&nbsp;self&nbsp;as&nbsp;a&nbsp;function.</tt></dd></dl>
 
-<dl><dt><a name="ActionTreeGenerator-detect_latest_statute"><strong>detect_latest_statute</strong></a>(extract)</dt></dl>
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="ActionTreeGenerator-break_smallest"><strong>break_smallest</strong></a>(tree)</dt><dd><tt>Break&nbsp;a&nbsp;tree&nbsp;into&nbsp;subtrees&nbsp;on&nbsp;the&nbsp;smallest&nbsp;node</tt></dd></dl>
 
-<dl><dt><a name="ActionTreeGenerator-detect_with_iterator"><strong>detect_with_iterator</strong></a>(non_extract_split, words)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-build_level"><strong>build_level</strong></a>(tmp, subtree, max_depth, stem, list_iter=False)</dt><dd><tt>Builds&nbsp;a&nbsp;level&nbsp;of&nbsp;the&nbsp;tree&nbsp;using&nbsp;the&nbsp;stems&nbsp;lookup</tt></dd></dl>
 
-<dl><dt><a name="ActionTreeGenerator-generate_action_tree"><strong>generate_action_tree</strong></a>(extract, issue, article, nested=True, max_what_window=20, max_where_window=30)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-build_level_helper"><strong>build_level_helper</strong></a>(tmp, subtree, max_depth, stem, list_iter=False, recursive=True)</dt><dd><tt>Builds&nbsp;a&nbsp;level&nbsp;of&nbsp;the&nbsp;tree&nbsp;using&nbsp;the&nbsp;stems&nbsp;lookup</tt></dd></dl>
 
-<dl><dt><a name="ActionTreeGenerator-generate_action_tree_from_string"><strong>generate_action_tree_from_string</strong></a>(s, nested=True, max_what_window=20, max_where_window=30, use_regex=False)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-build_levels"><strong>build_levels</strong></a>(tmp, subtree, list_iter=False)</dt><dd><tt>Build&nbsp;all&nbsp;levels&nbsp;using&nbsp;the&nbsp;stems</tt></dd></dl>
 
-<dl><dt><a name="ActionTreeGenerator-get_content"><strong>get_content</strong></a>(tree, extract, s)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-build_levels_helper"><strong>build_levels_helper</strong></a>(tmp, subtree, list_iter=False, recursive=True)</dt><dd><tt>Build&nbsp;all&nbsp;levels&nbsp;using&nbsp;the&nbsp;stems</tt></dd></dl>
+
+<dl><dt><a name="ActionTreeGenerator-detect_latest_statute"><strong>detect_latest_statute</strong></a>(extract)</dt><dd><tt>Detects&nbsp;the&nbsp;latest&nbsp;statute&nbsp;of&nbsp;any&nbsp;type<br>
+in&nbsp;a&nbsp;given&nbsp;string.<br>
+:params&nbsp;extract&nbsp;:&nbsp;Query&nbsp;String</tt></dd></dl>
+
+<dl><dt><a name="ActionTreeGenerator-detect_removals"><strong>detect_removals</strong></a>(q)</dt><dd><tt>Detect&nbsp;removals&nbsp;(καραργούμενες&nbsp;διατάξεις)&nbsp;on&nbsp;a&nbsp;string<br>
+:params&nbsp;q&nbsp;:&nbsp;Query&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="ActionTreeGenerator-detect_removals_helper"><strong>detect_removals_helper</strong></a>(s, law=None)</dt><dd><tt>Removals&nbsp;detection&nbsp;helper&nbsp;function</tt></dd></dl>
+
+<dl><dt><a name="ActionTreeGenerator-generate_action_tree_from_string"><strong>generate_action_tree_from_string</strong></a>(s, nested=False, max_what_window=20, max_where_window=30, use_regex=False)</dt><dd><tt>Main&nbsp;algorithm&nbsp;for&nbsp;amendment&nbsp;detection<br>
+The&nbsp;approach&nbsp;followed&nbsp;is&nbsp;hybrid<br>
+The&nbsp;procedure&nbsp;is&nbsp;outlined&nbsp;here:<br>
+https://github.com/eellak/gsoc2018-3gm/wiki/Algorithms-for-analyzing-Government-Gazette-Documents</tt></dd></dl>
+
+<dl><dt><a name="ActionTreeGenerator-get_content"><strong>get_content</strong></a>(tree, extract, s, secondary=False)</dt><dd><tt>Get&nbsp;content&nbsp;of&nbsp;amendment<br>
+:params&nbsp;tree&nbsp;:&nbsp;The&nbsp;dict&nbsp;tree<br>
+:params&nbsp;extract&nbsp;:&nbsp;The&nbsp;given&nbsp;content&nbsp;/&nbsp;extract<br>
+:params&nbsp;secondary&nbsp;:&nbsp;Set&nbsp;to&nbsp;true&nbsp;after&nbsp;splitting</tt></dd></dl>
 
 <dl><dt><a name="ActionTreeGenerator-get_latest_statute"><strong>get_latest_statute</strong></a>(statutes)</dt><dd><tt>Returns&nbsp;latest&nbsp;statute&nbsp;in&nbsp;a&nbsp;given&nbsp;list&nbsp;of<br>
 statutes&nbsp;by&nbsp;first&nbsp;splitting&nbsp;the&nbsp;statutes&nbsp;and&nbsp;then<br>
 finding&nbsp;the&nbsp;one&nbsp;with&nbsp;the&nbsp;latest&nbsp;year</tt></dd></dl>
 
-<dl><dt><a name="ActionTreeGenerator-get_nsubj"><strong>get_nsubj</strong></a>(doc, i, tree)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-get_nsubj"><strong>get_nsubj</strong></a>(doc, i, tree)</dt><dd><tt>Get&nbsp;nsubj&nbsp;dependency,&nbsp;in&nbsp;order&nbsp;to&nbsp;find&nbsp;what&nbsp;is<br>
+amended,&nbsp;using&nbsp;spaCy&nbsp;Greek&nbsp;Language&nbsp;model<br>
+:params&nbsp;doc&nbsp;:&nbsp;A&nbsp;spaCy&nbsp;doc&nbsp;<a href="builtins.html#object">object</a><br>
+:params&nbsp;i:&nbsp;The&nbsp;action&nbsp;position<br>
+:params&nbsp;tree&nbsp;:&nbsp;The&nbsp;JSON&nbsp;tree</tt></dd></dl>
 
-<dl><dt><a name="ActionTreeGenerator-get_nsubj_fallback"><strong>get_nsubj_fallback</strong></a>(tmp, tree, i)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-get_nsubj_fallback"><strong>get_nsubj_fallback</strong></a>(tmp, tree, i, max_what_window=20)</dt></dl>
 
-<dl><dt><a name="ActionTreeGenerator-get_rois_from_extract"><strong>get_rois_from_extract</strong></a>(q, what, idx_list)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-get_renumbering"><strong>get_renumbering</strong></a>(tree, doc)</dt><dd><tt>Get&nbsp;renumbering&nbsp;content</tt></dd></dl>
 
-<dl><dt><a name="ActionTreeGenerator-nest_tree"><strong>nest_tree</strong></a>(vertex, tree)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-get_rois_from_extract"><strong>get_rois_from_extract</strong></a>(q, what, idx_list)</dt><dd><tt>Get&nbsp;ROIs&nbsp;from&nbsp;extracts<br>
+:params&nbsp;q&nbsp;:&nbsp;Extract<br>
+:params&nbsp;what&nbsp;:&nbsp;Type&nbsp;of&nbsp;amendment<br>
+:params&nbsp;idx_list&nbsp;:&nbsp;List&nbsp;of&nbsp;numeric/alphabetic&nbsp;indices</tt></dd></dl>
 
-<dl><dt><a name="ActionTreeGenerator-nest_tree_helper"><strong>nest_tree_helper</strong></a>(vertex, tree)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-get_smallest"><strong>get_smallest</strong></a>(tree)</dt><dd><tt>Detect&nbsp;smallest&nbsp;(μικρότερο&nbsp;μόριο)&nbsp;part&nbsp;of&nbsp;given&nbsp;a&nbsp;tree</tt></dd></dl>
 
-<dl><dt><a name="ActionTreeGenerator-split_tree"><strong>split_tree</strong></a>(tree)</dt></dl>
+<dl><dt><a name="ActionTreeGenerator-nest_tree"><strong>nest_tree</strong></a>(vertex, tree)</dt><dd><tt>Nest&nbsp;a&nbsp;dict&nbsp;to&nbsp;a&nbsp;new&nbsp;one.&nbsp;(helper&nbsp;function)<br>
+Each&nbsp;value&nbsp;must&nbsp;have&nbsp;a&nbsp;children&nbsp;attribute<br>
+:params&nbsp;vertex&nbsp;:&nbsp;Root&nbsp;vertex<br>
+:params&nbsp;tree&nbsp;:&nbsp;Tree&nbsp;as&nbsp;dictionary</tt></dd></dl>
+
+<dl><dt><a name="ActionTreeGenerator-nest_tree_helper"><strong>nest_tree_helper</strong></a>(vertex, tree)</dt><dd><tt>Nest&nbsp;a&nbsp;dict&nbsp;to&nbsp;a&nbsp;new&nbsp;one.&nbsp;(helper&nbsp;function)<br>
+Each&nbsp;value&nbsp;must&nbsp;have&nbsp;a&nbsp;children&nbsp;attribute<br>
+:params&nbsp;vertex&nbsp;:&nbsp;Root&nbsp;vertex<br>
+:params&nbsp;tree&nbsp;:&nbsp;Tree&nbsp;as&nbsp;dictionary</tt></dd></dl>
+
+<dl><dt><a name="ActionTreeGenerator-split_dict_subkey"><strong>split_dict_subkey</strong></a>(d, key, subkey)</dt><dd><tt>Split&nbsp;a&nbsp;dict&nbsp;of&nbsp;dicts&nbsp;on&nbsp;a&nbsp;subkey&nbsp;of&nbsp;a&nbsp;given&nbsp;key<br>
+:params&nbsp;d&nbsp;:&nbsp;Dictionary&nbsp;to&nbsp;be&nbsp;split<br>
+:params&nbsp;key&nbsp;:&nbsp;Dictionary&nbsp;Key<br>
+:params&nbsp;subkey&nbsp;:&nbsp;Dictionary&nbsp;subkey</tt></dd></dl>
+
+<dl><dt><a name="ActionTreeGenerator-split_renumbering_tree"><strong>split_renumbering_tree</strong></a>(tree)</dt><dd><tt>Splits&nbsp;tree&nbsp;in&nbsp;case&nbsp;of&nbsp;renumbering<br>
+:params&nbsp;tree&nbsp;:&nbsp;The&nbsp;given&nbsp;tree&nbsp;to&nbsp;be&nbsp;split</tt></dd></dl>
+
+<dl><dt><a name="ActionTreeGenerator-split_tree"><strong>split_tree</strong></a>(tree)</dt><dd><tt>Splits&nbsp;tree&nbsp;into&nbsp;subtrees&nbsp;if&nbsp;multiple<br>
+amendmets&nbsp;are&nbsp;detected&nbsp;in&nbsp;the&nbsp;same&nbsp;sentence.<br>
+For&nbsp;example&nbsp;amending&nbsp;paragraphs&nbsp;3&nbsp;and&nbsp;4&nbsp;would<br>
+yield&nbsp;two&nbsp;subtrees</tt></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -108,7 +152,9 @@ Data descriptors defined here:<br>
 </dl>
 <hr>
 Data and other attributes defined here:<br>
-<dl><dt><strong>trans_lookup</strong> = {'άρθρο': 'article', 'εδάφιο': 'period', 'παράγραφος': 'paragraph', 'φράση': 'phrase'}</dl>
+<dl><dt><strong>children_loopkup</strong> = {'article': ['paragraph'], 'case': ['subcase'], 'law': ['article'], 'paragraph': ['period', 'case'], 'period': ['phrase'], 'phrase': [], 'subcase': []}</dl>
+
+<dl><dt><strong>trans_lookup</strong> = {'άρθρ': 'article', 'εδάφ': 'period', 'παρ.': 'paragraph', 'παράγραφ': 'paragraph', 'περίπτωσ': 'case', 'υποπερίπτωσ': 'subcase', 'φράσ': 'phrase'}</dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -130,9 +176,9 @@ classified.<br>&nbsp;</tt></td></tr>
 Methods defined here:<br>
 <dl><dt><a name="UncategorizedActionException-__init__"><strong>__init__</strong></a>(self, s)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
 
-<dl><dt><strong>__repr__</strong> <em>lambda</em> self</dt></dl>
+<dl><dt><a name="UncategorizedActionException-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
 
-<dl><dt><strong>__str__</strong> <em>lambda</em> self</dt></dl>
+<dl><dt><a name="UncategorizedActionException-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -181,18 +227,5 @@ Data descriptors inherited from <a href="builtins.html#BaseException">builtins.B
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>MONTHS_PREFIXES</strong> = {'Απριλίο': 4, 'Αυγούστο': 8, 'Δεκεμβρίο': 12, 'Ιανουαρίο': 1, 'Ιουλίο': 7, 'Ιουνίο': 6, 'Μαΐο': 5, 'Μαρτίο': 3, 'Νοεμβρίο': 11, 'Οκτωβρίο': 10, ...}<br>
-<strong>actions</strong> = [προστίθεται, διαγράφεται, παύεται, τροποποιείται, αντικαθίσταται, αναριθμείται]<br>
-<strong>article_regex</strong> = [r'άρθρο \d+', r'άρθρου \d+']<br>
-<strong>date</strong> = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0...τ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'<br>
-<strong>intonations</strong> = {'ά': 'α', 'έ': 'ε', 'ή': 'η', 'ί': 'ι', 'ό': 'ο', 'ύ': 'υ', 'ώ': 'ω'}<br>
-<strong>law_regex</strong> = '(ν.|Ν.) [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'<br>
-<strong>legislative_act_regex</strong> = 'Πράξη(|ς) Νομοθετικού Περιεχομένου ([0-9]|[0-3][0-9]).[0-9][0-9].[1-2][0-9][0-9][0-9]'<br>
-<strong>legislative_decree_regex</strong> = '(ν.δ.|Ν.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
-<strong>nlp</strong> = &lt;spacy.lang.el.Greek object&gt;<br>
-<strong>paragraph_regex</strong> = [r'παράγραφος \d+', r'παραγράφου \d+', r'παρ. \d+', 'παράγραφος']<br>
-<strong>plural_suffixes</strong> = ['οι', 'α', 'εις', 'οι', 'ες']<br>
-<strong>presidential_decree_regex</strong> = '(π.δ.|Π.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
-<strong>whats</strong> = ['φράση', 'παράγραφος', 'άρθρο', 'εδάφιο', 'φράσεις', 'άρθρα', 'εδάφια', 'παράγραφοι', 'τίτλος', 'περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις']<br>
-<strong>wheres</strong> = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']</td></tr></table>
+<td width="100%"><strong>nlp</strong> = &lt;spacy.lang.el.Greek object&gt;</td></tr></table>
 </body></html>

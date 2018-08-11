@@ -21,17 +21,18 @@ to&nbsp;provide&nbsp;flexibility&nbsp;with&nbsp;handling&nbsp;large&nbsp;documen
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.html">collections</a><br>
 <a href="copy.html">copy</a><br>
-<a href="spacy.displacy.html">spacy.displacy</a><br>
-<a href="el_unnamed.html">el_unnamed</a><br>
-</td><td width="25%" valign=top><a href="entities.html">entities</a><br>
-<a href="gridfs.html">gridfs</a><br>
+<a href="el_small.html">el_small</a><br>
+<a href="entities.html">entities</a><br>
+</td><td width="25%" valign=top><a href="gridfs.html">gridfs</a><br>
 <a href="helpers.html">helpers</a><br>
 <a href="itertools.html">itertools</a><br>
+<a href="json.html">json</a><br>
 </td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+<a href="phrase_fun.html">phrase_fun</a><br>
 <a href="pprint.html">pprint</a><br>
 <a href="re.html">re</a><br>
-<a href="spacy.html">spacy</a><br>
-</td><td width="25%" valign=top><a href="string.html">string</a><br>
+</td><td width="25%" valign=top><a href="spacy.html">spacy</a><br>
+<a href="string.html">string</a><br>
 <a href="syntax.html">syntax</a><br>
 <a href="tokenizer.html">tokenizer</a><br>
 </td></tr></table></td></tr></table><p>
@@ -61,15 +62,24 @@ to&nbsp;provide&nbsp;flexibility&nbsp;with&nbsp;handling&nbsp;large&nbsp;documen
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="Database-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt><a href="#Database">Database</a>&nbsp;wrapper&nbsp;constructor</tt></dd></dl>
 
+<dl><dt><a name="Database-checkout_laws"><strong>checkout_laws</strong></a>(self, identifier=None, version=0)</dt><dd><tt>Checkout&nbsp;to&nbsp;certain&nbsp;version<br>
+:param&nbsp;identifier&nbsp;Law&nbsp;to&nbsp;apply&nbsp;checkout</tt></dd></dl>
+
+<dl><dt><a name="Database-drop_archive_links"><strong>drop_archive_links</strong></a>(self)</dt><dd><tt>Drop&nbsp;archive&nbsp;links</tt></dd></dl>
+
+<dl><dt><a name="Database-drop_fs"><strong>drop_fs</strong></a>(self)</dt><dd><tt>Drop&nbsp;GridFS</tt></dd></dl>
+
 <dl><dt><a name="Database-drop_issues"><strong>drop_issues</strong></a>(self)</dt><dd><tt>Drop&nbsp;issues&nbsp;collection</tt></dd></dl>
 
 <dl><dt><a name="Database-drop_laws"><strong>drop_laws</strong></a>(self)</dt><dd><tt>Drop&nbsp;laws&nbsp;collection</tt></dd></dl>
 
 <dl><dt><a name="Database-drop_links"><strong>drop_links</strong></a>(self)</dt><dd><tt>Drop&nbsp;links&nbsp;collection</tt></dd></dl>
 
+<dl><dt><a name="Database-drop_summaries"><strong>drop_summaries</strong></a>(self)</dt><dd><tt>Drop&nbsp;summaries</tt></dd></dl>
+
 <dl><dt><a name="Database-drop_topics"><strong>drop_topics</strong></a>(self)</dt><dd><tt>Drop&nbsp;topics&nbsp;collection</tt></dd></dl>
 
-<dl><dt><a name="Database-get_json_from_fs"><strong>get_json_from_fs</strong></a>(self, _id=None)</dt></dl>
+<dl><dt><a name="Database-get_json_from_fs"><strong>get_json_from_fs</strong></a>(self, _id=None)</dt><dd><tt>Get&nbsp;json&nbsp;from&nbsp;GridFS</tt></dd></dl>
 
 <dl><dt><a name="Database-insert_issue_to_db"><strong>insert_issue_to_db</strong></a>(self, issue)</dt><dd><tt>Inserts&nbsp;issue&nbsp;to&nbsp;database</tt></dd></dl>
 
@@ -80,7 +90,7 @@ to&nbsp;provide&nbsp;flexibility&nbsp;with&nbsp;handling&nbsp;large&nbsp;documen
 <dl><dt><a name="Database-push_law_to_db"><strong>push_law_to_db</strong></a>(self, law)</dt><dd><tt>Push&nbsp;law&nbsp;to&nbsp;database&nbsp;via&nbsp;serializing&nbsp;it<br>
 :params&nbsp;law&nbsp;LawParser&nbsp;<a href="builtins.html#object">object</a></tt></dd></dl>
 
-<dl><dt><a name="Database-put_json_to_fs"><strong>put_json_to_fs</strong></a>(self, _id, _json)</dt></dl>
+<dl><dt><a name="Database-put_json_to_fs"><strong>put_json_to_fs</strong></a>(self, _id, _json)</dt><dd><tt>Put&nbsp;a&nbsp;json&nbsp;to&nbsp;GridFS</tt></dd></dl>
 
 <dl><dt><a name="Database-query_from_tree"><strong>query_from_tree</strong></a>(self, law, tree, issue_name=None)</dt><dd><tt>Apply&nbsp;query&nbsp;from&nbsp;tree</tt></dd></dl>
 
@@ -92,6 +102,8 @@ to&nbsp;provide&nbsp;flexibility&nbsp;with&nbsp;handling&nbsp;large&nbsp;documen
 <dl><dt><a name="Database-rollback_links"><strong>rollback_links</strong></a>(self, identifier=None, rollback_laws=False)</dt><dd><tt>Rollback&nbsp;links<br>
 :param&nbsp;identifier&nbsp;If&nbsp;none&nbsp;rollback&nbsp;everything&nbsp;else&nbsp;rollback&nbsp;certain&nbsp;id<br>
 :param&nbsp;rollback_laws&nbsp;if&nbsp;true&nbsp;rollback&nbsp;laws</tt></dd></dl>
+
+<dl><dt><a name="Database-save_json_to_fs"><strong>save_json_to_fs</strong></a>(self, _id, _json)</dt><dd><tt>Save&nbsp;a&nbsp;json&nbsp;to&nbsp;GridFS</tt></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>

@@ -23,13 +23,14 @@
 <a href="entities.html">entities</a><br>
 </td><td width="25%" valign=top><a href="gensim.html">gensim</a><br>
 <a href="helpers.html">helpers</a><br>
+<a href="logging.html">logging</a><br>
 <a href="multiprocessing.html">multiprocessing</a><br>
-<a href="parser.html">parser</a><br>
-</td><td width="25%" valign=top><a href="pprint.html">pprint</a><br>
+</td><td width="25%" valign=top><a href="pparser.html">pparser</a><br>
+<a href="pprint.html">pprint</a><br>
 <a href="re.html">re</a><br>
 <a href="syntax.html">syntax</a><br>
-<a href="sys.html">sys</a><br>
-</td><td width="25%" valign=top><a href="tokenizer.html">tokenizer</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+<a href="tokenizer.html">tokenizer</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
@@ -74,18 +75,25 @@ builds&nbsp;queries<br>
 
 <dl><dt><a name="LawCodifier-add_directory"><strong>add_directory</strong></a>(self, issues_directory, text_format=True)</dt><dd><tt>Add&nbsp;additional&nbsp;Directories</tt></dd></dl>
 
+<dl><dt><a name="LawCodifier-build_graph_from_links"><strong>build_graph_from_links</strong></a>(self, link_type=None)</dt><dd><tt>Build&nbsp;nx.Graph&nbsp;from&nbsp;links&nbsp;of&nbsp;a&nbsp;certain&nbsp;type<br>
+:params&nbsp;link_type&nbsp;:&nbsp;The&nbsp;link&nbsp;type&nbsp;(e.g.&nbsp;αναφορικός)&nbsp;for<br>
+building&nbsp;the&nbsp;graph&nbsp;(default&nbsp;is&nbsp;None&nbsp;to&nbsp;use&nbsp;all&nbsp;links)</tt></dd></dl>
+
 <dl><dt><a name="LawCodifier-calculate_links_degrees"><strong>calculate_links_degrees</strong></a>(self)</dt><dd><tt>Calculate&nbsp;statistics&nbsp;of&nbsp;links</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-codify_issue"><strong>codify_issue</strong></a>(self, filename)</dt><dd><tt>Codify&nbsp;certain&nbsp;issue&nbsp;(legacy)<br>
-:param&nbsp;filename&nbsp;:&nbsp;Issue&nbsp;filename</tt></dd></dl>
+:params&nbsp;filename&nbsp;:&nbsp;Issue&nbsp;filename</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-codify_law"><strong>codify_law</strong></a>(self, identifier)</dt><dd><tt>Codify&nbsp;certain&nbsp;law.&nbsp;Search&nbsp;all&nbsp;issues&nbsp;within&nbsp;self.<strong>issues</strong><br>
-&nbsp;<br>
 :param&nbsp;identifier&nbsp;:&nbsp;The&nbsp;law&nbsp;identifier&nbsp;e.g.&nbsp;ν.&nbsp;1234/5678</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-codify_new_laws"><strong>codify_new_laws</strong></a>(self)</dt><dd><tt>Append&nbsp;new&nbsp;laws&nbsp;found&nbsp;in&nbsp;self.<strong>issues</strong></tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-create_law_links"><strong>create_law_links</strong></a>(self)</dt><dd><tt>Creates&nbsp;links&nbsp;from&nbsp;existing&nbsp;laws</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-detect_and_apply_all_removals"><strong>detect_and_apply_all_removals</strong></a>(self)</dt><dd><tt>Detect&nbsp;and&nbsp;apply&nbsp;all&nbsp;removals&nbsp;in&nbsp;the&nbsp;codifier</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-detect_and_apply_removals"><strong>detect_and_apply_removals</strong></a>(self, identifier, generate_links=True)</dt><dd><tt>Apply&nbsp;removals,&nbsp;if&nbsp;any,&nbsp;of&nbsp;a&nbsp;given&nbsp;law</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-export_codifier_corpus"><strong>export_codifier_corpus</strong></a>(self, outfile, labels=None)</dt><dd><tt>Export&nbsp;every&nbsp;law&nbsp;in&nbsp;a&nbsp;line&nbsp;in&nbsp;str&nbsp;format</tt></dd></dl>
 
@@ -96,11 +104,12 @@ on&nbsp;phrases&nbsp;in&nbsp;plaintext&nbsp;format</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-get_history"><strong>get_history</strong></a>(self, law)</dt><dd><tt>Return&nbsp;the&nbsp;history&nbsp;and&nbsp;links&nbsp;of&nbsp;a&nbsp;certain&nbsp;law</tt></dd></dl>
 
-<dl><dt><a name="LawCodifier-get_law"><strong>get_law</strong></a>(self, identifier, export_type='latex')</dt><dd><tt>Get&nbsp;law&nbsp;string&nbsp;in&nbsp;LaTeX&nbsp;or&nbsp;Markdown&nbsp;string<br>
-&nbsp;<br>
+<dl><dt><a name="LawCodifier-get_law"><strong>get_law</strong></a>(self, identifier, export_type='latex')</dt><dd><tt>Get&nbsp;law&nbsp;string&nbsp;in&nbsp;LaTeX,&nbsp;Markdown,&nbsp;str,&nbsp;plaintext&nbsp;or&nbsp;issue-like&nbsp;format<br>
 :param&nbsp;identifier&nbsp;:&nbsp;Law&nbsp;identifier</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-keys"><strong>keys</strong></a>(self)</dt><dd><tt>Return&nbsp;set&nbsp;of&nbsp;keys&nbsp;for&nbsp;the&nbsp;codifier</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-pagerank"><strong>pagerank</strong></a>(self)</dt><dd><tt>Run&nbsp;pagerank&nbsp;on&nbsp;graph&nbsp;built&nbsp;from&nbsp;links</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-populate_issues"><strong>populate_issues</strong></a>(self, directory, text_format=True)</dt><dd><tt>Populate&nbsp;issues&nbsp;from&nbsp;directory</tt></dd></dl>
 
@@ -108,11 +117,11 @@ on&nbsp;phrases&nbsp;in&nbsp;plaintext&nbsp;format</tt></dd></dl>
 
 <dl><dt><a name="LawCodifier-populate_links"><strong>populate_links</strong></a>(self)</dt><dd><tt>Populate&nbsp;links&nbsp;from&nbsp;database&nbsp;and&nbsp;fetch&nbsp;latest&nbsp;versions</tt></dd></dl>
 
-<dl><dt><a name="LawCodifier-train_word2vec"><strong>train_word2vec</strong></a>(self)</dt><dd><tt>Train&nbsp;a&nbsp;word2vec&nbsp;model&nbsp;using&nbsp;the&nbsp;words&nbsp;of&nbsp;the&nbsp;codifier</tt></dd></dl>
+<dl><dt><a name="LawCodifier-populate_topics"><strong>populate_topics</strong></a>(self)</dt><dd><tt>Populate&nbsp;topics&nbsp;in&nbsp;codifier&nbsp;<a href="builtins.html#object">object</a></tt></dd></dl>
 
-<hr>
-Static methods defined here:<br>
-<dl><dt><a name="LawCodifier-codify_pair"><strong>codify_pair</strong></a>(source=None, target=None, outfile=None)</dt></dl>
+<dl><dt><a name="LawCodifier-topic_keys"><strong>topic_keys</strong></a>(self)</dt><dd><tt>Return&nbsp;topic&nbsp;keywords&nbsp;in&nbsp;a&nbsp;set</tt></dd></dl>
+
+<dl><dt><a name="LawCodifier-train_word2vec"><strong>train_word2vec</strong></a>(self)</dt><dd><tt>Train&nbsp;a&nbsp;word2vec&nbsp;model&nbsp;using&nbsp;the&nbsp;words&nbsp;of&nbsp;the&nbsp;codifier</tt></dd></dl>
 
 <hr>
 Data descriptors defined here:<br>
@@ -129,23 +138,28 @@ Data descriptors defined here:<br>
 <font color="#000000" face="helvetica, arial"><a name="Link">class <strong>Link</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt><a href="#Link">Link</a>&nbsp;representation<br>&nbsp;</tt></td></tr>
+<td colspan=2><tt><a href="#Link">Link</a>&nbsp;representation&nbsp;Class<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<strong>__dict__</strong> = mappingproxy({'__iter__': &lt;function Link.__iter_...__': &lt;function Link.__repr__ at 0x7fed43dd4d90&gt;})
+<strong>__dict__</strong> = mappingproxy({'__doc__': 'Link representation Cl...lized': &lt;staticmethod object at 0x7fec986504e0&gt;})
 <dl><dt><a name="Link-__init__"><strong>__init__</strong></a>(self, name='')</dt><dd><tt>Initialize&nbsp;an&nbsp;Empty&nbsp;<a href="#Link">Link</a><br>
 :param&nbsp;name&nbsp;:&nbsp;Name&nbsp;of&nbsp;link</tt></dd></dl>
 
 <dl><dt><a name="Link-__iter__"><strong>__iter__</strong></a>(self)</dt><dd><tt>Yields&nbsp;actual_links&nbsp;elements</tt></dd></dl>
 
-<dl><dt><a name="Link-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+<dl><dt><a name="Link-__len__"><strong>__len__</strong></a>(self)</dt><dd><tt>Returns&nbsp;number&nbsp;of&nbsp;edges</tt></dd></dl>
 
-<dl><dt><a name="Link-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+<dl><dt><a name="Link-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;link&nbsp;name</tt></dd></dl>
+
+<dl><dt><a name="Link-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;link&nbsp;name</tt></dd></dl>
 
 <dl><dt><a name="Link-add_link"><strong>add_link</strong></a>(self, other, s, link_type='general')</dt><dd><tt>Add&nbsp;linking<br>
-:param&nbsp;other&nbsp;:&nbsp;Neighbor<br>
-:param&nbsp;s&nbsp;:&nbsp;Content<br>
-:param&nbsp;link_type&nbsp;:&nbsp;<a href="#Link">Link</a>&nbsp;type&nbsp;(can&nbsp;be&nbsp;modifying,&nbsp;referential&nbsp;etc.)</tt></dd></dl>
+:params&nbsp;other&nbsp;:&nbsp;Neighbor<br>
+:params&nbsp;s&nbsp;:&nbsp;Content<br>
+:params&nbsp;link_type&nbsp;:&nbsp;<a href="#Link">Link</a>&nbsp;type&nbsp;(can&nbsp;be&nbsp;modifying,&nbsp;referential&nbsp;etc.)</tt></dd></dl>
+
+<dl><dt><a name="Link-compare"><strong>compare</strong></a>(self, x, y)</dt><dd><tt>Comparator&nbsp;function&nbsp;by&nbsp;year,&nbsp;identifier&nbsp;and&nbsp;type<br>
+params&nbsp;x,&nbsp;y:&nbsp;Items&nbsp;of&nbsp;self.<strong>actual_links</strong></tt></dd></dl>
 
 <dl><dt><a name="Link-organize_by_text"><strong>organize_by_text</strong></a>(self)</dt><dd><tt>Format&nbsp;for&nbsp;rendering</tt></dd></dl>
 
@@ -233,7 +247,16 @@ Data descriptors inherited from <a href="builtins.html#BaseException">builtins.B
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-build"><strong>build</strong></a>(start=1998, end=2018, data_dir='../data/')</dt></dl>
+<td width="100%"><dl><dt><a name="-build"><strong>build</strong></a>(start=1998, end=2018, data_dir='../data/', pipeline=['laws', 'links', 'topics', 'versions'], drop=True)</dt><dd><tt>Build&nbsp;codifier&nbsp;<a href="builtins.html#object">object</a><br>
+:params&nbsp;start&nbsp;:&nbsp;Start&nbsp;year<br>
+:params&nbsp;end&nbsp;:&nbsp;End&nbsp;year<br>
+:params&nbsp;data_dir&nbsp;:&nbsp;Text&nbsp;files&nbsp;directory<br>
+:params&nbsp;pipeline&nbsp;:&nbsp;Pipeline&nbsp;to&nbsp;build<br>
+Full&nbsp;pipeline&nbsp;['laws',&nbsp;'links',&nbsp;'topics',&nbsp;'versions']<br>
+laws:&nbsp;Build&nbsp;laws<br>
+links:&nbsp;Build&nbsp;links<br>
+topics:&nbsp;Build&nbsp;topics<br>
+versions:&nbsp;Build&nbsp;versions</tt></dd></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">

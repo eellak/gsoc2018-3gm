@@ -120,3 +120,23 @@ core: install_app_requirements install_nlp_tools
 scripts: install_scripts_requirements install_tesseract_4 install_chromedriver install_mongodb
 
 all: core scripts
+
+
+ddocs:
+	cd 3gm && pydoc3 -w syntax
+	cd 3gm && pydoc3 -w database
+	cd 3gm && pydoc3 -w codifier
+	cd 3gm && pydoc3 -w pparser
+	cd 3gm && pydoc3 -w apply_links
+	cd 3gm && pydoc3 -w summarize
+	cd 3gm && pydoc3 -w app
+	cd 3gm && pydoc3 -w phrase_fun
+	cd 3gm && mv syntax.html ../docs/
+	cd 3gm && mv database.html ../docs/
+	cd 3gm && mv codifier.html ../docs/
+	cd 3gm && mv pparser.html ../docs/
+	cd 3gm && mv apply_links.html ../docs/
+	cd 3gm && mv summarize.html ../docs/
+	cd 3gm && mv app.html ../docs/
+	cd 3gm && mv phrase_fun.html ../docs/
+	cd ..
