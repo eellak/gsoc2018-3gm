@@ -511,14 +511,13 @@ def get_edges(graph):
     return list(E)
 
 
-def ssconj_doc_iterator(l, i, is_plural=False):
+def ssconj_doc_iterator(l, i, is_plural=False, recursive=False):
     """Generator which yields components connected with commas and an "AND" (και)
     Example:
     1. παράγραφοι 3, 4 και 5 would yield [3,4,5]
     2. πρώτη και δεύτερη παράγραφος would yield [1,2]
     3. παράγραφος 1 would yield 1
     """
-
     j = i + 1
     if not is_plural:
         if str(
@@ -537,25 +536,34 @@ def ssconj_doc_iterator(l, i, is_plural=False):
                 # raise Exception('Invalid use of Iterator')
                 yield 'append'
     else:
-        result = []
         n = len(l)
+        result = []
         while j < n:
-            if str(l[j]) == 'και':
+            if str(l[j]).strip(',').isdigit() or str(l[j]).endswith(
+                    "'") or str(l[j]).endswith('΄') or str(l[j]).endswith(','):
+                yield str(l[j]).strip(',')
+
+            elif str(l[j]) == 'και':
                 if str(l[j + 1]).isdigit() or str(l[j + 1]
                                                   ).endswith("'") or str(l[j + 1]).endswith('΄'):
                     yield str(l[min(j + 1, n)]).strip(',')
-                    return
+                    try:
+                        if recursive and j + 3 < n:
+                            yield from ssconj_doc_iterator(l, j + 2, is_plural=is_plural, recursive=recursive)
+                        else:
+                            return
+                    except:
+                        return
             elif str(l[j]) in ['ως', 'έως']:
                 if str(l[j + 1]) == 'και':
                     k = 2
                 else:
                     k = 1
-                if str(l[j + k]).isdigit():
-                    start = int(l[j - 1])
-                    end = int(l[j + k])
+                if str(l[j + k]).strip(',').isdigit():
+                    start = int(l[j - 1].strip(','))
+                    end = int(l[j + k].strip(','))
                     for i in range(start + 1, end + 1):
-                        yield i
-                    return
+                        yield str(i)
                 elif str(l[j + k]).endswith("'") or str(l[j + k]).endswith('΄'):
                     start = str(l[j - 1]).strip('΄').strip("'")
                     end = str(l[j + k]).strip('΄').strip("'")
@@ -565,12 +573,17 @@ def ssconj_doc_iterator(l, i, is_plural=False):
                     while True:
                         yield start_num.s
                         if start_num.value == end_num.value:
-                            return
+                            break
                         start_num.value += 1
+                try:
+                    if recursive and j + k + 2 < n:
+                        yield from ssconj_doc_iterator(l, j + k + 1, is_plural=is_plural, recursive=recursive)
+                    else:
+                        return
+                except:
+                    return
 
-            elif str(l[j]).isdigit() or str(l[j]).endswith(
-                    "'") or str(l[j]).endswith('΄') or str(l[j]).endswith(','):
-                yield str(l[j]).strip(',')
+
             j += 1
 
         if result == []:
