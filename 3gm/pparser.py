@@ -1429,7 +1429,7 @@ class LawParser:
 
             for key, val in abbreviations.items():
                 if self.identifier.lower().startswith(key):
-                    counter = self.identifier.split('/')[-2]
+                    counter = self.identifier.strip(key).split('/')[-2]
                     result = '{} ΥΠ’ ΑΡΙΘΜ. {}\n'.format(val, counter)
                     break
 
