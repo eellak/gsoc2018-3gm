@@ -21,28 +21,18 @@ install_tesseract_4:
 	$(APT_INSTALL_Y) zlib1g-dev
 	echo "Build leptonica"
 	git clone https://github.com/DanBloomberg/leptonica
-	cd leptonica
-	./configure
-	make
-	make install
-	cd ..
+	cd leptonica && ./configure && make && make install
 	echo "Done Building leptonica"
 	echo "Building tesseract-ocr from git repo"
 	git clone https://github.com/tesseract-ocr/tesseract
-	cd tesseract
-	./autogen.sh
-	./configure --prefix=$HOME/local/
-	make
-	make install
+	cd tesseract && ./autogen.sh && ./configure --prefix=$HOME/local/ && make && make install
 	echo "Done building tesseract-ocr"
 	echo "Downloading Tesseract Language Data"
 	wget https://github.com/tesseract-ocr/tessdata_best/raw/master/ell.traineddata -P /usr/share/tesseract-ocr/tessdata/
 	wget https://github.com/tesseract-ocr/tessdata_best/raw/master/eng.traineddata -P /usr/share/tesseract-ocr/tessdata/
-	cd ..
 	echo "Done installing tesseract"
 
 install_chromedriver:
-	cd scripts/
 	echo "Installing Google Chrome"
 	$(APT_INSTALL_Y) libxss1 libappindicator1 libindicator7
 	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -58,8 +48,8 @@ install_chromedriver:
 	cp -f chromedriver /usr/local/share/chromedriver
 	ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
 	ln -s /usr/local/share/chromedriver /usr/bin/chromedriver
+	mv chromedriver scripts/chromedriver
 	echo "Complete"
-	cd ..
 
 install_mongodb: install_mongo.sh
 	chmod +x install_mongo.sh
@@ -68,13 +58,11 @@ install_mongodb: install_mongo.sh
 schedule_fetching_cronjobs: export_cronjobs.sh
 	echo "Installing cron"
 	$(APT_INSTALL_Y) cron
-	cd scripts/
 	echo "Export environment variables"
 	echo $(3GM_SCRIPTS)
 	echo 'export 3GM_SCRIPTS=$(3GM_SCRIPTS)' >> $(HOME)/.bashrc
 	exec bash
 	echo "Setup cronjobs"
-	cd ..
 	mkdir -p $(HOME)/GGG/pdf
 	mkdir -p $(HOME)/GGG/txt
 	./export_cronjobs 2 $(HOME)/GGG/pdf $(HOME)/GGG/txt
@@ -82,19 +70,12 @@ schedule_fetching_cronjobs: export_cronjobs.sh
 install_nlp_tools:
 	echo "Installing Greek Language support for spacy"
 	make install_app_requirements
-	mkdir -p nlp_tools
-	cd nlp_tools/
 	wget https://github.com/eellak/gsoc2018-spacy/raw/6212c56f94ca3926b0959ddf9cee39df28e1c5a8/spacy/lang/el/models/el_core_web_sm-1.0.0.tar.gz
 	pip3 install el_core_web_sm-1.0.0.tar.gz
-	cd ..
-	rm -rf nlp_tools
 
 run_web_application:
 	echo "Running web application"
-	cd 3gm/
-	pkill flask
-	./run.sh
-	cd ..
+	cd 3gm;	pkill flask; ./run.sh
 
 codifier_pipeline:
 	echo "Building codifier full pipeline"
@@ -102,9 +83,7 @@ codifier_pipeline:
 
 run_codifier_tests:
 	echo "Running codifier tests"
-	cd 3gm/
-	pytest tests.py -vv
-	cd ..
+	cd 3gm && pytest tests.py -vv
 
 symlink_tools:
 	echo "Symlinking tools"
