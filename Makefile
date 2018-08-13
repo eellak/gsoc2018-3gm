@@ -118,4 +118,3 @@ docs:
 	cd 3gm && mv summarize.html ../docs/
 	cd 3gm && mv app.html ../docs/
 	cd 3gm && mv phrase_fun.html ../docs/
-	cd ..
