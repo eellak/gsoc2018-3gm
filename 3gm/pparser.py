@@ -588,8 +588,8 @@ class LawParser:
 
     def find_corpus(self, government_gazette_issue=False, fix_paragraphs=True):
         """Analyzes the corpus to articles, paragraphs and
-        then sentences
-        """
+        then sentences"""
+
         idx = []
         for i, line in enumerate(self.lines):
             if line.startswith('Αρθρο:') or line.startswith('Άρθρο '):
@@ -605,7 +605,7 @@ class LawParser:
 
         if fix_paragraphs:
 
-            for article in self.corpus.keys():
+            for Κείμενοarticle in self.corpus.keys():
                 fixed_lines, title = self.fix_paragraphs(self.corpus[article])
                 self.titles[article] = title
                 self.corpus[article] = fixed_lines
@@ -649,13 +649,7 @@ class LawParser:
 
                     if government_gazette_issue:
                         break
-
-                elif line.startswith('Λήμματα'):
-                    self.lemmas[article] = self.corpus[article][i +
-                                                                1].split(' - ')
-                elif line.startswith('Τίτλος Αρθρου'):
-                    self.titles[article] = self.corpus[article][i + 1]
-
+        
     def __dict__(self):
         return self.serialize()
 
@@ -1161,11 +1155,15 @@ class LawParser:
                 raise Exception('Unable to find content or context in tree')
 
             if context in ['άρθρο', 'άρθρα', 'article']:
+                if not tree['article']['_id'].isdigit():
+                    tree['article']['_id'] = self.get_next_article()
                 return self.add_article(
                     article=tree['article']['_id'],
                     content=content)
 
             elif context in ['παράγραφος', 'παράγραφοι', 'paragraph']:
+                if not tree['paragraph']['_id'].isdigit():
+                    tree['article']['_id'] = self.get_next_paragraph(tree['article']['_id'])
                 return self.add_paragraph(
                     article=tree['article']['_id'],
                     paragraph=tree['paragraph']['_id'],
@@ -1437,55 +1435,6 @@ class LawParser:
 
         return result
 
-    def apply_links(self, links):
-        """Apply links to the given law
-        :params links : A Link object
-        Returns the serializable object containing all the versions of the
-        current statute and the links themselves.
-        """
-
-        self.autoincrement_version = False
-
-        links_hash = collections.defaultdict(list)
-        serializables = []
-
-        for l in links:
-            links_hash[l['from']].append(l)
-
-        sorted_links_keys = sorted(links_hash.keys(), key=helpers.compare_year)
-
-        links_groups = []
-
-        for k in sorted_links_keys:
-            links_groups.append(links_hash[k])
-
-        initial = self.serialize()
-        initial['_version'] = self.version_index
-
-        versions = [initial]
-
-        for link_group in links_groups:
-            # TODO Add syntax and db
-            # TODO update link state
-            for l in link_group:
-                pass  # APPLY LINK
-
-            self.version_index += 1
-
-            s = self.serialize()
-            s['_version'] = self.version_index
-            s['amendee'] = link_group[0]['from']
-            versions.append(s)
-
-            input()
-
-        final_serializable = {
-            '_id': self.identifier,
-            'versions': versions
-        }
-
-        return final_serializable, links_hash, links
-
     def prune_title(self, article):
         self.titles[article] = re.sub(
             'Άρθρο \d+', '', self.titles[article]).lstrip()
@@ -1494,6 +1443,14 @@ class LawParser:
     def prune_titles(self):
         for title in self.titles:
             self.prune_title(title)
+
+    def get_next_article(self):
+        maximum = max([int(x) for x in self.sentences.keys()])
+        return str(maximum + 1)
+
+    def get_next_paragraph(self, article):
+        maximum = max([int(x) for x in self.sentences[article].keys()])
+        return str(maximum + 1)
 
 
 class UnsupportedOperationException(Exception):
