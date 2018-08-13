@@ -101,7 +101,7 @@ scripts: install_scripts_requirements install_tesseract_4 install_chromedriver i
 all: core scripts
 
 
-ddocs:
+docs:
 	cd 3gm && pydoc3 -w syntax
 	cd 3gm && pydoc3 -w database
 	cd 3gm && pydoc3 -w codifier
