@@ -272,5 +272,5 @@ if __name__ == '__main__':
 		driver.quit()
 
 		if args.upload:
-			import uploader
-			uploader.upload(filenames)
+			for f in filenames:
+				os.system('./ia-upload.sh ' + f)

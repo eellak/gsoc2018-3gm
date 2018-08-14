@@ -8,24 +8,25 @@ import pparser as parser
 logger = logging.getLogger()
 logger.disabled = True
 
-def apply_links(identifier):
+def apply_links(identifier, rollback=True):
     """Apply all modifying links on a law
     :params identifier The identifier of the law
     """
     # rollback laws
-    try:
-        print('Rolling back...')
-        init = codifier.codifier.db.rollback_laws(identifier)
-        codifier.codifier.laws[identifier] = paraser.LawParser.from_serialized(init)
-    except:
-        print('No history on filesystem')
+    if rollback:
+        try:
+            print('Rolling back...')
+            init = codifier.codifier.db.rollback_laws(identifier)
+            codifier.codifier.laws[identifier] = paraser.LawParser.from_serialized(init)
+        except:
+            print('No history on filesystem')
 
-    # rollback links
-    try:
-        init = codifier.codifier.db.rollback_links(identifier=identifier)
-        codifier.codifier.links[identifier] = codifier.Link.from_serialized(init)
-    except:
-        print('No applied links found')
+        # rollback links
+        try:
+            init = codifier.codifier.db.rollback_links(identifier=identifier)
+            codifier.codifier.links[identifier] = codifier.Link.from_serialized(init)
+        except:
+            print('No applied links found')
 
     # Get information from codifier object
     law = codifier.codifier.laws[identifier]
@@ -69,7 +70,7 @@ def apply_links(identifier):
 
                     # Update link status
                     if a == 1:
-                        print('applied sucessfully')
+                        print('Link applied sucessfully')
                         links.actual_links[i]['status'] = 'εφαρμοσμένος'
                 except BaseException as e:
                     pass

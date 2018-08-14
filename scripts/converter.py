@@ -17,7 +17,27 @@ MIN_BYTES = 200
 logging.basicConfig(
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
+def batch_upload(filelist):
+    # batch upload to database / codifier
+    sys.path.insert(0, '../3gm')
+    import codifier
+    import apply_links
+
+    tmp_codifier = codifier.LawCodifier()
+    for f in filelist:
+        tmp_codifier.issues.append(f)
+
+    tmp_codifier.codify_new_laws()
+    tmp_codifier.create_law_links()
+
+    print('Laws added and links created')
+    print('Applying links')
+
+    apply_links.apply_all_links(identifiers=None, rollback=False)
+
+
 def job(x):
+    # document conversion
     global pdf2txt
     global output_dir
     global count
@@ -45,6 +65,7 @@ def job(x):
 
 
 def list_files(input_dir, suffix, recursive=True):
+    # list files (with recursive option in a dir)
     if recursive:
         result = []
         for root, dirs, files in os.walk(input_dir):
