@@ -169,20 +169,6 @@ def test_codifier():
 
 	assert(law.sentences['1']['3'] == ['Lorem Lorem  '])
 
-	k = len(law.sentences['1']['5'])
-	s = 'Στην παράγραφο 5 του άρθρου 1 διαγράφεται το εδάφιο 1 .'
-	tree = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
-
-	for t in tree:
-		law.query_from_tree(t)
-
-	assert(len(law.sentences['1']['5']) < k)
-	print(law.sentences['1']['5'])
-
-
-	law.apply_amendment(s)
-	print(law.sentences['1']['5'])
-
 	s = 'Στο ν. 4511/2018 προστίθεται άρθρο 15 ως εξής: « 1. This is a paragraph 2. This is another paragraph»'
 	tree = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
 
