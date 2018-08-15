@@ -73,7 +73,8 @@ def archive_format(params):
 	# Format for Internet Archive
 	volumes = {
 		'Α' : '01',
-		'Β' : '02'
+		'Β' : '02',
+		'B' : '02'
 	}
 
 	num =  params['issue_number']
@@ -252,7 +253,7 @@ if __name__ == '__main__':
 		for current_page in range(0, num_pages):
 
 			# Extract and handle download links.
-			filenames_ = extract_download_links(driver.page_source, 'Α')
+			filenames_ = extract_download_links(driver.page_source, args.type)
 
 			if args.upload:
 				filenames.extend(filenames_)
