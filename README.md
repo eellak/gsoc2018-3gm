@@ -22,6 +22,8 @@ You can view the detailed timeline [here](https://docs.google.com/document/d/1An
 
 ## Google Summer of Code 2018
 
+The project met and exceeded its goals for Google Summer of Code 2018. [Link](https://summerofcode.withgoogle.com/projects/#4875998630248448)
+
 Google Summer of Code participant: Marios Papachristou ([papachristoumarios](https://github.com/papachristoumarios))
 
 Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
