@@ -146,6 +146,10 @@ For more information visit the [corresponding Wiki Page](https://github.com/eell
 
 ---
 
+## Mailing List
+
+Development Mailing List: 3gm-dev@googlegroups.com
+
 ## License
 
  The project is [**opensourced**](https://en.wikipedia.org/wiki/Open-source_software) as a part of the Google Summer of Code Program and Vision. Here, the GNU GPLv3 license is adopted. For more information see LICENSE.
