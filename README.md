@@ -22,7 +22,7 @@ Finally, the laws are clustered into topics according to their content using a n
 
 Through the analysis, categorization and codification of the GG documents, this project facilitates key elements of everyday life such as the elimination of bureaucracy and the efficient management of public documents to implement tangible solutions, which allows huge savings for lawyers and citizens.
 
-A presentation of the project is [available here as part of FOSSCOMM 2018 at University of Crete](https://docs.google.com/presentation/d/1S5nSSr1uFo4FXLPnCw-qQckVaxN-8Vd5rIbUcv9-FNE/edit?usp=sharing)
+A presentation of the project is [available here as part of FOSSCOMM 2018 at the University of Crete](https://docs.google.com/presentation/d/1S5nSSr1uFo4FXLPnCw-qQckVaxN-8Vd5rIbUcv9-FNE/edit?usp=sharing)
 
 ## Demo
 
