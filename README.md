@@ -46,7 +46,6 @@ Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 
 * Mentor: Diomidis Spinellis ([dsplinellis](https://github.com/dspinellis))
 * Mentor: Sarantos Kapidakis
-* Mentor: Alexios Zavras (zvr)
 
 ---
 
