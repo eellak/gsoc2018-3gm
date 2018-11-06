@@ -50,7 +50,7 @@ Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 
 * Mentor: Diomidis Spinellis ([dsplinellis](https://github.com/dspinellis))
 * Mentor: Sarantos Kapidakis
-* Mentor: Marios Papachristou ([papachristoumarios])(https://github.com/papachristoumarios)
+* Mentor: Marios Papachristou ([papachristoumarios](https://github.com/papachristoumarios))
 
 ### Development
 
