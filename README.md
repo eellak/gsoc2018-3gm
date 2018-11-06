@@ -42,10 +42,20 @@ Google Summer of Code participant: Marios Papachristou ([papachristoumarios](htt
 
 Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 
+---
+
+## Contibutors
+
 ### Mentors
 
 * Mentor: Diomidis Spinellis ([dsplinellis](https://github.com/dspinellis))
 * Mentor: Sarantos Kapidakis
+* Mentor: Marios Papachristou ([papachristoumarios])(https://github.com/papachristoumarios)
+
+### Development
+
+ * Marios Papachristou (Original Developer)
+ * Theodore Papadopoulos
 
 ---
 
