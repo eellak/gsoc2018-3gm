@@ -67,7 +67,7 @@ def handle_download(download_page, params):
 		return None
 	print(filename)
 	Helper.download(download_link, filename, output_dir + '/' + dirs)
-	return filename
+	return outfile
 
 def archive_format(params):
 	# Format for Internet Archive
