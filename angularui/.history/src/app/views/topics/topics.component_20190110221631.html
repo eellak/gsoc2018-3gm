@@ -1,0 +1,54 @@
+
+<div *appBindOnce="topics">
+
+        <mat-accordion multi="true" #articlesaccordion="matAccordion">
+                <mat-expansion-panel *ngFor="let topic of topics ; first as isFirst"  [expanded]="isFirst" hideToggle="false">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <mat-checkbox 
+                      (click)="$event.stopPropagation();" 
+                      class="mail-checkbox hide-on-open">
+                      </mat-checkbox>
+                      <button 
+                      mat-icon-button 
+                      matTooltip="Mark as important"
+                      (click)="$event.stopPropagation()" 
+                      class="hide-on-open text-muted mr-1"><mat-icon>star_border</mat-icon></button>
+          
+                      <span class="hide-on-open">Άρθρο 1</span>
+                      <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center" class="show-on-open">
+                        <!-- <img [src]="" alt="" class="inbox-face mr-1"> -->
+                        <i class="material-icons md-36 mr-1">description</i>
+                        <div fxLayout="column">
+                          <span class="m-0" >Άρθρο 1</span>
+                          <!-- <small class="text-muted m-0">{{message.date | date}}</small> -->
+                        </div>
+                      </div>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    <span class="mail-subject text-sm mat-color-default">1</span>
+                    <span fxFlex></span>
+                    <span class="text-sm" fxHide.lt-sm="true"> παραγρ.</span>
+                    <button mat-icon-button [matMenuTriggerFor]="msgMenu" (click)="$event.stopPropagation()" class="hidden-on-open">
+                      <mat-icon class="text-muted">more_vert</mat-icon>
+                    </button>
+                    <mat-menu #msgMenu="matMenu">
+                      <button mat-menu-item><mat-icon>print</mat-icon> Εκτύπωση</button>
+                      <button mat-menu-item><mat-icon>save</mat-icon> Λήψη</button>
+                      <button mat-menu-item><mat-icon>send</mat-icon> Αποστολή</button>
+                    </mat-menu>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  
+                <app-topic [topic]="topic"></app-topic>
+
+                </mat-expansion-panel>
+              </mat-accordion>
+
+
+
+
+
+
+</div>
+

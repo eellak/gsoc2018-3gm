@@ -1,0 +1,45 @@
+
+<div fxLayout="row wrap">
+
+         <!-- Topics card row  -->
+        <div fxLayout="row wrap" [@animate]="{value:'*',params:{y:'25px',delay:'300ms'}}">
+                <div fxFlex="100">
+                <mat-card class="default">
+                  <mat-card-title class="">
+                    <div class="card-title-text">Θεματικές</div>
+                    <mat-divider></mat-divider>
+                  </mat-card-title>
+                  <mat-card-content>
+                        <mat-chip-list>
+                                <mat-chip color="primary" *ngFor="let topic of topics.keywords">{{topic}} </mat-chip>
+                        </mat-chip-list>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+           </div>
+
+        <!-- Related card row  -->
+           <div fxLayout="row wrap" [@animate]="{value:'*',params:{y:'25px',delay:'300ms'}}">
+                <div fxFlex="100">
+                <mat-card class="default">
+                  <mat-card-title class="">
+                    <div class="card-title-text">Σχετικοί νόμοι</div>
+                    <mat-divider></mat-divider>
+                  </mat-card-title>
+                  <mat-card-content>
+                        <mat-chip-list>
+                                <mat-chip color="item.startsWith('ν')?secondary:accent" *ngFor="let item of topics.statutes"  [routerLink]="['/statute', item | statute2url ]">
+                                    {{item}} 
+                                </mat-chip>
+                        </mat-chip-list>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+           </div>
+
+</div>
+
+
+
+       
+   

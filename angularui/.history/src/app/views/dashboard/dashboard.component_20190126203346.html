@@ -1,0 +1,275 @@
+<!-- Dashboard card row -->
+<div fxLayout="row wrap">
+  <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50" [@animate]="{value:'*',params:{scale:'.9',delay:'300ms'}}">
+    <mat-card>
+      <mat-card-title fxLayoutAlign="start center">
+        <small class="text-muted">Νομοθετήματα</small>
+        <span fxFlex></span>
+        <mat-chip
+        class="icon-chip" 
+        color="primary" 
+        selected="true"><mat-icon>file_copy</mat-icon>3140</mat-chip>
+        <mat-chip
+        class="icon-chip" 
+        color="accent" 
+        selected="true"><mat-icon>file_copy</mat-icon>285</mat-chip>
+      </mat-card-title>
+      <mat-card-content>
+        <h3 class="m-0 font-normal">{{ stats.res_laws_total }}</h3>
+        <small class="text-muted">Νόμοι & Π.Δ</small>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50" [@animate]="{value:'*',params:{delay:'300ms',scale:'.9'}}">
+    <mat-card>
+      <mat-card-title>
+        <small class="text-muted">Σύνδεσμοι</small>
+        <span fxFlex></span>
+        <mat-chip
+        class="icon-chip" 
+        color="accent" 
+        selected="true"><mat-icon>insert_link</mat-icon>10%</mat-chip>
+      </mat-card-title>
+      <mat-card-content>
+        <h3 class="m-0 font-normal">{{ stats.res_links_total }}</h3>
+        <small class="text-muted">Monthly</small>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50" [@animate]="{value:'*',params:{delay:'300ms',scale:'.9'}}">
+    <mat-card>
+      <mat-card-title>
+        <small class="text-muted">Θεματικές Ενότητες</small>
+        <span fxFlex></span>
+        <mat-chip
+        class="icon-chip" 
+        color="accent" 
+        selected="true"><mat-icon>trending_up</mat-icon>9%</mat-chip>
+      </mat-card-title>
+      <mat-card-content>
+        <h3 class="m-0 font-normal">{{ stats.res_topics_total }}</h3>
+        <small class="text-muted">Monthly</small>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50" [@animate]="{value:'*',params:{delay:'300ms',scale:'.9'}}">
+    <mat-card>
+      <mat-card-title>
+        <small class="text-muted">Επισκέπτες</small>
+        <span fxFlex></span>
+        <mat-chip
+        class="icon-chip" 
+        color="warn" 
+        selected="true"><mat-icon>trending_down</mat-icon>2%</mat-chip>
+      </mat-card-title>
+      <mat-card-content>
+        <h3 class="m-0 font-normal">2455</h3>
+        <small class="text-muted">Monthly</small>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div fxLayout="row wrap" [@animate]="{value:'*',params:{y:'25px',delay:'300ms'}}">
+  <div fxFlex="100">
+  <mat-card class="default">
+    <mat-card-title class="">
+      <div fxLayout="row" fxLayoutAlign="start center" class="card-title-text"> 
+        <mat-icon class="mat-primary">search</mat-icon> 
+        <span>Αναζήτηση</span>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-card-title>
+    <mat-card-content>
+      <mat-form-field>
+        <input id="tourSearchBox" matInput placeholder="Νομοθέτημα" [matAutocomplete]="auto" [formControl]="searchCtrl" >
+      </mat-form-field>
+  
+      <mat-autocomplete #auto="matAutocomplete" clas="m-0" (optionSelected)='navigateTo($event.option.value)' [displayWith]="displayStatuteFn">
+        <mat-option *ngFor="let statute of filteredOptions | async" [value]="statute">
+          {{ statute._id | url2statute }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-card-content>
+  </mat-card>
+</div>
+</div>
+
+<div fxLayout="row wrap">
+  <!-- Gallery and chart column -->
+  <div fxFlex="100" fxFlex.gt-sm="33.33" fxLayout="column">
+    <mat-card class="p-0" [@animate]="{value:'*',params:{delay:'300ms',scale:'.9'}}">
+        <button 
+        color="primary" 
+        mat-raised-button
+        (click)="startTour()">Οδηγίες</button>
+      <div class="m-1 p-1">
+        Το έργο αυτό, αναπτύχθηκε υπό την αιγίδα του προγράμματος Summer of Code 2018 της Google, 
+και υλοποιεί μια αυτοματοποιημένη κωδικοποίηση της Ελληνικής Νομοθεσίας. 
+Αρχικά πραγματοποιεί την εξαγωγή κειμένων των ΦΕΚ από το Εθνικό Τυπογραφείο (ET), 
+τα διασυνδέει μεταξύ τους και, τέλος, προσδιορίζει και εφαρμόζει τροποποιήσεις του νομικού κειμένου
+με μεθόδους και τεχνικές επεξεργασίας φυσικής γλώσσας.
+Στόχος είναι η κατάργηση των γραφειοκρατικών διαδικασιών και η εξοικονόμηση χρόνου σε όσους αναζητούν
+τις πιο πρόσφατες εκδόσεις της νομοθεσίας.
+Οι νέοι "συγχωνευμένοι / τροποποιημένοι / κωδικοποιημένοι νόμοι μπορούν να εμφανίζουν το τρέχον κείμενο κάθε νόμου 
+σε κάθε στιγμή. Αυτό είναι κάτι που συμβαίνει παραδοσιακά με το χέρι και ο στόχος μας ήταν να το αυτοματοποιήσουμε.
+      </div>
+    </mat-card>
+
+    <mat-card class="profile-sidebar mb-1 pb-0" [@animate]="{value:'*',params:{scale:'.9',delay:'300ms'}}">
+      <div class="propic text-center">
+        <img src="assets/images/logos/ia_logo.png" alt="Internet Archive">
+      </div>
+      <div class="profile-title text-center mb-1">
+        <div class="main-title">Internet <b>Archive</b></div>
+        <div class="subtitle mb-05">Greek Journal Collection</div>
+        <div class="text-muted">Τα τεύχη των ΦΕΚ αρχειοθετούνται αυτόματα στη σελίδα του Internet Archive</div>
+      </div>
+      <div class="profile-actions mb-1" fxLayoutAlign="center center">
+        <button mat-raised-button color="primary">Collection</button>
+        <span fxFlex="8px"></span>
+        <button mat-raised-button color="accent" (click)="openDialogWithTemplateRef(myDialog)">Σχετικά</button>
+      </div>
+       <!-- stat detail lines-->
+       <div class="user-details">
+          <p><mat-icon class="text-muted">done_all</mat-icon> Σύνολο {{ stats.iarchive_stats?.count_all }}</p>
+          <p><mat-icon class="text-muted">done</mat-icon> Τελέυταίο μήνα {{stats.iarchive_stats?.count_last30days }}</p>
+          <p><mat-icon class="text-muted">done</mat-icon> Τελευταία εβδομάδα {{stats.iarchive_stats?.count_last7days }}</p>
+          <p><mat-icon class="text-muted">done</mat-icon>Σήμερα {{stats.iarchive_stats?.count_today }}</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="default">
+      <mat-card-content class="p-0">
+        <mat-grid-list cols="3" rowHeight="1:1" class="app-gallery">
+          <!-- Gallery item -->
+          <mat-grid-tile *ngFor="let photo of photos">
+            <img [src]="photo.url" alt="">
+            <!-- item detail, show on hover -->
+            <div class="gallery-control-wrap">
+              <div class="gallery-control">
+                <h6 class="photo-detail" [fxHide.lt-sm]="true">{{photo.name}}</h6>
+                <span fxFlex></span>
+                <button mat-icon-button [matMenuTriggerFor]="photoMenu" class="">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #photoMenu="matMenu">
+                  <a mat-menu-item target="_blank" href="https://archive.org/details/{{ photo.identifier }}"><mat-icon>send</mat-icon>Προβολή</a>
+                  <button mat-menu-item><mat-icon>favorite</mat-icon>Favorite</button>
+                  <button mat-menu-item [disabled]="true"><mat-icon>delete</mat-icon>Delete</button>
+                </mat-menu>
+              </div>
+            </div>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- ticket and project table column -->
+  <div fxFlex="100" fxFlex.gt-sm="66.66" fxLayout="column wrap">
+    <mat-card class="default" [@animate]="{value:'*',params:{delay:'300ms',y:'50px'}}">
+        <mat-card-header>
+            <div>
+                <nav mat-tab-nav-bar>
+                    <a id="tourTopLaws" mat-tab-link (click)="activeList = stats.top_5_laws;" > Δημοφιλή </a>
+                    <a id="tourRecentLaws" mat-tab-link (click)="activeList = stats.last_5_laws;" > Πρόσφατα </a>
+                  </nav>
+            </div>
+            </mat-card-header>
+
+      <mat-card-content class="p-0">
+        <mat-list class="compact-list mb-0" *ngFor="let item of activeList">
+          <mat-list-item class="" routerLink="/statute/{{ item._id  }}" routerLinkActive="list-item-active">
+            <!-- <img mat-list-avatar class="mr-1" [src]="t.img" alt=""> -->
+            
+            <div fxLayout="row" fxFlex="100">
+              <i class="material-icons m-0 mr-1">description</i>
+              <h6 class="m-0 mr-1">{{item._id | url2statute }} </h6>
+              <span fxFlex></span>
+              <div fxFlex="40">text....</div>
+              <span fxFlex></span>
+              <small class="text-muted mr-1">date...</small>
+            </div>
+            <!-- <mat-chip mat-sm-chip [color]="'warn'" [selected]="t.isOpen">{{t.isOpen ? 'active' : 'closed'}}</mat-chip> -->
+          </mat-list-item>
+        </mat-list>
+        <div class="text-center">
+          <button mat-button class="full-width">Κατάλογος Νομοθεσίας</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="p-0" [@animate]="{value:'*',params:{y:'50px',delay:'300ms'}}">
+      
+      <mat-card-content class="p-0">
+        <div class="m-1 p-1">
+          Το έργο αυτό, αναπτύχθηκε υπό την αιγίδα του προγράμματος Summer of Code 2018 της Google, 
+  και υλοποιεί μια αυτοματοποιημένη κωδικοποίηση της Ελληνικής Νομοθεσίας. 
+  Αρχικά πραγματοποιεί την εξαγωγή κειμένων των ΦΕΚ από το Εθνικό Τυπογραφείο (ET), 
+  τα διασυνδέει μεταξύ τους και, τέλος, προσδιορίζει και εφαρμόζει τροποποιήσεις του νομικού κειμένου
+  με μεθόδους και τεχνικές επεξεργασίας φυσικής γλώσσας.
+  Στόχος είναι η κατάργηση των γραφειοκρατικών διαδικασιών και η εξοικονόμηση χρόνου σε όσους αναζητούν
+  τις πιο πρόσφατες εκδόσεις της νομοθεσίας.
+  Οι νέοι "συγχωνευμένοι / τροποποιημένοι / κωδικοποιημένοι νόμοι μπορούν να εμφανίζουν το τρέχον κείμενο κάθε νόμου 
+  σε κάθε στιγμή. Αυτό είναι κάτι που συμβαίνει παραδοσιακά με το χέρι και ο στόχος μας ήταν να το αυτοματοποιήσουμε.
+        </div>
+ 
+        <div class="text-center">
+          <button mat-button class="full-width">Περισσότερα</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Users Row -->
+    <div fxLayout="row wrap">
+      <div
+      *ngFor="let user of users" 
+      fxFlex="100"
+      fxFlex.gt-sm="50">
+        <mat-card class="user-card p-0">
+          <mat-card-title class="mat-bg-primary">
+            <div class="card-title-text">
+              <a href="" class="toolbar-avatar md mr-1"><img [src]="user.photo" alt=""></a>
+              <span>{{user.name}}</span>
+              <span fxFlex></span>
+              <button mat-icon-button [matMenuTriggerFor]="userMenu" class="">
+                  <mat-icon class="">more_vert</mat-icon>
+              </button>
+              <mat-menu #userMenu="matMenu">
+                  <a mat-menu-item target="_blank"[href]="user.linkedin">Follow</a>
+                  <a mat-menu-item>Message</a>
+              </mat-menu>
+            </div>
+            <mat-divider></mat-divider>
+          </mat-card-title>
+          <mat-card-content>
+            <!-- user detail lines-->
+            <div class="user-details">
+              <p><mat-icon class="text-muted">card_membership</mat-icon>{{user.membership}}</p>
+              <p><mat-icon class="text-muted">date_range</mat-icon>Member since {{user.registered | date}}</p>
+              <p><mat-icon class="text-muted">location_on</mat-icon>{{user.address}}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <!-- End Users Row -->
+  </div>
+  <!-- End tables and users column -->
+</div>
+
+
+<!-- Dialog template -->
+<ng-template #myDialog>
+  <h2 matDialogTitle>Internet Archive!</h2>
+  <mat-dialog-content>
+    <p>Όλα τα Φ.Ε.Κ ανεβαίνουν στο <code>Internet Archive</code> για αρχειοθέτηση...</p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button matDialogClose >Κλείσιμο</button>
+  </mat-dialog-actions>
+</ng-template>
+

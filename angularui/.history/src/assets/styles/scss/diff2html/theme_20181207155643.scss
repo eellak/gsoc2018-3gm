@@ -1,0 +1,46 @@
+@import '~@angular/material/theming';
+
+@mixin mgl-timeline-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+  $typographyConfig: mat-typography-config();
+
+  .d2h-file-header {
+    padding: 5px 10px;
+    border-bottom: 1px solid #d8d8d8;
+    background-color: map-get($background, app-bar) !important;
+  }
+
+/*   mgl-timeline {
+    font-family: mat-font-family($typographyConfig);
+
+      & mgl-timeline-entry {
+
+        & .mgl-timeline-entry-card {
+            @include mat-elevation(4);
+            background-color: map-get($background, card) !important;
+            color: map-get($foreground, base);
+
+            & .mgl-timeline-entry-card-header {
+                background-color: map-get($background, app-bar) !important;
+            }
+        }
+
+        & mgl-timeline-entry-dot {
+        @include mat-elevation(2);
+
+            &.primary {
+                background-color: mat-color($primary);
+            }
+
+            &.accent {
+                background-color: mat-color($accent);
+            }
+    }
+    }
+  } */
+
+  
+}

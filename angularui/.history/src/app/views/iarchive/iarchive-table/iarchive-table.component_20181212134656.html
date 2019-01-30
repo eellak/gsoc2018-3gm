@@ -1,0 +1,45 @@
+<mat-card class="p-0">
+  <mat-form-field class="margin-333" style="width: 100%">
+    <input 
+    matInput 
+    placeholder="Πληκτρολογήστε έναν όρο αναζήτησης" 
+    value=""
+    (keyup)='updateFilter($event)'>
+  </mat-form-field>
+  
+  <div class="mat-box-shadow margin-333">
+      <ngx-datatable class="material bg-white" 
+      [columnMode]="'flex'"
+      [headerHeight]="50"
+      [footerHeight]="50" 
+      [rowHeight]="'auto'"
+      [limit]="10"
+      [rows]="rows"
+      >
+      <ngx-datatable-column name="Όνομα" [flexGrow]="1">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.title }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Λήψεις" [flexGrow]="1">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.downloads }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Ημερομηνία" [flexGrow]="1">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.addeddate?.$date | date }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Actions" [flexGrow]="1">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <button mat-icon-button mat-sm-button color="'primary'" class="mr-1" >
+                <a href="https://archive.org/details/GreekGovernmentGazette-{{ row.identifier }}"></a>a>
+                  <mat-icon>info</mat-icon> 
+            </button>
+            
+          </ng-template>
+       </ngx-datatable-column>
+      </ngx-datatable>
+  </div>
+</mat-card>

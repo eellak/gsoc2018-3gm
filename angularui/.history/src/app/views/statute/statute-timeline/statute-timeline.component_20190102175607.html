@@ -1,0 +1,17 @@
+<h2>Timeline</h2>
+
+      <h3>Ιστορικό</h3>
+
+      <div #visElement [visTimeline]="visTimeline"
+
+           [visTimelineItems]="visTimelineItems"
+
+           (initialized)="timelineInitialized()"></div>
+
+      <button type="button" class="btn btn-default" (click)="addItem()">εμφάνιση</button>
+
+      <p>
+
+        <strong>Note:</strong> Μπορείτε να κάνετε zoom , με την χρήση των ...
+
+      </p>

@@ -1,0 +1,35 @@
+<div class="scrollable" [perfectScrollbar]>
+    <section class="home-section section-intro text-center">
+      <div class="container">
+          <span class="egret">3gm</span>
+          <img src="assets/images/logos/3gm-logo-transparent.png" alt="3gm logo">
+          <h1>Αυτόματη κωδικοποίηση ελληνικής νομοθεσίας</h1>
+          <p>Δείτε τις ενοποιημένες τελικές εκδόσεις <strong>Νόμων</strong>
+           της Ελληνικής Πολιτείας.</p>
+          <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="center center">
+            <button mat-raised-button mat-lg-button (click)="goToMainDash()">Κεντρική Εφαρμογή</button>
+            <span fxFlex="8px"></span>
+            <a href="/others/about" target="_blank">
+              <button mat-raised-button mat-lg-button color="warn">Πληροφορίες</button>
+            </a>
+          </div>
+      </div>
+    </section>
+<!--     <section id="demos" class="home-section section-demos">
+      <div class="container">
+        <div fxLayout="row wrap" fxLayout.lt-sm="column">
+          <div class="demo-box-wrap" fxFlex="50" *ngFor="let v of versions"> 
+            <div class="text-center demo-box">
+              <div (click)="goToDashboard(v)" class="p-0 screenshot">
+                <img [src]="v.photo">
+              </div>
+              <div class="caption">
+                <h3>{{v.name}}</h3>
+                <button mat-raised-button color="primary" (click)="goToDashboard(v)">View Demo</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section> -->
+  </div>
