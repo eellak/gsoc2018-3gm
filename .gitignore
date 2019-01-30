@@ -104,5 +104,50 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+#vscode config dir
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+#pickle files
+*.pickle
+
+# dependencies
+node_modules/
+package-lock.json
+
+# angular compiled output
+angularui/dist
+angularui/tmp
+angularui/out-tsc
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+angularui/e2e/*.js
+angularui/e2e/*.map
+
+#.history
+.history/
+/angularui/.history/
+
+#.vscode
+.vscode/
+/angularui/.vscode/
+
+# System Files
+.DS_Store
+Thumbs.db
+
 
 # End of https://www.gitignore.io/api/python
