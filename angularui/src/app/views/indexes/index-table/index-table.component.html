@@ -141,7 +141,7 @@
                   <ngx-datatable-column name="Όνομα" prop="name" [flexGrow]="1">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                         <mat-chip mat-sm-chip [color]="'primary'" [selected]="row.type=='l'">{{row.type=='l' ? 'Νόμος' : 'Π.Δ'}}</mat-chip>
-                      {{ row?.name }} / {{ row?.year }}
+                      {{ row?.name }}/{{ row?.year }}
                     </ng-template>
                   </ngx-datatable-column>
                   <ngx-datatable-column name="Έτος" prop="year" [flexGrow]="1">

@@ -137,6 +137,14 @@ testem.log
 angularui/e2e/*.js
 angularui/e2e/*.map
 
+#.history
+.history/
+/angularui/.history/
+
+#.vscode
+.vscode/
+/angularui/.vscode/
+
 # System Files
 .DS_Store
 Thumbs.db
