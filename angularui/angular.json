@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "egret": {
+    "3gmui": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -53,14 +53,14 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "egret:build:production"
+              "browserTarget": "3gmui:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "egret:build"
+            "browserTarget": "3gmui:build"
           }
         },
         "test": {
@@ -92,7 +92,7 @@
         }
       }
     },
-    "egret-e2e": {
+    "3gmui-e2e": {
       "root": "",
       "sourceRoot": "",
       "projectType": "application",
@@ -101,7 +101,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "egret:serve"
+            "devServerTarget": "3gmui:serve"
           }
         },
         "lint": {
@@ -116,7 +116,7 @@
       }
     }
   },
-  "defaultProject": "egret",
+  "defaultProject": "3gmui",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

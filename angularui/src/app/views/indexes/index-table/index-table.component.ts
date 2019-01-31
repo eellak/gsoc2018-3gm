@@ -23,13 +23,13 @@ export class IndexTableComponent implements OnInit, OnDestroy {
 
   public isSideNavOpen: boolean;
   public viewMode: string = 'grid-view';
-  
+
   @ViewChild(MatSidenav) private sideNav: MatSidenav;
   @ViewChild(DatatableComponent) table: DatatableComponent;
 
   public activeType: string = '';
   public filterForm: FormGroup;
-  
+
   //Filters
   public initialFilters = {
     year: 2018,
@@ -52,7 +52,7 @@ export class IndexTableComponent implements OnInit, OnDestroy {
     { value: 2016, viewValue: '2016' },
     { value: 2017, viewValue: '2017' },
     { value: 2018, viewValue: '2018' },
-
+    { value: 2019, viewValue: '2019' },
   ];
 
   public apiitems: Observable<LegalIndexItem[]> ;
@@ -98,7 +98,7 @@ export class IndexTableComponent implements OnInit, OnDestroy {
       year: [filterData.year],
       minRating: [filterData.minRating],
       maxRating: [filterData.maxRating]
-    })
+    });
   }
 
   setActiveType(type: string) {
