@@ -26,9 +26,7 @@ A presentation of the project is [available here as part of FOSSCOMM 2018 at the
 
 ## Demo
 
-The project is hosted at [3gm.ellak.gr](https://3gm.ellak.gr) or [openlaws.ellak.gr](https://openlaws.ellak.gr).
-A new (beta) UI based on angular is hosted at [3gm.thodoris.net](https://3gm.thodoris.net)
-A video presentation of the project is available [here](https://www.youtube.com/watch?v=_UIGsy85Ehw)
+The project is hosted at [3gm.ellak.gr](https://3gm.ellak.gr) or [openlaws.ellak.gr](https://openlaws.ellak.gr).  A video presentation of the project is available [here](https://www.youtube.com/watch?v=_UIGsy85Ehw)
 
 ## Timeline
 
