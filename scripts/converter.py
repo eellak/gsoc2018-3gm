@@ -16,7 +16,7 @@ MIN_BYTES = 200
 logging.basicConfig(
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-def batch_upload(filelist):
+def batch_codify(filelist):
     # batch upload to database / codifier
     sys.path.insert(0, '../3gm')
     import codifier
@@ -148,3 +148,6 @@ if __name__ == '__main__':
     # use multiprocessing for multiple jobs
     pool = multiprocessing.Pool(int(njobs))
     results = pool.map(job, pdfs)
+
+    # Batch codify results to DB
+    batch_codify(results)
