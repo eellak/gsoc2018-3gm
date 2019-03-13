@@ -1,3 +1,3 @@
 export const Globals = Object.freeze({
-    apiUrl: 'https://3gm.thodoris.net/api',
+    apiUrl: 'https://3gm.ellak.gr/api',
 });
