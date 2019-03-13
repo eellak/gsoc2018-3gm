@@ -1,7 +1,7 @@
 {
   "name": "3gmui",
   "version": "7.1.4",
-  "description": "ANgular UI for codification portal",
+  "description": "Angular UI for codification portal",
   "keywords": ["codification","greek gazette"],
   "author": {"name" : "Thodoris Papadopoulos"
     , "email" : "thodoris@thodoris.net"

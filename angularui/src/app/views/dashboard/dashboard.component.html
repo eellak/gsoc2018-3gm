@@ -129,7 +129,7 @@
         <div class="text-muted">Τα τεύχη των ΦΕΚ αρχειοθετούνται αυτόματα στη σελίδα του Internet Archive</div>
       </div>
       <div class="profile-actions mb-1" fxLayoutAlign="center center">
-        <button mat-raised-button color="primary">Collection</button>
+        <a mat-raised-button color="primary" target="_blank" href="https://archive.org/details/greekgovernmentgazette">Collection</a>
         <span fxFlex="8px"></span>
         <button mat-raised-button color="accent" (click)="openDialogWithTemplateRef(myDialog)">Σχετικά</button>
       </div>
@@ -207,15 +207,7 @@
       
       <mat-card-content class="p-0">
         <div class="m-1 p-1">
-          Το έργο αυτό, αναπτύχθηκε υπό την αιγίδα του προγράμματος Summer of Code 2018 της Google, 
-  και υλοποιεί μια αυτοματοποιημένη κωδικοποίηση της Ελληνικής Νομοθεσίας. 
-  Αρχικά πραγματοποιεί την εξαγωγή κειμένων των ΦΕΚ από το Εθνικό Τυπογραφείο (ET), 
-  τα διασυνδέει μεταξύ τους και, τέλος, προσδιορίζει και εφαρμόζει τροποποιήσεις του νομικού κειμένου
-  με μεθόδους και τεχνικές επεξεργασίας φυσικής γλώσσας.
-  Στόχος είναι η κατάργηση των γραφειοκρατικών διαδικασιών και η εξοικονόμηση χρόνου σε όσους αναζητούν
-  τις πιο πρόσφατες εκδόσεις της νομοθεσίας.
-  Οι νέοι "συγχωνευμένοι / τροποποιημένοι / κωδικοποιημένοι νόμοι μπορούν να εμφανίζουν το τρέχον κείμενο κάθε νόμου 
-  σε κάθε στιγμή. Αυτό είναι κάτι που συμβαίνει παραδοσιακά με το χέρι και ο στόχος μας ήταν να το αυτοματοποιήσουμε.
+            <img src="../../../assets/images/screenshots/lawlinks.png" />
         </div>
  
         <div class="text-center">
@@ -240,7 +232,7 @@
                   <mat-icon class="">more_vert</mat-icon>
               </button>
               <mat-menu #userMenu="matMenu">
-                  <a mat-menu-item target="_blank"[href]="user.linkedin">Follow</a>
+                  <a mat-menu-item target="_blank" [href]="user.linkedin">Follow</a>
                   <a mat-menu-item>Message</a>
               </mat-menu>
             </div>

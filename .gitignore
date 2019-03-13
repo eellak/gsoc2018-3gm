@@ -142,6 +142,7 @@ angularui/e2e/*.map
 /angularui/.history/
 
 #.vscode
+*.code-workspace
 .vscode/
 /angularui/.vscode/
 

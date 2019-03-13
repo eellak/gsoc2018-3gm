@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit , OnDestroy {
   constructor(
     private router: Router,
     private dashboardService: DashboardService,
-    private indexService:IndexService,
+    private indexService: IndexService,
     private dialog: MatDialog
     ) {
     this.searchCtrl = new FormControl();

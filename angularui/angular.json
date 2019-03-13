@@ -49,7 +49,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "egret:build"
+            "browserTarget": "3gmui:build"
           },
           "configurations": {
             "production": {
