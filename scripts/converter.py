@@ -9,7 +9,6 @@ import ocr
 import argparse
 import logging
 import glob
-import uploader
 
 # Minimum bytes for a file to considered purely image
 MIN_BYTES = 200
@@ -17,15 +16,17 @@ MIN_BYTES = 200
 logging.basicConfig(
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-def batch_upload(filelist):
+def batch_codify(filelist):
     # batch upload to database / codifier
     sys.path.insert(0, '../3gm')
     import codifier
     import apply_links
+    import pparser
 
     tmp_codifier = codifier.LawCodifier()
     for f in filelist:
-        tmp_codifier.issues.append(f)
+        issue = pparser.IssueParser(filename=f)
+        tmp_codifier.issues.append(issue)
 
     tmp_codifier.codify_new_laws()
     tmp_codifier.create_law_links()
@@ -147,6 +148,6 @@ if __name__ == '__main__':
     # use multiprocessing for multiple jobs
     pool = multiprocessing.Pool(int(njobs))
     results = pool.map(job, pdfs)
-    if upload:
-        print('Batch upload to database')
-        uploader.upload(results)
+
+    # Batch codify results to DB
+    batch_codify(results)

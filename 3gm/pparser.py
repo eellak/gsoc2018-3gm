@@ -70,7 +70,7 @@ class IssueParser:
             infile = open(filename, 'r')
 
         # remove ugly hyphenthation
-        while 1 == 1:
+        while True:
             if not stdin:
                 l = infile.readline()
             else:
@@ -649,7 +649,7 @@ class LawParser:
 
                     if government_gazette_issue:
                         break
-        
+
     def __dict__(self):
         return self.serialize()
 
