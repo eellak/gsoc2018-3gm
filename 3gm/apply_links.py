@@ -17,7 +17,7 @@ def apply_links(identifier, rollback=True):
         try:
             print('Rolling back...')
             init = codifier.codifier.db.rollback_laws(identifier)
-            codifier.codifier.laws[identifier] = paraser.LawParser.from_serialized(init)
+            codifier.codifier.laws[identifier] = parser.LawParser.from_serialized(init)
         except:
             print('No history on filesystem')
 
@@ -139,6 +139,8 @@ def apply_all_links(identifiers=None):
         except KeyError:
             # Law is never amended
             initial = codifier.codifier.laws[identifier].serialize()
+            initial_non_full = codifier.codifier.laws[identifier].serialize(full=False)
+
             initial['_version'] = 0
             final_serializable = {
                 '_id' : identifier,
@@ -148,7 +150,7 @@ def apply_all_links(identifiers=None):
             # Store current version to mongo
             latest = {
                 '_id' : identifier,
-                'versions' : [final_serializable['versions'][-1]]
+                'versions' : [initial_non_full] # XXX NOT FIXED YET
             }
             try:
                 codifier.codifier.db.laws.save(latest)

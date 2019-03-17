@@ -187,7 +187,8 @@ class LawCodifier:
         """Populate laws from database and fetch latest versions"""
 
         cursor = self.db.laws.find({"versions": {"$ne": None}})
-        for x in cursor:
+        for ptr in cursor:
+            x = self.db.get_json_from_fs(_id = ptr['_id'])
             current_version = 0
             current_instance = None
             for v in x['versions']:
@@ -325,7 +326,8 @@ class LawCodifier:
                             issue.filename)
                     except BaseException:
                         pass
-                    self.db.laws.save({
+                    self.db.save_json_to_fs(_id=new_laws[k].identifier,
+                        _json = {
                         '_id': new_laws[k].identifier,
                         'versions': [
                             serializable

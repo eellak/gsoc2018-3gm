@@ -653,21 +653,27 @@ class LawParser:
     def __dict__(self):
         return self.serialize()
 
-    def serialize(self):
+    def serialize(self, full=True):
         """Returns the object in database-friendly format
         in a dictionary.
+        :params full: Return the full law if true else avoid articles
+        This flag can be used to avoid the 16MB limit of BSON
         """
         if self.autoincrement_version:
             self.version_index += 1
 
-        return {
+        data = {
             '_id': self.identifier,
             'thesaurus': self.thesaurus,
             'lemmas': self.lemmas,
             'titles': self.titles,
-            'articles': self.sentences,
             'amendee': self.amendee
         }
+
+        if full:
+            data['articles'] = self.sentences
+
+        return data
 
     @staticmethod
     def from_serialized(x):
