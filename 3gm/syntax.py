@@ -10,9 +10,13 @@ import copy
 import string
 import phrase_fun
 import spacy
-import el_small
-nlp = el_small.load()
 
+try:
+    import el_small
+    nlp = el_small.load()
+except ImportError:
+    import el_core_web_sm
+    nlp = el_core_web_sm.load()
 
 class UncategorizedActionException(Exception):
     """This exception is raised whenever an action cannot be
@@ -594,7 +598,7 @@ class ActionTreeGenerator:
                         subtree[lookup]['_id'] = list(
                             helpers.ssconj_doc_iterator(tmp, i, is_plural=is_plural, recursive=recursive))
                     except:
-                        continue        
+                        continue
                 subtree[lookup]['children'] = ActionTreeGenerator.children_loopkup[lookup]
 
         return subtree

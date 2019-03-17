@@ -605,7 +605,7 @@ class LawParser:
 
         if fix_paragraphs:
 
-            for Κείμενοarticle in self.corpus.keys():
+            for article in self.corpus.keys():
                 fixed_lines, title = self.fix_paragraphs(self.corpus[article])
                 self.titles[article] = title
                 self.corpus[article] = fixed_lines

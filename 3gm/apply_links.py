@@ -120,6 +120,7 @@ def apply_all_links(identifiers=None):
     query_accuracy = []
     total = len(identifiers)
 
+
     # apply all links
     for i, identifier in enumerate(identifiers):
 
@@ -180,4 +181,4 @@ def apply_links_between(start, end):
     apply_all_links(list(identifiers))
 
 if __name__ == '__main__':
-    apply_all_links(['π.δ. 160/2008'])
+    apply_all_links()

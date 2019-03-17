@@ -169,7 +169,7 @@ class Database:
 
         return tmp
 
-    def rollback_all():
+    def rollback_all(self):
         """Rollsback everything in the database"""
         self.rollback_links(identifier=None, rollback_laws=True)
 

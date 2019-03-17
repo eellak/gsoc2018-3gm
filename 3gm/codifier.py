@@ -195,7 +195,7 @@ class LawCodifier:
                 if int(v['_version']) >= current_version:
                     current_version = int(v['_version'])
                     current_instance = v
-
+                
             law, identifier = parser.LawParser.from_serialized(v)
             law.version_index = current_version
             self.laws[identifier] = law
@@ -319,8 +319,11 @@ class LawCodifier:
                 self.db.archive_links.save(archive_link)
                 try:
                     serializable = new_laws[k].__dict__()
+                    serializable_non_full = new_laws[k].serialize(full=False)
                     serializable['_version'] = 0
+                    serializable_non_full['_version'] = 0
                     serializable['amendee'] = k
+                    serializable_non_full['amendee'] = k
                     try:
                         serializable['issue'] = helpers.parse_filename(
                             issue.filename)
@@ -333,6 +336,14 @@ class LawCodifier:
                             serializable
                         ]
                     })
+
+                    self.db.laws.save({
+                        '_id': new_laws[k].identifier,
+                        'versions': [
+                            serializable_non_full
+                        ]
+                    })
+
                 except BaseException as e:
                     logging.warning(str(e))
 
