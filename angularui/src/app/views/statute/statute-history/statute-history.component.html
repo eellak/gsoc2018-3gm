@@ -1,12 +1,9 @@
     <mat-toolbar color="primary" class="inbox-toolbar">
       <!-- Left sidebar toggle button -->
-      <button mat-icon-button (click)="historytimeline.toggle=true" fxShow [fxShow.gt-sm]="isMobile"><mat-icon>short_text</mat-icon></button>
+      <!-- <button mat-icon-button (click)="historytimeline.toggle=true" fxShow [fxShow.gt-sm]="isMobile"><mat-icon>short_text</mat-icon></button> -->
       <!-- multiple email select and control -->
-      <mat-checkbox (change)="historytimeline.toggle = $event.checked;" class="inbox-toggle-all mr-1" [checked]=true><small>All</small></mat-checkbox>
-      <button mat-icon-button matTooltip="Move to trash"><mat-icon>delete</mat-icon></button>
-      <button mat-icon-button matTooltip="Mark as important" class=""><mat-icon>folder_special</mat-icon></button>
-      <button mat-icon-button matTooltip="Move to archive"><mat-icon>archive</mat-icon></button>
-      <button mat-icon-button matTooltip="Report spam"><mat-icon>error</mat-icon></button>
+      <!-- <mat-checkbox (change)="historytimeline.toggle = $event.checked;" class="inbox-toggle-all mr-1" [checked]=true><small>All</small></mat-checkbox> -->
+      Ιστορικό
     </mat-toolbar>
     
  <mgl-timeline #historytimeline>
