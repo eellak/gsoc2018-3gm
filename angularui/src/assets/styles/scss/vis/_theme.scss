@@ -10,14 +10,16 @@
   $typographyConfig: mat-typography-config();
  
   
+ .vis-time-axis .vis-text { 
+    color:map-get($foreground, status-bar) !important;
+    font-weight: bolder;
+  }
 
 .vis-text.vis-minor {
 
-  color: #FFFFFF!important;
+  color: map-get($foreground, status-bar) !important;
+  font-weight: bolder;
 
 }
-
-
-
 
 }

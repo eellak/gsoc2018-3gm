@@ -1,17 +1,23 @@
 {
   "name": "3gmui",
   "version": "7.1.4",
-  "description": "ANgular UI for codification portal",
-  "keywords": ["codification","greek gazette"],
-  "author": {"name" : "Thodoris Papadopoulos"
-    , "email" : "thodoris@thodoris.net"
-    , "url" : "http://www.thodoris.net"},
+  "description": "Angular UI for codification portal",
+  "keywords": [
+    "codification",
+    "greek gazette"
+  ],
+  "author": {
+    "name": "Thodoris Papadopoulos",
+    "email": "thodoris@thodoris.net",
+    "url": "http://www.thodoris.net"
+  },
   "license": "MIT-style",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "serveProd": "ng serve --configuration=production",
     "build": "ng build",
+    "buildprod": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -59,12 +65,13 @@
     "@angular/cli": "7.1.4",
     "@angular/compiler-cli": "7.1.4",
     "@angular/language-service": "7.1.4",
+    "@types/hopscotch": "0.2.30",
     "@types/jasmine": "2.5.38",
     "@types/node": "6.0.60",
+    "angular-cli-ghpages": "^0.5.3",
     "codelyzer": "~4.5.0",
     "copy-webpack-plugin": "4.6.0",
     "enhanced-resolve": "4.1.0",
-    "@types/hopscotch": "0.2.30",
     "jasmine-core": "~2.5.2",
     "jasmine-spec-reporter": "~3.2.0",
     "karma": "~1.4.1",

@@ -306,18 +306,18 @@ export class NavigationService {
       icon: 'local_offer',
       state: 'topics'
     },
-    {
-      name: 'ΑΝΑΛΥΣEΙΣ',
-      type: 'dropDown',
-      tooltip: 'Αναλύσεις δεδομένων',
-      icon: 'timeline',
-      state: 'analyses',
-      sub: [
-        { name: 'CLUSTERS', state: 'clusters' },
-        { name: 'LINKS', state: 'links' },
-        { name: 'ENTITIES', state: 'entities' }
-      ]
-    },
+    // {
+    //   name: 'ΑΝΑΛΥΣEΙΣ',
+    //   type: 'dropDown',
+    //   tooltip: 'Αναλύσεις δεδομένων',
+    //   icon: 'timeline',
+    //   state: 'analyses',
+    //   sub: [
+    //     { name: 'CLUSTERS', state: 'clusters' },
+    //     { name: 'LINKS', state: 'links' },
+    //     { name: 'ENTITIES', state: 'entities' }
+    //   ]
+    // },
   ];
 
   // Icon menu TITLE at the very top of navigation.
