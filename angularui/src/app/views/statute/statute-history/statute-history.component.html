@@ -12,7 +12,7 @@
  <mgl-timeline #historytimeline>
    <mgl-timeline-entry *ngFor="let item of statuteHistory">
      <!-- Header-->
-     <mgl-timeline-entry-header><h6>{{ item.amendee }}</h6></mgl-timeline-entry-header>
+     <mgl-timeline-entry-header><h6>{{ item.amendee | url2statute }}</h6></mgl-timeline-entry-header>
      <mgl-timeline-entry-content>{{ item.summary }}</mgl-timeline-entry-content>
      <mgl-timeline-entry-dot class="accent"></mgl-timeline-entry-dot>
      <mgl-timeline-entry-side>

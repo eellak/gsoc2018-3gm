@@ -52,7 +52,6 @@ export class StatuteHistoryComponent implements OnInit, OnDestroy {
     if (this.getLawSub) {
       this.getLawSub.unsubscribe();
     }
-   
   }
 
   // UI

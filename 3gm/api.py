@@ -293,7 +293,7 @@ class StatuteStatsResource(Resource):
         }
 
         #jsonres = dumps(res)
-        cache_store(cache_key,res,False)
+        cache_store(cache_key,res)
         return res
         
 class StatuteIndexResource(Resource):
