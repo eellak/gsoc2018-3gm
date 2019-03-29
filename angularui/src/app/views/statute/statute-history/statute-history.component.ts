@@ -43,7 +43,11 @@ export class StatuteHistoryComponent implements OnInit, OnDestroy {
   getStatuteHistory() {
   this.getLawSub =  this.statuteService.getStatuteHistory(this.statuteID)
   .subscribe(data => {
-    this.statuteHistory = data;
+    // ORDER_BY last_nom, first_nom
+    const unique_data = data.filter((e, i) => data.findIndex(a => a.amendee === e.amendee) === i);
+    const sorted_data = unique_data.sort(( a , b ) => a.amendee_date.localeCompare(b.amendee_date) ||
+                                                a.amendee.localeCompare(b.amendee)  );
+    this.statuteHistory = sorted_data;
   });
 }
 
@@ -63,7 +67,7 @@ export class StatuteHistoryComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       self.isSidenavOpen = !self.isMobile;
       self.sideNav.mode = self.isMobile ? 'over' : 'side';
-    })
+    });
   }
   inboxSideNavInit() {
     this.isMobile = this.media.isActive('xs') || this.media.isActive('sm');

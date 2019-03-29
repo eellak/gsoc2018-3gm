@@ -128,9 +128,9 @@ getStatuteHistory() {
     .subscribe(data => {
       // TODO : Check if we need the redudant information
       const unique_data = data.filter((e, i) => data.findIndex(a => a.amendee === e.amendee) === i);
-      this.statuteHistory = data;
+      this.statuteHistory = unique_data;
       this.visTimelineItems = new VisTimelineItems(
-        unique_data.map(item => <VisTimelineItem>
+      unique_data.map(item => <VisTimelineItem>
           {
             id: item.amendee || item.identifier,
             title: new Url2StatutePipe().transform(item.amendee),
@@ -158,7 +158,7 @@ getStatuteHistory() {
     ); // end subscribe
 }
 
-public fit(){
+public fit() {
   this.visTimelineService.fit(this.visTimeline);
 }
 
