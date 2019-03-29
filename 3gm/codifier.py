@@ -187,14 +187,15 @@ class LawCodifier:
         """Populate laws from database and fetch latest versions"""
 
         cursor = self.db.laws.find({"versions": {"$ne": None}})
-        for x in cursor:
+        for ptr in cursor:
+            x = self.db.get_json_from_fs(_id = ptr['_id'])
             current_version = 0
             current_instance = None
             for v in x['versions']:
                 if int(v['_version']) >= current_version:
                     current_version = int(v['_version'])
                     current_instance = v
-
+                
             law, identifier = parser.LawParser.from_serialized(v)
             law.version_index = current_version
             self.laws[identifier] = law
@@ -318,19 +319,31 @@ class LawCodifier:
                 self.db.archive_links.save(archive_link)
                 try:
                     serializable = new_laws[k].__dict__()
+                    serializable_non_full = new_laws[k].serialize(full=False)
                     serializable['_version'] = 0
+                    serializable_non_full['_version'] = 0
                     serializable['amendee'] = k
+                    serializable_non_full['amendee'] = k
                     try:
                         serializable['issue'] = helpers.parse_filename(
                             issue.filename)
                     except BaseException:
                         pass
-                    self.db.laws.save({
+                    self.db.save_json_to_fs(_id=new_laws[k].identifier,
+                        _json = {
                         '_id': new_laws[k].identifier,
                         'versions': [
                             serializable
                         ]
                     })
+
+                    self.db.laws.save({
+                        '_id': new_laws[k].identifier,
+                        'versions': [
+                            serializable_non_full
+                        ]
+                    })
+
                 except BaseException as e:
                     logging.warning(str(e))
 
