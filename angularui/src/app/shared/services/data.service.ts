@@ -6,7 +6,8 @@ import {Globals } from '../globals';
 
 @Injectable()
 export class DataService {
-    public apiUrl =  Globals.apiUrl; // 'https://3gm.thodoris.net/api';
+   // public apiUrl =  Globals.apiUrlDev;  // 'http://3gm.thodoris.net:5000';
+      public apiUrl =  Globals.apiUrl; // 'https://3gm.thodoris.net/api';
 
     // Define the internal Subject we'll use to push the command count
     public pendingCommandsSubject = new Subject<number>();

@@ -32,7 +32,7 @@ export class IndexTableComponent implements OnInit, OnDestroy {
 
   //Filters
   public initialFilters = {
-    year: 2018,
+    year: 2019,
     minRating: 1,
     maxRating: 5
   };
@@ -41,6 +41,7 @@ export class IndexTableComponent implements OnInit, OnDestroy {
   //range = (start: number, end: number) => Array.from({length: (end - start)} , (v, k) => k + start);
 
   years = [
+    { value: 2007, viewValue: '2007' },
     { value: 2008, viewValue: '2008' },
     { value: 2009, viewValue: '2009' },
     { value: 2010, viewValue: '2010' },

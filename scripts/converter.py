@@ -3,7 +3,7 @@
 # conversion tool to convert all pdfs in stereo to txt with pdfminer.six
 # help: python3 converter --help
 
-import os
+import os,sys
 import multiprocessing
 import ocr
 import argparse
@@ -13,7 +13,7 @@ import glob
 # Minimum bytes for a file to considered purely image
 MIN_BYTES = 200
 
-logging.basicConfig(
+logging.basicConfig(filename="codify_daily.log",filemode = 'a'
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def batch_codify(filelist):
@@ -22,20 +22,28 @@ def batch_codify(filelist):
     import codifier
     import apply_links
     import pparser
+    new_laws = {}
+    try:
+        if (isinstance(filelist,str)):
+            filelist = [filelist]
+        if not (filelist and isinstance(filelist, list) and all(isinstance(file, str) for file in filelist)):
+            raise TypeError('filelist must be a list of one or more strings.')
+        
+        tmp_codifier = codifier.LawCodifier()
+        for f in filelist:
+            issue = pparser.IssueParser(filename=f)
+            tmp_codifier.issues.append(issue)
+            new_laws.update(issue.detect_new_laws())
 
-    tmp_codifier = codifier.LawCodifier()
-    for f in filelist:
-        issue = pparser.IssueParser(filename=f)
-        tmp_codifier.issues.append(issue)
+        tmp_codifier.codify_new_laws()
+        tmp_codifier.create_law_links()
 
-    tmp_codifier.codify_new_laws()
-    tmp_codifier.create_law_links()
-
-    print('Laws added and links created')
-    print('Applying links')
-
-    apply_links.apply_all_links(identifiers=None, rollback=False)
-
+        print('Laws added and links created')
+        print('Applying links')
+        print(new_laws)
+        apply_links.apply_all_links(identifiers=None)
+    except Exception as e:
+        logging.error("Exception occurred while codifying file %s to txt", ''.join(filelist),exc_info=True)
 
 def job(x):
     # document conversion
