@@ -4,7 +4,7 @@
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
 
-# :rocket: Greek Government Gazette Text Mining  - 3gm
+# :rocket: Greek Government Gazette Text Mining, Cross Linking and Codification  - 3gm
 
   
 
