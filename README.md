@@ -4,7 +4,11 @@
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
 
-# :rocket: Google Summer Of Code 2018 - 3gm
+# :rocket: Google Summer Of Code 2019 - 3gm
+
+This repository will host the changes and code developped for 3gm as part of the Google Summer of Code 2019. This year's effort mainly aims to enhence NLP functionalities of the project and is based on this [project proposal](https://docs.google.com/document/d/1KT14HmJBIOsKgLSfm4iBz79PCH1G2LUxbNVDINGr_2o/edit?usp=sharing). The timeline of the project is described [here](https://docs.google.com/document/d/1mr633dCmdtp3bLqRKWygj7VoQ_enh-qHvqHgYysRhjM/edit?usp=sharing) and you can also find a [worklog](https://docs.google.com/document/d/1wPAsp_DKi8Xls54dusn0rQQcFnnREFRTKvJsYco4s1k/edit?usp=sharing) documenting the progress made during the development of the project.   
+
+The main goals for GSoC-2019 are populating the database with more types of amendments, widening the range of feature extraction and training a new Doc2Vec model and a new NER annotator specifically for our corpus.  
 
 Welcome to _Government Gazette text mining, cross linking, and codification Project_ (or 3gm for short) using [Natural Language Processing Methods](https://en.wikipedia.org/wiki/Natural_language_processing) and Practices on **Greek Legislation**.
 
