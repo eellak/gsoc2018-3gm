@@ -59,6 +59,7 @@ Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 * Mentor: Marios Papachristou ([papachristoumarios](https://github.com/papachristoumarios))
 * Mentor: Diomidis Spinellis ([dsplinellis](https://github.com/dspinellis))
 * Mentor: Ioannis Anagnostopoulos
+* Mentor: Panos Louridas ([louridas](https://github.com/louridas))
 
 ### Mentors for GSOC 2018
 
@@ -68,8 +69,10 @@ Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 
 ### Development
 
- * Marios Papachristou (Original Developer)
- * Theodore Papadopoulos
+ * Marios Papachristou (Original Developer - Google Summer of Code 2018)
+ * Theodore Papadopoulos (AngularJS UI)
+ * Sotirios Papadiamantis (Google Summer of Code 2019)
+ 
 
 ---
 
