@@ -31,8 +31,8 @@ if __name__ == '__main__':
     argparser = argparse.ArgumentParser(description='''
     Tool for batch upload to Internet Archive for the greekgovernmentgazette collection.
     https://archive.org/details/greekGovernmentgazette''')
-    required = parser.add_argument_group('required arguments')
-    optional = parser.add_argument_group('optional arguments')
+    required = argparser.add_argument_group('required arguments')
+    optional = argparser.add_argument_group('optional arguments')
 
     # arguments
     required.add_argument('-d', help='Input directory', required=True)
