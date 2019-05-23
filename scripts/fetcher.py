@@ -240,7 +240,10 @@ if __name__ == '__main__':
 	driver.get('http://www.et.gr/idocs-nph/search/fekForm.html')
 
 	driver.find_element_by_name("showhide").click()
-
+	
+	# Add year to the respective dropdown option
+	driver.find_element_by_name("year").send_keys(date_to[6:10])
+	
 	# Enter Details
 	driver.find_element_by_name("fekReleaseDateTo").clear()
 	driver.find_element_by_name("fekReleaseDateTo").send_keys(date_to)
