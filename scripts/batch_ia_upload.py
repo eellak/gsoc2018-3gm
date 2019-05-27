@@ -12,6 +12,10 @@ import multiprocessing
 from converter import list_files
 import time
 
+#Configure logging
+logging.basicConfig(filename="batch_upload.log",filemode = 'a',
+    format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
 def ia_upload(pdf):
     global pfs
     global uploaded
@@ -20,7 +24,7 @@ def ia_upload(pdf):
     ia_id = 'GreekGovernmentGazette-' + filename
     if ia_id not in uploaded:
         os.system('./ia-upload.sh {}'.format(pdf))
-        print('Uploaded ' + filename)
+          logging.info('Uploaded {}'.format(filename))
 
 
 def basename(x, ext): return x.replace(ext, "").split('/')[-1]
