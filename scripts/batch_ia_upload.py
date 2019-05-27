@@ -10,7 +10,7 @@ import glob
 import argparse
 import multiprocessing
 from converter import list_files
-
+import time
 
 def ia_upload(pdf):
     global pfs
@@ -27,6 +27,8 @@ def basename(x, ext): return x.replace(ext, "").split('/')[-1]
 
 
 if __name__ == '__main__':
+    
+    start_time = time.time()
     # argument parser
     argparser = argparse.ArgumentParser(description='''
     Tool for batch upload to Internet Archive for the greekgovernmentgazette collection.
@@ -51,3 +53,7 @@ if __name__ == '__main__':
     # pool for multiprocessing
     pool = multiprocessing.Pool(args.w)
     pool.map(ia_upload, pdfs)
+    
+    elapsed_time = time.time() - start_time
+    print('Elapsed time in minutes:', elapsed_time/60)
+    print('Seconds per issues uploaded:', elapsed_time/number_of_files)
