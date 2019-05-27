@@ -26,7 +26,11 @@ import platform
 import sys
 sys.path.append('../3gm')
 from helpers import Helper
+import logging
 
+# Configure logging module
+logging.basicConfig(filename="fetching.log",filemode = 'a',
+    format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def handle_download(download_page, params):
 	"""Original function"""
@@ -60,7 +64,7 @@ def handle_download(download_page, params):
 	outfile = '{}/{}/{}'.format(output_dir, dirs, filename)
 
 	if os.path.isfile(outfile):
-	   print('Already a file')
+	   logging.info('{} already a file'.format(filename))
 	   return
 
 	try:
@@ -76,9 +80,11 @@ def handle_download(download_page, params):
 		meta = beautiful_soup.find("meta", {"http-equiv": "REFRESH"})
 		download_link = meta['content'].replace("0;url=", "")
 	except BaseException as e:
+		logging.error("Exception occurred while processing a link",exc_info=True)
 		print(e)
 		return None
 	print(filename)
+	logging.info('Downloaded {}'.format(filename))
 	Helper.download(download_link, filename, output_dir + '/' + dirs)
 	return outfile
 
@@ -233,6 +239,7 @@ if __name__ == '__main__':
 			chromedriver_executable,
 			chrome_options=options)
 	except BaseException as e:
+		logging.error("Exception occurred:Could not find chromedriver",exc_info=True)
 		print('Could not find chromedriver. Exiting')
 		print(e)
 		exit()
@@ -296,6 +303,7 @@ if __name__ == '__main__':
 				time.sleep(1)
 
 	except AttributeError:
+		logging.error('Could not find results')
 		print('Could not find results')
 
 	finally:
