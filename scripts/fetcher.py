@@ -242,7 +242,7 @@ if __name__ == '__main__':
 	driver.find_element_by_name("showhide").click()
 	
 	# Add year to the respective dropdown option
-	driver.find_element_by_name("year").send_keys(date_to[6:10])
+	driver.find_element_by_name("year").send_keys(date_from[6:10])
 	
 	# Enter Details
 	driver.find_element_by_name("fekReleaseDateTo").clear()
