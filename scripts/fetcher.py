@@ -29,7 +29,7 @@ from helpers import Helper
 import logging
 
 # Configure logging module
-logging.basicConfig(filename="fetching.log",filemode = 'a',
+logging.basicConfig(filename="./logs/fetching.log",filemode = 'a',
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def handle_download(download_page, params):
