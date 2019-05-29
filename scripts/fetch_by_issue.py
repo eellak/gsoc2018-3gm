@@ -28,7 +28,7 @@ import logging
 sys.path.append('../3gm')
 from helpers import Helper
 
-logging.basicConfig(filename="fetch_daily.log",filemode = 'a',
+logging.basicConfig(filename="./logs/fetch_by_issue.log",filemode = 'a',
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def handle_download(download_page, params):
