@@ -13,7 +13,7 @@ from converter import list_files
 import time
 
 #Configure logging
-logging.basicConfig(filename="batch_upload.log",filemode = 'a',
+logging.basicConfig(filename="./logs/batch_upload.log",filemode = 'a',
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def ia_upload(pdf):
