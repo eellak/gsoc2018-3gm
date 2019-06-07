@@ -43,9 +43,16 @@ This repository will host the changes and code developped for 3gm as part of the
 The main goals for GSoC-2019 are populating the database with more types of amendments, widening the range of feature extraction and training a new Doc2Vec model and a new NER annotator specifically for our corpus.
 
 As part of the first week of GSoC-2019 a data mirgation project. In the scope of this project we had to mine the webite of
-the [Greek National Printing House](http://www.et.gr/idocs-nph/search/fekForm.html#results) and upload as many GGG issues to the respective [Internet Archive Collection](https://archive.org/details/greekgovernmentgazette). Until now, 66.000 files have been uploaded, in addition to the ~45.000 files that the collection contained initially. This number will continue to surge.
+the [Greek National Printing House](http://www.et.gr/idocs-nph/search/fekForm.html#results) and upload as many GGG issues to the respective [Internet Archive Collection](https://archive.org/details/greekgovernmentgazette). Until now, 78.900 files have been uploaded, in addition to the ~45.000 files that the collection contained initially. This number will continue to surge.
 
-We tried documenting our insights from this process. We would like to evolve this to an entry at the project wiki, titled [" A simple guide to mining the Greek Government Gazette"](https://docs.google.com/document/d/1pcCmRKKRClTmOD1HQav2GRlkM0mLZUgGmIv83HX4wv0/edit?usp=sharing).  
+We tried documenting our insights from this process. We would like to evolve this to an entry at the project wiki, titled [" A simple guide to mining the Greek Government Gazette"](https://docs.google.com/document/d/1pcCmRKKRClTmOD1HQav2GRlkM0mLZUgGmIv83HX4wv0/edit?usp=sharing). 
+
+After uploading a major part of the Greek Government Gazette issues, including all primary type issues, it was time to start 
+building a dataset to train a new NER tagger based on the [Greek spaCy model](https://spacy.io/models/el). To do that it is necessary to use an annotation tool. A tool that is fully compatible with spaCy is [prodigy](https://prodi.gy/). We contacted them and they provided a research licence for the duration of the project.
+
+To mine, prepare and annotate our data we followed this [workflow](https://docs.google.com/document/d/1ICkSLpc2IZEuISpb2VXWURZ4cyVXQ_Os4ynWwnmIJU8/edit?usp=sharing) and followed the guidlines for annotation described [here].
+
+At this point we have created a large data-set that needs to be annotated. All above documents will be incorporated on the project wiki shortely.
 
 ## Google Summer of Code 2018
 
