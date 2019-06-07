@@ -50,7 +50,7 @@ We tried documenting our insights from this process. We would like to evolve thi
 After uploading a major part of the Greek Government Gazette issues, including all primary type issues, it was time to start 
 building a dataset to train a new NER tagger based on the [Greek spaCy model](https://spacy.io/models/el). To do that it is necessary to use an annotation tool. A tool that is fully compatible with spaCy is [prodigy](https://prodi.gy/). We contacted them and they provided a research licence for the duration of the project.
 
-To mine, prepare and annotate our data we followed this [workflow](https://docs.google.com/document/d/1ICkSLpc2IZEuISpb2VXWURZ4cyVXQ_Os4ynWwnmIJU8/edit?usp=sharing) and followed the guidlines for annotation described [here].
+To mine, prepare and annotate our data we followed this [workflow](https://docs.google.com/document/d/1ICkSLpc2IZEuISpb2VXWURZ4cyVXQ_Os4ynWwnmIJU8/edit?usp=sharing) and followed the guidlines for annotation described [here](https://docs.google.com/document/d/1xvNTYXnakbyPCecVDVC3SgK8DB3ylR2wb8z6cABNiMA/edit?usp=sharing).
 
 At this point we have created a large data-set that needs to be annotated. All above documents will be incorporated on the project wiki shortely.
 
