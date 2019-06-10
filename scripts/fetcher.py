@@ -24,19 +24,19 @@ import os.path
 import datetime
 import platform
 import sys
+import logging
 sys.path.append('../3gm')
 from helpers import Helper
-import logging
 
-# Configure logging module
-logging.basicConfig(filename="./logs/fetching.log",filemode = 'a',
+
+logging.basicConfig(filename="fetch_daily.log",filemode = 'a',
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def handle_download(download_page, params):
 	"""Original function"""
 
 	global output_dir
-	print(params)
+	print(params)	
 
 	filename = archive_format(params) + ".pdf"
 	volumes = {
@@ -54,7 +54,8 @@ def handle_download(download_page, params):
 		'ΠΑΡΑΡΤΗΜΑ': 'APPENDIX', 
 		'Δ.Ε.Β.Ι.': 'D.E.B.I',
 		'ΑΕ-ΕΠΕ': 'AE-EPE',
-		'Ο.Π.Κ.': 'O.P.K',	
+		'Ο.Π.Κ.': 'O.P.K',		
+
 	}
 	vol = volumes[params['issue_type']]
 	year = params['issue_date'].year
@@ -66,6 +67,7 @@ def handle_download(download_page, params):
 	if os.path.isfile(outfile):
 	   logging.info('{} already a file'.format(filename))
 	   return
+	
 
 	try:
 		# First we get the redirect link from the download page
@@ -247,10 +249,9 @@ if __name__ == '__main__':
 	driver.get('http://www.et.gr/idocs-nph/search/fekForm.html')
 
 	driver.find_element_by_name("showhide").click()
-	
-	# Add year to the respective dropdown option
+	#add year to the respective dropdown option
 	driver.find_element_by_name("year").send_keys(date_from[6:10])
-	
+
 	# Enter Details
 	driver.find_element_by_name("fekReleaseDateTo").clear()
 	driver.find_element_by_name("fekReleaseDateTo").send_keys(date_to)
@@ -280,20 +281,20 @@ if __name__ == '__main__':
 	try:
 		# By default we'll see the first page of results, well.. first
 		active_page = 1
-
+		
 		# Gets the pagination list items
 		pages = driver.find_elements_by_class_name("pagination_field")
 		# If there's no paginations then there's one page (max)
 		num_pages = len(pages) if len(pages) else 1
 
 		for current_page in range(0, num_pages):
-
+			
 			# Extract and handle download links.
 			filenames_ = extract_download_links(driver.page_source, args.type)
 
 			if args.upload:
 				filenames.extend(filenames_)
-
+			
 			# We have to re-find the pagination list because the DOM has been
 			# rebuilt.
 			pages = driver.find_elements_by_class_name("pagination_field")
