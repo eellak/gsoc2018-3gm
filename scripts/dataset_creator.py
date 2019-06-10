@@ -15,7 +15,6 @@ import nltk.data
 tokenizer = nltk.data.load('tokenizers/punkt/greek.pickle')
 from langdetect import detect 
 
-
 if __name__ == '__main__':
 
   
@@ -24,7 +23,6 @@ if __name__ == '__main__':
 		For more information visit https://github.com/eellak/gsoc2018-3gm/wiki/''')
   required = parser.add_argument_group('required arguments')
   optional = parser.add_argument_group('optional arguments')
-
   required.add_argument(
 		'-input',
 		help='Corpus file from which you can create a dataset',
@@ -34,11 +32,13 @@ if __name__ == '__main__':
 		help='Add langage filtering. Reccomended for issue type A',
 		action='store_true'
 		)
+
   
   args = parser.parse_args()
   
   input_file =  args.input
   
+
   # read corpus of texts
   with open(input_file, 'r') as file:
      data = file.read().replace('\n', ' ')
@@ -56,8 +56,7 @@ if __name__ == '__main__':
   data_set = data_set.replace('  ', ' ')
   data_set = data_set.replace('ΕΦΗΜΕΡΙΣ ΤΗΣ ΚΥΒΕΡΝΗΣΕΩΣ (ΤΕΥΧΟΣ ΠΡΩΤΟ)', '')
   data_set = data_set.replace('•', '')
-	
-
+  
   #split sentences using regex
   sentences = re.split(r' *[\.\?!][\'"\)\]]* *', data_set)
 
@@ -68,8 +67,7 @@ if __name__ == '__main__':
   for item in sentences:
     if len(item)>300 and len(item)<1000 and "cid"  not in item:
       clean.append(item)
- 
-  #apply language filtering if lang option recommended mainly for issue-type A
+
   if args.lang: 
     clean_1 = []
     for item in clean:
@@ -77,12 +75,12 @@ if __name__ == '__main__':
         clean_1.append(item)
     clean = clean_1
 
+
   temp_str = "dataset_" + input_file 
   
   #create an write the output file    
   with open(temp_str, 'w') as f:
     for item in clean:
-        f.write("%s\n" % item)
-        
+        f.write("%s\n" % item)   
         
   print("You have created a dataset with ",len(clean), "lines")
