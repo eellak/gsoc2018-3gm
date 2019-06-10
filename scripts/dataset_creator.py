@@ -48,6 +48,7 @@ if __name__ == '__main__':
   data_set = data_set.replace('ΕΓΓΡΑΦΗΣ ΣΤΟ   ΕΛΛΗΝΙΚΟΥ ΔΗΜΟΣΙΟΥ: ', '')
   data_set = data_set.replace(' 1  2  3  ', '')
   data_set = data_set.replace('  ', ' ')
+  data_set = data_set.replace('ΕΦΗΜΕΡΙΣ ΤΗΣ ΚΥΒΕΡΝΗΣΕΩΣ (ΤΕΥΧΟΣ ΠΡΩΤΟ)', '')
   
   #split sentences using regex
   sentences = re.split(r' *[\.\?!][\'"\)\]]* *', data_set)
