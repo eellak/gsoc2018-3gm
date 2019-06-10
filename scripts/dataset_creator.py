@@ -13,6 +13,7 @@ import nltk
 nltk.download('punkt')
 import nltk.data
 tokenizer = nltk.data.load('tokenizers/punkt/greek.pickle')
+from langdetect import detect 
 
 
 if __name__ == '__main__':
@@ -22,12 +23,17 @@ if __name__ == '__main__':
 	description='''This is a simple tool thaat creates data-sets from Greek Government Gazette corpo<a.
 		For more information visit https://github.com/eellak/gsoc2018-3gm/wiki/''')
   required = parser.add_argument_group('required arguments')
-  
+  optional = parser.add_argument_group('optional arguments')
+
   required.add_argument(
 		'-input',
 		help='Corpus file from which you can create a dataset',
 		required=True)
-
+  optional.add_argument(
+		'--lang',
+		help='Add langage filtering. Reccomended for issue type A',
+		action='store_true'
+		)
   
   args = parser.parse_args()
   
@@ -60,6 +66,14 @@ if __name__ == '__main__':
   for item in sentences:
     if len(item)>300 and len(item)<1000 and "cid"  not in item:
       clean.append(item)
+ 
+  #apply language filtering if lang option recommended mainly for issue-type A
+  if args.lang: 
+    clean_1 = []
+    for item in clean:
+      if detect(item)!='en':
+        clean_1.append(item)
+    clean = clean_1
 
   temp_str = "dataset_" + input_file 
   
