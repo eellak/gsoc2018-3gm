@@ -1,0 +1,645 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module app</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>app</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/marios/workspace/gsoc2018-3gm/3gm/app.py">/home/marios/workspace/gsoc2018-3gm/3gm/app.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;-*-&nbsp;coding:&nbsp;utf-8&nbsp;-*-</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="argparse.html">argparse</a><br>
+<a href="collections.html">collections</a><br>
+<a href="copy.html">copy</a><br>
+<a href="database.html">database</a><br>
+<a href="difflib.html">difflib</a><br>
+<a href="el_small.html">el_small</a><br>
+</td><td width="25%" valign=top><a href="entities.html">entities</a><br>
+<a href="gensim.models.html">gensim.models</a><br>
+<a href="gensim.html">gensim</a><br>
+<a href="helpers.html">helpers</a><br>
+<a href="json.html">json</a><br>
+<a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="markdown.html">markdown</a><br>
+<a href="multiprocessing.html">multiprocessing</a><br>
+<a href="pparser.html">pparser</a><br>
+<a href="pprint.html">pprint</a><br>
+<a href="pymongo.html">pymongo</a><br>
+<a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="spacy.html">spacy</a><br>
+<a href="syntax.html">syntax</a><br>
+<a href="sys.html">sys</a><br>
+<a href="tokenizer.html">tokenizer</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="flask_restful.html#Api">flask_restful.Api</a>(<a href="builtins.html#object">builtins.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="app.html#UnicodeApi">UnicodeApi</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="flask_restful.html#Resource">flask_restful.Resource</a>(<a href="flask.views.html#MethodView">flask.views.MethodView</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="app.html#HistoryResource">HistoryResource</a>
+</font></dt><dt><font face="helvetica, arial"><a href="app.html#LawResource">LawResource</a>
+</font></dt><dt><font face="helvetica, arial"><a href="app.html#LinkResource">LinkResource</a>
+</font></dt><dt><font face="helvetica, arial"><a href="app.html#SyntaxResource">SyntaxResource</a>
+</font></dt><dt><font face="helvetica, arial"><a href="app.html#TopicResource">TopicResource</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="HistoryResource">class <strong>HistoryResource</strong></a>(<a href="flask_restful.html#Resource">flask_restful.Resource</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;an&nbsp;abstract&nbsp;RESTful&nbsp;resource.&nbsp;Concrete&nbsp;resources&nbsp;should<br>
+extend&nbsp;from&nbsp;this&nbsp;class&nbsp;and&nbsp;expose&nbsp;methods&nbsp;for&nbsp;each&nbsp;supported&nbsp;HTTP<br>
+method.&nbsp;If&nbsp;a&nbsp;resource&nbsp;is&nbsp;invoked&nbsp;with&nbsp;an&nbsp;unsupported&nbsp;HTTP&nbsp;method,<br>
+the&nbsp;API&nbsp;will&nbsp;return&nbsp;a&nbsp;response&nbsp;with&nbsp;status&nbsp;405&nbsp;Method&nbsp;Not&nbsp;Allowed.<br>
+Otherwise&nbsp;the&nbsp;appropriate&nbsp;method&nbsp;is&nbsp;called&nbsp;and&nbsp;passed&nbsp;all&nbsp;arguments<br>
+from&nbsp;the&nbsp;url&nbsp;rule&nbsp;used&nbsp;when&nbsp;adding&nbsp;the&nbsp;resource&nbsp;to&nbsp;an&nbsp;<a href="flask_restful.html#Api">Api</a>&nbsp;instance.&nbsp;See<br>
+:meth:`~flask_restful.<a href="flask_restful.html#Api">Api</a>.add_resource`&nbsp;for&nbsp;details.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.html#HistoryResource">HistoryResource</a></dd>
+<dd><a href="flask_restful.html#Resource">flask_restful.Resource</a></dd>
+<dd><a href="flask.views.html#MethodView">flask.views.MethodView</a></dd>
+<dd><a href="flask.views.html#View">flask.views.View</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="HistoryResource-get"><strong>get</strong></a>(self, statute_type, identifier, year)</dt></dl>
+
+<dl><dt><strong>mediatypes</strong> <em>lambda</em> resource_cls</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>endpoint</strong> = 'historyresource'</dl>
+
+<dl><dt><strong>methods</strong> = ['GET']</dl>
+
+<hr>
+Methods inherited from <a href="flask_restful.html#Resource">flask_restful.Resource</a>:<br>
+<dl><dt><a name="HistoryResource-dispatch_request"><strong>dispatch_request</strong></a>(self, *args, **kwargs)</dt><dd><tt>Subclasses&nbsp;have&nbsp;to&nbsp;override&nbsp;this&nbsp;method&nbsp;to&nbsp;implement&nbsp;the<br>
+actual&nbsp;view&nbsp;function&nbsp;code.&nbsp;&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;with&nbsp;all<br>
+the&nbsp;arguments&nbsp;from&nbsp;the&nbsp;URL&nbsp;rule.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="flask_restful.html#Resource">flask_restful.Resource</a>:<br>
+<dl><dt><strong>method_decorators</strong> = []</dl>
+
+<dl><dt><strong>representations</strong> = None</dl>
+
+<hr>
+Class methods inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><a name="HistoryResource-as_view"><strong>as_view</strong></a>(name, *class_args, **class_kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="flask.views.html#MethodViewType">flask.views.MethodViewType</a></font></font></dt><dd><tt>Converts&nbsp;the&nbsp;class&nbsp;into&nbsp;an&nbsp;actual&nbsp;view&nbsp;function&nbsp;that&nbsp;can&nbsp;be&nbsp;used<br>
+with&nbsp;the&nbsp;routing&nbsp;system.&nbsp;&nbsp;Internally&nbsp;this&nbsp;generates&nbsp;a&nbsp;function&nbsp;on&nbsp;the<br>
+fly&nbsp;which&nbsp;will&nbsp;instantiate&nbsp;the&nbsp;:class:`View`&nbsp;on&nbsp;each&nbsp;request&nbsp;and&nbsp;call<br>
+the&nbsp;:meth:`dispatch_request`&nbsp;method&nbsp;on&nbsp;it.<br>
+&nbsp;<br>
+The&nbsp;arguments&nbsp;passed&nbsp;to&nbsp;:meth:`as_view`&nbsp;are&nbsp;forwarded&nbsp;to&nbsp;the<br>
+constructor&nbsp;of&nbsp;the&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><strong>decorators</strong> = ()</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LawResource">class <strong>LawResource</strong></a>(<a href="flask_restful.html#Resource">flask_restful.Resource</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;an&nbsp;abstract&nbsp;RESTful&nbsp;resource.&nbsp;Concrete&nbsp;resources&nbsp;should<br>
+extend&nbsp;from&nbsp;this&nbsp;class&nbsp;and&nbsp;expose&nbsp;methods&nbsp;for&nbsp;each&nbsp;supported&nbsp;HTTP<br>
+method.&nbsp;If&nbsp;a&nbsp;resource&nbsp;is&nbsp;invoked&nbsp;with&nbsp;an&nbsp;unsupported&nbsp;HTTP&nbsp;method,<br>
+the&nbsp;API&nbsp;will&nbsp;return&nbsp;a&nbsp;response&nbsp;with&nbsp;status&nbsp;405&nbsp;Method&nbsp;Not&nbsp;Allowed.<br>
+Otherwise&nbsp;the&nbsp;appropriate&nbsp;method&nbsp;is&nbsp;called&nbsp;and&nbsp;passed&nbsp;all&nbsp;arguments<br>
+from&nbsp;the&nbsp;url&nbsp;rule&nbsp;used&nbsp;when&nbsp;adding&nbsp;the&nbsp;resource&nbsp;to&nbsp;an&nbsp;<a href="flask_restful.html#Api">Api</a>&nbsp;instance.&nbsp;See<br>
+:meth:`~flask_restful.<a href="flask_restful.html#Api">Api</a>.add_resource`&nbsp;for&nbsp;details.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.html#LawResource">LawResource</a></dd>
+<dd><a href="flask_restful.html#Resource">flask_restful.Resource</a></dd>
+<dd><a href="flask.views.html#MethodView">flask.views.MethodView</a></dd>
+<dd><a href="flask.views.html#View">flask.views.View</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="LawResource-get"><strong>get</strong></a>(self, statute_type, identifier, year)</dt></dl>
+
+<dl><dt><strong>mediatypes</strong> <em>lambda</em> resource_cls</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>endpoint</strong> = 'lawresource'</dl>
+
+<dl><dt><strong>methods</strong> = ['GET']</dl>
+
+<hr>
+Methods inherited from <a href="flask_restful.html#Resource">flask_restful.Resource</a>:<br>
+<dl><dt><a name="LawResource-dispatch_request"><strong>dispatch_request</strong></a>(self, *args, **kwargs)</dt><dd><tt>Subclasses&nbsp;have&nbsp;to&nbsp;override&nbsp;this&nbsp;method&nbsp;to&nbsp;implement&nbsp;the<br>
+actual&nbsp;view&nbsp;function&nbsp;code.&nbsp;&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;with&nbsp;all<br>
+the&nbsp;arguments&nbsp;from&nbsp;the&nbsp;URL&nbsp;rule.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="flask_restful.html#Resource">flask_restful.Resource</a>:<br>
+<dl><dt><strong>method_decorators</strong> = []</dl>
+
+<dl><dt><strong>representations</strong> = None</dl>
+
+<hr>
+Class methods inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><a name="LawResource-as_view"><strong>as_view</strong></a>(name, *class_args, **class_kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="flask.views.html#MethodViewType">flask.views.MethodViewType</a></font></font></dt><dd><tt>Converts&nbsp;the&nbsp;class&nbsp;into&nbsp;an&nbsp;actual&nbsp;view&nbsp;function&nbsp;that&nbsp;can&nbsp;be&nbsp;used<br>
+with&nbsp;the&nbsp;routing&nbsp;system.&nbsp;&nbsp;Internally&nbsp;this&nbsp;generates&nbsp;a&nbsp;function&nbsp;on&nbsp;the<br>
+fly&nbsp;which&nbsp;will&nbsp;instantiate&nbsp;the&nbsp;:class:`View`&nbsp;on&nbsp;each&nbsp;request&nbsp;and&nbsp;call<br>
+the&nbsp;:meth:`dispatch_request`&nbsp;method&nbsp;on&nbsp;it.<br>
+&nbsp;<br>
+The&nbsp;arguments&nbsp;passed&nbsp;to&nbsp;:meth:`as_view`&nbsp;are&nbsp;forwarded&nbsp;to&nbsp;the<br>
+constructor&nbsp;of&nbsp;the&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><strong>decorators</strong> = ()</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LinkResource">class <strong>LinkResource</strong></a>(<a href="flask_restful.html#Resource">flask_restful.Resource</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;an&nbsp;abstract&nbsp;RESTful&nbsp;resource.&nbsp;Concrete&nbsp;resources&nbsp;should<br>
+extend&nbsp;from&nbsp;this&nbsp;class&nbsp;and&nbsp;expose&nbsp;methods&nbsp;for&nbsp;each&nbsp;supported&nbsp;HTTP<br>
+method.&nbsp;If&nbsp;a&nbsp;resource&nbsp;is&nbsp;invoked&nbsp;with&nbsp;an&nbsp;unsupported&nbsp;HTTP&nbsp;method,<br>
+the&nbsp;API&nbsp;will&nbsp;return&nbsp;a&nbsp;response&nbsp;with&nbsp;status&nbsp;405&nbsp;Method&nbsp;Not&nbsp;Allowed.<br>
+Otherwise&nbsp;the&nbsp;appropriate&nbsp;method&nbsp;is&nbsp;called&nbsp;and&nbsp;passed&nbsp;all&nbsp;arguments<br>
+from&nbsp;the&nbsp;url&nbsp;rule&nbsp;used&nbsp;when&nbsp;adding&nbsp;the&nbsp;resource&nbsp;to&nbsp;an&nbsp;<a href="flask_restful.html#Api">Api</a>&nbsp;instance.&nbsp;See<br>
+:meth:`~flask_restful.<a href="flask_restful.html#Api">Api</a>.add_resource`&nbsp;for&nbsp;details.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.html#LinkResource">LinkResource</a></dd>
+<dd><a href="flask_restful.html#Resource">flask_restful.Resource</a></dd>
+<dd><a href="flask.views.html#MethodView">flask.views.MethodView</a></dd>
+<dd><a href="flask.views.html#View">flask.views.View</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="LinkResource-get"><strong>get</strong></a>(self, statute_type, identifier, year)</dt></dl>
+
+<dl><dt><strong>mediatypes</strong> <em>lambda</em> resource_cls</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>endpoint</strong> = 'linkresource'</dl>
+
+<dl><dt><strong>methods</strong> = ['GET']</dl>
+
+<hr>
+Methods inherited from <a href="flask_restful.html#Resource">flask_restful.Resource</a>:<br>
+<dl><dt><a name="LinkResource-dispatch_request"><strong>dispatch_request</strong></a>(self, *args, **kwargs)</dt><dd><tt>Subclasses&nbsp;have&nbsp;to&nbsp;override&nbsp;this&nbsp;method&nbsp;to&nbsp;implement&nbsp;the<br>
+actual&nbsp;view&nbsp;function&nbsp;code.&nbsp;&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;with&nbsp;all<br>
+the&nbsp;arguments&nbsp;from&nbsp;the&nbsp;URL&nbsp;rule.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="flask_restful.html#Resource">flask_restful.Resource</a>:<br>
+<dl><dt><strong>method_decorators</strong> = []</dl>
+
+<dl><dt><strong>representations</strong> = None</dl>
+
+<hr>
+Class methods inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><a name="LinkResource-as_view"><strong>as_view</strong></a>(name, *class_args, **class_kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="flask.views.html#MethodViewType">flask.views.MethodViewType</a></font></font></dt><dd><tt>Converts&nbsp;the&nbsp;class&nbsp;into&nbsp;an&nbsp;actual&nbsp;view&nbsp;function&nbsp;that&nbsp;can&nbsp;be&nbsp;used<br>
+with&nbsp;the&nbsp;routing&nbsp;system.&nbsp;&nbsp;Internally&nbsp;this&nbsp;generates&nbsp;a&nbsp;function&nbsp;on&nbsp;the<br>
+fly&nbsp;which&nbsp;will&nbsp;instantiate&nbsp;the&nbsp;:class:`View`&nbsp;on&nbsp;each&nbsp;request&nbsp;and&nbsp;call<br>
+the&nbsp;:meth:`dispatch_request`&nbsp;method&nbsp;on&nbsp;it.<br>
+&nbsp;<br>
+The&nbsp;arguments&nbsp;passed&nbsp;to&nbsp;:meth:`as_view`&nbsp;are&nbsp;forwarded&nbsp;to&nbsp;the<br>
+constructor&nbsp;of&nbsp;the&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><strong>decorators</strong> = ()</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SyntaxResource">class <strong>SyntaxResource</strong></a>(<a href="flask_restful.html#Resource">flask_restful.Resource</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;an&nbsp;abstract&nbsp;RESTful&nbsp;resource.&nbsp;Concrete&nbsp;resources&nbsp;should<br>
+extend&nbsp;from&nbsp;this&nbsp;class&nbsp;and&nbsp;expose&nbsp;methods&nbsp;for&nbsp;each&nbsp;supported&nbsp;HTTP<br>
+method.&nbsp;If&nbsp;a&nbsp;resource&nbsp;is&nbsp;invoked&nbsp;with&nbsp;an&nbsp;unsupported&nbsp;HTTP&nbsp;method,<br>
+the&nbsp;API&nbsp;will&nbsp;return&nbsp;a&nbsp;response&nbsp;with&nbsp;status&nbsp;405&nbsp;Method&nbsp;Not&nbsp;Allowed.<br>
+Otherwise&nbsp;the&nbsp;appropriate&nbsp;method&nbsp;is&nbsp;called&nbsp;and&nbsp;passed&nbsp;all&nbsp;arguments<br>
+from&nbsp;the&nbsp;url&nbsp;rule&nbsp;used&nbsp;when&nbsp;adding&nbsp;the&nbsp;resource&nbsp;to&nbsp;an&nbsp;<a href="flask_restful.html#Api">Api</a>&nbsp;instance.&nbsp;See<br>
+:meth:`~flask_restful.<a href="flask_restful.html#Api">Api</a>.add_resource`&nbsp;for&nbsp;details.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.html#SyntaxResource">SyntaxResource</a></dd>
+<dd><a href="flask_restful.html#Resource">flask_restful.Resource</a></dd>
+<dd><a href="flask.views.html#MethodView">flask.views.MethodView</a></dd>
+<dd><a href="flask.views.html#View">flask.views.View</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="SyntaxResource-get"><strong>get</strong></a>(self, s)</dt></dl>
+
+<dl><dt><strong>mediatypes</strong> <em>lambda</em> resource_cls</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>endpoint</strong> = 'syntaxresource'</dl>
+
+<dl><dt><strong>methods</strong> = ['GET']</dl>
+
+<hr>
+Methods inherited from <a href="flask_restful.html#Resource">flask_restful.Resource</a>:<br>
+<dl><dt><a name="SyntaxResource-dispatch_request"><strong>dispatch_request</strong></a>(self, *args, **kwargs)</dt><dd><tt>Subclasses&nbsp;have&nbsp;to&nbsp;override&nbsp;this&nbsp;method&nbsp;to&nbsp;implement&nbsp;the<br>
+actual&nbsp;view&nbsp;function&nbsp;code.&nbsp;&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;with&nbsp;all<br>
+the&nbsp;arguments&nbsp;from&nbsp;the&nbsp;URL&nbsp;rule.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="flask_restful.html#Resource">flask_restful.Resource</a>:<br>
+<dl><dt><strong>method_decorators</strong> = []</dl>
+
+<dl><dt><strong>representations</strong> = None</dl>
+
+<hr>
+Class methods inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><a name="SyntaxResource-as_view"><strong>as_view</strong></a>(name, *class_args, **class_kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="flask.views.html#MethodViewType">flask.views.MethodViewType</a></font></font></dt><dd><tt>Converts&nbsp;the&nbsp;class&nbsp;into&nbsp;an&nbsp;actual&nbsp;view&nbsp;function&nbsp;that&nbsp;can&nbsp;be&nbsp;used<br>
+with&nbsp;the&nbsp;routing&nbsp;system.&nbsp;&nbsp;Internally&nbsp;this&nbsp;generates&nbsp;a&nbsp;function&nbsp;on&nbsp;the<br>
+fly&nbsp;which&nbsp;will&nbsp;instantiate&nbsp;the&nbsp;:class:`View`&nbsp;on&nbsp;each&nbsp;request&nbsp;and&nbsp;call<br>
+the&nbsp;:meth:`dispatch_request`&nbsp;method&nbsp;on&nbsp;it.<br>
+&nbsp;<br>
+The&nbsp;arguments&nbsp;passed&nbsp;to&nbsp;:meth:`as_view`&nbsp;are&nbsp;forwarded&nbsp;to&nbsp;the<br>
+constructor&nbsp;of&nbsp;the&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><strong>decorators</strong> = ()</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TopicResource">class <strong>TopicResource</strong></a>(<a href="flask_restful.html#Resource">flask_restful.Resource</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;an&nbsp;abstract&nbsp;RESTful&nbsp;resource.&nbsp;Concrete&nbsp;resources&nbsp;should<br>
+extend&nbsp;from&nbsp;this&nbsp;class&nbsp;and&nbsp;expose&nbsp;methods&nbsp;for&nbsp;each&nbsp;supported&nbsp;HTTP<br>
+method.&nbsp;If&nbsp;a&nbsp;resource&nbsp;is&nbsp;invoked&nbsp;with&nbsp;an&nbsp;unsupported&nbsp;HTTP&nbsp;method,<br>
+the&nbsp;API&nbsp;will&nbsp;return&nbsp;a&nbsp;response&nbsp;with&nbsp;status&nbsp;405&nbsp;Method&nbsp;Not&nbsp;Allowed.<br>
+Otherwise&nbsp;the&nbsp;appropriate&nbsp;method&nbsp;is&nbsp;called&nbsp;and&nbsp;passed&nbsp;all&nbsp;arguments<br>
+from&nbsp;the&nbsp;url&nbsp;rule&nbsp;used&nbsp;when&nbsp;adding&nbsp;the&nbsp;resource&nbsp;to&nbsp;an&nbsp;<a href="flask_restful.html#Api">Api</a>&nbsp;instance.&nbsp;See<br>
+:meth:`~flask_restful.<a href="flask_restful.html#Api">Api</a>.add_resource`&nbsp;for&nbsp;details.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.html#TopicResource">TopicResource</a></dd>
+<dd><a href="flask_restful.html#Resource">flask_restful.Resource</a></dd>
+<dd><a href="flask.views.html#MethodView">flask.views.MethodView</a></dd>
+<dd><a href="flask.views.html#View">flask.views.View</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="TopicResource-get"><strong>get</strong></a>(self, statute_type, identifier, year)</dt></dl>
+
+<dl><dt><strong>mediatypes</strong> <em>lambda</em> resource_cls</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>endpoint</strong> = 'topicresource'</dl>
+
+<dl><dt><strong>methods</strong> = ['GET']</dl>
+
+<hr>
+Methods inherited from <a href="flask_restful.html#Resource">flask_restful.Resource</a>:<br>
+<dl><dt><a name="TopicResource-dispatch_request"><strong>dispatch_request</strong></a>(self, *args, **kwargs)</dt><dd><tt>Subclasses&nbsp;have&nbsp;to&nbsp;override&nbsp;this&nbsp;method&nbsp;to&nbsp;implement&nbsp;the<br>
+actual&nbsp;view&nbsp;function&nbsp;code.&nbsp;&nbsp;This&nbsp;method&nbsp;is&nbsp;called&nbsp;with&nbsp;all<br>
+the&nbsp;arguments&nbsp;from&nbsp;the&nbsp;URL&nbsp;rule.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="flask_restful.html#Resource">flask_restful.Resource</a>:<br>
+<dl><dt><strong>method_decorators</strong> = []</dl>
+
+<dl><dt><strong>representations</strong> = None</dl>
+
+<hr>
+Class methods inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><a name="TopicResource-as_view"><strong>as_view</strong></a>(name, *class_args, **class_kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="flask.views.html#MethodViewType">flask.views.MethodViewType</a></font></font></dt><dd><tt>Converts&nbsp;the&nbsp;class&nbsp;into&nbsp;an&nbsp;actual&nbsp;view&nbsp;function&nbsp;that&nbsp;can&nbsp;be&nbsp;used<br>
+with&nbsp;the&nbsp;routing&nbsp;system.&nbsp;&nbsp;Internally&nbsp;this&nbsp;generates&nbsp;a&nbsp;function&nbsp;on&nbsp;the<br>
+fly&nbsp;which&nbsp;will&nbsp;instantiate&nbsp;the&nbsp;:class:`View`&nbsp;on&nbsp;each&nbsp;request&nbsp;and&nbsp;call<br>
+the&nbsp;:meth:`dispatch_request`&nbsp;method&nbsp;on&nbsp;it.<br>
+&nbsp;<br>
+The&nbsp;arguments&nbsp;passed&nbsp;to&nbsp;:meth:`as_view`&nbsp;are&nbsp;forwarded&nbsp;to&nbsp;the<br>
+constructor&nbsp;of&nbsp;the&nbsp;class.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="flask.views.html#View">flask.views.View</a>:<br>
+<dl><dt><strong>decorators</strong> = ()</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UnicodeApi">class <strong>UnicodeApi</strong></a>(<a href="flask_restful.html#Api">flask_restful.Api</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>The&nbsp;main&nbsp;entry&nbsp;point&nbsp;for&nbsp;the&nbsp;application.<br>
+You&nbsp;need&nbsp;to&nbsp;initialize&nbsp;it&nbsp;with&nbsp;a&nbsp;Flask&nbsp;Application:&nbsp;::<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;app&nbsp;=&nbsp;Flask(__name__)<br>
+&gt;&gt;&gt;&nbsp;api&nbsp;=&nbsp;restful.<a href="flask_restful.html#Api">Api</a>(app)<br>
+&nbsp;<br>
+Alternatively,&nbsp;you&nbsp;can&nbsp;use&nbsp;:meth:`init_app`&nbsp;to&nbsp;set&nbsp;the&nbsp;Flask&nbsp;application<br>
+after&nbsp;it&nbsp;has&nbsp;been&nbsp;constructed.<br>
+&nbsp;<br>
+:param&nbsp;app:&nbsp;the&nbsp;Flask&nbsp;application&nbsp;object<br>
+:type&nbsp;app:&nbsp;flask.Flask<br>
+:type&nbsp;app:&nbsp;flask.Blueprint<br>
+:param&nbsp;prefix:&nbsp;Prefix&nbsp;all&nbsp;routes&nbsp;with&nbsp;a&nbsp;value,&nbsp;eg&nbsp;v1&nbsp;or&nbsp;2010-04-01<br>
+:type&nbsp;prefix:&nbsp;str<br>
+:param&nbsp;default_mediatype:&nbsp;The&nbsp;default&nbsp;media&nbsp;type&nbsp;to&nbsp;return<br>
+:type&nbsp;default_mediatype:&nbsp;str<br>
+:param&nbsp;decorators:&nbsp;Decorators&nbsp;to&nbsp;attach&nbsp;to&nbsp;every&nbsp;resource<br>
+:type&nbsp;decorators:&nbsp;list<br>
+:param&nbsp;catch_all_404s:&nbsp;Use&nbsp;:meth:`handle_error`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;handle&nbsp;404&nbsp;errors&nbsp;throughout&nbsp;your&nbsp;app<br>
+:param&nbsp;serve_challenge_on_401:&nbsp;Whether&nbsp;to&nbsp;serve&nbsp;a&nbsp;challenge&nbsp;response&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clients&nbsp;on&nbsp;receiving&nbsp;401.&nbsp;This&nbsp;usually&nbsp;leads&nbsp;to&nbsp;a&nbsp;username/password<br>
+&nbsp;&nbsp;&nbsp;&nbsp;popup&nbsp;in&nbsp;web&nbsp;browers.<br>
+:param&nbsp;url_part_order:&nbsp;A&nbsp;string&nbsp;that&nbsp;controls&nbsp;the&nbsp;order&nbsp;that&nbsp;the&nbsp;pieces<br>
+&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;url&nbsp;are&nbsp;concatenated&nbsp;when&nbsp;the&nbsp;full&nbsp;url&nbsp;is&nbsp;constructed.&nbsp;&nbsp;'b'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;the&nbsp;blueprint&nbsp;(or&nbsp;blueprint&nbsp;registration)&nbsp;prefix,&nbsp;'a'&nbsp;is&nbsp;the&nbsp;api<br>
+&nbsp;&nbsp;&nbsp;&nbsp;prefix,&nbsp;and&nbsp;'e'&nbsp;is&nbsp;the&nbsp;path&nbsp;component&nbsp;the&nbsp;endpoint&nbsp;is&nbsp;added&nbsp;with<br>
+:type&nbsp;catch_all_404s:&nbsp;bool<br>
+:param&nbsp;errors:&nbsp;A&nbsp;dictionary&nbsp;to&nbsp;define&nbsp;a&nbsp;custom&nbsp;response&nbsp;for&nbsp;each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;exception&nbsp;or&nbsp;error&nbsp;raised&nbsp;during&nbsp;a&nbsp;request<br>
+:type&nbsp;errors:&nbsp;dict<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.html#UnicodeApi">UnicodeApi</a></dd>
+<dd><a href="flask_restful.html#Api">flask_restful.Api</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="UnicodeApi-__init__"><strong>__init__</strong></a>(self, *args, **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;<a href="#-help">help</a>(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="flask_restful.html#Api">flask_restful.Api</a>:<br>
+<dl><dt><a name="UnicodeApi-add_resource"><strong>add_resource</strong></a>(self, resource, *urls, **kwargs)</dt><dd><tt>Adds&nbsp;a&nbsp;resource&nbsp;to&nbsp;the&nbsp;api.<br>
+&nbsp;<br>
+:param&nbsp;resource:&nbsp;the&nbsp;class&nbsp;name&nbsp;of&nbsp;your&nbsp;resource<br>
+:type&nbsp;resource:&nbsp;:class:`<a href="flask_restful.html#Resource">Resource</a>`<br>
+&nbsp;<br>
+:param&nbsp;urls:&nbsp;one&nbsp;or&nbsp;more&nbsp;url&nbsp;routes&nbsp;to&nbsp;match&nbsp;for&nbsp;the&nbsp;resource,&nbsp;standard<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flask&nbsp;routing&nbsp;rules&nbsp;apply.&nbsp;&nbsp;Any&nbsp;url&nbsp;variables&nbsp;will&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;passed&nbsp;to&nbsp;the&nbsp;resource&nbsp;method&nbsp;as&nbsp;args.<br>
+:type&nbsp;urls:&nbsp;str<br>
+&nbsp;<br>
+:param&nbsp;endpoint:&nbsp;endpoint&nbsp;name&nbsp;(defaults&nbsp;to&nbsp;:meth:`<a href="flask_restful.html#Resource">Resource</a>.__name__.lower`<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Can&nbsp;be&nbsp;used&nbsp;to&nbsp;reference&nbsp;this&nbsp;route&nbsp;in&nbsp;:class:`fields.Url`&nbsp;fields<br>
+:type&nbsp;endpoint:&nbsp;str<br>
+&nbsp;<br>
+:param&nbsp;resource_class_args:&nbsp;args&nbsp;to&nbsp;be&nbsp;forwarded&nbsp;to&nbsp;the&nbsp;constructor&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;resource.<br>
+:type&nbsp;resource_class_args:&nbsp;tuple<br>
+&nbsp;<br>
+:param&nbsp;resource_class_kwargs:&nbsp;kwargs&nbsp;to&nbsp;be&nbsp;forwarded&nbsp;to&nbsp;the&nbsp;constructor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;resource.<br>
+:type&nbsp;resource_class_kwargs:&nbsp;dict<br>
+&nbsp;<br>
+Additional&nbsp;keyword&nbsp;arguments&nbsp;not&nbsp;specified&nbsp;above&nbsp;will&nbsp;be&nbsp;passed&nbsp;as-is<br>
+to&nbsp;:meth:`flask.Flask.add_url_rule`.<br>
+&nbsp;<br>
+Examples::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;api.<a href="#UnicodeApi-add_resource">add_resource</a>(HelloWorld,&nbsp;'/',&nbsp;'/hello')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;api.<a href="#UnicodeApi-add_resource">add_resource</a>(Foo,&nbsp;'/foo',&nbsp;endpoint="foo")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;api.<a href="#UnicodeApi-add_resource">add_resource</a>(FooSpecial,&nbsp;'/special/foo',&nbsp;endpoint="foo")</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-error_router"><strong>error_router</strong></a>(self, original_handler, e)</dt><dd><tt>This&nbsp;function&nbsp;decides&nbsp;whether&nbsp;the&nbsp;error&nbsp;occured&nbsp;in&nbsp;a&nbsp;flask-restful<br>
+endpoint&nbsp;or&nbsp;not.&nbsp;If&nbsp;it&nbsp;happened&nbsp;in&nbsp;a&nbsp;flask-restful&nbsp;endpoint,&nbsp;our<br>
+handler&nbsp;will&nbsp;be&nbsp;dispatched.&nbsp;If&nbsp;it&nbsp;happened&nbsp;in&nbsp;an&nbsp;unrelated&nbsp;view,&nbsp;the<br>
+app's&nbsp;original&nbsp;error&nbsp;handler&nbsp;will&nbsp;be&nbsp;dispatched.<br>
+In&nbsp;the&nbsp;event&nbsp;that&nbsp;the&nbsp;error&nbsp;occurred&nbsp;in&nbsp;a&nbsp;flask-restful&nbsp;endpoint&nbsp;but<br>
+the&nbsp;local&nbsp;handler&nbsp;can't&nbsp;resolve&nbsp;the&nbsp;situation,&nbsp;the&nbsp;router&nbsp;will&nbsp;fall<br>
+back&nbsp;onto&nbsp;the&nbsp;original_handler&nbsp;as&nbsp;last&nbsp;resort.<br>
+&nbsp;<br>
+:param&nbsp;original_handler:&nbsp;the&nbsp;original&nbsp;Flask&nbsp;error&nbsp;handler&nbsp;for&nbsp;the&nbsp;app<br>
+:type&nbsp;original_handler:&nbsp;function<br>
+:param&nbsp;e:&nbsp;the&nbsp;exception&nbsp;raised&nbsp;while&nbsp;handling&nbsp;the&nbsp;request<br>
+:type&nbsp;e:&nbsp;Exception</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-handle_error"><strong>handle_error</strong></a>(self, e)</dt><dd><tt>Error&nbsp;handler&nbsp;for&nbsp;the&nbsp;API&nbsp;transforms&nbsp;a&nbsp;raised&nbsp;exception&nbsp;into&nbsp;a&nbsp;Flask<br>
+response,&nbsp;with&nbsp;the&nbsp;appropriate&nbsp;HTTP&nbsp;status&nbsp;code&nbsp;and&nbsp;body.<br>
+&nbsp;<br>
+:param&nbsp;e:&nbsp;the&nbsp;raised&nbsp;Exception&nbsp;object<br>
+:type&nbsp;e:&nbsp;Exception</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-init_app"><strong>init_app</strong></a>(self, app)</dt><dd><tt>Initialize&nbsp;this&nbsp;class&nbsp;with&nbsp;the&nbsp;given&nbsp;:class:`flask.Flask`<br>
+application&nbsp;or&nbsp;:class:`flask.Blueprint`&nbsp;object.<br>
+&nbsp;<br>
+:param&nbsp;app:&nbsp;the&nbsp;Flask&nbsp;application&nbsp;or&nbsp;blueprint&nbsp;object<br>
+:type&nbsp;app:&nbsp;flask.Flask<br>
+:type&nbsp;app:&nbsp;flask.Blueprint<br>
+&nbsp;<br>
+Examples::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;api&nbsp;=&nbsp;<a href="flask_restful.html#Api">Api</a>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;api.<a href="#UnicodeApi-add_resource">add_resource</a>(...)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;api.<a href="#UnicodeApi-init_app">init_app</a>(app)</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-make_response"><strong>make_response</strong></a>(self, data, *args, **kwargs)</dt><dd><tt>Looks&nbsp;up&nbsp;the&nbsp;representation&nbsp;transformer&nbsp;for&nbsp;the&nbsp;requested&nbsp;media<br>
+type,&nbsp;invoking&nbsp;the&nbsp;transformer&nbsp;to&nbsp;create&nbsp;a&nbsp;response&nbsp;object.&nbsp;This<br>
+defaults&nbsp;to&nbsp;default_mediatype&nbsp;if&nbsp;no&nbsp;transformer&nbsp;is&nbsp;found&nbsp;for&nbsp;the<br>
+requested&nbsp;mediatype.&nbsp;If&nbsp;default_mediatype&nbsp;is&nbsp;None,&nbsp;a&nbsp;406&nbsp;Not<br>
+Acceptable&nbsp;response&nbsp;will&nbsp;be&nbsp;sent&nbsp;as&nbsp;per&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc2616.txt">RFC&nbsp;2616</a>&nbsp;section&nbsp;14.1<br>
+&nbsp;<br>
+:param&nbsp;data:&nbsp;Python&nbsp;object&nbsp;containing&nbsp;response&nbsp;data&nbsp;to&nbsp;be&nbsp;transformed</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-mediatypes"><strong>mediatypes</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;requested&nbsp;mediatypes&nbsp;sent&nbsp;in&nbsp;the&nbsp;Accept&nbsp;header</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-mediatypes_method"><strong>mediatypes_method</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;method&nbsp;that&nbsp;returns&nbsp;a&nbsp;list&nbsp;of&nbsp;mediatypes</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-output"><strong>output</strong></a>(self, resource)</dt><dd><tt>Wraps&nbsp;a&nbsp;resource&nbsp;(as&nbsp;a&nbsp;flask&nbsp;view&nbsp;function),&nbsp;for&nbsp;cases&nbsp;where&nbsp;the<br>
+resource&nbsp;does&nbsp;not&nbsp;directly&nbsp;return&nbsp;a&nbsp;response&nbsp;object<br>
+&nbsp;<br>
+:param&nbsp;resource:&nbsp;The&nbsp;resource&nbsp;as&nbsp;a&nbsp;flask&nbsp;view&nbsp;function</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-owns_endpoint"><strong>owns_endpoint</strong></a>(self, endpoint)</dt><dd><tt>Tests&nbsp;if&nbsp;an&nbsp;endpoint&nbsp;name&nbsp;(not&nbsp;path)&nbsp;belongs&nbsp;to&nbsp;this&nbsp;<a href="flask_restful.html#Api">Api</a>.&nbsp;&nbsp;Takes<br>
+in&nbsp;to&nbsp;account&nbsp;the&nbsp;Blueprint&nbsp;name&nbsp;part&nbsp;of&nbsp;the&nbsp;endpoint&nbsp;name.<br>
+&nbsp;<br>
+:param&nbsp;endpoint:&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;endpoint&nbsp;being&nbsp;checked<br>
+:return:&nbsp;bool</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-representation"><strong>representation</strong></a>(self, mediatype)</dt><dd><tt>Allows&nbsp;additional&nbsp;representation&nbsp;transformers&nbsp;to&nbsp;be&nbsp;declared&nbsp;for&nbsp;the<br>
+api.&nbsp;Transformers&nbsp;are&nbsp;functions&nbsp;that&nbsp;must&nbsp;be&nbsp;decorated&nbsp;with&nbsp;this<br>
+method,&nbsp;passing&nbsp;the&nbsp;mediatype&nbsp;the&nbsp;transformer&nbsp;represents.&nbsp;Three<br>
+arguments&nbsp;are&nbsp;passed&nbsp;to&nbsp;the&nbsp;transformer:<br>
+&nbsp;<br>
+*&nbsp;The&nbsp;data&nbsp;to&nbsp;be&nbsp;represented&nbsp;in&nbsp;the&nbsp;response&nbsp;body<br>
+*&nbsp;The&nbsp;http&nbsp;status&nbsp;code<br>
+*&nbsp;A&nbsp;dictionary&nbsp;of&nbsp;headers<br>
+&nbsp;<br>
+The&nbsp;transformer&nbsp;should&nbsp;convert&nbsp;the&nbsp;data&nbsp;appropriately&nbsp;for&nbsp;the&nbsp;mediatype<br>
+and&nbsp;return&nbsp;a&nbsp;Flask&nbsp;response&nbsp;object.<br>
+&nbsp;<br>
+Ex::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@api.<a href="#UnicodeApi-representation">representation</a>('application/xml')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;xml(data,&nbsp;code,&nbsp;headers):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resp&nbsp;=&nbsp;<a href="#UnicodeApi-make_response">make_response</a>(convert_data_to_xml(data),&nbsp;code)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resp.headers.extend(headers)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;resp</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-resource"><strong>resource</strong></a>(self, *urls, **kwargs)</dt><dd><tt>Wraps&nbsp;a&nbsp;:class:`~flask_restful.<a href="flask_restful.html#Resource">Resource</a>`&nbsp;class,&nbsp;adding&nbsp;it&nbsp;to&nbsp;the<br>
+api.&nbsp;Parameters&nbsp;are&nbsp;the&nbsp;same&nbsp;as&nbsp;:meth:`~flask_restful.<a href="flask_restful.html#Api">Api</a>.add_resource`.<br>
+&nbsp;<br>
+Example::<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app&nbsp;=&nbsp;Flask(__name__)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;api&nbsp;=&nbsp;restful.<a href="flask_restful.html#Api">Api</a>(app)<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;@api.<a href="#UnicodeApi-resource">resource</a>('/foo')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;class&nbsp;Foo(<a href="flask_restful.html#Resource">Resource</a>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;get(self):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;'Hello,&nbsp;World!'</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-unauthorized"><strong>unauthorized</strong></a>(self, response)</dt><dd><tt>Given&nbsp;a&nbsp;response,&nbsp;change&nbsp;it&nbsp;to&nbsp;ask&nbsp;for&nbsp;credentials</tt></dd></dl>
+
+<dl><dt><a name="UnicodeApi-url_for"><strong>url_for</strong></a>(self, resource, **values)</dt><dd><tt>Generates&nbsp;a&nbsp;URL&nbsp;to&nbsp;the&nbsp;given&nbsp;resource.<br>
+&nbsp;<br>
+Works&nbsp;like&nbsp;:func:`flask.url_for`.</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="flask_restful.html#Api">flask_restful.Api</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-amendment"><strong>amendment</strong></a>(identifier=None)</dt><dd><tt>Route&nbsp;to&nbsp;demonstrate&nbsp;what&nbsp;laws&nbsp;does&nbsp;the&nbsp;law&nbsp;amend</tt></dd></dl>
+ <dl><dt><a name="-analyze"><strong>analyze</strong></a>()</dt></dl>
+ <dl><dt><a name="-archive_link"><strong>archive_link</strong></a>(identifier)</dt></dl>
+ <dl><dt><a name="-autocomplete"><strong>autocomplete</strong></a>()</dt><dd><tt>Autocomplete&nbsp;in&nbsp;searchbar</tt></dd></dl>
+ <dl><dt><a name="-codification"><strong>codification</strong></a>()</dt><dd><tt>Main&nbsp;route&nbsp;used&nbsp;for&nbsp;search</tt></dd></dl>
+ <dl><dt><a name="-codify_law"><strong>codify_law</strong></a>(identifier=None)</dt><dd><tt>Displays&nbsp;the&nbsp;current&nbsp;version&nbsp;of&nbsp;the&nbsp;law</tt></dd></dl>
+ <dl><dt><a name="-color_iterator"><strong>color_iterator</strong></a>()</dt></dl>
+ <dl><dt><a name="-diff"><strong>diff</strong></a>()</dt><dd><tt>Diffs&nbsp;page</tt></dd></dl>
+ <dl><dt><a name="-full_index"><strong>full_index</strong></a>()</dt><dd><tt>Displays&nbsp;full&nbsp;linking&nbsp;index</tt></dd></dl>
+ <dl><dt><a name="-get_id"><strong>get_id</strong></a>(statute_type, identifier, year)</dt><dd><tt>#&nbsp;Get&nbsp;id&nbsp;for&nbsp;API</tt></dd></dl>
+ <dl><dt><a name="-gg_link"><strong>gg_link</strong></a>(identifier)</dt></dl>
+ <dl><dt><a name="-help"><strong>help</strong></a>()</dt><dd><tt>Help&nbsp;page</tt></dd></dl>
+ <dl><dt><a name="-highlight_diff"><strong>highlight_diff</strong></a>(d, initial, final, initial_archive, final_archive)</dt></dl>
+ <dl><dt><a name="-history"><strong>history</strong></a>()</dt><dd><tt>Displays&nbsp;the&nbsp;versioning&nbsp;history&nbsp;of&nbsp;a&nbsp;law</tt></dd></dl>
+ <dl><dt><a name="-index"><strong>index</strong></a>(js)</dt><dd><tt>#&nbsp;Application&nbsp;Routes</tt></dd></dl>
+ <dl><dt><a name="-is_empty_statute"><strong>is_empty_statute</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-label"><strong>label</strong></a>(label, sorting='rank')</dt><dd><tt>Label&nbsp;search&nbsp;results</tt></dd></dl>
+ <dl><dt><a name="-legal_index"><strong>legal_index</strong></a>()</dt><dd><tt>Displays&nbsp;the&nbsp;index&nbsp;containing&nbsp;only&nbsp;statutes</tt></dd></dl>
+ <dl><dt><a name="-links"><strong>links</strong></a>(identifier=None)</dt><dd><tt>Route&nbsp;to&nbsp;demonstrate&nbsp;links&nbsp;to&nbsp;the&nbsp;existing&nbsp;law</tt></dd></dl>
+ <dl><dt><a name="-listify"><strong>listify</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-lower"><strong>lower</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-render_badges"><strong>render_badges</strong></a>(l)</dt></dl>
+ <dl><dt><a name="-render_badges_from_tree"><strong>render_badges_from_tree</strong></a>(tree)</dt></dl>
+ <dl><dt><a name="-render_badges_single"><strong>render_badges_single</strong></a>(l, color='light', label_url=True)</dt></dl>
+ <dl><dt><a name="-render_links"><strong>render_links</strong></a>(content)</dt></dl>
+ <dl><dt><a name="-render_md"><strong>render_md</strong></a>(corpus)</dt></dl>
+ <dl><dt><a name="-setify"><strong>setify</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-to_hyperlink"><strong>to_hyperlink</strong></a>(l, link_type='markdown')</dt><dd><tt>#&nbsp;Template&nbsp;filters</tt></dd></dl>
+ <dl><dt><a name="-topics"><strong>topics</strong></a>()</dt><dd><tt>Topics&nbsp;page</tt></dd></dl>
+ <dl><dt><a name="-visualize"><strong>visualize</strong></a>()</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>api</strong> = &lt;app.UnicodeApi object&gt;<br>
+<strong>api_lookup</strong> = {'l': 'ν.', 'pd': 'π.δ.'}<br>
+<strong>app</strong> = &lt;Flask 'app'&gt;<br>
+<strong>application</strong> = &lt;Flask 'app'&gt;<br>
+<strong>autocomplete_</strong> = ['Ν. 1558/1985', 'Ν. 1892/1990', 'Ν. 2084/1992', 'Ν. 3463/2006', 'Ν. 3526/2007', 'Ν. 3863/2010', 'Ν. 4170/2013', 'Ν. 4199/2013', 'Ν. 4262/2014', 'Ν. 4280/2014', 'Ν. 4303/2014', 'Ν. 4320/2015', 'Ν. 4369/2016', 'Ν. 4375/2016', 'Ν. 4412/2016', 'Π.Δ. 114/2014', 'Π.Δ. 30/2007', 'ν  3877/2010', 'ν, 1198/1981', 'ν, 3149/2003', ...]<br>
+<strong>autocomplete_laws</strong> = ['Ν. 1558/1985', 'Ν. 1892/1990', 'Ν. 2084/1992', 'Ν. 3463/2006', 'Ν. 3526/2007', 'Ν. 3863/2010', 'Ν. 4170/2013', 'Ν. 4199/2013', 'Ν. 4262/2014', 'Ν. 4280/2014', 'Ν. 4303/2014', 'Ν. 4320/2015', 'Ν. 4369/2016', 'Ν. 4375/2016', 'Ν. 4412/2016', 'Π.Δ. 114/2014', 'Π.Δ. 30/2007', 'ν  3877/2010', 'ν, 1198/1981', 'ν, 3149/2003', ...]<br>
+<strong>autocomplete_topics</strong> = ['δικαιολογητικά', 'αναφορά', 'εντός', 'ενέργεια', 'βαρύνω', 'προϊστάμενο', 'κέντρου', 'έννοια', 'αξιολόγηση', 'δικτύου', 'εσωτερικών', 'εκτός', 'αυτούς', 'κοινού', 'χρησιμοποιούνται', 'προβλέπονται', 'πρόεδρος', 'υποψήφιος', 'κάλυψη', 'συμβουλίου', ...]<br>
+<strong>codifier</strong> = &lt;codifier.LawCodifier object&gt;<br>
+<strong>logger</strong> = &lt;logging.RootLogger object&gt;<br>
+<strong>nlp</strong> = &lt;spacy.lang.el.Greek object&gt;<br>
+<strong>request</strong> = &lt;LocalProxy unbound&gt;</td></tr></table>
+</body></html>

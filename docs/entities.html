@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module entities</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>entities</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/marios/workspace/gsoc2018-3gm/3gm/entities.py">/home/marios/workspace/gsoc2018-3gm/3gm/entities.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.html">collections</a><br>
+<a href="datetime.html">datetime</a><br>
+<a href="entities.html">entities</a><br>
+</td><td width="25%" valign=top><a href="itertools.html">itertools</a><br>
+<a href="json.html">json</a><br>
+<a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="re.html">re</a><br>
+<a href="shutil.html">shutil</a><br>
+</td><td width="25%" valign=top><a href="string.html">string</a><br>
+<a href="urllib.html">urllib</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="entities.html#Action">Action</a>
+</font></dt><dt><font face="helvetica, arial"><a href="entities.html#LegalEntities">LegalEntities</a>
+</font></dt><dt><font face="helvetica, arial"><a href="entities.html#Minister">Minister</a>
+</font></dt><dt><font face="helvetica, arial"><a href="entities.html#Numerals">Numerals</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Action">class <strong>Action</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Action-__eq__"><strong>__eq__</strong></a>(self, q)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="Action-__init__"><strong>__init__</strong></a>(self, name, lemma, derivatives=[], weight_vector=None)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="Action-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="Action-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<dl><dt><a name="Action-score"><strong>score</strong></a>(self, word, _normalize_word=True)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LegalEntities">class <strong>LegalEntities</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>entities</strong> = ['(ν.|Ν.) [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]', 'Πράξη(|ς) Νομοθετικού Περιεχομένου ([0-9]|[0-3][0-9]).[0-9][0-9].[1-2][0-9][0-9][0-9]', '(π.δ.|Π.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]']</dl>
+
+<dl><dt><strong>ratification</strong> = r'(ΝΟΜΟΣ|NOMOΣ|ΠΡΟΕΔΡΙΚΟ ΔΙΑΤΑΓΜΑ|ΚΟΙΝΗ ΥΠΟΥΡΓΙΚΗ ΑΠΟΦΑΣΗ|ΝΟΜΟΘΕΤΙΚΟ ΔΙΑΤΑΓΜΑ) ΥΠ’ ΑΡΙΘ(|Μ). (\d+)'</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Minister">class <strong>Minister</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Minister-__init__"><strong>__init__</strong></a>(self, name, middle, surname, ministry)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="Minister-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="Minister-is_mentioned"><strong>is_mentioned</strong></a>(self, s)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Numerals">class <strong>Numerals</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Static methods defined here:<br>
+<dl><dt><a name="Numerals-full_number_to_integer"><strong>full_number_to_integer</strong></a>(s)</dt></dl>
+
+<dl><dt><a name="Numerals-full_numeral_to_integer_from_list"><strong>full_numeral_to_integer_from_list</strong></a>(tmp, index)</dt></dl>
+
+<dl><dt><a name="Numerals-greek_num_generator"><strong>greek_num_generator</strong></a>(n=None, suffix=')')</dt></dl>
+
+<dl><dt><a name="Numerals-greek_nums_to_int"><strong>greek_nums_to_int</strong></a>(s)</dt></dl>
+
+<dl><dt><a name="Numerals-int_to_greek_num"><strong>int_to_greek_num</strong></a>(n)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>GREEK_NUM_MAX</strong> = 199</dl>
+
+<dl><dt><strong>GreekNum</strong> = &lt;class 'entities.Numerals.GreekNum'&gt;<dd><tt>Support&nbsp;for&nbsp;greek&nbsp;numerals</tt></dl>
+
+<dl><dt><strong>greek_nums</strong> = {'α': 1, 'β': 2, 'γ': 3, 'δ': 4, 'ε': 5, 'ζ': 7, 'η': 8, 'θ': 9, 'ι': 10, 'κ': 20, ...}</dl>
+
+<dl><dt><strong>greek_nums_inv</strong> = {1: 'α', 2: 'β', 3: 'γ', 4: 'δ', 5: 'ε', 6: 'στ', 7: 'ζ', 8: 'η', 9: 'θ', 10: 'ι', ...}</dl>
+
+<dl><dt><strong>hundreds</strong> = {'διακοσιοστ': 200, 'εκατοστ': 100, 'εννιακοστιοστ': 900, 'εξακοσιοστ': 600, 'επτακοστιοστ': 700, 'εφτακοσιοστ': 700, 'οκτακοσιοστ': 800, 'οχτακοσιοστ': 800, 'πεντακοσιοστ': 500, 'τετρακοσιοστ': 400, ...}</dl>
+
+<dl><dt><strong>inv_hundreds</strong> = {100: 'εκατοστ', 200: 'διακοσιοστ', 300: 'τριακοσιοστ', 400: 'τετρακοσιοστ', 500: 'πεντακοσιοστ', 600: 'εξακοσιοστ', 700: 'επτακοστιοστ', 800: 'οχτακοσιοστ', 900: 'εννιακοστιοστ'}</dl>
+
+<dl><dt><strong>inv_tens</strong> = {10: 'δέκατ', 20: 'εικοστ', 30: 'τριακοστ', 40: 'τεσσαρακοστ', 50: 'πεντηκοστ', 60: 'εξηκοστ', 70: 'εβδομηκοστ', 80: 'ογδοηκοστ', 90: 'ενενηκοστ'}</dl>
+
+<dl><dt><strong>inv_units</strong> = {1: 'πρώτ', 2: 'δεύτερ', 3: 'τρίτ', 4: 'τέταρτ', 5: 'πέμπτ', 6: 'έκτ', 7: 'έβδομ', 8: 'όγδο', 9: 'ένατ'}</dl>
+
+<dl><dt><strong>tens</strong> = {'δέκατ': 10, 'εβδομηκοστ': 70, 'εικοστ': 20, 'ενενηκοστ': 90, 'εξηκοστ': 60, 'ογδοηκοστ': 80, 'πεντηκοστ': 50, 'τεσσαρακοστ': 40, 'τριακοστ': 30}</dl>
+
+<dl><dt><strong>units</strong> = {'έβδομ': 7, 'έκτ': 6, 'ένατ': 9, 'δεύτερ': 2, 'πέμπτ': 5, 'πρώτ': 1, 'τέταρτ': 4, 'τρίτ': 3, 'όγδο': 8}</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>MONTHS_PREFIXES</strong> = {'Απριλίο': 4, 'Αυγούστο': 8, 'Δεκεμβρίο': 12, 'Ιανουαρίο': 1, 'Ιουλίο': 7, 'Ιουνίο': 6, 'Μαΐο': 5, 'Μαρτίο': 3, 'Νοεμβρίο': 11, 'Οκτωβρίο': 10, ...}<br>
+<strong>actions</strong> = [προστίθεται, διαγράφεται, παύεται, τροποποιείται, αντικαθίσταται, αναριθμείται]<br>
+<strong>article_regex</strong> = [r'άρθρο \d+', r'άρθρου \d+']<br>
+<strong>date</strong> = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0...τ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'<br>
+<strong>intonations</strong> = {'ά': 'α', 'έ': 'ε', 'ή': 'η', 'ί': 'ι', 'ό': 'ο', 'ύ': 'υ', 'ώ': 'ω'}<br>
+<strong>law_regex</strong> = '(ν.|Ν.) [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'<br>
+<strong>legislative_act_regex</strong> = 'Πράξη(|ς) Νομοθετικού Περιεχομένου ([0-9]|[0-3][0-9]).[0-9][0-9].[1-2][0-9][0-9][0-9]'<br>
+<strong>legislative_decree_regex</strong> = '(ν.δ.|Ν.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
+<strong>paragraph_regex</strong> = [r'παράγραφος \d+', r'παραγράφου \d+', r'παρ. \d+', 'παράγραφος']<br>
+<strong>plural_suffixes</strong> = ['οι', 'α', 'εις', 'οι', 'ες', 'ων', 'ους']<br>
+<strong>presidential_decree_regex</strong> = '(π.δ.|Π.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'<br>
+<strong>what_stems</strong> = ['παράγραφ', 'άρθρ', 'εδάφι', 'τίτλ', 'υποπεριπτώσ', 'περίπτωσ']<br>
+<strong>whats</strong> = ['φράση', 'παράγραφος', 'άρθρο', 'εδάφιο', 'φράσεις', 'άρθρα', 'εδάφια', 'παράγραφοι', 'τίτλος', 'τίτλοι', 'περίπτωση', 'περιπτώσεις', 'υποπερίπτωση', 'υποπεριπτώσεις', 'λέξη', 'λέξεις']<br>
+<strong>wheres</strong> = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']</td></tr></table>
+</body></html>

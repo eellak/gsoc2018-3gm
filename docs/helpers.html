@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module helpers</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>helpers</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/marios/workspace/gsoc2018-3gm/3gm/helpers.py">/home/marios/workspace/gsoc2018-3gm/3gm/helpers.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.html">collections</a><br>
+<a href="datetime.html">datetime</a><br>
+<a href="entities.html">entities</a><br>
+</td><td width="25%" valign=top><a href="json.html">json</a><br>
+<a href="numpy.html">numpy</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+<a href="shutil.html">shutil</a><br>
+<a href="urllib.html">urllib</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="helpers.html#Helper">Helper</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Helper">class <strong>Helper</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Static methods defined here:<br>
+<dl><dt><a name="Helper-clear_annotations"><strong>clear_annotations</strong></a>(text)</dt><dd><tt>#&nbsp;Clears&nbsp;wikipedia&nbsp;annotations&nbsp;from&nbsp;a&nbsp;string</tt></dd></dl>
+
+<dl><dt><a name="Helper-date_match"><strong>date_match</strong></a>(year=0)</dt><dd><tt>#&nbsp;Returns&nbsp;a&nbsp;compiled&nbsp;regex&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;find&nbsp;dates&nbsp;in&nbsp;text</tt></dd></dl>
+
+<dl><dt><a name="Helper-date_to_unix_timestamp"><strong>date_to_unix_timestamp</strong></a>(date, lang='el')</dt><dd><tt>#&nbsp;Converts&nbsp;a&nbsp;textual&nbsp;date&nbsp;to&nbsp;a&nbsp;unix&nbsp;timestamp</tt></dd></dl>
+
+<dl><dt><a name="Helper-download"><strong>download</strong></a>(url, file_name=None, folder='/home/marios/workspace/gsoc2018-3gm/3gm')</dt></dl>
+
+<dl><dt><a name="Helper-find_all"><strong>find_all</strong></a>(key, string)</dt><dd><tt>#&nbsp;Finds&nbsp;all&nbsp;occurences&nbsp;of&nbsp;a&nbsp;substring&nbsp;in&nbsp;a&nbsp;string<br>
+#&nbsp;@return&nbsp;The&nbsp;indexes&nbsp;of&nbsp;all&nbsp;matched&nbsp;substrings.</tt></dd></dl>
+
+<dl><dt><a name="Helper-format_role"><strong>format_role</strong></a>(text)</dt><dd><tt>#&nbsp;Formats&nbsp;roles&nbsp;extracted&nbsp;from&nbsp;pdfs.&nbsp;Specifically,&nbsp;splits&nbsp;separate&nbsp;words<br>
+#&nbsp;that&nbsp;are&nbsp;stuck&nbsp;together</tt></dd></dl>
+
+<dl><dt><a name="Helper-get_url_contents"><strong>get_url_contents</strong></a>(link, content_type='')</dt></dl>
+
+<dl><dt><a name="Helper-normalize_greek_name"><strong>normalize_greek_name</strong></a>(name)</dt><dd><tt>#&nbsp;Converts&nbsp;upper&nbsp;/&nbsp;lowercase&nbsp;text&nbsp;with&nbsp;possible&nbsp;ambiguous&nbsp;latin&nbsp;characters&nbsp;to&nbsp;a&nbsp;fully&nbsp;greek&nbsp;uppercase&nbsp;word&nbsp;with<br>
+#&nbsp;no&nbsp;accents.<br>
+#&nbsp;@todo:&nbsp;Use&nbsp;regex&nbsp;or&nbsp;other&nbsp;way&nbsp;to&nbsp;speed&nbsp;up</tt></dd></dl>
+
+<dl><dt><a name="Helper-qsort_by_dict_value"><strong>qsort_by_dict_value</strong></a>(inlist, dict_key)</dt><dd><tt>#&nbsp;Orders&nbsp;a&nbsp;list&nbsp;of&nbsp;dicts&nbsp;by&nbsp;a&nbsp;value&nbsp;inside&nbsp;the&nbsp;dicts</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>camel_case_patteren</strong> = re.compile('([α-ω])([Α-Ω])')</dl>
+
+<dl><dt><strong>date_patterns</strong> = {}</dl>
+
+<dl><dt><strong>final_s_pattern</strong> = re.compile('(ς)([Α-Ωα-ωά-ώ])')</dl>
+
+<dl><dt><strong>u_pattern</strong> = re.compile('(ύ)(και)')</dl>
+
+<dl><dt><strong>upper_s_pattern</strong> = re.compile('(Σ)(ΚΑΙ)')</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-check_brackets"><strong>check_brackets</strong></a>(s)</dt><dd><tt>Return&nbsp;True&nbsp;if&nbsp;the&nbsp;brackets&nbsp;in&nbsp;string&nbsp;s&nbsp;match,&nbsp;otherwise&nbsp;False.</tt></dd></dl>
+ <dl><dt><a name="-connected_components"><strong>connected_components</strong></a>(graph)</dt></dl>
+ <dl><dt><a name="-edit_distance"><strong>edit_distance</strong></a>(str1, str2, weight=&lt;function &lt;lambda&gt; at 0x7f9de179e510&gt;)</dt></dl>
+ <dl><dt><a name="-find_brackets"><strong>find_brackets</strong></a>(s, remove_sub=True)</dt><dd><tt>Find&nbsp;and&nbsp;return&nbsp;the&nbsp;location&nbsp;of&nbsp;the&nbsp;matching&nbsp;brackets&nbsp;pairs&nbsp;in&nbsp;s.<br>
+Given&nbsp;a&nbsp;string,&nbsp;s,&nbsp;return&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;start:&nbsp;end&nbsp;pairs&nbsp;giving&nbsp;the<br>
+indexes&nbsp;of&nbsp;the&nbsp;matching&nbsp;brackets&nbsp;in&nbsp;s.&nbsp;Suitable&nbsp;exceptions&nbsp;are<br>
+raised&nbsp;if&nbsp;s&nbsp;contains&nbsp;unbalanced&nbsp;brackets.</tt></dd></dl>
+ <dl><dt><a name="-fix_hyphenthation"><strong>fix_hyphenthation</strong></a>(s)</dt><dd><tt>Fix&nbsp;hyphenthation&nbsp;in&nbsp;string&nbsp;s<br>
+Example:&nbsp;'The&nbsp;q-&nbsp;uick&nbsp;brown&nbsp;fox'&nbsp;-&gt;&nbsp;'The&nbsp;quick&nbsp;brown&nbsp;fox'</tt></dd></dl>
+ <dl><dt><a name="-get_edges"><strong>get_edges</strong></a>(graph)</dt></dl>
+ <dl><dt><a name="-get_extracts"><strong>get_extracts</strong></a>(s, min_words=5)</dt></dl>
+ <dl><dt><a name="-has_suffix"><strong>has_suffix</strong></a>(w, s)</dt><dd><tt>Returns&nbsp;true&nbsp;if&nbsp;string&nbsp;w&nbsp;has&nbsp;suffix&nbsp;in&nbsp;list&nbsp;s</tt></dd></dl>
+ <dl><dt><a name="-is_subset"><strong>is_subset</strong></a>(A, B)</dt></dl>
+ <dl><dt><a name="-normalize"><strong>normalize</strong></a>(x, l=None, r=None)</dt></dl>
+ <dl><dt><a name="-normalize_word"><strong>normalize_word</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-remove_subsets"><strong>remove_subsets</strong></a>(l)</dt></dl>
+ <dl><dt><a name="-replace_whitespaces"><strong>replace_whitespaces</strong></a>(s)</dt><dd><tt>Replace&nbsp;all&nbsp;unicode&nbsp;whitespaces&nbsp;with&nbsp;normal&nbsp;whitespaces</tt></dd></dl>
+ <dl><dt><a name="-ssconj_doc_iterator"><strong>ssconj_doc_iterator</strong></a>(l, i)</dt><dd><tt>Generator&nbsp;which&nbsp;yields&nbsp;components&nbsp;connected&nbsp;with&nbsp;commas&nbsp;and&nbsp;an&nbsp;"AND"&nbsp;(και)</tt></dd></dl>
+ <dl><dt><a name="-string_to_date"><strong>string_to_date</strong></a>(d)</dt></dl>
+ <dl><dt><a name="-texify"><strong>texify</strong></a>(s, outfile)</dt></dl>
+ <dl><dt><a name="-traverse_nums"><strong>traverse_nums</strong></a>(l, i)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>MONTHS_PREFIXES</strong> = {'Απριλίο': 4, 'Αυγούστο': 8, 'Δεκεμβρίο': 12, 'Ιανουαρίο': 1, 'Ιουλίο': 7, 'Ιουνίο': 6, 'Μαΐο': 5, 'Μαρτίο': 3, 'Νοεμβρίο': 11, 'Οκτωβρίο': 10, ...}<br>
+<strong>intonations</strong> = {'ά': 'α', 'έ': 'ε', 'ή': 'η', 'ί': 'ι', 'ό': 'ο', 'ύ': 'υ', 'ώ': 'ω'}</td></tr></table>
+</body></html>

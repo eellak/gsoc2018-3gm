@@ -1,0 +1,21 @@
+    <mat-toolbar color="primary" class="inbox-toolbar">
+      <!-- Left sidebar toggle button -->
+      <!-- <button mat-icon-button (click)="historytimeline.toggle=true" fxShow [fxShow.gt-sm]="isMobile"><mat-icon>short_text</mat-icon></button> -->
+      <!-- multiple email select and control -->
+      <!-- <mat-checkbox (change)="historytimeline.toggle = $event.checked;" class="inbox-toggle-all mr-1" [checked]=true><small>All</small></mat-checkbox> -->
+      Ιστορικό
+    </mat-toolbar>
+    
+ <mgl-timeline #historytimeline>
+   <mgl-timeline-entry *ngFor="let item of statuteHistory">
+     <!-- Header-->
+     <mgl-timeline-entry-header><h6>{{ item.amendee | url2statute }}</h6></mgl-timeline-entry-header>
+     <mgl-timeline-entry-content>{{ item.summary }}</mgl-timeline-entry-content>
+     <mgl-timeline-entry-dot class="accent"></mgl-timeline-entry-dot>
+     <mgl-timeline-entry-side>
+      <a mat-button color='warn' target="_blank" href="https://archive.org/details/GreekGovernmentGazette-{{ item.archive }}"> Δεσμός στο Internet Archive  </a> 
+      <a mat-button color='warn' routerLink="../../diff/{{ item.identifier }}/{{ item.amendee  }}" > Εμφάνιση Διαφορών   </a> 
+      </mgl-timeline-entry-side>
+   </mgl-timeline-entry>
+ </mgl-timeline>
+

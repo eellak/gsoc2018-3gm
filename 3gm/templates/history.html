@@ -1,0 +1,128 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+
+<script>
+  new WOW().init();
+</script>
+
+<ul class='law-options navbar-ul'>
+  <li><a href="{{ url_for('codify_law', identifier=identifier )}}">Δείτε την τρέχουσα έκδοση του {{ identifier }}</a></li>
+  <li><a href="{{ url_for('amendment', identifier=identifier )}}">Δείτε τους νόμους που τροποποιεί ο {{ identifier }}</a></li>
+  <li><a href="{{ url_for('links', identifier=identifier )}}">Δείτε του συνδέσμους στον {{ identifier }}</a></li>
+</ul>
+
+
+<h1>Ιστορικό του {{ identifier }}</h1>
+
+
+<h3>Ιστορία</h3>
+
+<div class="container">
+    <ul class="timeline">
+      {% for law in history | reverse %}
+        {% if loop.index % 2 == 1 %}
+        <li class="wow bounceInLeft">
+          <div class="timeline-badge danger"><i class="glyphicon glyphicon-check"></i></div>
+        {% else %}
+        <li class="timeline-inverted wow bounceInRight">
+          <div class="timeline-badge dark"><i class="glyphicon glyphicon-credit-card"></i></div>
+        {% endif %}
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h4 class="timeline-title">
+                <a href="#heading{{ loop.index }}">
+                {% if law.identifier == law.amendee %}
+                {% set issue = law.issue %}
+                Αρχική μορφή του {{ law.identifier }}, δημοσιευθείς στο {{ law.amendee | gg_link }}
+                {% else %}
+                Εμφάνιση του {{ law.identifier }} μέχρι και τις αλλαγές του {{ law.amendee }}
+                {% endif %}
+              </a></h4>
+            </div>
+            <div class="timeline-body">
+                <p>{{ law.summary }}</p>
+                <p><a href="{{ law.amendee | archive_link }} ">
+                  <i class="fas fa-link"></i> Δεσμός στο Internet Archive
+                </a></p>
+                <p><a href="{{ url_for('diff', identifier=identifier, initial=identifier, final=law.amendee) }}">
+                  <i class="fas fa-history"></i> Εμφάνιση διαφορών σε σχέση με την αρχική έκδοση
+                </a></p>
+            </div>
+          </div>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<h3>Πλήρες Ιστορικό</h3>
+
+<div id="accordion">
+  {% for law in history | reverse %}
+  <div class="card">
+    <div class="card-header" id="heading{{ loop.index }}">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" aria-expanded="false" data-target="#collapse{{ loop.index }}" aria-controls="collapse{{ loop.index }}">
+          <h1>
+            {% if law.identifier == law.amendee %}
+            Αρχική μορφή του {{ law.identifier }}
+            {% else %}
+            Εμφάνιση του {{ law.identifier }} μέχρι και τις αλλαγές του {{ law.amendee }}
+            <a class="btn btn-link" href="{{ url_for('diff', identifier=identifier, initial=identifier, final=law.amendee) }}"><h3>Διαφορές</h3></a>
+            {% endif %}
+          </h1>
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapse{{ loop.index }}" class="collapse" aria-labelledby="heading{{ loop.index }}" data-parent="#accordion">
+      <div class="card-body">
+        {% if not law.is_empty %}
+          <h5>Κείμενο</h5>
+          <a href='#links{{ loop.index }}'>Δείτε τους συνδέσμους</a>
+          {{ law.content | render_md | safe }}
+          <br>
+          {% if law.amendee != law.identifier %}
+          <hr>
+          <h5 id="links{{ loop.index }}">Σύνδεσμοι</h5>
+          <h6>Εφαρσμοσμένοι</h6>
+          {% for text, tags in links %}
+          {% if tags[0] == 'τροποποιητικός' and tags[1] == law.amendee and tags[2] == 'εφαρμοσμένος'%}
+          <strong>Κείμενο Τροποποίησης</strong>
+          <p>{{ text }}</p>
+
+          <strong>Είδος Τροποποίησης </strong>
+          <p>{{ tags | render_badges | safe }}</p>
+          <hr>
+          {% endif %}
+          {% endfor %}
+
+          <h6><br>Μη Εφαρσμοσμένοι</h6>
+          {% for text, tags in links %}
+          {% if tags[0] == 'τροποποιητικός' and tags[1] == law.amendee and tags[2] == 'μη εφαρμοσμένος'%}
+          <strong>Κείμενο Τροποποίησης</strong>
+          <p>{{ text }}</p>
+
+          <strong>Είδος Τροποποίησης </strong>
+          <p>{{ tags | render_badges | safe }}</p>
+          <hr>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+
+        {% else %}
+          <p class="warning">Το νομοθέτημα έχει καταργηθεί</p>
+        {% endif %}
+
+
+
+      </div>
+    </div>
+  </div>
+
+
+  {% endfor %}
+</div>
+
+
+{% endblock %}

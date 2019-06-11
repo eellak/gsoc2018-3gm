@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module phrase_fun</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>phrase_fun</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/marios/workspace/gsoc2018-3gm/3gm/phrase_fun.py">/home/marios/workspace/gsoc2018-3gm/3gm/phrase_fun.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="entities.html">entities</a><br>
+</td><td width="25%" valign=top><a href="helpers.html">helpers</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="tokenizer.html">tokenizer</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-delete_case"><strong>delete_case</strong></a>(s, case_letter)</dt><dd><tt>Deletes&nbsp;a&nbsp;case&nbsp;of&nbsp;arbitrary&nbsp;depth<br>
+Performs&nbsp;auto-renumbering</tt></dd></dl>
+ <dl><dt><a name="-detect_phr_replacement"><strong>detect_phr_replacement</strong></a>(s)</dt><dd><tt>Detect&nbsp;the&nbsp;phrase&nbsp;that&nbsp;will&nbsp;replace&nbsp;another&nbsp;phrase<br>
+:params&nbsp;s&nbsp;:&nbsp;Query&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-detect_phrase_components"><strong>detect_phrase_components</strong></a>(s, tree)</dt><dd><tt>Detect&nbsp;phrase&nbsp;components&nbsp;given&nbsp;a&nbsp;tree.<br>
+:params&nbsp;s&nbsp;:&nbsp;The&nbsp;region&nbsp;of&nbsp;interest<br>
+:params&nbsp;tree&nbsp;:&nbsp;The&nbsp;syntax&nbsp;tree&nbsp;as&nbsp;argument</tt></dd></dl>
+ <dl><dt><a name="-detect_phrase_content"><strong>detect_phrase_content</strong></a>(s)</dt><dd><tt>Detect&nbsp;phrasal&nbsp;content&nbsp;at&nbsp;nsubj&nbsp;position</tt></dd></dl>
+ <dl><dt><a name="-detect_prhase_locations"><strong>detect_prhase_locations</strong></a>(s, tree)</dt><dd><tt>Detect&nbsp;new&nbsp;phrase&nbsp;placement&nbsp;location<br>
+params&nbsp;s&nbsp;:&nbsp;Query&nbsp;string<br>
+params&nbsp;tree&nbsp;:&nbsp;Already&nbsp;constructed&nbsp;syntax&nbsp;tree</tt></dd></dl>
+ <dl><dt><a name="-get_cases"><strong>get_cases</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-get_phr_content"><strong>get_phr_content</strong></a>(q)</dt><dd><tt>Given&nbsp;a&nbsp;query&nbsp;it&nbsp;returns&nbsp;the&nbsp;portion&nbsp;enclosed&nbsp;in&nbsp;quotes<br>
+:params&nbsp;q&nbsp;:&nbsp;Query&nbsp;string</tt></dd></dl>
+ <dl><dt><a name="-insert_case"><strong>insert_case</strong></a>(s, case_letter, content, suffix=')')</dt></dl>
+ <dl><dt><a name="-insert_phrase"><strong>insert_phrase</strong></a>(s, new_phrase, position='append', old_phrase='')</dt><dd><tt>Phrase&nbsp;insertion&nbsp;with&nbsp;respect&nbsp;to&nbsp;another&nbsp;phrase</tt></dd></dl>
+ <dl><dt><a name="-remove_phrase"><strong>remove_phrase</strong></a>(s, old_phrase)</dt></dl>
+ <dl><dt><a name="-renumber_case"><strong>renumber_case</strong></a>(s, case_letter, new_letter, suffix=')')</dt><dd><tt>Renumbers&nbsp;a&nbsp;case&nbsp;of&nbsp;arbitrary&nbsp;depth</tt></dd></dl>
+ <dl><dt><a name="-replace_case"><strong>replace_case</strong></a>(s, case_letter, new_content, suffix=')')</dt><dd><tt>Replaces&nbsp;a&nbsp;case&nbsp;(περίπτωση,&nbsp;υποπερίπτωση)&nbsp;of&nbsp;arbitrary&nbsp;depth</tt></dd></dl>
+ <dl><dt><a name="-replace_phrase"><strong>replace_phrase</strong></a>(s, old_phrase, new_phrase)</dt><dd><tt>Replacement&nbsp;of&nbsp;phrase&nbsp;inside&nbsp;document<br>
+:old_phrase&nbsp;phrase&nbsp;to&nbsp;be&nbsp;replaced<br>
+:new_phrase&nbsp;new&nbsp;phrase<br>
+:article&nbsp;optional&nbsp;detect&nbsp;phrase&nbsp;in&nbsp;certain&nbsp;article<br>
+:paragraph&nbsp;optional&nbsp;detect&nbsp;phrase&nbsp;in&nbsp;certain&nbsp;paragraph</tt></dd></dl>
+</td></tr></table>
+</body></html>

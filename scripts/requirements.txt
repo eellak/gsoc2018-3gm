@@ -1,0 +1,6 @@
+internetarchive==1.8.1
+selenium==2.53.6
+Wand==0.4.4
+Pillow==5.2.0
+beautifulsoup4==4.6.0
+pyocr==0.5.2

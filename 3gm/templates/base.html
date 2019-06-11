@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<h1>Syntactic Analysis</h1>
+
+<p>Enter a paragraph from Government Gazette Article (in Greek). Avoid newlines.</p>
+<form id="calc">
+<label>Input Text<textarea name="a" rows="20">
+
+</textarea></label>
+
+<input type="submit" value="Analyze">
+</form>
+<label>Result
+<textarea id="result" rows="20">
+
+</textarea></label>
+{% block script %}{% endblock %}
+
+{{ examples | safe }}
+{% endblock %}
