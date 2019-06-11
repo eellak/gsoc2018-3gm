@@ -3,8 +3,7 @@
 # conversion tool to convert all pdfs in stereo to txt with pdfminer.six
 # help: python3 converter --help
 
-import os
-import sys
+import os,sys
 import multiprocessing
 import ocr
 import argparse
@@ -14,9 +13,8 @@ import glob
 # Minimum bytes for a file to considered purely image
 MIN_BYTES = 200
 
-logging.basicConfig(filename="./logs/codify_daily.log", filemode='a',
-                    format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-
+logging.basicConfig(filename="./logs/codify_daily.log",filemode = 'a',
+    format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def batch_codify(filelist):
     # batch upload to database / codifier
@@ -26,11 +24,11 @@ def batch_codify(filelist):
     import pparser
     new_laws = {}
     try:
-        if (isinstance(filelist, str)):
+        if (isinstance(filelist,str)):
             filelist = [filelist]
         if not (filelist and isinstance(filelist, list) and all(isinstance(file, str) for file in filelist)):
             raise TypeError('filelist must be a list of one or more strings.')
-
+        
         tmp_codifier = codifier.LawCodifier()
         for f in filelist:
             issue = pparser.IssueParser(filename=f)
@@ -45,9 +43,7 @@ def batch_codify(filelist):
         print(new_laws)
         apply_links.apply_all_links(identifiers=None)
     except Exception as e:
-        logging.error("Exception occurred while codifying file %s to txt", ''.join(
-            filelist), exc_info=True)
-
+        logging.error("Exception occurred while codifying file %s to txt", ''.join(filelist),exc_info=True)
 
 def job(x):
     # document conversion
@@ -64,8 +60,7 @@ def job(x):
         else:
             os.system('python3 {} {}'.format(pdf2txt, x))
         if os.stat(y).st_size <= MIN_BYTES:
-            logging.info(
-                '{}: File Size unsatisfactory. Performing OCR'.format(x))
+            logging.info('{}: File Size unsatisfactory. Performing OCR'.format(x))
             ocr.pdfocr2txt(x, y, resolution=resolution, tmp=tmp)
 
         logging.info('{} Done'.format(x))
@@ -102,8 +97,7 @@ if __name__ == '__main__':
 
     required.add_argument('-pdf2txt', help='pdf2txt.py Executable')
     required.add_argument('-input_dir', help='Input Directory')
-    optional.add_argument(
-        '-output_dir', help='Output Directory (if omitted output goes to stdout)')
+    optional.add_argument('-output_dir', help='Output Directory (if omitted output goes to stdout)')
     optional.add_argument(
         '--njobs',
         help='Number of parallel jobs (default = 1)',

@@ -52,9 +52,7 @@ building a dataset to train a new NER tagger based on the [Greek spaCy model](ht
 
 To mine, prepare and annotate our data we followed this [workflow](https://docs.google.com/document/d/1ICkSLpc2IZEuISpb2VXWURZ4cyVXQ_Os4ynWwnmIJU8/edit?usp=sharing) and followed the guidlines for annotation described [here](https://docs.google.com/document/d/1xvNTYXnakbyPCecVDVC3SgK8DB3ylR2wb8z6cABNiMA/edit?usp=sharing).
 
-All above documents will be incorporated on the project wiki shortely.
-
-As a result of this process we have created a prodigy dataset of  around 3000 annotated sentences. A first version of this dataset can be found [here](https://github.com/eellak/gsoc2019-3gm/blob/GSOC-2019/data/ner_ggg.jsonl). This version will be further updated. 
+At this point we have created a large data-set that needs to be annotated. All above documents will be incorporated on the project wiki shortely.
 
 ## Google Summer of Code 2018
 
