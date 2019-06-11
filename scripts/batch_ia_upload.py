@@ -13,8 +13,9 @@ from converter import list_files
 import time
 
 
-logging.basicConfig(filename="./logs/batch_upload.log",filemode = 'a',
-    format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+logging.basicConfig(filename="./logs/batch_upload.log", filemode='a',
+                    format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
 
 def ia_upload(pdf):
     global pfs
@@ -57,7 +58,6 @@ if __name__ == '__main__':
     # pool for multiprocessing
     pool = multiprocessing.Pool(args.w)
     pool.map(ia_upload, pdfs)
-
 
     elapsed_time = time.time() - start_time
     print('Elapsed time in minutes:', elapsed_time/60)
