@@ -52,7 +52,11 @@ building a dataset to train a new NER tagger based on the [Greek spaCy model](ht
 
 To mine, prepare and annotate our data we followed this [workflow](https://docs.google.com/document/d/1ICkSLpc2IZEuISpb2VXWURZ4cyVXQ_Os4ynWwnmIJU8/edit?usp=sharing) and followed the guidlines for annotation described [here](https://docs.google.com/document/d/1xvNTYXnakbyPCecVDVC3SgK8DB3ylR2wb8z6cABNiMA/edit?usp=sharing).
 
-At this point we have created a large data-set that needs to be annotated. All above documents will be incorporated on the project wiki shortely.
+All above documents will be incorporated on the project wiki shortely.
+
+As a result of this process we have created a dataset containing around 3000 sentences. A first version of this dataset can be found in 
+the projects data folder
+
 
 ## Google Summer of Code 2018
 
