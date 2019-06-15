@@ -55,7 +55,7 @@ To mine, prepare and annotate our data we followed this [workflow](https://docs.
 All above documents will be incorporated on the project wiki shortely.
 
 As a result of this process we have created a dataset containing around 3000 sentences. A first version of this dataset can be found in 
-the projects data folder
+the projects data folder. We have also deployed the prodigy annotator, in an effort  to showcase our progress. In case you want to support this year's project. All annotations gathered will be used for model training after quality control.You can find it [here](http://36ba097e.ngrok.io/).
 
 
 ## Google Summer of Code 2018
