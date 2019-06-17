@@ -55,6 +55,7 @@ if __name__ == '__main__':
   data_set = data_set.replace(' 1  2  3  ', '')
   data_set = data_set.replace('  ', ' ')
   data_set = data_set.replace('ΕΦΗΜΕΡΙΣ ΤΗΣ ΚΥΒΕΡΝΗΣΕΩΣ (ΤΕΥΧΟΣ ΠΡΩΤΟ)', '')
+  data_set = data_set.replace('ΤΕΥΧΟΣ ΑΝΑΠΤΥΞΙΑΚΩΝ ΠΡΑΞΕΩΝ ΚΑΙ ΣΥΜΒΑΣΕΩΝ', '')
   data_set = data_set.replace('•', '')
   
   #split sentences using regex
