@@ -57,6 +57,7 @@ All above documents will be incorporated on the project wiki shortely.
 As a result of this process we have created a dataset containing around 3000 sentences. A first version of this dataset can be found in 
 the projects data folder. We have also deployed the prodigy annotator, in an effort  to showcase our progress. In case you want to support this year's project. All annotations gathered will be used for model training after quality control.You can find it [here](http://36ba097e.ngrok.io/).
 
+After obtaining a large enough data-set to train our models we trained the small and medium sized Greek spaCy models using the prodigy recipes for training. The models showed significant improvement after training. A version of the small NER model that we trained can be found in the data directory of this repo. Our goal now is to optimize the model and properly evaluate it. As a first step to this process we will use the train-curve recipe of prodigy to see how to the model performs when trained with different portions of our data. Finally we will develop a python script to train the spacy model, document all its metrics and tune hyperparameters.     
 
 ## Google Summer of Code 2018
 
