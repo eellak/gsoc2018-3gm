@@ -35,8 +35,8 @@ autocomplete_ = autocomplete_laws + autocomplete_topics
 
 # NLP Related packages
 import spacy
-import el_small
-nlp = el_small.load()
+import el_core_news_sm
+nlp = el_core_news_sm.load()
 import syntax
 
 app = Flask(__name__)
