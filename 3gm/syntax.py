@@ -15,8 +15,8 @@ try:
     import el_small
     nlp = el_small.load()
 except ImportError:
-    import el_core_web_sm
-    nlp = el_core_web_sm.load()
+    import el_core_news_sm
+    nlp = el_core_news_sm.load()
 
 class UncategorizedActionException(Exception):
     """This exception is raised whenever an action cannot be
