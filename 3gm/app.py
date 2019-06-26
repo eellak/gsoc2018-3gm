@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
 # Flask imports
+import syntax
+import el_core_news_sm
+import spacy
+import helpers
+from codifier import *
 from flask import Flask
 from flask import jsonify
 from flask import render_template
@@ -27,59 +32,64 @@ logger.disabled = True
 # Import local modules
 sys.path.insert(0, './')
 
-from codifier import *
-import helpers
 autocomplete_laws = sorted(list(codifier.keys()))
 autocomplete_topics = codifier.topic_keys()
 autocomplete_ = autocomplete_laws + autocomplete_topics
 
 # NLP Related packages
-import spacy
-import el_core_news_sm
+#import el_small
+#nlp = el_small.load()
 nlp = el_core_news_sm.load()
-import syntax
 
 app = Flask(__name__)
-application = app # for gunicorn
+application = app  # for gunicorn
 
 # Unicode API Wrapper
+
+
 class UnicodeApi(Api):
     def __init__(self, *args, **kwargs):
         super(UnicodeApi, self).__init__(*args, **kwargs)
-        self.app.config['RESTFUL_JSON'] = { 'ensure_ascii': False }
+        self.app.config['RESTFUL_JSON'] = {'ensure_ascii': False}
 
         self.representations = {
             'application/json; charset=utf-8': output_json,
         }
 
+
 # RestFUL API
 api = UnicodeApi(app)
 api_lookup = {
-    'l' : 'ν.',
-    'pd' : 'π.δ.'
+    'l': 'ν.',
+    'pd': 'π.δ.'
 }
 
 # Get id for API
+
+
 def get_id(statute_type, identifier, year):
     try:
         return '{} {}/{}'.format(api_lookup[statute_type], identifier, year)
     except:
         return '{} {}/{}'.format(statute_type, identifier, year)
 
+
 class LawResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
         _id = get_id(statute_type, identifier, year)
-        for x in codifier.db.laws.find({'_id' : _id}):
+        for x in codifier.db.laws.find({'_id': _id}):
             return x
+
 
 class HistoryResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
         _id = get_id(statute_type, identifier, year)
         return json.dumps(
-                codifier.db.get_json_from_fs(_id),
-                ensure_ascii=False)
+            codifier.db.get_json_from_fs(_id),
+            ensure_ascii=False)
+
 
 class TopicResource(Resource):
     def get(self, statute_type, identifier, year):
@@ -90,22 +100,39 @@ class TopicResource(Resource):
         }))
         return json.dumps(topics, ensure_ascii=False)
 
+
+class NamedEntityResource(Resource):
+    def get(self, statute_type, identifier, year):
+        global codifier
+        _id = get_id(statute_type, identifier, year)
+        named_entities = list(codifier.db.named_entities.find({
+            'statutes': _id
+        }))
+        return json.dumps(named_entities, ensure_ascii=False)
+
+
 class LinkResource(Resource):
     def get(self, statute_type, identifier, year):
         global codifier
         _id = get_id(statute_type, identifier, year)
-        for x in codifier.db.links.find({'_id' : _id}):
+        for x in codifier.db.links.find({'_id': _id}):
             return x
+
 
 class SyntaxResource(Resource):
     def get(self, s):
         return syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
 
+
 # Endpoints
-api.add_resource(LawResource, '/get_law/<string:statute_type>/<string:identifier>/<string:year>')
-api.add_resource(HistoryResource, '/get_history/<string:statute_type>/<string:identifier>/<string:year>')
-api.add_resource(LinkResource, '/get_link/<string:statute_type>/<string:identifier>/<string:year>')
-api.add_resource(TopicResource, '/get_topic/<string:statute_type>/<string:identifier>/<string:year>')
+api.add_resource(
+    LawResource, '/get_law/<string:statute_type>/<string:identifier>/<string:year>')
+api.add_resource(
+    HistoryResource, '/get_history/<string:statute_type>/<string:identifier>/<string:year>')
+api.add_resource(
+    LinkResource, '/get_link/<string:statute_type>/<string:identifier>/<string:year>')
+api.add_resource(
+    TopicResource, '/get_topic/<string:statute_type>/<string:identifier>/<string:year>')
 api.add_resource(SyntaxResource, '/get_syntax/<string:s>')
 
 # Application Routes
@@ -124,7 +151,8 @@ def index(js):
 @app.route('/analyze', methods=['POST'])
 def analyze():
     a = request.form.get('a', '', type=str)
-    result = syntax.ActionTreeGenerator.generate_action_tree_from_string(a, nested=False)
+    result = syntax.ActionTreeGenerator.generate_action_tree_from_string(
+        a, nested=False)
     json_string = pprint.pformat(result)
     return jsonify(result=json_string)
 
@@ -132,6 +160,7 @@ def analyze():
 @app.route('/visualize')
 def visualize():
     return app.send_static_file('templates/graph.html')
+
 
 @app.route('/')
 @app.route('/codification')
@@ -141,7 +170,8 @@ def codification():
     num_laws = len(codifier.laws)
     num_links = len(codifier.links)
     num_topics = len(codifier.topics)
-    return render_template('codification.html', num_laws=num_laws, num_links=num_links, num_topics=num_topics)
+    num_named_entities = len(codifier.named_entities)
+    return render_template('codification.html', num_laws=num_laws, num_links=num_links, num_topics=num_topics, num_named_entities=num_named_entities)
 
 
 @app.route('/autocomplete', methods=['GET'])
@@ -191,11 +221,12 @@ def codify_law(identifier=None):
         topics = None
 
     try:
-        rank_txt = str(codifier.ranking[ data['law'] ]) + 'ος'
+        rank_txt = str(codifier.ranking[data['law']]) + 'ος'
     except:
         rank_txt = ''
 
     return render_template('codify_law.html', **locals())
+
 
 @app.route('/amendment', methods=['POST', 'GET'])
 def amendment(identifier=None):
@@ -234,6 +265,7 @@ def amendment(identifier=None):
 
     return render_template('amendment.html', **locals())
 
+
 @app.route('/links', methods=['POST', 'GET'])
 def links(identifier=None):
     """Route to demonstrate links to the existing law"""
@@ -264,6 +296,7 @@ def links(identifier=None):
 
     return render_template('links.html', **locals())
 
+
 @app.route('/history')
 def history():
     """Displays the versioning history of a law"""
@@ -275,7 +308,7 @@ def history():
     for x in history:
         x.content = x.export_law('markdown')
         x.is_empty = is_empty_statute(x.content)
-        for y in codifier.db.summaries.find({'_id' : x.amendee}):
+        for y in codifier.db.summaries.find({'_id': x.amendee}):
             x.summary = y['summary']
 
     return render_template('history.html', **locals())
@@ -303,7 +336,8 @@ def full_index():
     """Displays full linking index"""
     global codifier
     full_index = list(codifier.db.links.find())
-    helpers.quicksort(full_index, lambda x, y: helpers.compare_statutes(x['_id'], y['_id']))
+    helpers.quicksort(full_index, lambda x,
+                      y: helpers.compare_statutes(x['_id'], y['_id']))
 
     current = None
     toc = []
@@ -340,10 +374,11 @@ def label(label, sorting='rank'):
 
     summaries = {}
     for identifier in refs:
-        for x in codifier.db.summaries.find({'_id' : identifier}):
+        for x in codifier.db.summaries.find({'_id': identifier}):
             summaries[identifier] = x['summary']
 
     return render_template('label.html', **locals())
+
 
 @app.route('/topics')
 def topics():
@@ -359,9 +394,9 @@ def diff():
         data = request.form
         print(data)
         return redirect(url_for('diff',
-            identifier=data['identifier'],
-            final=data['final'],
-            initial=data['initial']))
+                                identifier=data['identifier'],
+                                final=data['final'],
+                                initial=data['initial']))
 
     global codifier
     differ = difflib.Differ()
@@ -394,6 +429,7 @@ def diff():
     diffs = differ.compare(initial_text, final_text)
 
     return render_template('diff.html', **locals())
+
 
 @app.route('/help')
 def help():
@@ -435,7 +471,8 @@ def render_badges_single(l, color='light', label_url=True):
         if label_url:
             url = url_for('label', label=x, sorting='rank')
             result = result + \
-                '<span class="badge badge-{}"><a class="no-linter" href="{}">{}</a></span> '.format(color, url, x)
+                '<span class="badge badge-{}"><a class="no-linter" href="{}">{}</a></span> '.format(
+                    color, url, x)
         else:
             result = result + \
                 '<span class="badge badge-{}">{}</span> '.format(color, x)
@@ -475,6 +512,8 @@ def render_links(content):
     return ''.join(splitted)
 
 # Template filters
+
+
 def to_hyperlink(l, link_type='markdown'):
     u = url_for('codify_law', identifier=l)
     if link_type == 'html':
@@ -492,56 +531,62 @@ def render_md(corpus):
 def listify(s):
     return list(s)
 
+
 @app.template_filter('setify')
 def setify(s):
     return set(s)
 
+
 @app.template_filter('archive_link')
 def archive_link(identifier):
     cur = codifier.db.archive_links.find({
-            '_id' : identifier
+        '_id': identifier
     })
     for x in cur:
         l = x['issue']
 
     return 'https://archive.org/details/GreekGovernmentGazette-{}'.format(l)
 
+
 @app.template_filter('gg_link')
 def gg_link(identifier):
     cur = codifier.db.archive_links.find({
-            '_id' : identifier
+        '_id': identifier
     })
     for x in cur:
         l = x['issue']
 
     return 'ΦΕΚ Α {}/{}'.format(int(l[-4:]), l[:4])
 
+
 @app.template_filter('lower')
 def lower(s):
     return s.lower()
 
+
 @app.template_filter('highlight_diff')
 def highlight_diff(d, initial, final, initial_archive, final_archive):
     lookup = {
-        '+' : 'rgba(0, 255, 0, 0.3)',
-        '-' : 'rgba(255, 0, 0, 0.3)',
-        '?' :  'rgba(0, 0, 255, 0.3)'
+        '+': 'rgba(0, 255, 0, 0.3)',
+        '-': 'rgba(255, 0, 0, 0.3)',
+        '?':  'rgba(0, 0, 255, 0.3)'
     }
 
     gg_lookup = {
-        '+' : final,
-        '-' : initial,
-        '?' : 'Δεν βρίσκεται σε κανένα από τα δύο'
+        '+': final,
+        '-': initial,
+        '?': 'Δεν βρίσκεται σε κανένα από τα δύο'
     }
 
     archive_lookup = {
-        '+' : final_archive,
-        '-' : initial_archive,
-        '?' : 'Δεν βρίσκεται σε κανένα από τα δύο'
+        '+': final_archive,
+        '-': initial_archive,
+        '?': 'Δεν βρίσκεται σε κανένα από τα δύο'
     }
 
     try:
-        pref = "<a href='{}' class='no-linter'><p style='background-color: {};' data-toggle='tooltip' data-placement='right' data-html='true' title='<h3>{}</h3>' >{}</p></a>".format(archive_lookup[d[0]], lookup[d[0]], gg_lookup[d[0]], d)
+        pref = "<a href='{}' class='no-linter'><p style='background-color: {};' data-toggle='tooltip' data-placement='right' data-html='true' title='<h3>{}</h3>' >{}</p></a>".format(
+            archive_lookup[d[0]], lookup[d[0]], gg_lookup[d[0]], d)
         script = '''<script>
                     $(document).ready(function(){
                         $('[data-toggle="tooltip"]').tooltip();
@@ -551,8 +596,10 @@ def highlight_diff(d, initial, final, initial_archive, final_archive):
     except BaseException:
         return '<p>{}</p>'.format(d)
 
+
 def is_empty_statute(s):
     return len(s.splitlines()) == 1
+
 
 if __name__ == '__main__':
     app.jinja_env.globals.update(render_badges=render_badges)
