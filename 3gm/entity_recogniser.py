@@ -1,3 +1,4 @@
+import greek_lemmas
 from multiprocessing import cpu_count
 
 # sklearn
@@ -29,7 +30,6 @@ except:
     nlp = el_core_web_sm.load(max_length=2000000)
 
 sys.path.insert(0, '../resources')
-import greek_lemmas
 
 
 db = database.Database()
@@ -37,7 +37,6 @@ db = database.Database()
 
 def contains_digit_or_num(i): return any(
     j.isdigit() or j in string.punctuation for j in i)
-
 
 
 def build_greek_stoplist(cnt_swords=300):
@@ -108,9 +107,11 @@ def build_gg_stoplist(data_samples, greek_stopwords, gg_most_common=500):
     print('Done Counting')
     return greek_stopwords, words
 
+
 def displacy_service(text):
     doc = nlp(text)
     return displacy.parse_deps(doc)
+
 
 def build_entity_recogniser(use_spacy=True):
     greek_stopwords = build_greek_stoplist()
@@ -123,7 +124,6 @@ def build_entity_recogniser(use_spacy=True):
     doc = nlp(data_samples)
 
     pickle.dump(nlp, open('ner.pickle', 'wb'))
-
 
 
 if __name__ == '__main__':
