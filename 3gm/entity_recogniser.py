@@ -108,15 +108,9 @@ def build_gg_stoplist(data_samples, greek_stopwords, gg_most_common=500):
     print('Done Counting')
     return greek_stopwords, words
 
-
-def display_components(graph_lda):
-    print('\nBreadth first Search for Connected Components for Latent Dirichlet Allocation')
-    cc_lda = connected_components(graph_lda)
-    print(cc_lda)
-    print('Statutes')
-    for c in cc_lda:
-        print([codifier.codifier.laws[indices[d]] for d in c])
-
+def displacy_service(text):
+    doc = nlp(text)
+    return displacy.parse_deps(doc)
 
 def build_entity_recogniser(use_spacy=True):
     greek_stopwords = build_greek_stoplist()
@@ -126,7 +120,7 @@ def build_entity_recogniser(use_spacy=True):
     # Initial Parameters
     n_samples = len(data_samples)  # Len of data samples
 
-    doc = nlp(data_samples
+    doc = nlp(data_samples)
 
     pickle.dump(nlp, open('ner.pickle', 'wb'))
 
