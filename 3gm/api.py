@@ -392,6 +392,22 @@ class StatuteTopicsResource(Resource):
             cache_store(cache_key,topics)
         return topics
 
+
+class StatuteNamedEntitiesResource(Resource):
+    def get(self,statute_id):
+        _id = get_title_from_id(statute_id)
+        cache_key = get_cache_key()
+        if cache_key_exists(cache_key):
+            app.logger.info('getting data from Redis')
+            return json.loads(redis_store.get(cache_key))
+
+        named_entities = list(codifier.db.named_entities.find({'statutes': _id}))
+        if len(named_entities)>0:
+            named_entities = named_entities[0]
+            cache_store(cache_key,named_entities)
+        return named_entities
+
+
 class StatuteRankingResource(Resource):
     def get(self,statute_id):
         statute = next(filter(lambda d: d['_id']==statute_id , legal_index),None)
