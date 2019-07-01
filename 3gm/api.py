@@ -231,6 +231,17 @@ class TopicsResource(Resource):
         cache_store(cache_key,res)
         return res
 
+class NamedEntitiesResource(Resource):
+    def get(self):
+        cache_key = get_cache_key()
+        if redis_store.exists(cache_key):
+            app.logger.info('getting data from Redis')
+            return json.loads(redis_store.get(cache_key))
+        res = codifier.named_entities
+        cache_store(cache_key,res)
+        return res
+
+
 class ArchiveStatsResource(Resource):
     def get(self):
         cache_key = get_cache_key()
