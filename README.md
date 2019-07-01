@@ -42,9 +42,13 @@ This repository will host the changes and code developped for 3gm as part of the
 
 The main goals for GSoC-2019 are populating the database with more types of amendments, widening the range of feature extraction and training a new Doc2Vec model and a new NER annotator specifically for our corpus.
 
+### Migrating Data
+
 As part of the first week of GSoC-2019 a data mirgation project. In the scope of this project we had to mine the website of the [Greek National Printing House](http://www.et.gr/idocs-nph/search/fekForm.html#results) and upload as many GGG issues to the respective [Internet Archive Collection](https://archive.org/details/greekgovernmentgazette). Until now, 87,874 issues have been uploaded, in addition to the ~45.000 files that the collection contained initially and this number will continue to surge. The main goal of this whole endeavour is making the greek legislation archive more accessible.
 
 We tried documenting our insights from this process. We would like to evolve this to an entry at the project wiki, titled [" A simple guide to mining the Greek Government Gazette"](https://docs.google.com/document/d/1pcCmRKKRClTmOD1HQav2GRlkM0mLZUgGmIv83HX4wv0/edit?usp=sharing). 
+
+### NER model Training
 
 After uploading a major part of the Greek Government Gazette issues, including all primary type issues, it was time to start building a dataset to train a new NER tagger based on the [Greek spaCy model](https://spacy.io/models/el). To do that it is necessary to use an annotation tool. A tool that is fully compatible with spaCy is [prodigy](https://prodi.gy/). We contacted them and they provided a research licence for the duration of the project.
 
@@ -55,6 +59,8 @@ All above documents will be incorporated on the project wiki shortely.
 As a result of this process we have created a dataset containing around 3000 sentences. A first version of this dataset can be found in the projects data folder. We have also deployed the prodigy annotator, in an effort  to showcase our progress. In case you want to support this year's project. All annotations gathered will be used for model training after quality control.You can find it [here](http://36ba097e.ngrok.io/).
 
 After obtaining a large enough data-set to train our models we trained the small and medium sized Greek spaCy models using the prodigy recipes for training. The models showed significant improvement after training. A version of the small NER model that we trained can be found in the data directory of this repo. Our goal now is to optimize the model and properly evaluate it. As a first step to this process we will use the train-curve recipe of prodigy to see how to the model performs when trained with different portions of our data. Finally we will develop a python script to train the spacy model, document all its metrics and tune hyperparameters. The is process is documented in this [report](https://docs.google.com/document/d/1uWAOgDVAA2zCa5SE8A2L6OHVBXTkm0sQMMyxdkErKnI/edit?usp=sharing)
+
+The final version of the NER model is located in the models folder alongside a model of word-embedding containing around 20000 word vectors. 
 
 The most efficient in terms of performance and complexity model will then be integrated to the 3gm app.    
 
