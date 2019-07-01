@@ -523,10 +523,14 @@ api.add_resource(StatuteArticlesResource, '/statute/<string:statute_id>/articles
 api.add_resource(StatuteArticleResource, '/statute/<string:statute_id>/articles/<string:article_id>')
 
 api.add_resource(StatuteTopicsResource, '/statute/<string:statute_id>/topics')
+api.add_resource(StatuteNamedEntitiesRecource,'/statute/<string:statute_id>/named_entities')
 api.add_resource(StatuteRankingResource, '/statute/<string:statute_id>/ranking')
 
 # Topics 
 api.add_resource(TopicsResource, '/topics')
+
+#Named Entities
+api.add_resource(NamedEntitiesResource, '/named_entities')
 
 # Internet archive
 api.add_resource(ArchiveStatsResource, '/ia/stats')
