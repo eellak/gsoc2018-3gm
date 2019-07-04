@@ -64,6 +64,14 @@ The final version of the NER model is located in the models folder alongside a m
 
 The most efficient in terms of performance and complexity model will then be integrated to the 3gm app.    
 
+### Broadening fact extaction
+
+During this year's GSOC we focused a lot on enhancing the NLP capabilities of the project.
+
+As part of this procedure it is vital to broaden fact extraction on the project. Using regular expressions we will work on the entities file aiming to make it possible for the app to identify useful information such as metrics, codes, ids, contact info e.t.c.
+
+For the time being we have created a script to test regular expressions for fact extractions. Unfortunately there is very little consistency when it come to writing information between issues and this results to difficulties in entities extraction. After perfecting the extraction queries we will integrate them to the entities module. 
+
 ## Google Summer of Code 2018
 
 The project met and exceeded its goals for Google Summer of Code 2018. [Link](https://summerofcode.withgoogle.com/projects/#4875998630248448)
