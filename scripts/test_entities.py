@@ -15,7 +15,7 @@ import string
 if __name__ == "__main__":
 
     # YOUR FILE HERE
-    with open('corpus_AAP.txt', 'r') as myfile:
+    with open('vector_corpus.txt', 'r') as myfile:
         data = myfile.read()
 
     # Very simple preprocessing for txt
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     # TVA tax
     TVA = re.findall('Φ.Π.Α. [0-9]{1,2}%', data)
-    print("TVA rates: ", TVA)
+    print("TVA rates: ", len(TVA))
     e_mails = re.findall(r'[\w\.-]+@[\w\.-]+', data)
 
     # E-MAILS
@@ -92,12 +92,23 @@ if __name__ == "__main__":
     #print("KAEK: ", kaek)
     print("KAEK: ", len(kaek))
 
+    # get AFM
+    afm = re.findall('ΑΦΜ [0-9]{9}|Α.Φ.Μ. [0-9]{9}|ΑΦΜ: [0-9]{9}', data)
+    print('AFM codes: ', len(afm))
+
+    # get HULL number of ship, mainly used in AAP issues uncomplete
+    hull = re.findall(
+        'HULL No [A-Z0-9 -]{1,17}|HULL No [A-Z]{1,2} [0-9]{1,17}', data)
+    print('HUll numbers: ', hull)
+
+    # PROTYPA ELOT, ISO klp
+
     # FIND METRICS -Distances
     # Scale
     scales = re.findall('1:[0-9]{1,10}', data)
     print("Scales: ", len(scales))
     # meters
-    meters = re.findall('\d+m', data)
+    meters = re.findall('\d+m|\d+ m', data)
     print("Meters : ", len(meters))
     kilometers = re.findall('\-?\d+\,\d+ km', data)
     print("KiloMeters : ", kilometers)
