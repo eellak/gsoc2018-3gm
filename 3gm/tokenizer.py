@@ -2,6 +2,7 @@ import copy
 import re
 import entities
 
+
 class Tokenizer:
 
     def __init__(self, exceptions):
@@ -81,7 +82,7 @@ class Tokenizer:
         for e in self.exceptions:
             q = q.replace(e, self.inv_hashmap[e])
 
-        splitting_regex =  '|'.join(map(re.escape, delimiter))
+        splitting_regex = '|'.join(map(re.escape, delimiter))
         q = re.split(splitting_regex, q)
 
         for i, x in enumerate(q):
@@ -96,15 +97,17 @@ class Tokenizer:
         params: q : String query
         params ncases : Number of cases
         params suffix : Suffix"""
-        cases = list(entities.Numerals.greek_num_generator(ncases, suffix=suffix))
+        cases = list(entities.Numerals.greek_num_generator(
+            ncases, suffix=suffix))
         for i in range(len(cases)):
             cases[i] = prefix + cases[i]
 
         return self.split(q, False, *cases)
 
-    def join_cases(self, l, suffix = ')', prefix=''):
+    def join_cases(self, l, suffix=')', prefix=''):
         ncases = len(l) + 1
-        cases = [''] + list(entities.Numerals.greek_num_generator(ncases, suffix=suffix))
+        cases = [
+            ''] + list(entities.Numerals.greek_num_generator(ncases, suffix=suffix))
         result = []
         for c, w in zip(cases, l):
             result.append(prefix + c + w)
@@ -115,6 +118,7 @@ class Tokenizer:
         :params q : String to be cleaned
         """
         return re.sub(self.subordinate_conjuctions_regex, ' ', q)
+
 
 # Common Tokenizer Exceptions in Legal Texts
 global TOKENIZER_EXCEPTIONS

@@ -21,6 +21,7 @@ logging.basicConfig(
 def rmdir(d):
     return os.system('rm -rf ' + d)
 
+
 def pdfocr2txt(data, outfile, resolution=300, tmp='/tmp/'):
     tool = pyocr.get_available_tools()[0]
     lang = []
@@ -92,7 +93,7 @@ def pdfocr2txt(data, outfile, resolution=300, tmp='/tmp/'):
     else:
         for txt in final_text:
             sys.stdout.write(txt)
-        sys.stdout.flush()    
+        sys.stdout.flush()
 
     logging.info('Cleaning {} directory'.format(dir_name))
     rmdir(dir_name)

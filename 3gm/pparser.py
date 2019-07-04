@@ -1132,7 +1132,8 @@ class LawParser:
         if is_removal:
             trees, exc = syntax.ActionTreeGenerator.detect_removals(s)
         else:
-            trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+            trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(
+                s)
         for t in trees:
             detected = 1
             try:
@@ -1169,7 +1170,8 @@ class LawParser:
 
             elif context in ['παράγραφος', 'παράγραφοι', 'paragraph']:
                 if not tree['paragraph']['_id'].isdigit():
-                    tree['article']['_id'] = self.get_next_paragraph(tree['article']['_id'])
+                    tree['article']['_id'] = self.get_next_paragraph(
+                        tree['article']['_id'])
                 return self.add_paragraph(
                     article=tree['article']['_id'],
                     paragraph=tree['paragraph']['_id'],
@@ -1347,7 +1349,6 @@ class LawParser:
         finally:
             return '. '.join(self.sentences[article][paragraph_id]).rstrip('.') + '.'
 
-
     def get_paragraphs(self, article):
         """Return Paragraphs via a generator
         :params article : The article number
@@ -1395,7 +1396,8 @@ class LawParser:
                 result = result + '### Άρθρο {} \n'.format(article)
                 if add_titles:
                     try:
-                        result = result + '#### {}\n'.format(self.titles[article])
+                        result = result + \
+                            '#### {}\n'.format(self.titles[article])
                     except:
                         pass
                 for i, paragraph in enumerate(self.get_paragraphs(article)):

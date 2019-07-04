@@ -1,12 +1,12 @@
+from entities import *
+import parser
+import codifier
+import tokenizer
+import helpers
+import syntax
+import os
 import sys
 sys.path.insert(0, '../3gm')
-import os
-import syntax
-import helpers
-import tokenizer
-import codifier
-import parser
-from entities import *
 
 if __name__ == '__main__':
     counter = 0
@@ -26,10 +26,12 @@ if __name__ == '__main__':
                     counter += 1
                     continue
                 non_extracts = ' '.join(non_extracts)
-                non_extracts = tokenizer.tokenizer.split(non_extracts, delimiter='. ')
+                non_extracts = tokenizer.tokenizer.split(
+                    non_extracts, delimiter='. ')
 
                 for non_extract in non_extracts:
-                    tmp = list(map(lambda s : s.strip(string.punctuation),  non_extract.split(' ')))
+                    tmp = list(map(lambda s: s.strip(
+                        string.punctuation),  non_extract.split(' ')))
 
                     for action in actions:
                         for i, w in enumerate(tmp):

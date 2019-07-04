@@ -54,11 +54,9 @@ def link_issues(input_dir, outfile):
                 iids[cnt] = identifier
                 cnt += 1
 
-
         for entity in LegalEntities.entities:
             neighbors = re.finditer(entity, lines)
             neighbors = [neighbor.group() for neighbor in neighbors]
-
 
             for u in neighbors:
                 if not u in ids:
@@ -80,20 +78,15 @@ def link_issues(input_dir, outfile):
 
     print('Average Vertex Degree: ', avg_degree)
 
-
-
     G = Graph()
 
     G.add_edges_from(get_edges(graph))
     for n in G:
         G.nodes[n]['name'] = n
 
-    
     d = json_graph.node_link_data(G)
 
-
     json.dump(d, open(outfile, 'w'), ensure_ascii=False)
-
 
 
 if __name__ == '__main__':

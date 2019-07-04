@@ -10,6 +10,7 @@ output_dir = sys.argv[1]
 os.chdir(output_dir)
 filelist = glob.glob('*.txt')
 
+
 def fix_file(filename):
     print(filename)
     with open(filename, 'r') as f:

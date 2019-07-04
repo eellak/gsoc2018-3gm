@@ -19,8 +19,3 @@ for f in files:
     if not os.path.isdir(x):
         os.mkdir(x)
     os.rename(f, '{}/{}'.format(x, f))
-
- 
-
-
-
