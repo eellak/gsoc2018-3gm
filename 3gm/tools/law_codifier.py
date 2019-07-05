@@ -4,11 +4,11 @@
 # Example Usage: python3 law_codifier.py ../../examples/20180100102.txt initial-out.txt  <../../examples/initial-version.txt > final-version.txt
 # Diff versions: diff initial-out.txt final-version.txt
 
+import syntax
+import logging
+import pparser as parser
 import sys
 sys.path.insert(0, '../')
-import pparser as parser
-import logging
-import syntax
 
 # Disable logging due to stdout usage
 logger = logging.getLogger()
