@@ -206,6 +206,16 @@ if __name__ == "__main__":
         "(Αριθμ. βεβ. εγγραφής στο Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: [0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
     print("Insertion to registry: ", len(ins_to_registry))
 
-    # Finfing Courts
+   # Directives EU
+    directives = re.findall(
+        'Οδηγία [0-9]+/[0-9]+/[Α-Ω]{2,4}|Οδηγίας [0-9]+/[0-9]+/[Α-Ω]{2,4}', data)
+    print("EU Directives: ", len(directives))
+
+    # ADA -> Αριθμός Διαδικτυακής Ανάρτησης (Internet Publcation Numbers)
+    adas = re.findall(
+        'ΑΔΑ: [Α-Ω0-9]{4,10}-[Α-Ω0-9]{3}|ΑΔΑ [Α-Ω0-9]{4,10}-[Α-Ω0-9]{3}', data)
+    print("ADAs found: ", len(adas))
+
+    # Finding Courts
     # print(re.findall(r"(?=("+'|'.join(high_courts)+r"))",data))
     # print(re.findall(r"(?=("+'|'.join(courts)+r"[Α-Ωα-ω]+"+r"))",data))
