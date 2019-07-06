@@ -175,12 +175,12 @@ if __name__ == "__main__":
 
     # Act of deletion from the Public HR registry
     del_from_registry = re.findall(
-        "(Αριθ. βεβ. διαγραφής από το Μητρώο Ανθρώπινου Δυ-\nναμικού Ελληνικού Δημοσίου: [0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
+        "(Αριθ. βεβ. διαγραφής από το Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: [0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
     print("Deletion from registry: ", len(del_from_registry))
 
     # Act of inscription to the Public HR registry
     ins_to_registry = re.findall(
-        "(Αριθμ. βεβ. εγγραφής στο Μητρώο Ανθρώπινου Δυ-\nναμικού Ελληνικού Δημοσίου: [0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
+        "(Αριθμ. βεβ. εγγραφής στο Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: [0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
     print("Insertion to registry: ", len(ins_to_registry))
 
     # Finfing Courts
