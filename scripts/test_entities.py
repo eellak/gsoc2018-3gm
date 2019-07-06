@@ -1,10 +1,10 @@
-##############################################
-# This is a simple file used for development
-# regarding feature extraction. Our goal is to enhance the functionalites
-# of the entities.py using regular expressions. Once we find the proper
-# one and we are happy with the results we will integrate changes
-# the entites file
-###############################################
+"""
+This is a simple file used for development
+regarding feature extraction. Our goal is to enhance the functionalites
+of the entities.py using regular expressions. Once we find the proper
+one and we are happy with the results we will integrate changes
+the entites file
+"""
 
 
 import re
@@ -24,7 +24,6 @@ durations = ['επί', 'μέσα στον μήνα', 'μέσα σε', 'εντό�
 days_of_week = ['Δευτέρα', 'Δευτέρας', 'Τρίτη', 'Τρίτης', 'Τετάρτη', 'Τετάρτης',
                 'Πέμπτη', 'Πέμπτης', 'Παρασκευή', 'Παρασκευής', 'Σάββατο', 'Σαββάτου', 'Κυριακή',
                 'Κυριακής']
-
 # this is a list that will be used to mine the names of courts
 # Since these entities can be expressser to more than on grammatical
 # case we will have to integrate sufixes. An outline of the courts
