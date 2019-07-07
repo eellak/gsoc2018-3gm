@@ -16,7 +16,7 @@ conditions = ['Εκτός αν', 'αν', 'προϋπόθεση', 'κατά πε�
               'ανεξαρτήτως εάν', 'είναι δυνατόν να', 'τις προϋποθέσεις', 'μόνο εφόσον', 'μετά από', 'ενέχει']
 
 constraints = ['εν όλω', 'εν μέρει', 'αρκεί', 'εκτός από',
-               'πρέπει να', 'πλην', 'τουλάχιστον', 'μέχρι', 'το πολύ', 'εκτός']
+               'πρέπει να', 'πλην', 'τουλάχιστον', 'μέχρι', 'το πολύ', 'εκτός', 'λιγότερο από']
 
 durations = ['επί', 'μέσα στον μήνα', 'μέσα σε', 'εντός ',
              'μέχρι της ίδιας αυτής ημερομηνίας', 'προθεσμία',  'το αργότερο εντός']
@@ -24,6 +24,7 @@ durations = ['επί', 'μέσα στον μήνα', 'μέσα σε', 'εντό�
 days_of_week = ['Δευτέρα', 'Δευτέρας', 'Τρίτη', 'Τρίτης', 'Τετάρτη', 'Τετάρτης',
                 'Πέμπτη', 'Πέμπτης', 'Παρασκευή', 'Παρασκευής', 'Σάββατο', 'Σαββάτου', 'Κυριακή',
                 'Κυριακής']
+
 
 # this is a list that will be used to mine the names of courts
 # Since these entities can be expressser to more than on grammatical
@@ -53,7 +54,7 @@ def flatten(items):
 if __name__ == "__main__":
 
     # YOUR FILE HERE
-    with open('corpus_d.txt', 'r') as myfile:
+    with open('corpus_YODD.txt', 'r') as myfile:
         data = myfile.read()
 
     # Very simple preprocessing for txt
@@ -140,11 +141,6 @@ if __name__ == "__main__":
         'HULL No [A-Z0-9 -]{1,17}|HULL No [A-Z]{1,2} [0-9]{1,17}', data)
     print('HUll numbers: ', hull)
 
-    # OPS code https://www.mou.gr/elibrary/codes.xls
-    ops = re.findall('κωδικό ΟΠΣ [0-9]{5,9}', data)
-    print("OPS codes: ", ops)
-
-    # PROTYPA ELOT, ISO klp
     # Ship flags (doesnt work)
     flags = re.findall('[Α-Ω][\u0370-\u03FF]+ σημαία', data)
     print('Flags: ', len(flags))
@@ -196,6 +192,10 @@ if __name__ == "__main__":
     natura_ter = re.findall("GR[0-9]{7}", data)
     print("Natura 2000 regions: ", len(natura_ter))
 
+    # Wildlife sanctuaries
+    wildlife_sanct = re.findall('Καταφύγιο Άγριας Ζωής [Α-ΩA-Z0-9]+', data)
+    print("Wildlife sanctuaries: ", wildlife_sanct)
+
     # Act of deletion from the Public HR registry
     del_from_registry = re.findall(
         "(Αριθ. βεβ. διαγραφής από το Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: [0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
@@ -206,7 +206,11 @@ if __name__ == "__main__":
         "(Αριθμ. βεβ. εγγραφής στο Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: [0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
     print("Insertion to registry: ", len(ins_to_registry))
 
-   # Directives EU
+    # Finfing Courts
+    # print(re.findall(r"(?=("+'|'.join(high_courts)+r"))",data))
+    # print(re.findall(r"(?=("+'|'.join(courts)+r"[Α-Ωα-ω]+"+r"))",data))
+
+    # Directives EU
     directives = re.findall(
         'Οδηγία [0-9]+/[0-9]+/[Α-Ω]{2,4}|Οδηγίας [0-9]+/[0-9]+/[Α-Ω]{2,4}', data)
     print("EU Directives: ", len(directives))
@@ -216,6 +220,17 @@ if __name__ == "__main__":
         'ΑΔΑ: [Α-Ω0-9]{4,10}-[Α-Ω0-9]{3}|ΑΔΑ [Α-Ω0-9]{4,10}-[Α-Ω0-9]{3}', data)
     print("ADAs found: ", len(adas))
 
-    # Finding Courts
-    # print(re.findall(r"(?=("+'|'.join(high_courts)+r"))",data))
-    # print(re.findall(r"(?=("+'|'.join(courts)+r"[Α-Ωα-ω]+"+r"))",data))
+    # OPS code -> code to th Ολοκληρωμένο Πληροφοριακό Σύστημα (ΟΠΣ)
+    ops = re.findall('ΟΠΣ [0-9]+|ΟΠΣ: [0-9]+', data)
+    print("OPS codes found: ", ops)
+
+    # Protocols ISO-ELOT
+    protocols = re.findall(
+        'πρότυπο [Α-ΩA-Z]{2,4} [Α-ΩA-Z]{2,4} [0-9:-]+|πρότυπο [Α-ΩA-Z]{2,4} [0-9:-]+', data)
+    print("Protocols: ", protocols)
+
+    # Academic year:
+    ac_year = re.findall('ακαδημαϊκό έτος [0-9]{4}-[0-9]{4}', data)
+    print("Academic year: ", ac_year)
+
+    #
