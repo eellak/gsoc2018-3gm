@@ -74,14 +74,14 @@ if __name__ == "__main__":
     cpv = re.findall('[0-9]{8}-[0-9]', data)
     print("CPV: ", len(cpv))
 
-    # POEPLE
+    # PEOPLE
 
     military_personel = re.findall('ΣΑ [0-9]{3}/[0-9]{3}/[0-9]{2}', data)
     print("Military personnel: ", military_personel)
     #id_numbers = re.findall(
     #    'Α.Δ.Τ. [Α-Ωα-ω]{0,2} [0-9]{6}|Α.Δ.Τ.: [Α-Ωα-ω]{0,2}-[0-9]{6}|Α.Δ.Τ. [Α-Ωα-ω]{0,2}[0-9]{6}|ΑΔΤ Α[Α-Ωα-ω]{0,2}[0-9]{6}', data)
-    id_numbers = re.findall('(Α.Δ.Τ.|Α.Δ.Τ.:|ΑΔΤ) ([Α-Ωα-ω]{0,2}[0-9]{6}|[Α-Ωα-ω]{0,2}-[0-9]{6}|[Α-Ωα-ω]{0,2} [0-9]{6})',data)
-    print("ID numbers: ",  len(id_numbers))
+    id_numbers = re.findall('Α.?Δ.?Τ.?:? ([Α-Ωα-ω]{0,2}[0-9]{6}|[Α-Ωα-ω]{0,2}-[0-9]{6}|[Α-Ωα-ω]{0,2} [0-9]{6})',data)
+    print("ID numbers: ", len(id_numbers))
 
     # IBAN accounts
     ibans = re.findall(
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     print("IBAN numbers: ", len(ibans))
 
     # TVA tax
-    TVA = re.findall('(Φ.Π.Α.|ΦΠΑ) [0-9]{1,2}%', data)
+    TVA = re.findall('Φ.?Π.?Α.? ([0-9]{1,2}%)', data)
     print("TVA rates: ", len(TVA))
     e_mails = re.findall(r'[\w\.-]+@[\w\.-]+', data)
 
@@ -97,16 +97,16 @@ if __name__ == "__main__":
     print("Emails :", len(e_mails))
     #phone_numbers = re.findall(
     #    'τηλ. .+[0-9]|τηλ: .+[0-9]|tel: .+[0-9]|τηλ.: .+[0-9]|Τηλέφωνο: .+[0-9]|Τηλ. .+[0-9]', data)
-    phone_numbers = re.findall('(τηλ.|τηλ:|τηλ.:|Τηλ.|Τηλέφωνο:) .+[0-9]',data)
-    # Phone numbers
-    print("Phone numbers: ", len(phone_numbers))
+    tel = re.findall('[Ττ]ηλ.?:? ([+03]{0,4} 2[1-8][0-9]{1,2} [0-9]{5}|2[1-8][0-9]{1,2}[ -]?[0-9]{5})',data)
+
+    print("Phone numbers: ", len(tel))
     post_codes = re.findall('ΤΚ: [0-9]{3} [0-9]{2}', data)
     print("Post codes: ", len(post_codes))
 
     # exact times can be found in issues like YODD documenting mainly
     # when an assebly or meeting took place
     exact_times = re.findall(
-        '[0-9]{2}:[0-9]{2} (π.μ.|μ.μ.)|[0-9]{2}:[0-9]{2}', data)
+        '[0-9]{2}:[0-9]{2} π.μ.|[0-9]{2}:[0-9]{2} μ.μ.|[0-9]{2}:[0-9]{2}', data)
     print("Exact time: ", len(exact_times))
 
     # money YODD many variations
@@ -133,7 +133,7 @@ if __name__ == "__main__":
     print("KAEK: ", len(kaek))
 
     # get AFM
-    afm = re.findall('(ΑΦΜ|Α.Φ.Μ.|ΑΦΜ:) [0-9]{9}', data)
+    afm = re.findall('Α.?Φ.?Μ.?:? ([0-9]{9})', data)
     print('AFM codes: ', len(afm))
 
     # get HULL number of ship, mainly used in AAP issues uncomplete
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     print("Volumes: ", len(volumes))
 
     # Ship tonnage in register tons
-    tonnage = re.findall('[-+]?[.]?[\d]+[-+]?[.]?[\d]+(?:,\d\d)* κόροι|[-+]?[.]?[\d]+[-+]?[.]?[\d]+(?:,\d\d)* κόρωv', data)
+    tonnage = re.findall('[-+]?[.]?[\d]+[-+]?[.]?[\d]+(?:,\d\d)* κόρ[οιωv]{2}', data)
     print("Tonnage: ", tonnage)
 
     # Power
@@ -209,26 +209,34 @@ if __name__ == "__main__":
     
 
     # Directives EU 
-    directives = re.findall('(Οδηγία|Οδηγίας) [0-9]+/[0-9]+/[Α-Ω]{2,4}',data)
+    directives = re.findall('Οδηγίας? ([0-9]+/[0-9]+/[Α-Ω]{2,4})',data)
     print("EU Directives: ", len(directives))
 
+    # Regulations EU
+    regulations = re.findall('Κανονισμ[όούς]{1,2} ([0-9]+/[0-9]{4})', data)
+    print("EU regulations: ", len(regulations))
+
+    # Decisions EU
+    decisions = re.findall('Απόφαση ([1-9][0-9]{3}/[0-9]{1,5}/[Α-Ω]{2,3})',data)
+    print("EU decisions:", len(decisions))
+
     # ADA -> Αριθμός Διαδικτυακής Ανάρτησης (Internet Publcation Numbers)
-    adas = re.findall('(ΑΔΑ:|ΑΔΑ) [Α-Ω0-9]{4,10}-[Α-Ω0-9]{3}',data)
+    adas = re.findall('ΑΔΑ:? ([Α-Ω0-9]{4,10}-[Α-Ω0-9]{3})',data)
     print("ADAs found: ", len(adas))
 
     #OPS code -> code to th Ολοκληρωμένο Πληροφοριακό Σύστημα (ΟΠΣ) 
-    ops = re.findall('ΟΠΣ [0-9]+|ΟΠΣ: [0-9]+',data)
-    print("OPS codes found: ", ops)
+    ops = re.findall('ΟΠΣ:? ([0-9]+)',data)
+    print("OPS codes found: ", len(ops))
 
     #Protocols ISO-ELOT
     protocols = re.findall('πρότυπο ([Α-ΩA-Z]{2,4} [Α-ΩA-Z]{2,4} [0-9:-]+|[Α-ΩA-Z]{2,4} [0-9:-]+)',data)
     print("Protocols: ", protocols)  
 
     #Academic year:
-    ac_year = re.findall('ακαδημαϊκό έτος [0-9]{4}-[0-9]{4}',data)
+    ac_year = re.findall('ακαδημαϊκό έτος ([1-9][0-9]{3}-[1-9][0-9]{3})',data)
     print("Academic year: " , ac_year)
    
-    #
+   
     
 
 
