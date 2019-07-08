@@ -97,16 +97,16 @@ if __name__ == "__main__":
     print("Emails :", len(e_mails))
     #phone_numbers = re.findall(
     #    'τηλ. .+[0-9]|τηλ: .+[0-9]|tel: .+[0-9]|τηλ.: .+[0-9]|Τηλέφωνο: .+[0-9]|Τηλ. .+[0-9]', data)
-    tel = re.findall('[Ττ]ηλ.?:? ([+03]{0,4} 2[1-8][0-9]{1,2} [0-9]{5}|2[1-8][0-9]{1,2}[ -]?[0-9]{5})',data)
+    tel = re.findall('[Ττ]ηλ.?:? ([+03]{0,4} 2[1-8][0-9]{1,2} [0-9]{6,7}|2[1-8][0-9]{1,2}[ -]?[0-9]{6,7})',data)
 
-    print("Phone numbers: ", len(tel))
-    post_codes = re.findall('ΤΚ: [0-9]{3} [0-9]{2}', data)
+    print("Phone numbers: ", tel)
+    post_codes = re.findall('ΤΚ:? [0-9]{3} [0-9]{2}', data)
     print("Post codes: ", len(post_codes))
 
     # exact times can be found in issues like YODD documenting mainly
     # when an assebly or meeting took place
     exact_times = re.findall(
-        '[0-9]{2}:[0-9]{2} π.μ.|[0-9]{2}:[0-9]{2} μ.μ.|[0-9]{2}:[0-9]{2}', data)
+        '[0-9]{2}:[0-9]{2} [πμ].μ.|[0-9]{2}:[0-9]{2}', data)
     print("Exact time: ", len(exact_times))
 
     # money YODD many variations
@@ -124,11 +124,11 @@ if __name__ == "__main__":
     print("Public works: ", len(publc_works))
 
     # find NUTS european regions https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:02003R1059-20180118&qid=1519136585935
-    NUTS_reg = re.findall('NUTS: [A-Z]{2}[0-9]{1,3}', data)
+    NUTS_reg = re.findall('NUTS:? ([A-Z]{2}[0-9]{1,3})', data)
     print("NUTS_reg: ", len(NUTS_reg))
 
     # find KAEK  code basic heurestic  http://www.ktimatologio.gr/aboutus/Documents/Pages/33/LqYyvusGBh2JgNdw/diad_entaksis_praxis_efarmogis_1.pdf
-    kaek = re.findall('ΚΑΕΚ(- )[0-9/]{12}', data)
+    kaek = re.findall('ΚΑΕΚ-? [0-9/]{12}', data)
     #print("KAEK: ", kaek)
     print("KAEK: ", len(kaek))
 
