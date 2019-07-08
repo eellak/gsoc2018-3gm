@@ -79,7 +79,8 @@ if __name__ == "__main__":
     military_personel = re.findall('ΣΑ [0-9]{3}/[0-9]{3}/[0-9]{2}', data)
     print("Military personnel: ", military_personel)
 
-    id_numbers = re.findall('Α.?Δ.?Τ.?:? ([Α-Ωα-ω]{0,2}[0-9]{6}|[Α-Ωα-ω]{0,2}-[0-9]{6}|[Α-Ωα-ω]{0,2} [0-9]{6})',data)
+
+    id_numbers = re.findall('Α.?Δ.?Τ.?:? ([Α-Ωα-ω]{0,2}[- ]?[0-9]{6})',data)
     print("ID numbers: ", len(id_numbers))
 
     # IBAN accounts
