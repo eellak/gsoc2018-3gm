@@ -219,7 +219,6 @@ number_regex = r'[-+]?[.]?[\d]+[-+]?[.]?[\d]+(?:,\d\d)*'
 # Phone numbers
 phone_numbers= r'[+03]{0,4} 2[1-8][0-9][ -]?[0-9]{7}|[+03]{0,4} 2[1-8][0-9]{3}[ -]?[0-9]{6}'
 
-
 class Units:
 
   meters = r'(m|μ)'
@@ -233,6 +232,17 @@ class Units:
   power = r'(KW|kw|kW)'
 
   kgr = r'(Kg|kg|kgr)'
+
+class Currency:
+
+  eur = r'([Εε]υρώ|€|EUR)
+
+  dol = r'(USD|$|[Δδ]ολ[άα]ρ[ιί][αών]{1,2})
+
+  pnd = r'(GPK|£|[Λλ]ίρ[εςών]{2})
+
+  drm = r'([Δδ]ραχμ[ώνές]{2}|δρχ.)
+
 
 
 class LegalEntities:
