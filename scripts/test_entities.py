@@ -78,29 +78,29 @@ if __name__ == "__main__":
 
     military_personel = re.findall('ΣΑ [0-9]{3}/[0-9]{3}/[0-9]{2}', data)
     print("Military personnel: ", military_personel)
-    #id_numbers = re.findall(
-    #    'Α.Δ.Τ. [Α-Ωα-ω]{0,2} [0-9]{6}|Α.Δ.Τ.: [Α-Ωα-ω]{0,2}-[0-9]{6}|Α.Δ.Τ. [Α-Ωα-ω]{0,2}[0-9]{6}|ΑΔΤ Α[Α-Ωα-ω]{0,2}[0-9]{6}', data)
+
     id_numbers = re.findall('Α.?Δ.?Τ.?:? ([Α-Ωα-ω]{0,2}[0-9]{6}|[Α-Ωα-ω]{0,2}-[0-9]{6}|[Α-Ωα-ω]{0,2} [0-9]{6})',data)
     print("ID numbers: ", len(id_numbers))
 
     # IBAN accounts
-    ibans = re.findall(
-        '^[A-Z]{2}(?:[ ]?[0-9]){18,20}$|[A-Z]{2} [0-9]{25}|[A-Z]{2}[0-9]{2}-[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}', data)
-    print("IBAN numbers: ", len(ibans))
+    ibans = re.findall('[A-Z]{2}[ ]?[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{4}[- ]?[0-9]{4}[- ]?[0-9]{4}[- ]?[0-9]{4}[- ]?[0-9]{3}',data)
+    print("IBAN numbers: ", ibans)
 
     # TVA tax
     TVA = re.findall('Φ.?Π.?Α.? ([0-9]{1,2}%)', data)
     print("TVA rates: ", len(TVA))
-    e_mails = re.findall(r'[\w\.-]+@[\w\.-]+', data)
+
 
     # E-MAILS
+    e_mails = re.findall(r'[\w\.-]+@[\w\.-]+', data)
     print("Emails :", len(e_mails))
+
     #phone_numbers = re.findall(
     #    'τηλ. .+[0-9]|τηλ: .+[0-9]|tel: .+[0-9]|τηλ.: .+[0-9]|Τηλέφωνο: .+[0-9]|Τηλ. .+[0-9]', data)
     tel = re.findall('[Ττ]ηλ.?:? ([+03]{0,4} 2[1-8][0-9]{1,2} [0-9]{6,7}|2[1-8][0-9]{1,2}[ -]?[0-9]{6,7})',data)
 
-    print("Phone numbers: ", tel)
-    post_codes = re.findall('ΤΚ:? [0-9]{3} [0-9]{2}', data)
+    print("Phone numbers: ", len(tel))
+    post_codes = re.findall('ΤΚ: [0-9]{3} [0-9]{2}', data)
     print("Post codes: ", len(post_codes))
 
     # exact times can be found in issues like YODD documenting mainly
@@ -195,12 +195,12 @@ if __name__ == "__main__":
 
     # Act of deletion from the Public HR registry
     del_from_registry = re.findall(
-        "(Αριθ. βεβ. διαγραφής από το Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: [0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
+        "Αριθ. βεβ. διαγραφής από το Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: ([0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
     print("Deletion from registry: ", len(del_from_registry))
 
     # Act of inscription to the Public HR registry
     ins_to_registry = re.findall(
-        "(Αριθμ. βεβ. εγγραφής στο Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: [0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
+        "Αριθμ. βεβ. εγγραφής στο Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: ([0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})", data)
     print("Insertion to registry: ", len(ins_to_registry))
 
     # Finfing Courts
