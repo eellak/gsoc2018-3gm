@@ -141,7 +141,25 @@ urls = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-f
 cpc = r'CPC .+[0-9]'
 cpv = r'[0-9]{8}-[0-9]'
 military_personel_id = r'ΣΑ [0-9]{3}/[0-9]{3}/[0-9]{2}'
+scales = r'1:[0-9]{1,10}'
+natura_regions = r'GR[0-9]{7}'
+directives_eu = r'Οδηγίας? ([0-9]+/[0-9]+/[Α-Ω]{2,4})'
+ac_year = r'ακαδημαϊκό έτος ([1-9][0-9]{3}-[1-9][0-9]{3})'
+zip_codes = r'ΤΚ: [0-9]{3} [0-9]{2}'
 
+class Units:
+
+  meters = r'(m|μ)'
+
+  kilometers = r'(km|χλμ)'
+
+  liters = r'(λίτρα|lt|lt|ml)'
+
+  surface = r'(μ2|τετραγωνικών μέτρων|τμ|τ.μ.|στρέμματα|στρ|στρ.|τετρ. μέτρων)
+  
+  power = r'(KW|kw|kW)'
+
+  kgr = r'(Kg|kg|kgr)'
 
 
 class LegalEntities:
