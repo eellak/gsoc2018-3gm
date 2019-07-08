@@ -214,19 +214,19 @@ if __name__ == "__main__":
     print("EU Directives: ", len(directives))
 
     # Regulations EU
-    regulations = re.findall('Κανονισμ[όούς]{1,2} ([0-9]+/[0-9]{4})', data)
-    print("EU regulations: ", len(regulations))
+    regulations = re.findall(r'[Κκ]ανονισμ[όούς]{1,2}[Α-Ω )(]*[ αριθ.]* ([0-9]{1,5}/[0-9]{4})', data)
+    print("EU regulations: ", regulations)
 
     # Decisions EU
-    decisions = re.findall('Απόφαση ([1-9][0-9]{3}/[0-9]{1,5}/[Α-Ω]{2,3})',data)
+    decisions = re.findall('Απόφασης?[Α-Ω )(]*[ αριθ.]* ([1-9][0-9]{3}/[0-9]{1,5}/[Α-Ω]{2,3})',data)
     print("EU decisions:", len(decisions))
 
     # ADA -> Αριθμός Διαδικτυακής Ανάρτησης (Internet Publcation Numbers)
-    adas = re.findall('ΑΔΑ:? ([Α-Ω0-9]{4,10}-[Α-Ω0-9]{3})',data)
+    adas = re.findall('Α.?Δ.?Α.?:? ([Α-Ω0-9]{4,10}-[Α-Ω0-9]{3})',data)
     print("ADAs found: ", len(adas))
 
     #OPS code -> code to th Ολοκληρωμένο Πληροφοριακό Σύστημα (ΟΠΣ) 
-    ops = re.findall('ΟΠΣ:? ([0-9]+)',data)
+    ops = re.findall('Ο.?Π.?Σ.?:? ([0-9]+)',data)
     print("OPS codes found: ", len(ops))
 
     #Protocols ISO-ELOT
