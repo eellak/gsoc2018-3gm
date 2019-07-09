@@ -219,6 +219,12 @@ number_regex = r'[-+]?[.]?[\d]+[-+]?[.]?[\d]+(?:,\d\d)*'
 # Phone numbers
 phone_numbers= r'[+03]{0,4} 2[1-8][0-9][ -]?[0-9]{7}|[+03]{0,4} 2[1-8][0-9]{3}[ -]?[0-9]{6}'
 
+# HULL number - Ship ID
+hull = r'HULL No ([A-Z0-9]{1,17}|[A-Z]{1,2}[- ]?[A-Z0-9]{1,17})'
+
+# Ship flag 
+flag = r'\W σημαία|σημαία \W'
+
 class Units:
 
   meters = r'(m|μ)'
