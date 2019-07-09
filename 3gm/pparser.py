@@ -105,6 +105,34 @@ class IssueParser:
 
         self.dates = []
         self.find_dates()
+
+        #various entities
+        self.urls = []
+        self.cpc = []
+        self.cpv = []
+        self.military_personel = []
+        self.id_numbers = []
+        self.ibans  = []
+        self.TVA = []
+        self.e_mails = []
+        self.phone_numbers = []
+        self.scales = []
+        self.natura_regions = []
+        self.wildlife_sanctuaries = []
+        self.directives_eu = []
+        self.regulations_eu = []
+        self.decisions_eu = []
+        self.ac_year = []
+        self.zip_codes = []
+        self.del_from_registry = []
+        self.ins_to_registry = []
+        self.adas = []
+        self.ops = []
+        self.protocols = []
+        self.afm = []
+        self.nuts_reg = []
+        self.exact_times = []
+
         self.articles = {}
         self.articles_as_paragraphs = {}
         if not stdin:
