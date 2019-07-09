@@ -105,34 +105,6 @@ class IssueParser:
 
         self.dates = []
         self.find_dates()
-
-        #various entities
-        self.urls = []
-        self.cpc = []
-        self.cpv = []
-        self.military_personel = []
-        self.id_numbers = []
-        self.ibans  = []
-        self.TVA = []
-        self.e_mails = []
-        self.phone_numbers = []
-        self.scales = []
-        self.natura_regions = []
-        self.wildlife_sanctuaries = []
-        self.directives_eu = []
-        self.regulations_eu = []
-        self.decisions_eu = []
-        self.ac_year = []
-        self.zip_codes = []
-        self.del_from_registry = []
-        self.ins_to_registry = []
-        self.adas = []
-        self.ops = []
-        self.protocols = []
-        self.afm = []
-        self.nuts_reg = []
-        self.exact_times = []
-
         self.articles = {}
         self.articles_as_paragraphs = {}
         if not stdin:
@@ -188,6 +160,72 @@ class IssueParser:
                                           for statute in self.statutes[article]]
 
         return self.statutes
+
+     def detect_entities(self):
+        """Detect all statutes within the issue"""
+
+        self.entities = {}
+        self.entities["Urls"] = []
+        self.entities["CPC Codes"] = []
+        self.entities["CPV Codes"] = []
+        self.entities["IBANs"] = []
+        self.entities["E-mails"] = []
+        self.entities["Id Numbers"] = []
+        self.entities["Urls"] = []
+        self.entities["Natura 2000 Regions"] = []
+        self.entities["Scales"] = []
+        self.entities["EU Directives"] = []
+        self.entities["EU Regulations"] = []
+        self.entities["EU Decisions"] = []
+        self.entities["Phone Numbers"] = []
+
+        for article in self.articles.keys():
+            for extract in self.get_non_extracts(article):
+
+                urls = list(re.finditer(
+                    entities.urls, extract))
+                cpc = list(re.finditer(
+                    entities.cpc, extract))
+                cpv = list(re.finditer(
+                    entities.cpv, extract))
+                ibans = list(re.finditer(
+                    entities.ibans, extract))
+                e_mails = list(re.finditer(
+                    entities.e_mails, extract))
+                id_numbers = list(re.finditer(
+                    entities.id_numbers, extract))
+                military_personel = list(re.finditer(
+                    entities.military_personel_id, extract))
+                natura_regions = list(re.finditer(
+                    entities.natura_regions, extract))
+                scales = list(re.finditer(
+                    entities.scales, extract))
+                directives_eu = list(re.finditer(
+                    entities.directives_eu, extract))
+                regulations_eu = list(re.finditer(
+                    entities.regulations_eu, extract))
+                decisions_eu = list(re.finditer(
+                    entities.decisions_eu, extract))
+                phone_numbers = list(re.finditer(
+                    entities.phone_numbers, extract))
+
+
+                self.entities["Urls"].extend(urls)
+                self.entities["CPC Codes"].extend(cpc)
+                self.entities["CPV Codes"].extend(cpv)
+                self.entities["IBANS"].extend(ibans)
+                self.entities["E-mails"].extend(emails)
+                self.entities["Id Numbers"].extend(id_numbers)
+                self.entities["Millitary Personel"].extend(military_personel)
+                self.entities["Natura 2000 Regions"].extend(natura_regions)
+                self.entities["Scales"].extend(scales)
+                self.entities["EU Directives"].extend(directives_eu)
+                self.entities["EU Regulations"].extend(regulations_eu)
+                self.entities["EU Decisions"].extend(decisions_eu)
+                self.entities["Phone Numbers"].extend(phone_numbers)
+
+        return self.statutes
+
 
     def __contains__(self, key):
         for article in self.articles.keys():
