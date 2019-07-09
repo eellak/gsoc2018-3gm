@@ -70,7 +70,9 @@ During this year's GSOC we focused a lot on enhancing the NLP capabilities of th
 
 As part of this procedure it is vital to broaden fact extraction on the project. Using regular expressions we will work on the entities file aiming to make it possible for the app to identify useful information such as metrics, codes, ids, contact info e.t.c.
 
-For the time being we have created a script to test regular expressions for fact extractions. Unfortunately there is very little consistency when it come to writing information between issues and this results to difficulties in entities extraction. After perfecting the extraction queries we will integrate them to the entities module. 
+We have created a script to test regular expressions for fact extractions. Unfortunately there is very little consistency when it come to writing information between issues and this results to difficulties in entities extraction.
+
+After optimizing the extraction queries we integrated them to the entities module that can be found in the 3gm directory. We now have to use the regular expressions to extract entities in the pparser module, the module that is responsible for extracting amendments, laws and ratifications. 
 
 ## Google Summer of Code 2018
 
