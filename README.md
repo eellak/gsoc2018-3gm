@@ -74,6 +74,10 @@ We have created a script to test regular expressions for fact extractions. Unfor
 
 After optimizing the extraction queries we integrated them to the entities module that can be found in the 3gm directory. We now have to use the regular expressions to extract entities in the pparser module, the module that is responsible for extracting amendments, laws and ratifications. 
 
+### Documentation
+
+As part of our effort to document the changes to the project during GSOC-2019 we thought that it would be vital to update and interate changes to the project's wiki. You can follow up on the process in this [repo](https://github.com/spapadiamantis/3gm-wiki)
+
 ## Google Summer of Code 2018
 
 The project met and exceeded its goals for Google Summer of Code 2018. [Link](https://summerofcode.withgoogle.com/projects/#4875998630248448)
