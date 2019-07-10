@@ -20,7 +20,26 @@ import tarfile
 import urllib.request
 import text_helpers
 from tensorflow.python.framework import ops
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, LSTM, Embedding, Input, RepeatVector
+from keras.optimizers import SGD
 
+
+
+
+
+def baseline_model():
+    model = Sequential()
+    model.add(Dense(256, input_dim=Text_INPUT_DIM+Gene_INPUT_DIM*2, init='normal', activation='relu'))
+    model.add(Dropout(0.3))
+    model.add(Dense(256, init='normal', activation='relu'))
+    model.add(Dropout(0.5))
+    model.add(Dense(80, init='normal', activation='relu'))
+    model.add(Dense(9, init='normal', activation="softmax"))
+    
+    sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)  
+    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+    return model
 
 # document cleanup
 
