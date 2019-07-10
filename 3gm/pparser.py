@@ -114,6 +114,7 @@ class IssueParser:
         self.sentences = {}
         self.find_articles()
         self.detect_statutes()
+        self.detect_entities()
 
     def __str__(self):
         return self.name
@@ -161,7 +162,7 @@ class IssueParser:
 
         return self.statutes
 
-     def detect_entities(self):
+    def detect_entities(self):
         """Detect all statutes within the issue"""
 
         self.entities = {}
