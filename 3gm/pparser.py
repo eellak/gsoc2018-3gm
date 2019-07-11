@@ -193,8 +193,7 @@ class IssueParser:
         for article in self.articles.keys():
             for extract in self.get_non_extracts(article):
 
-                urls = list(re.finditer(
-                    entities.urls, extract))
+                urls = re.findall(entities.urls,extract)
                 cpc = list(re.finditer(
                     entities.cpc, extract))
                 cpv = list(re.finditer(
@@ -250,14 +249,14 @@ class IssueParser:
                 self.entities["EU Regulations"].extend(regulations_eu)
                 self.entities["EU Decisions"].extend(decisions_eu)
                 self.entities["Phone Numbers"].extend(phone_numbers)
-                self.entities["Protocols"] = []
-                self.entities["AFM numbers"] = []
-                self.entities["NUTS Region Codes"] = []
-                self.entities["Exact times"] = []
-                self.entities["Ship Tonnage"] = []
-                self.entities["KAEK Codes"] = []
-                self.entities["Hull"] = []
-                self.entities["Flags"] = [] 
+                self.entities["Protocols"].extend(protocols)
+                self.entities["AFM numbers"].extend(afm)
+                self.entities["NUTS Region Codes"].extend(nuts_reg)
+                self.entities["Exact times"].extend(exact_times)
+                self.entities["Ship Tonnage"].extend(tonnage)
+                self.entities["KAEK Codes"].extend(kaek)
+                self.entities["Hull"].extend(hull)
+                self.entities["Flags"].extend(flag) 
                 
         return self.entities
 
