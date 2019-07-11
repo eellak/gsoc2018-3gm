@@ -69,6 +69,8 @@ class IssueParser:
         if not stdin:
             infile = open(filename, 'r')
 
+
+
         # remove ugly hyphenthation
         while True:
             if not stdin:
@@ -115,6 +117,7 @@ class IssueParser:
         self.find_articles()
         self.detect_statutes()
         self.detect_entities()
+
 
     def __str__(self):
         return self.name
@@ -172,7 +175,7 @@ class IssueParser:
         self.entities["IBANs"] = []
         self.entities["E-mails"] = []
         self.entities["Id Numbers"] = []
-        self.entities["Urls"] = []
+        self.entities["Millitary Personel"] = []
         self.entities["Natura 2000 Regions"] = []
         self.entities["Scales"] = []
         self.entities["EU Directives"] = []
@@ -188,59 +191,40 @@ class IssueParser:
         self.entities["Hull"] = []
         self.entities["Flags"] = []
 
+       
 
+#        for article in self.articles.keys():
+#            for extract in self.get_non_extracts(article):
 
-        for article in self.articles.keys():
-            for extract in self.get_non_extracts(article):
-
-                urls = re.findall(entities.urls,extract)
-                cpc = list(re.finditer(
-                    entities.cpc, extract))
-                cpv = list(re.finditer(
-                    entities.cpv, extract))
-                ibans = list(re.finditer(
-                    entities.ibans, extract))
-                e_mails = list(re.finditer(
-                    entities.e_mails, extract))
-                id_numbers = list(re.finditer(
-                    entities.id_numbers, extract))
-                military_personel = list(re.finditer(
-                    entities.military_personel_id, extract))
-                natura_regions = list(re.finditer(
-                    entities.natura_regions, extract))
-                scales = list(re.finditer(
-                    entities.scales, extract))
-                directives_eu = list(re.finditer(
-                    entities.directives_eu, extract))
-                regulations_eu = list(re.finditer(
-                    entities.regulations_eu, extract))
-                decisions_eu = list(re.finditer(
-                    entities.decisions_eu, extract))
-                phone_numbers = list(re.finditer(
-                    entities.phone_numbers, extract))
-                protocols = list(re.finditer(
-                    entities.protocols, extract))
-                afm = list(re.finditer(
-                    entities.afm, extract))
-                nuts_reg = list(re.finditer(
-                    entities.nuts_reg, extract))
-                exact_times = list(re.finditer(
-                    entities.exact_times, extract))
-                tonnage = list(re.finditer(
-                    entities.tonnage, extract))
-                kaek = list(re.finditer(
-                    entities.kaek, extract))
-                hull = list(re.finditer(
-                    entities.hull, extract))
-                flag = list(re.finditer(
-                    entities.flag, extract))
-
+        for line in self.lines:
+                
+                urls = re.findall(entities.urls,line)
+                cpc = re.findall(entities.cpc, line)
+                cpv = re.findall(entities.cpv,line)
+                ibans = re.findall(entities.ibans,line)
+                e_mails = re.findall(entities.e_mails,line)
+                id_numbers = re.findall(entities.id_numbers, line)
+                military_personel = re.findall(entities.military_personel_id, line)
+                natura_regions =  re.findall(entities.natura_regions, line)
+                scales =  re.findall(entities.scales, line)
+                directives_eu =  re.findall(entities.directives_eu, line)
+                regulations_eu = re.findall(entities.regulations_eu, line)
+                decisions_eu = re.findall(entities.decisions_eu, line)
+                phone_numbers = re.findall(entities.phone_numbers, line)
+                protocols = re.findall(entities.protocols, line)
+                afm = re.findall(entities.afm, line)
+                nuts_reg = re.findall(entities.nuts_reg, line)
+                exact_times = re.findall(entities.exact_times, line)
+                tonnage = re.findall(entities.tonnage, line)
+                kaek = re.findall(entities.kaek, line)
+                hull = re.findall(entities.hull, line)
+                flag = re.findall(entities.flag, line)
 
                 self.entities["Urls"].extend(urls)
                 self.entities["CPC Codes"].extend(cpc)
                 self.entities["CPV Codes"].extend(cpv)
-                self.entities["IBANS"].extend(ibans)
-                self.entities["E-mails"].extend(emails)
+                self.entities["IBANs"].extend(ibans)
+                self.entities["E-mails"].extend(e_mails)
                 self.entities["Id Numbers"].extend(id_numbers)
                 self.entities["Millitary Personel"].extend(military_personel)
                 self.entities["Natura 2000 Regions"].extend(natura_regions)
