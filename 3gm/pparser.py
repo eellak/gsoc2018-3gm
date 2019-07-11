@@ -163,7 +163,7 @@ class IssueParser:
         return self.statutes
 
     def detect_entities(self):
-        """Detect all statutes within the issue"""
+        """Detect all entities within the issue and stores them in a dictionary"""
 
         self.entities = {}
         self.entities["Urls"] = []
@@ -179,6 +179,16 @@ class IssueParser:
         self.entities["EU Regulations"] = []
         self.entities["EU Decisions"] = []
         self.entities["Phone Numbers"] = []
+        self.entities["Protocols"] = []
+        self.entities["AFM numbers"] = []
+        self.entities["NUTS Region Codes"] = []
+        self.entities["Exact times"] = []
+        self.entities["Ship Tonnage"] = []
+        self.entities["KAEK Codes"] = []
+        self.entities["Hull"] = []
+        self.entities["Flags"] = []
+
+
 
         for article in self.articles.keys():
             for extract in self.get_non_extracts(article):
@@ -209,6 +219,22 @@ class IssueParser:
                     entities.decisions_eu, extract))
                 phone_numbers = list(re.finditer(
                     entities.phone_numbers, extract))
+                protocols = list(re.finditer(
+                    entities.protocols, extract))
+                afm = list(re.finditer(
+                    entities.afm, extract))
+                nuts_reg = list(re.finditer(
+                    entities.nuts_reg, extract))
+                exact_times = list(re.finditer(
+                    entities.exact_times, extract))
+                tonnage = list(re.finditer(
+                    entities.tonnage, extract))
+                kaek = list(re.finditer(
+                    entities.kaek, extract))
+                hull = list(re.finditer(
+                    entities.hull, extract))
+                flag = list(re.finditer(
+                    entities.flag, extract))
 
 
                 self.entities["Urls"].extend(urls)
@@ -224,8 +250,16 @@ class IssueParser:
                 self.entities["EU Regulations"].extend(regulations_eu)
                 self.entities["EU Decisions"].extend(decisions_eu)
                 self.entities["Phone Numbers"].extend(phone_numbers)
-
-        return self.statutes
+                self.entities["Protocols"] = []
+                self.entities["AFM numbers"] = []
+                self.entities["NUTS Region Codes"] = []
+                self.entities["Exact times"] = []
+                self.entities["Ship Tonnage"] = []
+                self.entities["KAEK Codes"] = []
+                self.entities["Hull"] = []
+                self.entities["Flags"] = [] 
+                
+        return self.entities
 
 
     def __contains__(self, key):
