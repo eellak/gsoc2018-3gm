@@ -11,12 +11,9 @@ import string
 import phrase_fun
 import spacy
 
-try:
-    import el_small
-    nlp = el_small.load()
-except ImportError:
-    import el_core_news_sm
-    nlp = el_core_news_sm.load()
+
+import el_core_news_sm
+nlp = el_core_news_sm.load()
 
 
 class UncategorizedActionException(Exception):

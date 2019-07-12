@@ -4,7 +4,7 @@
 import io
 import sys
 import syntax
-import el_core_web_sm
+import el_core_news_sm
 import spacy
 import helpers
 from codifier import *

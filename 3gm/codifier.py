@@ -5,6 +5,7 @@ import re
 import sys
 import syntax
 import entities
+import entity_recogniser
 import pparser as parser
 import helpers
 import database

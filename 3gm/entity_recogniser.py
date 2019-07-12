@@ -22,12 +22,9 @@ import string
 from spacy import displacy
 # spacy
 import spacy
-try:
-    import el_small
-    nlp = el_small.load(max_length=2000000)
-except:
-    import el_core_web_sm
-    nlp = el_core_web_sm.load(max_length=2000000)
+
+import el_core_news_sm
+nlp = el_core_news_sm.load(max_length=2000000)
 
 sys.path.insert(0, '../resources')
 
