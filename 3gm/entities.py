@@ -214,7 +214,7 @@ tonnage = r'[-+]?[.]?[\d]+[-+]?[.]?[\d]+(?:,\d\d)* κόρ[οιωv]{2}'
 kaek = r'ΚΑΕΚ[- ]?[0-9/]{12}'
 
 # Number regex
-number_regex = r'[-+]?[.]?[\d]+[-+]?[.]?[\d]+(?:,\d\d)*'
+number_regex = r'[.\d]?[.]?[\d]+[.]?[\d]+(?:[,.]\d\d)*[ ]?'
 
 # Phone numbers
 phone_numbers = r'[+03]{0,4} 2[1-8][0-9][ -]?[0-9]{7}|[+03]{0,4} 2[1-8][0-9]{3}[ -]?[0-9]{6}'
@@ -228,7 +228,7 @@ flag = r'\W σημαία|σημαία \W'
 
 class Units:
 
-    meters = r'(m|μ.|μέτρ[ωνα]{1,2})'
+    meters = r'(m |μ\.?[ \.)]|μέτρ[ωνα]{1,2})'
 
     kilometers = r'(km|χλμ.?|χιλι[όο]μ[εέ]τρ[ωνα])'
 
@@ -269,7 +269,7 @@ def get_metrics(text):
         return []
 
     metrics = list(zip(*metrics))
-    return metrics
+    return metrics[0]
 
 
 def get_monetary_amounts(text):
@@ -277,17 +277,16 @@ def get_monetary_amounts(text):
     money = []
 
     money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.eur+')', text))
-    #money.extend(re.findall(r'('+Currency.eur+'[ ]?'+number_regex+')', text))
-    money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.dol+')', text))
-    money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.pnd+')', text))
-    money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.drm+')', text))
-    
+    #money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.dol+')', text))
+    #money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.pnd+')', text))
+    #money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.drm+')', text))
+
     if len(money) == 0:
         return []
 
     money = list(zip(*money))
 
-    return money[0]
+    return money
 
 
 class LegalEntities:
