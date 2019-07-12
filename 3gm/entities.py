@@ -2,6 +2,7 @@ import re
 import numpy as np
 from helpers import *
 import string
+from collections import Iterable
 
 
 class Minister:
@@ -128,7 +129,7 @@ plural_suffixes = [
     'ους'
 ]
 
-conditions = ['Εκτός αν', 'αν', 'προϋπόθεση', 'κατά περίπτωση', 'εφόσον', 'εάν',
+conditions = ['Εκτός αν', ' αν ', 'προϋπόθεση', 'κατά περίπτωση', 'εφόσον', 'εάν',
               'ανεξαρτήτως εάν', 'είναι δυνατόν να', 'τις προϋποθέσεις', 'μόνο εφόσον', 'μετά από', 'ενέχει']
 
 constraints = ['εν όλω', 'εν μέρει', 'αρκεί', 'εκτός από',
@@ -151,7 +152,7 @@ def get_conditions(text):
 
     # Conditions
     cond = []
-    const.append(re.findall('|'.join(x for x in conditions), text))
+    cond.append(re.findall('|'.join(x for x in conditions), text))
 
     return(list(flatten(cond)))
          

@@ -168,6 +168,8 @@ class IssueParser:
     def detect_entities(self):
         """Detect all entities within the issue and stores them in a dictionary"""
 
+
+        # Creating entity dictionary and setting keys
         self.entities = {}
         self.entities["Urls"] = []
         self.entities["CPC Codes"] = []
@@ -192,12 +194,11 @@ class IssueParser:
         self.entities["Flags"] = []
         self.entities["Monetary Amounts"] = []
         self.entities["Metrics"] = []
+        self.entities["Conditions"] = []
+        self.entities["Contraints"] = []
+        self.entities["Durations"] = []
 
-       
-
-#        for article in self.articles.keys():
-#            for extract in self.get_non_extracts(article):
-
+        # Iterating through lines
         for line in self.lines:
                 
                 urls = re.findall(entities.urls,line)
@@ -223,6 +224,9 @@ class IssueParser:
                 flag = re.findall(entities.flag, line)
                 money = entities.get_monetary_amounts(line)
                 metrics = entities.get_metrics(line)
+                conditions = entities.get_conditions(line)
+                constraints = entities.get_constraints(line)
+                durations = entities.get_durations(line)
 
                 self.entities["Urls"].extend(urls)
                 self.entities["CPC Codes"].extend(cpc)
@@ -247,6 +251,9 @@ class IssueParser:
                 self.entities["Flags"].extend(flag)
                 self.entities["Monetary Amounts"].extend(money)
                 self.entities["Metrics"].extend(metrics)
+                self.entities["Conditions"].extend(conditions)
+                self.entities["Contraints"].extend(constraints)
+                self.entities["Durations"].extend(durations)
 
 
         return self.entities
