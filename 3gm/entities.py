@@ -137,6 +137,41 @@ constraints = ['εν όλω', 'εν μέρει', 'αρκεί', 'εκτός απ�
 durations = ['επί', 'μέσα στον μήνα', 'μέσα σε', 'εντός ',
              'μέχρι της ίδιας αυτής ημερομηνίας', 'προθεσμία',  'το αργότερο εντός']
 
+
+def flatten(items):
+    """Yield items from any nested iterable; see Reference."""
+    for x in items:
+        if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
+            for sub_x in flatten(x):
+                yield sub_x
+        else:
+            yield x
+
+def get_conditions(text):
+
+    # Conditions
+    cond = []
+    const.append(re.findall('|'.join(x for x in conditions), text))
+
+    return(list(flatten(cond)))
+         
+def get_constraints(text):
+
+    # Constrains
+    const = []
+    const.append(re.findall('|'.join(x for x in constraints), text))
+
+    return(list(flatten(const)))
+         
+def get_durations(text):
+
+    # Durations
+    dur = []
+    dur.append(re.findall('|'.join(x for x in durations), text))
+
+    return(list(flatten(dur)))
+
+
 # URLS
 urls = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 
