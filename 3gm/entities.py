@@ -265,8 +265,11 @@ def get_metrics(text):
     metrics.extend(re.findall(r'('+number_regex+'[ ]?'+Units.power+')', text))
     metrics.extend(re.findall(r'('+number_regex+'[ ]?'+Units.kgr+')', text))
 
+    if len(metrics) == 0:
+        return []
+
     metrics = list(zip(*metrics))
-    return metrics[0]
+    return metrics
 
 
 def get_monetary_amounts(text):
@@ -274,11 +277,16 @@ def get_monetary_amounts(text):
     money = []
 
     money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.eur+')', text))
-    money.extend(re.findall(r'('+Currency.eur+'[ ]?'+number_regex+')', text))
+    #money.extend(re.findall(r'('+Currency.eur+'[ ]?'+number_regex+')', text))
     money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.dol+')', text))
     money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.pnd+')', text))
     money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.drm+')', text))
+    
+    if len(money) == 0:
+        return []
+
     money = list(zip(*money))
+
     return money[0]
 
 

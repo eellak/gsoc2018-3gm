@@ -190,6 +190,8 @@ class IssueParser:
         self.entities["KAEK Codes"] = []
         self.entities["Hull"] = []
         self.entities["Flags"] = []
+        self.entities["Monetary Amounts"] = []
+        self.entities["Metrics"] = []
 
        
 
@@ -219,6 +221,8 @@ class IssueParser:
                 kaek = re.findall(entities.kaek, line)
                 hull = re.findall(entities.hull, line)
                 flag = re.findall(entities.flag, line)
+                money = entities.get_monetary_amounts(line)
+                metrics = entities.get_metrics(line)
 
                 self.entities["Urls"].extend(urls)
                 self.entities["CPC Codes"].extend(cpc)
@@ -240,8 +244,11 @@ class IssueParser:
                 self.entities["Ship Tonnage"].extend(tonnage)
                 self.entities["KAEK Codes"].extend(kaek)
                 self.entities["Hull"].extend(hull)
-                self.entities["Flags"].extend(flag) 
-                
+                self.entities["Flags"].extend(flag)
+                self.entities["Monetary Amounts"].extend(money)
+                self.entities["Metrics"].extend(metrics)
+
+
         return self.entities
 
 
