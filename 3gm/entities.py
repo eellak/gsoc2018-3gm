@@ -266,19 +266,24 @@ hull = r'HULL No ([A-Z0-9]{1,17}|[A-Z]{1,2}[- ]?[A-Z0-9]{1,17})'
 flag = r'\W σημαία|σημαία \W'
 
 
-class Units:
 
-    meters = r'(m |μ\.?[ \.)]|μέτρ[ωνα]{1,2})'
 
-    kilometers = r'(km|χλμ.?|χιλι[όο]μ[εέ]τρ[ωνα])'
+meters = r'm |μ\.?[ \.)]|μέτρ[ωνα]{1,2}'
+kilometers = r'km|χλμ.?|χιλι[όο]μ[εέ]τρ[ωνα]'
+liters = r'[Λλ]ίτρ[ωνα]{1,2}|[LIl]t|ml'
+surface = r'μ2|τετραγωνικών μέτρ[ωνα]{1,2}|τ[.]?μ[.]?|στρ[εέ]μμ[άα]τ[ωνα]{1,2}|στρ.?|τετρ. μέτρ[ωνα]{1,2}'
+power = r'[Kk][wW]'
+kgr = r'[Kk]g[r]?'
 
-    liters = r'([Λλ]ίτρ[ωνα]{1,2}|[LIl]t|ml)'
-
-    surface = r'(μ2|τετραγωνικών μέτρ[ωνα]|τ[.]?μ[.]?|στρ[εέ]μμ[άα]τ[ωνα]|στρ.?|τετρ. μέτρ[ωνα])'
-
-    power = r'([Kk][wW])'
-
-    kgr = r'([Kk]g[r]?)'
+class Unit:
+    units = [
+         meters,
+         kilometers,
+         liters,
+         surface,
+         power,
+         kgr
+    ]
 
 eur = r'[Εε]υρώ|€|EUR'
 dol = r'USD|$|[Δδ]ολ[άα]ρ[ιί][αών]{1,2}'
@@ -294,23 +299,16 @@ class Currency:
 
 def get_metrics(text):
 
-    metrics = []
+    pattern = '|'.join(item for item in Unit.units)
+    amounts_regex = re.compile(r'('+number_regex+'('+pattern+'))')
+    amounts =  amounts_regex.finditer(text)
 
-    metrics.extend(re.findall(r'('+number_regex+Units.meters+')', text))
-    metrics.extend(re.findall(
-        r'('+number_regex+'[ ]?'+Units.kilometers+')', text))
-    metrics.extend(re.findall(r'('+number_regex+'[ ]?'+Units.liters+')', text))
-    metrics.extend(re.findall(
-        r'('+number_regex+'[ ]?'+Units.surface+')', text))
-    metrics.extend(re.findall(r'('+number_regex+'[ ]?'+Units.power+')', text))
-    metrics.extend(re.findall(r'('+number_regex+'[ ]?'+Units.kgr+')', text))
+    result = []
+    for match in amounts:
+          if match.group(2) != '':
+              result.append(match.group(1))
 
-    if len(metrics) == 0:
-        return []
-
-    metrics = list(zip(*metrics))
-    return metrics[0]
-
+    return result
 
 def get_monetary_amounts(text):
     
