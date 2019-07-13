@@ -110,7 +110,7 @@ class IssueParser:
         self.sentences = {}
         self.find_articles()
         self.detect_statutes()
-        self.detect_entities()
+
 
 
     def __str__(self):
@@ -158,152 +158,6 @@ class IssueParser:
                                           for statute in self.statutes[article]]
 
         return self.statutes
-
-    
-
-    def detect_entities(self):
-        """Detect all entities within the issue and stores them in a dictionary"""
-
-
-        # Creating entity dictionary and setting keys
-        self.entities = {}
-        self.entities["Urls"] = []
-        self.entities["CPC Codes"] = []
-        self.entities["CPV Codes"] = []
-        self.entities["IBANs"] = []
-        self.entities["E-mails"] = []
-        self.entities["Id Numbers"] = []
-        self.entities["Military Personel"] = []
-        self.entities["Natura 2000 Regions"] = []
-        self.entities["Scales"] = []
-        self.entities["EU Directives"] = []
-        self.entities["EU Regulations"] = []
-        self.entities["EU Decisions"] = []
-        self.entities["Phone Numbers"] = []
-        self.entities["Protocols"] = []
-        self.entities["AFM numbers"] = []
-        self.entities["NUTS Region Codes"] = []
-        self.entities["Exact times"] = []
-        self.entities["Ship Tonnage"] = []
-        self.entities["KAEK Codes"] = []
-        self.entities["Hull"] = []
-        self.entities["Flags"] = []
-        self.entities["Monetary Amounts"] = []
-        self.entities["Metrics"] = []
-        self.entities["Conditions"] = []
-        self.entities["Contraints"] = []
-        self.entities["Durations"] = []
-
-        # Iterating through lines
-        for i , line in enumerate(self.lines):
-
-                urls = re.findall(entities.urls,line)
-                cpc = re.findall(entities.cpc, line)
-                cpv = re.findall(entities.cpv,line)
-                ibans = re.findall(entities.ibans,line)
-                e_mails = re.findall(entities.e_mails,line)
-                id_numbers = re.findall(entities.id_numbers, line)
-                military_personel = re.findall(entities.military_personel_id, line)
-                natura_regions = re.findall(entities.natura_regions,line)
-                scales =  re.findall(entities.scales, line)
-                directives_eu =  re.findall(entities.directives_eu, line)
-                regulations_eu = re.findall(entities.regulations_eu, line)
-                decisions_eu = re.findall(entities.decisions_eu, line)
-                phone_numbers = re.findall(entities.phone_numbers, line)
-                protocols = re.findall(entities.protocols, line)
-                afm = re.findall(entities.afm, line)
-                nuts_reg = re.findall(entities.nuts_reg, line)
-                exact_times = re.findall(entities.exact_times, line)
-                tonnage = re.findall(entities.tonnage, line)
-                kaek = re.findall(entities.kaek, line)
-                hull = re.findall(entities.hull, line)
-                flag = re.findall(entities.flag, line)
-                money = entities.get_monetary_amounts(line)
-                metrics = entities.get_metrics(line)
-                conditions = entities.get_conditions(line)
-                constraints = entities.get_constraints(line)
-                durations = entities.get_durations(line)
-
-                if urls != []:
-                    self.entities["Urls"].append((i,urls))
-
-                if cpc != []:
-                    self.entities["CPC Codes"].append((i,cpc))
-
-                if cpv != []:
-                    self.entities["CPV Codes"].append((i,cpv))
-
-                if ibans != []:
-                    self.entities["IBANs"].append((i,ibans))
-
-                if e_mails != []:
-                    self.entities["E-mails"].append((i,e_mails))
-
-                if id_numbers != []:
-                    self.entities["Id Numbers"].append((i,id_numbers))
-
-                if military_personel != []:
-                    self.entities["Military Personel"].append((i,military_personel))
-
-                if natura_regions != []:
-                    self.entities["Natura 2000 Regions"].append((i,natura_regions))
-
-                if scales != []:
-                    self.entities["Scales"].append((i,scales))
-
-                if directives_eu != []:
-                    self.entities["EU Directives"].append((i,directives_eu))
-
-                if regulations_eu != []:
-                    self.entities["EU Regulations"].append((i,regulations_eu))
-
-                if decisions_eu != []:
-                    self.entities["EU Decisions"].append((i,decisions_eu))
-
-                if phone_numbers != []:
-                    self.entities["Phone Numbers"].append((i,phone_numbers))
-
-                if protocols != []:
-                    self.entities["Protocols"].append((i,protocols))
-
-                if afm != []:
-                    self.entities["AFM numbers"].append((i,afm))
-
-                if nuts_reg != []:
-                    self.entities["NUTS Region Codes"].append((i,nuts_reg))
-
-                if exact_times != []:
-                    self.entities["Exact times"].append((i,exact_times))
-
-                if tonnage != []:
-                    self.entities["Ship Tonnage"].append((i,tonnage))
-
-                if kaek != []:
-                    self.entities["KAEK Codes"].append((i,kaek))
-
-                if hull != []:
-                    self.entities["Hull"].append((i,hull))
-
-                if flag != []:
-                    self.entities["Flags"].append((i,flag))
-
-                if money != []:
-                    self.entities["Monetary Amounts"].append((i,money))
-
-                if metrics != []:
-                    self.entities["Metrics"].append((i,metrics))
-
-                if conditions != []:
-                    self.entities["Conditions"].append((i,conditions))
-
-                if constraints != []:
-                    self.entities["Contraints"].append((i,constraints))
-
-                if durations != []:
-                    self.entities["Durations"].append((i,durations))
-
-
-        return self.entities
 
 
     def __contains__(self, key):
@@ -657,6 +511,7 @@ class LawParser:
         self.amendee = None
 
         self.find_corpus(fix_paragraphs=False)
+        self.detect_entities()
 
 
 
@@ -796,6 +651,152 @@ class LawParser:
 
                     if government_gazette_issue:
                         break
+
+
+    def detect_entities(self):
+        """Detect all entities within the issue and stores them in a dictionary"""
+
+
+        # Creating entity dictionary and setting keys
+        self.entities = {}
+        self.entities["Urls"] = []
+        self.entities["CPC Codes"] = []
+        self.entities["CPV Codes"] = []
+        self.entities["IBANs"] = []
+        self.entities["E-mails"] = []
+        self.entities["Id Numbers"] = []
+        self.entities["Military Personel"] = []
+        self.entities["Natura 2000 Regions"] = []
+        self.entities["Scales"] = []
+        self.entities["EU Directives"] = []
+        self.entities["EU Regulations"] = []
+        self.entities["EU Decisions"] = []
+        self.entities["Phone Numbers"] = []
+        self.entities["Protocols"] = []
+        self.entities["AFM numbers"] = []
+        self.entities["NUTS Region Codes"] = []
+        self.entities["Exact times"] = []
+        self.entities["Ship Tonnage"] = []
+        self.entities["KAEK Codes"] = []
+        self.entities["Hull"] = []
+        self.entities["Flags"] = []
+        self.entities["Monetary Amounts"] = []
+        self.entities["Metrics"] = []
+        self.entities["Conditions"] = []
+        self.entities["Contraints"] = []
+        self.entities["Durations"] = []
+
+        # Iterating through lines
+        for i , line in enumerate(self.lines):
+
+                urls = re.findall(entities.urls,line)
+                cpc = re.findall(entities.cpc, line)
+                cpv = re.findall(entities.cpv,line)
+                ibans = re.findall(entities.ibans,line)
+                e_mails = re.findall(entities.e_mails,line)
+                id_numbers = re.findall(entities.id_numbers, line)
+                military_personel = re.findall(entities.military_personel_id, line)
+                natura_regions = re.findall(entities.natura_regions,line)
+                scales =  re.findall(entities.scales, line)
+                directives_eu =  re.findall(entities.directives_eu, line)
+                regulations_eu = re.findall(entities.regulations_eu, line)
+                decisions_eu = re.findall(entities.decisions_eu, line)
+                phone_numbers = re.findall(entities.phone_numbers, line)
+                protocols = re.findall(entities.protocols, line)
+                afm = re.findall(entities.afm, line)
+                nuts_reg = re.findall(entities.nuts_reg, line)
+                exact_times = re.findall(entities.exact_times, line)
+                tonnage = re.findall(entities.tonnage, line)
+                kaek = re.findall(entities.kaek, line)
+                hull = re.findall(entities.hull, line)
+                flag = re.findall(entities.flag, line)
+                money = entities.get_monetary_amounts(line)
+                metrics = entities.get_metrics(line)
+                conditions = entities.get_conditions(line)
+                constraints = entities.get_constraints(line)
+                durations = entities.get_durations(line)
+
+                if urls != []:
+                    self.entities["Urls"].append((i,urls))
+
+                if cpc != []:
+                    self.entities["CPC Codes"].append((i,cpc))
+
+                if cpv != []:
+                    self.entities["CPV Codes"].append((i,cpv))
+
+                if ibans != []:
+                    self.entities["IBANs"].append((i,ibans))
+
+                if e_mails != []:
+                    self.entities["E-mails"].append((i,e_mails))
+
+                if id_numbers != []:
+                    self.entities["Id Numbers"].append((i,id_numbers))
+
+                if military_personel != []:
+                    self.entities["Military Personel"].append((i,military_personel))
+
+                if natura_regions != []:
+                    self.entities["Natura 2000 Regions"].append((i,natura_regions))
+
+                if scales != []:
+                    self.entities["Scales"].append((i,scales))
+
+                if directives_eu != []:
+                    self.entities["EU Directives"].append((i,directives_eu))
+
+                if regulations_eu != []:
+                    self.entities["EU Regulations"].append((i,regulations_eu))
+
+                if decisions_eu != []:
+                    self.entities["EU Decisions"].append((i,decisions_eu))
+
+                if phone_numbers != []:
+                    self.entities["Phone Numbers"].append((i,phone_numbers))
+
+                if protocols != []:
+                    self.entities["Protocols"].append((i,protocols))
+
+                if afm != []:
+                    self.entities["AFM numbers"].append((i,afm))
+
+                if nuts_reg != []:
+                    self.entities["NUTS Region Codes"].append((i,nuts_reg))
+
+                if exact_times != []:
+                    self.entities["Exact times"].append((i,exact_times))
+
+                if tonnage != []:
+                    self.entities["Ship Tonnage"].append((i,tonnage))
+
+                if kaek != []:
+                    self.entities["KAEK Codes"].append((i,kaek))
+
+                if hull != []:
+                    self.entities["Hull"].append((i,hull))
+
+                if flag != []:
+                    self.entities["Flags"].append((i,flag))
+
+                if money != []:
+                    self.entities["Monetary Amounts"].append((i,money))
+
+                if metrics != []:
+                    self.entities["Metrics"].append((i,metrics))
+
+                if conditions != []:
+                    self.entities["Conditions"].append((i,conditions))
+
+                if constraints != []:
+                    self.entities["Contraints"].append((i,constraints))
+
+                if durations != []:
+                    self.entities["Durations"].append((i,durations))
+
+
+        return self.entities
+
 
     def __dict__(self):
         return self.serialize()
