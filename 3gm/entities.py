@@ -111,6 +111,11 @@ wheres = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']
 law_regex = r'(ν.|Ν.) [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'
 legislative_decree_regex = r'(ν.δ.|Ν.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'
 presidential_decree_regex = r'(π.δ.|Π.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'
+date_regex = re.compile('(\
+([1-9]|0[1-9]|[12][0-9]|3[01])\
+[-/.\s+]\
+(1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)\
+(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)')
 legislative_act_regex = r'Πράξη(|ς) Νομοθετικού Περιεχομένου ([0-9]|[0-3][0-9]).[0-9][0-9].[1-2][0-9][0-9][0-9]'
 article_regex = ['άρθρο \d+', 'άρθρου \d+']
 paragraph_regex = [
@@ -275,17 +280,17 @@ class Units:
 
     kgr = r'([Kk]g[r]?)'
 
-
+eur = r'[Εε]υρώ|€|EUR'
+dol = r'USD|$|[Δδ]ολ[άα]ρ[ιί][αών]{1,2}'
+pnd = r'GPK|£|[Λλ]ίρ[εςών]{2}'
+drm = r'[Δδ]ραχμ[ώνές]{2}|δρχ\.'
 class Currency:
-
-    eur = r'([Εε]υρώ|€|EUR)'
-
-    dol = r'(USD|$|[Δδ]ολ[άα]ρ[ιί][αών]{1,2})'
-
-    pnd = r'(GPK|£|[Λλ]ίρ[εςών]{2})'
-
-    drm = r'([Δδ]ραχμ[ώνές]{2}|δρχ.)'
-
+    currencies = [
+         eur,
+         dol,
+         pnd,
+         drm
+    ]
 
 def get_metrics(text):
 
@@ -308,21 +313,17 @@ def get_metrics(text):
 
 
 def get_monetary_amounts(text):
+    
+    pattern = '|'.join(item for item in Currency.currencies)
+    currency_regex = re.compile(r'('+number_regex+'('+pattern+'))')
+    currency =  currency_regex.finditer(text)
 
-    money = []
+    result = []
+    for match in currency:
+          if match.group(2) != '':
+              result.append(match.group(1))
 
-    money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.eur+')', text))
-    #money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.dol+')', text))
-    #money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.pnd+')', text))
-    #money.extend(re.findall(r'('+number_regex+'[ ]?'+Currency.drm+')', text))
-
-    if len(money) == 0:
-        return []
-
-    money = list(zip(*money))
-
-    return money[0]
-
+    return result
 
 class LegalEntities:
     entities = [

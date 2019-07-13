@@ -31,12 +31,6 @@ logging.basicConfig(
 params = {'size': 200, 'iter': 20, 'window': 2, 'min_count': 15,
           'workers': max(1, multiprocessing.cpu_count() - 1), 'sample': 1E-3, }
 
-date_regex = re.compile('(\
-([1-9]|0[1-9]|[12][0-9]|3[01])\
-[-/.\s+]\
-(1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)\
-(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)')
-
 
 class IssueParser:
     """
@@ -165,6 +159,8 @@ class IssueParser:
 
         return self.statutes
 
+    
+
     def detect_entities(self):
         """Detect all entities within the issue and stores them in a dictionary"""
 
@@ -200,7 +196,7 @@ class IssueParser:
 
         # Iterating through lines
         for line in self.lines:
-                
+
                 urls = re.findall(entities.urls,line)
                 cpc = re.findall(entities.cpc, line)
                 cpv = re.findall(entities.cpv,line)
@@ -224,9 +220,9 @@ class IssueParser:
                 flag = re.findall(entities.flag, line)
                 money = entities.get_monetary_amounts(line)
                 metrics = entities.get_metrics(line)
-                conditions = entities.get_conditions(line)
-                constraints = entities.get_constraints(line)
-                durations = entities.get_durations(line)
+                #conditions = entities.get_conditions(line)
+                #constraints = entities.get_constraints(line)
+                #durations = entities.get_durations(line)
 
                 self.entities["Urls"].extend(urls)
                 self.entities["CPC Codes"].extend(cpc)
@@ -251,9 +247,9 @@ class IssueParser:
                 self.entities["Flags"].extend(flag)
                 self.entities["Monetary Amounts"].extend(money)
                 self.entities["Metrics"].extend(metrics)
-                self.entities["Conditions"].extend(conditions)
-                self.entities["Contraints"].extend(constraints)
-                self.entities["Durations"].extend(durations)
+                #self.entities["Conditions"].extend(conditions)
+                #self.entities["Contraints"].extend(constraints)
+                #self.entities["Durations"].extend(durations)
 
 
         return self.entities
@@ -291,7 +287,7 @@ class IssueParser:
         now = datetime.now()
 
         for i, line in enumerate(self.lines):
-            result = date_regex.findall(line)
+            result = entities.date_regex.findall(line)
             if result != []:
                 self.dates.append((i, result))
 
@@ -611,6 +607,8 @@ class LawParser:
 
         self.find_corpus(fix_paragraphs=False)
 
+
+
     def __repr__(self):
         return self.identifier
 
@@ -750,6 +748,7 @@ class LawParser:
 
     def __dict__(self):
         return self.serialize()
+
 
     def serialize(self, full=True):
         """Returns the object in database-friendly format
