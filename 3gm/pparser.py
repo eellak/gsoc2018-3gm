@@ -797,7 +797,6 @@ class LawParser:
 
         return self.entities
 
-
     def __dict__(self):
         return self.serialize()
 
@@ -816,7 +815,8 @@ class LawParser:
             'thesaurus': self.thesaurus,
             'lemmas': self.lemmas,
             'titles': self.titles,
-            'amendee': self.amendee
+            'amendee': self.amendee,
+            'entities':self.entities
         }
 
         if full:
@@ -833,6 +833,7 @@ class LawParser:
         law.titles = x['titles']
         law.sentences = x['articles']
         law.amendee = x['amendee']
+        law.entities = x['entities']
         try:
             law.issue = x['issue']
         except BaseException:
