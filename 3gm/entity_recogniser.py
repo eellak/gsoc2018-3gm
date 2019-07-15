@@ -91,7 +91,28 @@ def build_named_entities(use_spacy=True,serve=False):
          doc = nlp(item)
          if serve:
              displacy.serve(doc, style="ent")
-    
+
+    i = 0
+    global db
+    db.drop_named_entities()
+
+    for item in data_samples:
+         doc = nlp(item)
+         if serve:
+             displacy.serve(doc, style="ent")
+         else:
+             entities = []
+             for ent in doc.ents:
+                 entity_tuple = (ent.text, ent.start_char, ent.end_char, ent.label_)
+                 entities.append(entity_tuple)
+
+         s = {'law': indices.get(i),
+              'entities': entities
+          }
+         print(s)
+         db.named_entities.save(s)
+         i+=1
+
 
 if __name__ == '__main__':
     use_spacy = '--spacy' in sys.argv[1:]
