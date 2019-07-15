@@ -1,13 +1,5 @@
-import greek_lemmas
 from multiprocessing import cpu_count
-
-# sklearn
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from sklearn.model_selection import GridSearchCV
-from sklearn.decomposition import NMF, LatentDirichletAllocation
-
 # Imports
-from helpers import connected_components, get_edges
 import parser
 import collections
 import numpy as np
@@ -16,17 +8,18 @@ import pprint
 import re
 import codifier
 import database
-import math
 import pickle
 import string
 from spacy import displacy
 # spacy
 import spacy
 
-import el_core_news_sm
-nlp = el_core_news_sm.load(max_length=2000000)
+# Importing 3gm NER model 
+nlp = spacy.load('../models/3gm_ner_model')
+
 
 sys.path.insert(0, '../resources')
+import greek_lemmas
 
 
 db = database.Database()
@@ -34,6 +27,7 @@ db = database.Database()
 
 def contains_digit_or_num(i): return any(
     j.isdigit() or j in string.punctuation for j in i)
+
 
 
 def build_greek_stoplist(cnt_swords=300):
@@ -49,7 +43,6 @@ def build_greek_stoplist(cnt_swords=300):
 
     return greek_stopwords
 
-
 def build_data_samples(min_size=4, use_spacy=True):
     data_samples = []
     indices = {}
@@ -58,26 +51,6 @@ def build_data_samples(min_size=4, use_spacy=True):
     for law in codifier.codifier.laws.keys():
         print(law)
         corpus = codifier.codifier.laws[law].export_law('str')
-        if use_spacy:
-            tmp = nlp(corpus)
-        else:
-            tmp = corpus.split(' ')
-        corpus = []
-        for j, word in enumerate(tmp):
-            if contains_digit_or_num(word.text) or len(word.text) < min_size:
-                continue
-            try:
-                if use_spacy:
-                    try:
-                        corpus.append(greek_lemmas[word.lemma_])
-                    except BaseException:
-                        corpus.append(greek_lemmas[word])
-                else:
-                    corpus.append(greek_lemmas[word])
-            except BaseException:
-                corpus.append(str(word))
-
-        corpus = ' '.join(corpus)
 
         data_samples.append(corpus)
         indices[i] = law
@@ -104,25 +77,22 @@ def build_gg_stoplist(data_samples, greek_stopwords, gg_most_common=500):
     print('Done Counting')
     return greek_stopwords, words
 
-
 def displacy_service(text):
     doc = nlp(text)
     return displacy.parse_deps(doc)
 
+def build_named_entities(use_spacy=True,serve=False):
 
-def build_entity_recogniser(use_spacy=True):
     greek_stopwords = build_greek_stoplist()
     data_samples, indices = build_data_samples(use_spacy=use_spacy)
     greek_stopwords, words = build_gg_stoplist(data_samples, greek_stopwords)
-
-    # Initial Parameters
-    n_samples = len(data_samples)  # Len of data samples
-
-    doc = nlp(data_samples)
-
-    pickle.dump(nlp, open('ner.pickle', 'wb'))
-
+ 
+    for item in data_samples:
+         doc = nlp(item)
+         if serve:
+             displacy.serve(doc, style="ent")
+    
 
 if __name__ == '__main__':
     use_spacy = '--spacy' in sys.argv[1:]
-    build_topics(use_spacy=use_spacy)
+    build_namde_entities(use_spacy=use_spacy)
