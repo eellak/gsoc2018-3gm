@@ -5,7 +5,6 @@ import re
 import sys
 import syntax
 import entities
-import entity_recogniser
 import pparser as parser
 import helpers
 import database
@@ -629,6 +628,7 @@ def build(
             'laws',
             'links',
             'topics',
+            'named_entities',
             'versions'],
         drop=True):
     """Build codifier object
@@ -645,6 +645,7 @@ def build(
     # Import here for performance
     import topic_models
     import apply_links
+    import entity_recogniser
 
     if not data_dir[-1] == '/':
         data_dir = data_dir + '/'
