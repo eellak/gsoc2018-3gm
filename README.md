@@ -74,6 +74,10 @@ We have created a script to test regular expressions for fact extractions. Unfor
 
 After optimizing the extraction queries we integrated them to the entities module that can be found in the 3gm directory. We now have to use the regular expressions to extract entities in the pparser module, the module that is responsible for extracting amendments, laws and ratifications. 
 
+### Training a new Doc2vec model
+
+We will train a new model for doc2vec using the gensim library following the proposed workflow in the project wiki. We will use the codifier to create a large corpus and subsequently we will train the gensim model on it. To make sure that the model is efficient we will have to create a corpus of severa thousand issues and the finetune the models hyperparameters.
+
 ### Documentation
 
 As part of our effort to document the changes to the project during GSOC-2019 we thought that it would be vital to update and interate changes to the project's wiki. You can follow up on the process in this [repo](https://github.com/spapadiamantis/3gm-wiki)
