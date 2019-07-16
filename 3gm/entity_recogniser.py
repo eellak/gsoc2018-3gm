@@ -81,16 +81,11 @@ def displacy_service(text):
     doc = nlp(text)
     return displacy.parse_deps(doc)
 
-def build_named_entities(use_spacy=True,serve=False):
+def build_named_entities(use_spacy=True):
 
     greek_stopwords = build_greek_stoplist()
     data_samples, indices = build_data_samples(use_spacy=use_spacy)
     greek_stopwords, words = build_gg_stoplist(data_samples, greek_stopwords)
- 
-    for item in data_samples:
-         doc = nlp(item)
-         if serve:
-             displacy.serve(doc, style="ent")
 
     i = 0
     global db
@@ -98,15 +93,14 @@ def build_named_entities(use_spacy=True,serve=False):
 
     for item in data_samples:
          doc = nlp(item)
-         if serve:
-             displacy.serve(doc, style="ent")
-         else:
-             entities = []
-             for ent in doc.ents:
-                 entity_tuple = (ent.text, ent.start_char, ent.end_char, ent.label_)
-                 entities.append(entity_tuple)
 
-         s = {'law': indices.get(i),
+
+         entities = []
+         for ent in doc.ents:
+             entity_tuple = (ent.text, ent.start_char, ent.end_char, ent.label_)
+             entities.append(entity_tuple)
+
+         s = {'_id': indices.get(i),
               'entities': entities
           }
          print(s)
