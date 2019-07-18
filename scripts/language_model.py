@@ -27,8 +27,6 @@ def get_features(docs, max_length):
 
 
 
-
-
 def train(
     train_texts,
     train_labels,
@@ -116,7 +114,76 @@ def generate_text(seed_text, next_words, max_sequence_len, model):
                 output_word = word
                 break
         seed_text += " " + output_word
- return seed_text      
+ return seed_text 
+
+@plac.annotations(
+    train_dir=("Location of training file or directory"),
+    dev_dir=("Location of development file or directory"),
+    model_dir=("Location of output model directory",),
+    is_runtime=("Demonstrate run-time usage", "flag", "r", bool),
+    nr_hidden=("Number of hidden units", "option", "H", int),
+    max_length=("Maximum sentence length", "option", "L", int),
+    dropout=("Dropout", "option", "d", float),
+    learn_rate=("Learn rate", "option", "e", float),
+    nb_epoch=("Number of training epochs", "option", "i", int),
+    batch_size=("Size of minibatches for training LSTM", "option", "b", int),
+    nr_examples=("Limit to N examples", "option", "n", int),
+)     
+
+def main(
+    model_dir=None,
+    train_dir=None,
+    dev_dir=None,
+    is_runtime=False,
+    nr_hidden=64,
+    max_length=100,  # Shape
+    dropout=0.5,
+    learn_rate=0.001,  # General NN config
+    nb_epoch=5,
+    batch_size=256,
+    nr_examples=-1,
+):  # Training params
+    if model_dir is not None:
+        model_dir = pathlib.Path(model_dir)
+    if train_dir is None or dev_dir is None:
+        imdb_data = thinc.extra.datasets.imdb()
+    if is_runtime:
+        if dev_dir is None:
+            dev_texts, dev_labels = zip(*imdb_data[1])
+        else:
+            dev_texts, dev_labels = read_data(dev_dir)
+        acc = evaluate(model_dir, dev_texts, dev_labels, max_length=max_length)
+        print(acc)
+    else:
+        if train_dir is None:
+            train_texts, train_labels = zip(*imdb_data[0])
+        else:
+            print("Read data")
+            train_texts, train_labels = read_data(train_dir, limit=nr_examples)
+        if dev_dir is None:
+            dev_texts, dev_labels = zip(*imdb_data[1])
+        else:
+            dev_texts, dev_labels = read_data(dev_dir, imdb_data, limit=nr_examples)
+        train_labels = numpy.asarray(train_labels, dtype="int32")
+        dev_labels = numpy.asarray(dev_labels, dtype="int32")
+        lstm = train(
+            train_texts,
+            train_labels,
+            dev_texts,
+            dev_labels,
+            {"nr_hidden": nr_hidden, "max_length": max_length, "nr_class": 1},
+            {"dropout": dropout, "lr": learn_rate},
+            {},
+            nb_epoch=nb_epoch,
+            batch_size=batch_size,
+        )
+        weights = lstm.get_weights()
+        if model_dir is not None:
+            with (model_dir / "model").open("wb") as file_:
+                pickle.dump(weights[1:], file_)
+            with (model_dir / "config.json").open("w") as file_:
+                file_.write(lstm.to_json())
+
 
 
 if __name__ == "__main__":
