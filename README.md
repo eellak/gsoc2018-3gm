@@ -76,11 +76,13 @@ After optimizing the extraction queries we integrated them to the entities modul
 
 ### Training a new Doc2vec model
 
-We will train a new model for doc2vec using the gensim library following the proposed workflow in the project wiki. We will use the codifier to create a large corpus and subsequently we will train the gensim model on it. To make sure that the model is efficient we will have to create a corpus of severa thousand issues and the finetune the models hyperparameters.
+We will train a new model for doc2vec using the gensim library following the proposed [workflow](https://github.com/eellak/gsoc2018-3gm/wiki/Document-Embeddings-with-Doc2Vec) in the project wiki. We will use the codifier to create a large corpus and subsequently we will train the gensim model on it. To make sure that the model is efficient we will have to create a corpus of several thousand issues and then finetune the model's hyperparameters.
 
 ### Creating a natural language model
 
-Even though it was not included in the initial project proposal we also decided to create natural lanuage model that generates texts, aiming to make use of the word vectors we had produced earlier using prodigy. The idea is to use the embeddings produced, in an embedding layer and the fit an RNN on top of it.
+Even though it was not included in the initial project proposal we also decided to create a natural lanuage model that generates texts, aiming to make use of the word vectors we had produced earlier using prodigy.
+
+Our approach includes training a variation of a character level based LSTM model that we trained on a corpus of GGG texts. The idea is to use the embeddings produced, in an embedding layer and then stack this model on top of it.
 
 ### Documentation
 
