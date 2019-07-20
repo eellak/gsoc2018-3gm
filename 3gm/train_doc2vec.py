@@ -6,11 +6,13 @@ from multiprocessing import cpu_count
 from gensim.models.doc2vec import TaggedDocument
 import tokenizer
 import gensim.models as g
+import argparse
 import logging
 import sys
 sys.path.insert(0, '../')
 
 # Document cleanup
+
 
 def nlp_clean(data):
     new_data = []
@@ -34,14 +36,24 @@ tokenize = '--tokenize' in sys.argv
 
 if __name__ == '__main__':
 
+    parser = argparse.ArgumentParser(description='''
+        Tool for training gensim Doc2Vec embeddings. For more details and documentation visit https://github.com/eellak/gsoc2018-3gm/wiki/Document-Embeddings-with-Doc2Vec
+    ''')
+
+    required = parser.add_argument_group('required arguments')
+    required.add_argument('-corpus', help='Corpus File')
+    required.add_argument('-labels', help='Labels File')
+    required.add_argument('-model', help='Path to save model')
+
+    args = parser.parse_args()
     # Input corpus
-    train_corpus = sys.argv[1]
+    train_corpus = args.corpus
 
     # Output model
-    saved_path = sys.argv[2]
+    saved_path = args.model
 
     # Labels
-    labels_file = sys.argv[3]
+    labels_file = args.labels
 
     with open(labels_file, 'r') as f:
         labels = f.read().splitlines()
@@ -64,7 +76,8 @@ if __name__ == '__main__':
         # print(td)
         taggeddocs.append(td)
 
-    model = g.Doc2Vec(taggeddocs, size=vector_size, window=window_size, min_count=min_count, sample=sampling_threshold,workers=worker_count, hs=0, dm=dm, negative=negative_size, dbow_words=1, dm_concat=1, pretrained_emb=None, iter=train_epoch)
+    model = g.Doc2Vec(taggeddocs, size=vector_size, window=window_size, min_count=min_count, sample=sampling_threshold,
+                      workers=worker_count, hs=0, dm=dm, negative=negative_size, dbow_words=1, dm_concat=1, pretrained_emb=None, iter=train_epoch)
 
     # Save model
     model.save(saved_path)
