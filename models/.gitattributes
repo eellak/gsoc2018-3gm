@@ -1,2 +1,4 @@
 3gm_vectors.zip filter=lfs diff=lfs merge=lfs -text
 3gm_ner_model.zip filter=lfs diff=lfs merge=lfs -text
+corpus.txt filter=lfs diff=lfs merge=lfs -text
+doc2vec filter=lfs diff=lfs merge=lfs -text
