@@ -82,13 +82,13 @@ For the time being we have created a corpus file containing 2878 laws and presid
 
 ### Creating a natural language model
 
-Even though it was not included in the initial project proposal we also decided to create a natural language model that generates texts, aiming to make use of the word vectors we had produced earlier using prodigy.
+Even though it was not included in the initial project proposal we also decided to create a natural language model that generates texts, aiming to make use of the word vectors we had produced earlier using prodigy. to achieve this we will deploy transfer learning techniques
 
-Our approach includes training a variation of a character level based LSTM model that we trained on a corpus of GGG texts. The idea is to use the embeddings produced, in an embedding layer and then stack this model on top of it.
+Our approach includes training a variation of a character level based LSTM model that we trained on a corpus of GGG texts.The idea is to use the embeddings produced, in an embedding layer and then stack this model on top of it. To train the model we are using Google Colab using TPU acceleration on a variation of [this](https://colab.research.google.com/github/tensorflow/tpu/blob/master/tools/colab/shakespeare_with_tpu_and_keras.ipynb) notebook provided by the TensorFlow Hub Authors.
 
 ### Documentation
 
-As part of our effort to document the changes to the project during GSOC-2019 we thought that it would be vital to update and interate changes to the project's wiki. You can follow up on the process in this [repo](https://github.com/spapadiamantis/3gm-wiki)
+As part of our effort to document the changes to the project during GSOC-2019 we thought that it would be vital to update and integrate changes to the project's wiki. You can follow up on the process in this [repo](https://github.com/spapadiamantis/3gm-wiki)
 
 ## Google Summer of Code 2018
 
