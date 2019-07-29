@@ -90,6 +90,15 @@ Our approach includes training a variation of a character level based LSTM model
 
 As part of our effort to document the changes to the project during GSOC-2019 we thought that it would be vital to update and integrate changes to the project's wiki. You can follow up on the process in this [repo](https://github.com/spapadiamantis/3gm-wiki)
 
+### Deliverables 
+
+The deliverables for the GSOC-2019 include:
+
+1. An expanded version of the Internet Archive [collection](https://archive.org/details/greekgovernmentgazette) containing a total of 134,113 issues from several issue types.
+2. A new Named Entity Recognision model trained exlusively on Greek Government Gazzette texts.
+3. An expanded entities.py module with broadened fact extraction functionality 
+4. A new Doc2vec model containing around 3000 vectors
+
 ## Google Summer of Code 2018
 
 The project met and exceeded its goals for Google Summer of Code 2018. [Link](https://summerofcode.withgoogle.com/projects/#4875998630248448)
