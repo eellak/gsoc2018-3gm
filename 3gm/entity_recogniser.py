@@ -24,13 +24,8 @@ import greek_lemmas
 
 db = database.Database()
 
-
-def contains_digit_or_num(i): return any(
-    j.isdigit() or j in string.punctuation for j in i)
-
-
-
 def build_greek_stoplist(cnt_swords=300):
+    """Builds a list of Greek stopwords"""
     greek_stopwords = []
 
     with open('../resources/greek_stoplist.dat') as f:
@@ -44,6 +39,7 @@ def build_greek_stoplist(cnt_swords=300):
     return greek_stopwords
 
 def build_data_samples(min_size=4, use_spacy=True):
+    """Returns a list of data samples to be classified"""
     data_samples = []
     indices = {}
 
@@ -78,11 +74,12 @@ def build_gg_stoplist(data_samples, greek_stopwords, gg_most_common=500):
     return greek_stopwords, words
 
 def displacy_service(text):
+    """Deploys a displaCy server in localhost"""
     doc = nlp(text)
     return displacy.parse_deps(doc)
 
 def build_named_entities(use_spacy=True):
-
+    """Detects named entities in a list of laws and saves to database"""
     greek_stopwords = build_greek_stoplist()
     data_samples, indices = build_data_samples(use_spacy=use_spacy)
     greek_stopwords, words = build_gg_stoplist(data_samples, greek_stopwords)

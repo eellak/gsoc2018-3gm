@@ -32,7 +32,8 @@ logging.basicConfig(filename="./logs/fetch_by_issue.log",filemode = 'a',
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def handle_download(download_page, params):
-	"""Original function"""
+	"""Handles download of issues from et.gr
+        according to parameters"""
 
 	global output_dir
 	print(params)	
@@ -90,7 +91,7 @@ def handle_download(download_page, params):
 	return outfile
 
 def archive_format(params):
-	# Format for Internet Archive
+	"""Turns metadata to Internet Archive format"""
 	volumes = {
 		'Α' : '01',
 		'Β' : '02',

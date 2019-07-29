@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Train word2vec model and (optionally) create document embeddings for the dataset
-In this approach we will try to trainn a model using tensorflow as oposed to 
+In this approach we will try to train a model using tensorflow as oposed to 
 the gensim implementetion in the 3gm directory
 """
 from multiprocessing import cpu_count
