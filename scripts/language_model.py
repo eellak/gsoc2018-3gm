@@ -1,85 +1,132 @@
-from keras.preprocessing.sequence import pad_sequences
-from keras.layers import Embedding, LSTM, Dense, Dropout
-from keras.preprocessing.text import Tokenizer
-from keras.callbacks import EarlyStopping
-from keras.models import Sequential
-from keras.utils import np_utils
-import keras.utils as ku 
-import numpy as np 
-import spacy
+"""This is a python script used for training a language generations model
+on a Google Colab notebook using TPU acceleration"""
 
-tokenizer = Tokenizer()
-
-def get_embeddings(vocab):
-	return vocab.vectors.data
-
-
-def create_model(embeddings):
-	model = Sequential()
-	model.add(Embedding(embeddings.shape[0],embeddings.shape[1],input_length=150,trainable=True,weights=[embeddings],mask_zero=True))
-	model.add(LSTM(150, return_sequences = True))
-	model.add(Dropout(0.2))
-	model.add(LSTM(100))
-	model.add(Dense(84, activation='softmax'))
-
-	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-
-	print(model.summary())
-	return model 
-
-def generate_text(seed_text, next_words, max_sequence_len):
-	for _ in range(next_words):
-		token_list = tokenizer.texts_to_sequences([seed_text])[0]
-		token_list = pad_sequences([token_list], maxlen=max_sequence_len-1, padding='pre')
-		predicted = model.predict_classes(token_list, verbose=1)
-		
-		output_word = ""
-		for word, index in tokenizer.word_index.items():
-			if index == predicted:
-				output_word = word
-				break
-		seed_text += " " + output_word
-	return seed_text
+import numpy as np
+import tensorflow as tf
+import os
+import io
+import distutils
 
 
 
 
+if distutils.version.LooseVersion(tf.__version__) < '1.14':
+    raise Exception('This script is compatible with TensorFlow 1.14 or higher, for TensorFlow 1.13 or lower please use the previous version at https://github.com/tensorflow/tpu/blob/r1.13/tools/colab/shakespeare_with_tpu_and_keras.ipynb')
 
-filename = "20180100009.txt"
-raw_text = open(filename).read()
-raw_text = raw_text.lower()
-# create mapping of unique chars to integers
-chars = sorted(list(set(raw_text)))
-char_to_int = dict((c, i) for i, c in enumerate(chars))
-# summarize the loaded data
-n_chars = len(raw_text)
-n_vocab = len(chars)
-print("Total Characters: ", n_chars)
-print("Total Vocab: ", n_vocab)
-# prepare the dataset of input to output pairs encoded as integers
-seq_length = 150
-dataX = []
-dataY = []
-for i in range(0, n_chars - seq_length, 1):
-	seq_in = raw_text[i:i + seq_length]
-	seq_out = raw_text[i + seq_length]
-	dataX.append([char_to_int[char] for char in seq_in])
-	dataY.append(char_to_int[seq_out])
-n_patterns = len(dataX)
-X = np.reshape(dataX, (n_patterns, seq_length))
-# normalize
-X = X / float(n_vocab)
-# one hot encode the output variable
-y = np_utils.to_categorical(dataY)
+# This address identifies the TPU we'll use when configuring TensorFlow.
+TPU_WORKER = 'grpc://' + os.environ['COLAB_TPU_ADDR']
 
-nlp = spacy.load("blank_vectors")
-#nlp.add_pipe(nlp.create_pipe("sentencizer"))
-embeddings = get_embeddings(nlp.vocab)
-print(len(embeddings))
-model = create_model(embeddings)
-earlystop = EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=0, mode='auto')
-seed_file="20180100009.txt"
-seed_text = open(seed_file).read()
-model.fit(X, y, epochs=1, verbose=1)
-print(generate_text(" Η Ενεργειακή Κοινότητα (Ε.Κοιν.) είναι αστικός συνεταιρισμός αποκλειστικού σκοπού με στόχο την προώθηση της κοινωνικής και αλληλέγγυας οικονομίας, όπως ορίζεται στην παρ. 1 του άρθρου 2 του ν. 4430/2016 ", 3, 151))
+SHAKESPEARE_TXT = '/content/dataset_train_vectors.txt'
+
+def transform(txt, char_indices):
+  return np.asarray([char_indices[c] for c in txt], dtype=np.int32)
+
+def input_fn(seq_len=100, batch_size=1024):
+  """Return a dataset of source and target sequences for training."""
+
+
+  with io.open(SHAKESPEARE_TXT, encoding='utf-8') as f:
+    txt = f.read().lower()
+
+
+#  with tf.io.gfile.GFile(SHAKESPEARE_TXT,  'r',encoding='utf-8') as f:
+#    txt = f.read()
+  global char_indices
+  global indices_char
+  chars = sorted(list(set(txt)))
+  print('total chars:', len(chars))
+  char_indices = dict((c, i) for i, c in enumerate(chars))
+  indices_char = dict((i, c) for i, c in enumerate(chars))
+
+  source = tf.constant(transform(txt,char_indices), dtype=tf.int32)
+
+  ds = tf.data.Dataset.from_tensor_slices(source).batch(seq_len+1, drop_remainder=True)
+
+  def split_input_target(chunk):
+    input_text = chunk[:-1]
+    target_text = chunk[1:]
+    return input_text, target_text
+
+  BUFFER_SIZE = 10000
+  ds = ds.map(split_input_target).shuffle(BUFFER_SIZE).batch(batch_size, drop_remainder=True)
+
+  return ds.repeat()
+
+
+EMBEDDING_DIM = 512
+
+def lstm_model(seq_len=100, batch_size=None, stateful=True):
+  """Language model: predict the next word given the current word."""
+  source = tf.keras.Input(
+      name='seed', shape=(seq_len,), batch_size=batch_size, dtype=tf.int64)
+
+  embedding = tf.keras.layers.Embedding(input_dim=200, output_dim=EMBEDDING_DIM)(source)
+  lstm_1 = tf.keras.layers.LSTM(EMBEDDING_DIM, stateful=stateful, return_sequences=True)(embedding)
+  lstm_2 = tf.keras.layers.LSTM(EMBEDDING_DIM, stateful=stateful, return_sequences=True)(lstm_1)
+  predicted_char = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(256, activation='softmax'))(lstm_2)
+  return tf.keras.Model(inputs=[source], outputs=[predicted_char])
+
+tf.keras.backend.clear_session()
+
+resolver = tf.contrib.cluster_resolver.TPUClusterResolver(TPU_WORKER)
+tf.contrib.distribute.initialize_tpu_system(resolver)
+strategy = tf.contrib.distribute.TPUStrategy(resolver)
+
+with strategy.scope():
+  training_model = lstm_model(seq_len=100, stateful=False)
+  training_model.compile(
+      optimizer=tf.keras.optimizers.RMSprop(learning_rate=0.01),
+      loss='sparse_categorical_crossentropy',
+      metrics=['sparse_categorical_accuracy'])
+
+training_model.fit(
+    input_fn(),
+    steps_per_epoch=100,
+    epochs=10
+)
+training_model.save_weights('/model.h5', overwrite=True)
+
+
+BATCH_SIZE = 5
+PREDICT_LEN = 250
+
+# Keras requires the batch size be specified ahead of time for stateful models.
+# We use a sequence length of 1, as we will be feeding in one character at a 
+# time and predicting the next character.
+prediction_model = lstm_model(seq_len=1, batch_size=BATCH_SIZE, stateful=True)
+prediction_model.load_weights('/tmp/bard.h5')
+
+# We seed the model with our initial string, copied BATCH_SIZE times
+
+seed_txt = 'Οι όροι που πρέπει να τηρούνται προκειμένου να  χορηγηθεί η άδεια, είναι οι ακόλουθοι:'
+seed_txt = seed_txt.lower()
+seed = transform(seed_txt,char_indices)
+seed = np.repeat(np.expand_dims(seed, 0), BATCH_SIZE, axis=0)
+
+# First, run the seed forward to prime the state of the model.
+prediction_model.reset_states()
+for i in range(len(seed_txt) - 1):
+  prediction_model.predict(seed[:, i:i + 1])
+
+# Now we can accumulate predictions!
+predictions = [seed[:, -1:]]
+for i in range(PREDICT_LEN):
+  last_word = predictions[-1]
+  next_probits = prediction_model.predict(last_word)[:, 0, :]
+  
+  # sample from our output distribution
+  next_idx = [
+      np.random.choice(256, p=next_probits[i])
+      for i in range(BATCH_SIZE)
+  ]
+  predictions.append(np.asarray(next_idx, dtype=np.int32))
+  
+
+for i in range(BATCH_SIZE):
+  print('PREDICTION %d\n\n' % i)
+  p = [predictions[j][i] for j in range(PREDICT_LEN)]
+  print(p)
+  generated = ''.join([indices_char[int(c)] for c in p])  # Convert back to text
+  print(generated)
+  print()
+  assert len(generated) == PREDICT_LEN, 'Generated text too short'
