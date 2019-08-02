@@ -14,7 +14,7 @@ from spacy import displacy
 # spacy
 import spacy
 
-# Importing 3gm NER model 
+# Importing 3gm NER model
 nlp = spacy.load('../models/3gm_ner_model')
 
 
@@ -23,6 +23,7 @@ import greek_lemmas
 
 
 db = database.Database()
+
 
 def build_greek_stoplist(cnt_swords=300):
     """Builds a list of Greek stopwords"""
@@ -38,7 +39,8 @@ def build_greek_stoplist(cnt_swords=300):
 
     return greek_stopwords
 
-def build_data_samples(min_size=4, use_spacy=True):
+
+def build_data_samples(min_size=4):
     """Returns a list of data samples to be classified"""
     data_samples = []
     indices = {}
@@ -73,15 +75,17 @@ def build_gg_stoplist(data_samples, greek_stopwords, gg_most_common=500):
     print('Done Counting')
     return greek_stopwords, words
 
+
 def displacy_service(text):
     """Deploys a displaCy server in localhost"""
     doc = nlp(text)
     return displacy.parse_deps(doc)
 
-def build_named_entities(use_spacy=True):
+
+def build_named_entities():
     """Detects named entities in a list of laws and saves to database"""
     greek_stopwords = build_greek_stoplist()
-    data_samples, indices = build_data_samples(use_spacy=use_spacy)
+    data_samples, indices = build_data_samples()
     greek_stopwords, words = build_gg_stoplist(data_samples, greek_stopwords)
 
     i = 0
@@ -89,22 +93,21 @@ def build_named_entities(use_spacy=True):
     db.drop_named_entities()
 
     for item in data_samples:
-         doc = nlp(item)
+        doc = nlp(item)
 
+        entities = []
+        for ent in doc.ents:
+            entity_tuple = (ent.text, ent.start_char, ent.end_char, ent.label_)
+            entities.append(entity_tuple)
 
-         entities = []
-         for ent in doc.ents:
-             entity_tuple = (ent.text, ent.start_char, ent.end_char, ent.label_)
-             entities.append(entity_tuple)
-
-         s = {'_id': indices.get(i),
-              'entities': entities
-          }
-         print(s)
-         db.named_entities.save(s)
-         i+=1
+        s = {'_id': indices.get(i),
+             'entities': entities
+             }
+        print(s)
+        db.named_entities.save(s)
+        i += 1
 
 
 if __name__ == '__main__':
     use_spacy = '--spacy' in sys.argv[1:]
-    build_namde_entities(use_spacy=use_spacy)
+    build_namde_entities()
