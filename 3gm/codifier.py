@@ -371,8 +371,9 @@ class LawCodifier:
         with open(outfile, 'w+') as f:
             for law in self.laws:
                 s = self.get_law(law, export_type='str')
-                f.write(s + '\n')
-                labels.write(str(law) + '\n')
+                if s:
+                    f.write(s + '\n')
+                    labels.write(str(law) + '\n')
         labels.close()
 
     def export_phrase_links(self, outfile):
