@@ -62,7 +62,7 @@ After obtaining a large enough data-set to train our models we trained the small
 
 The final version of the NER model is located in the models folder alongside a model of word-embedding containing around 20000 word vectors. 
 
-The most efficient in terms of performance and complexity model will then be integrated to the 3gm app.    
+The most efficient in terms of performance and complexity model will then be integrated to the 3gm app. 
 
 ### Broadening fact extaction
 
@@ -98,6 +98,10 @@ The deliverables for the GSOC-2019 include:
 2. A new Named Entity Recognision model trained exlusively on Greek Government Gazzette texts.
 3. An expanded entities.py module with broadened fact extraction functionality 
 4. A new Doc2vec model containing around 3000 vectors
+
+### Final Progress Report
+
+You can find the final progress report in the form of github gist at the following [link](https://gist.github.com/spapadiamantis/8ee78769975ffcb2a7a4d1a135a7a05f)
 
 ## Google Summer of Code 2018
 
