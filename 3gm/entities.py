@@ -298,6 +298,10 @@ class Currency:
     ]
 
 def get_metrics(text):
+    """
+    Extracts all non-monetary amounts using the units class,
+    from plain text
+    """
 
     pattern = '|'.join(item for item in Unit.units)
     amounts_regex = re.compile(r'('+number_regex+'('+pattern+'))')
@@ -311,7 +315,10 @@ def get_metrics(text):
     return result
 
 def get_monetary_amounts(text):
-    
+    """
+    Extracts all monetary amounts using the currencies class,
+    from plain text
+    """
     pattern = '|'.join(item for item in Currency.currencies)
     currency_regex = re.compile(r'('+number_regex+'('+pattern+'))')
     currency =  currency_regex.finditer(text)
