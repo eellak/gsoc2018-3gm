@@ -2,3 +2,6 @@
 3gm_ner_model.zip filter=lfs diff=lfs merge=lfs -text
 corpus.txt filter=lfs diff=lfs merge=lfs -text
 doc2vec filter=lfs diff=lfs merge=lfs -text
+lang_generator.h5 filter=lfs diff=lfs merge=lfs -text
+words_indices.json filter=lfs diff=lfs merge=lfs -text
+indices_words.json filter=lfs diff=lfs merge=lfs -text
