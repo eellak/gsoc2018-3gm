@@ -5,28 +5,6 @@ import string
 from collections import Iterable
 
 
-class Minister:
-
-    def __init__(self, name, middle, surname, ministry):
-        self.name = name
-        self.surname = surname
-        self.ministry = ministry
-        self.middle = middle
-
-    def is_mentioned(self, s):
-        search_full = re.search(self.name + ' ' + self.surname, s)
-        if search_full is not None:
-            return search_full.span()
-        search_sur = re.search(self.surname, s)
-        if search_sur is not None:
-            return search_sur.span()
-        search_min = re.search(self.ministry, s)
-        if search_min is not None:
-            return search_min.span()
-
-    def __repr__(self):
-        return '{} {}'.format(self.name, self.surname)
-
 
 class Action:
 
