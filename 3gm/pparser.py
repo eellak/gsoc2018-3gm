@@ -356,24 +356,7 @@ class IssueParser:
                 yield sentence
 
     def detect_signatories(self):
-        self.signatories = set([])
-        for i, line in enumerate(self.lines):
-            if line.startswith('Ο Πρόεδρος της Δημοκρατίας'):
-                minister_section = self.lines[i:]
-                break
-
-        for i, line in enumerate(minister_section):
-            for minister in ministers:
-                x = minister.is_mentioned(line)
-                if x is not None:
-                    self.signatories |= set([minister])
-
-        for signatory in self.signatories:
-            logging.info(signatory)
-
-        self.signatories = list(self.signatories)
-
-        return self.signatories
+        raise NotImplementedError
 
     def detect_new_laws(self):
         """Detect new laws being added to Greek
