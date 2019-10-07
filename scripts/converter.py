@@ -13,7 +13,7 @@ import glob
 # Minimum bytes for a file to considered purely image
 MIN_BYTES = 200
 
-logging.basicConfig(filename="codify_daily.log",filemode = 'a'
+logging.basicConfig(filename="./logs/codify_daily.log",filemode = 'a',
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def batch_codify(filelist):

@@ -28,12 +28,12 @@ import logging
 sys.path.append('../3gm')
 from helpers import Helper
 
-
-logging.basicConfig(filename="fetch_daily.log",filemode = 'a',
+logging.basicConfig(filename="./logs/fetch_by_issue.log",filemode = 'a',
     format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def handle_download(download_page, params):
-	"""Original function"""
+	"""Handles download of issues from et.gr
+        according to parameters"""
 
 	global output_dir
 	print(params)	
@@ -91,7 +91,7 @@ def handle_download(download_page, params):
 	return outfile
 
 def archive_format(params):
-	# Format for Internet Archive
+	"""Turns metadata to Internet Archive format"""
 	volumes = {
 		'Α' : '01',
 		'Β' : '02',
@@ -186,12 +186,16 @@ if __name__ == '__main__':
 	optional = parser.add_argument_group('optional arguments')
 
 	required.add_argument(
-		'-date_from',
-		help='Date from in DD.MM.YYYY format',
+		'-issue_from',
+		help='Number of FEK to start from ',
 		required=True)
 	required.add_argument(
-		'-date_to',
-		help='Date to in DD.MM.YYYY format',
+		'-issue_to',
+		help='Number of FEK to finish fetching at',
+		required=True)
+	required.add_argument(
+		'-year',
+		help='Input the year you are searching for',
 		required=True)
 	required.add_argument(
 		'-output_dir',
@@ -213,9 +217,9 @@ if __name__ == '__main__':
 
 
 	args = parser.parse_args()
-
-	date_from = args.date_from
-	date_to = args.date_to
+	year = args.year
+	issue_from = args.issue_from
+	issue_to = args.issue_to
 	chromedriver_executable = args.chromedriver
 
 	if not chromedriver_executable:
@@ -226,9 +230,10 @@ if __name__ == '__main__':
 	output_dir = args.output_dir
 
 	print(
-		'Fetching Government Gazette Issues from {} to {}'.format(
-			date_from,
-			date_to))
+		'Fetching Government Gazette Issues from {} to {} in {}'.format(
+			issue_from,
+			issue_to,
+			year))
 
 	# Initialize Driver
 	options = webdriver.ChromeOptions()
@@ -250,18 +255,14 @@ if __name__ == '__main__':
 
 	driver.find_element_by_name("showhide").click()
 	#add year to the respective dropdown option
-	driver.find_element_by_name("year").send_keys(date_from[6:10])
+	driver.find_element_by_name("year").send_keys(year)
 
 	# Enter Details
-	driver.find_element_by_name("fekReleaseDateTo").clear()
-	driver.find_element_by_name("fekReleaseDateTo").send_keys(date_to)
-	driver.find_element_by_name("fekReleaseDateFrom").clear()
-	driver.find_element_by_name("fekReleaseDateFrom").send_keys(date_from)
 
-	driver.find_element_by_name("fekEffectiveDateTo").clear()
-	driver.find_element_by_name("fekEffectiveDateTo").send_keys(date_to)
-	driver.find_element_by_name("fekEffectiveDateFrom").clear()
-	driver.find_element_by_name("fekEffectiveDateFrom").send_keys(date_from)
+	driver.find_element_by_name("fekNumberFrom").clear()
+	driver.find_element_by_name("fekNumberFrom").send_keys(issue_from)
+	driver.find_element_by_name("fekNumberTo").clear()
+	driver.find_element_by_name("fekNumberTo").send_keys(issue_to)
 
 	# Multiple issues support
 	possible_issues = dict(zip(['Α', 'Β', 'Γ', 'Δ',

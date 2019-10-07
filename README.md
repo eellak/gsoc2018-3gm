@@ -4,7 +4,9 @@
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/sindresorhus/awesome)
 
 
-# :rocket: Google Summer Of Code 2018 - 3gm
+# :rocket: Greek Government Gazette Text Mining, Cross Linking and Codification  - 3gm
+
+  
 
 Welcome to _Government Gazette text mining, cross linking, and codification Project_ (or 3gm for short) using [Natural Language Processing Methods](https://en.wikipedia.org/wiki/Natural_language_processing) and Practices on **Greek Legislation**.
 
@@ -34,6 +36,73 @@ You can view the detailed timeline [here](https://docs.google.com/document/d/1An
 
 ---
 
+## Google Summer of Code 2019
+
+This repository will host the changes and code developped for 3gm as part of the Google Summer of Code 2019. This year's effort mainly aims to enhence NLP functionalities of the project and is based on this [project proposal](https://docs.google.com/document/d/1KT14HmJBIOsKgLSfm4iBz79PCH1G2LUxbNVDINGr_2o/edit?usp=sharing). The timeline of the project is described [here](https://docs.google.com/document/d/1mr633dCmdtp3bLqRKWygj7VoQ_enh-qHvqHgYysRhjM/edit?usp=sharing) and you can also find a [worklog](https://docs.google.com/document/d/1wPAsp_DKi8Xls54dusn0rQQcFnnREFRTKvJsYco4s1k/edit?usp=sharing) documenting the progress made during the development of the project.   
+
+The main goals for GSoC-2019 are populating the database with more types of amendments, widening the range of feature extraction and training a new Doc2Vec model and a new NER annotator specifically for our corpus.
+
+### Migrating Data
+
+As part of the first week of GSoC-2019 a data mirgation project. In the scope of this project we had to mine the website of the [Greek National Printing House](http://www.et.gr/idocs-nph/search/fekForm.html#results) and upload as many GGG issues to the respective [Internet Archive Collection](https://archive.org/details/greekgovernmentgazette). Until now, 87,874 issues have been uploaded, in addition to the ~45.000 files that the collection contained initially and this number will continue to surge. The main goal of this whole endeavour is making the greek legislation archive more accessible.
+
+We tried documenting our insights from this process. We would like to evolve this to an entry at the project wiki, titled [" A simple guide to mining the Greek Government Gazette"](https://docs.google.com/document/d/1pcCmRKKRClTmOD1HQav2GRlkM0mLZUgGmIv83HX4wv0/edit?usp=sharing). 
+
+### NER model Training
+
+After uploading a major part of the Greek Government Gazette issues, including all primary type issues, it was time to start building a dataset to train a new NER tagger based on the [Greek spaCy model](https://spacy.io/models/el). To do that it is necessary to use an annotation tool. A tool that is fully compatible with spaCy is [prodigy](https://prodi.gy/). We contacted them and they provided a research licence for the duration of the project.
+
+To mine, prepare and annotate our data we followed this [workflow](https://docs.google.com/document/d/1ICkSLpc2IZEuISpb2VXWURZ4cyVXQ_Os4ynWwnmIJU8/edit?usp=sharing) and followed the guidlines for annotation described [here](https://docs.google.com/document/d/1xvNTYXnakbyPCecVDVC3SgK8DB3ylR2wb8z6cABNiMA/edit?usp=sharing).
+
+All above documents will be incorporated on the project wiki shortely.
+
+As a result of this process we have created a dataset containing around 3000 sentences. A first version of this dataset can be found in the projects data folder. We have also deployed the prodigy annotator, in an effort  to showcase our progress. In case you want to support this year's project. All annotations gathered will be used for model training after quality control.You can find it [here](http://36ba097e.ngrok.io/).
+
+After obtaining a large enough data-set to train our models we trained the small and medium sized Greek spaCy models using the prodigy recipes for training. The models showed significant improvement after training. A version of the small NER model that we trained can be found in the data directory of this repo. Our goal now is to optimize the model and properly evaluate it. As a first step to this process we will use the train-curve recipe of prodigy to see how to the model performs when trained with different portions of our data. Finally we will develop a python script to train the spacy model, document all its metrics and tune hyperparameters. The is process is documented in this [report](https://docs.google.com/document/d/1uWAOgDVAA2zCa5SE8A2L6OHVBXTkm0sQMMyxdkErKnI/edit?usp=sharing)
+
+The final version of the NER model is located in the models folder alongside a model of word-embedding containing around 20000 word vectors. 
+
+The most efficient in terms of performance and complexity model will then be integrated to the 3gm app. 
+
+### Broadening fact extaction
+
+During this year's GSOC we focused a lot on enhancing the NLP capabilities of the project.
+
+As part of this procedure it is vital to broaden fact extraction on the project. Using regular expressions we will work on the entities file aiming to make it possible for the app to identify useful information such as metrics, codes, ids, contact info e.t.c.
+
+We have created a script to test regular expressions for fact extractions. Unfortunately there is very little consistency when it come to writing information between issues and this results to difficulties in entities extraction.
+
+After optimizing the extraction queries we integrated them to the entities module that can be found in the 3gm directory. We now have to use the regular expressions to extract entities in the pparser module, the module that is responsible for extracting amendments, laws and ratifications. 
+
+### Training a new Doc2vec model
+
+We will train a new model for doc2vec using the gensim library following the proposed [workflow](https://github.com/eellak/gsoc2018-3gm/wiki/Document-Embeddings-with-Doc2Vec) in the project wiki. We will use the codifier to create a large corpus and subsequently train the gensim model on it. To make sure that the model is efficient we will have to create a corpus of several thousand issues and then finetune the model's hyperparameters.
+
+For the time being we have created a corpus file containing 2878 laws and presidential decisions totaling around 223Mb. We have also trained a doc2vec model that can be found in the models directory. Our goal is to create a corpus as big as possible and this is the reason we will continue to expand it.
+
+### Creating a natural language model
+
+Even though it was not included in the initial project proposal we also decided to create a natural language model that generates texts, aiming to make use of the word vectors we had produced earlier using prodigy. to achieve this we will deploy transfer learning techniques
+
+Our approach includes training a variation of a character level based LSTM model that we trained on a corpus of GGG texts.The idea is to use the embeddings produced, in an embedding layer and then stack this model on top of it. To train the model we are using Google Colab using TPU acceleration on a variation of [this](https://colab.research.google.com/github/tensorflow/tpu/blob/master/tools/colab/shakespeare_with_tpu_and_keras.ipynb) notebook provided by the TensorFlow Hub Authors.
+
+### Documentation
+
+As part of our effort to document the changes to the project during GSOC-2019 we thought that it would be vital to update and integrate changes to the project's wiki. You can follow up on the process in this [repo](https://github.com/spapadiamantis/3gm-wiki)
+
+### Deliverables 
+
+The deliverables for the GSOC-2019 include:
+
+1. An expanded version of the Internet Archive [collection](https://archive.org/details/greekgovernmentgazette) containing a total of 134,113 issues from several issue types.
+2. A new Named Entity Recognision model trained exlusively on Greek Government Gazzette texts.
+3. An expanded entities.py module with broadened fact extraction functionality 
+4. A new Doc2vec model containing around 3000 vectors
+
+### Final Progress Report
+
+You can find the final progress report in the form of github gist at the following [link](https://gist.github.com/spapadiamantis/8ee78769975ffcb2a7a4d1a135a7a05f)
+
 ## Google Summer of Code 2018
 
 The project met and exceeded its goals for Google Summer of Code 2018. [Link](https://summerofcode.withgoogle.com/projects/#4875998630248448)
@@ -46,7 +115,14 @@ Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 
 ## Contibutors
 
-### Mentors
+### Mentors for GSOC 2019
+
+* Mentor: Marios Papachristou ([papachristoumarios](https://github.com/papachristoumarios))
+* Mentor: Diomidis Spinellis ([dsplinellis](https://github.com/dspinellis))
+* Mentor: Ioannis Anagnostopoulos
+* Mentor: Panos Louridas ([louridas](https://github.com/louridas))
+
+### Mentors for GSOC 2018
 
 * Mentor: Diomidis Spinellis ([dsplinellis](https://github.com/dspinellis))
 * Mentor: Sarantos Kapidakis
@@ -54,8 +130,10 @@ Organization: [GFOSS - Open Technologies Alliance](https://gfoss.eu/)
 
 ### Development
 
- * Marios Papachristou (Original Developer)
- * Theodore Papadopoulos
+ * Marios Papachristou (Original Developer - Google Summer of Code 2018)
+ * Theodore Papadopoulos (AngularJS UI)
+ * Sotirios Papadiamantis (Google Summer of Code 2019)
+ 
 
 ---
 

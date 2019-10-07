@@ -521,11 +521,11 @@ def ssconj_doc_iterator(l, i, is_plural=False, recursive=False):
     j = i + 1
     if not is_plural:
         if str(
-            l[j]).isdigit() or str(
-            l[j]).endswith("'") or str(
-            l[j]).endswith('΄') or str(
-            l[j]).endswith(',') or str(
-            l[j]).endswith( ')'):
+                l[j]).isdigit() or str(
+                l[j]).endswith("'") or str(
+                l[j]).endswith('΄') or str(
+                l[j]).endswith(',') or str(
+                l[j]).endswith(')'):
             yield str(l[j])
         else:
             j = i - 1
@@ -583,7 +583,6 @@ def ssconj_doc_iterator(l, i, is_plural=False, recursive=False):
                         return
                 except:
                     return
-
 
             j += 1
 
@@ -649,7 +648,7 @@ def fix_par_abbrev(s):
         r'την (παρ.|παρ) ': 'την παράγραφο ',
         r'οι (παρ.|παρ) ': 'οι παράγραφοι ',
         r'των (παρ.|παρ) ': 'των παραγράφων ',
-        r'τις (παρ.|παρ) ' : 'τις παραγράφους ',
+        r'τις (παρ.|παρ) ': 'τις παραγράφους ',
         r'Η (παρ.|παρ) ': 'Η παράγραφος ',
         r'Της (παρ.|παρ) ': 'Της παραγράφου ',
         r'Την (παρ.|παρ) ': 'Την παράγραφο ',
@@ -678,18 +677,20 @@ def split_index(s, idx_list):
 
 def invert_dict(d): return dict(zip(d.values(), d.keys()))
 
+
 def compare_year(s):
     try:
         return int(s.split('/')[-1])
     except BaseException:
         return int(s.split('.')[-1])
 
+
 def parse_filename(fn):
     fn = fn.replace('.txt', '')
     year = fn[:4]
     volume_lookup = {
-        '01' : 'Α',
-        '02' : 'Β'
+        '01': 'Α',
+        '02': 'Β'
     }
 
     vol = volume_lookup[fn[4:6]]
@@ -697,18 +698,21 @@ def parse_filename(fn):
     result = 'ΦΕΚ {} {}/{}'.format(vol, number, year)
     return result
 
+
 def partition(array, begin, end, cmp):
     pivot = begin
     for i in range(begin+1, end+1):
-        if cmp(array[i],array[begin]):
+        if cmp(array[i], array[begin]):
             pivot += 1
             array[i], array[pivot] = array[pivot], array[i]
     array[pivot], array[begin] = array[begin], array[pivot]
     return pivot
 
+
 def quicksort(array, cmp, begin=0, end=None):
     if end is None:
         end = len(array) - 1
+
     def _quicksort(array, begin, end):
         if begin >= end:
             return
@@ -716,6 +720,7 @@ def quicksort(array, cmp, begin=0, end=None):
         _quicksort(array, begin, pivot-1)
         _quicksort(array, pivot+1, end)
     return _quicksort(array, begin, end)
+
 
 def compare_statutes(x, y):
     x = x.lower()
@@ -731,6 +736,7 @@ def compare_statutes(x, y):
             return int(xs[1].split('/')[0]) < int(ys[1].split('/')[0])
         else:
             return xs[0] != 'ν.'
+
 
 def remove_front_num(s, max_span=4):
     """Remove front number if exists.
