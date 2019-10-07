@@ -30,6 +30,7 @@ class Database:
         self.laws = self.db.laws
         self.links = self.db.links
         self.topics = self.db.topics
+        self.named_entities = self.db.named_entities
         self.archive_links = self.db.archive_links
         self.fs = gridfs.GridFS(self.db)
         self.summaries = self.db.summaries
@@ -86,11 +87,12 @@ class Database:
         if issue_name:
             result['amendee'] = issue_name
 
-        cur = self.laws.find({"_id" : law.identifier, "versions.amendee": { "$ne" : issue_name} } )
+        cur = self.laws.find(
+            {"_id": law.identifier, "versions.amendee": {"$ne": issue_name}})
         cur = list(cur)
         if cur == []:
             self.laws.save({'_id': law.identifier})
-            temp = {'_id' : law.identifier}
+            temp = {'_id': law.identifier}
         else:
             temp = cur[0]
 
@@ -116,6 +118,10 @@ class Database:
         """Drop topics collection"""
         self.db.drop_collection('topics')
 
+    def drop_named_entities(self):
+        """Drop named entities collection"""
+        self.db.drop_collection('named_entities')
+
     def checkout_laws(self, identifier=None, version=0):
         """Checkout to certain version
         :param identifier Law to apply checkout"""
@@ -125,8 +131,8 @@ class Database:
             for v in x['versions']:
                 if int(v['_version']) == version:
                     y = {
-                        '_id' : identifier,
-                        'versions' : [v]
+                        '_id': identifier,
+                        'versions': [v]
                     }
                     break
 
@@ -149,12 +155,12 @@ class Database:
         """
         if identifier != None:
             cursor = self.links.find({
-                '_id' : identifier,
-                'actual_links.status' : 'εφαρμοσμένος'
+                '_id': identifier,
+                'actual_links.status': 'εφαρμοσμένος'
             })
         else:
             cursor = self.links.find({
-                'actual_links.status' : 'εφαρμοσμένος'
+                'actual_links.status': 'εφαρμοσμένος'
             })
 
         for x in cursor:
@@ -186,7 +192,7 @@ class Database:
 
     def get_json_from_fs(self, _id=None):
         """Get json from GridFS"""
-        dump = self.fs.find_one({'_id' : _id})
+        dump = self.fs.find_one({'_id': _id})
         return json.loads(dump.read().decode('utf-8'))
 
     def drop_fs(self):

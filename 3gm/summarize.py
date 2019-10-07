@@ -13,13 +13,15 @@ db = database.Database()
 MAX_TITLE_WORDS = 20
 
 # Summarization job
+
+
 def job(identifier):
     global db
     punct = str.maketrans('', '', string.punctuation)
     try:
         l = codifier.codifier.laws[identifier]
         titles = filter(lambda x: len(x.split()) <= MAX_TITLE_WORDS,
-            [x.lstrip().rstrip().translate(punct) for x in l.titles.values()])
+                        [x.lstrip().rstrip().translate(punct) for x in l.titles.values()])
         titles = filter(lambda x: x.rstrip() != '', titles)
         titles = '. '.join(titles)
         summary = summarize_textrank(titles, ratio=0.1)
@@ -28,12 +30,14 @@ def job(identifier):
 
     finally:
         summary_obj = {
-            '_id' : identifier,
-            'summary' : summary
+            '_id': identifier,
+            'summary': summary
         }
         db.summaries.save(summary_obj)
 
 # Summarize
+
+
 def summarize(identifiers=[]):
     workers = multiprocessing.cpu_count() - 1
     pool = multiprocessing.Pool(workers)
@@ -41,6 +45,7 @@ def summarize(identifiers=[]):
         identifiers = list(codifier.codifier.laws.keys())
     print(identifiers)
     pool.map(job, identifiers)
+
 
 if __name__ == '__main__':
     summarize()

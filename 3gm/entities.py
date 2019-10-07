@@ -2,29 +2,8 @@ import re
 import numpy as np
 from helpers import *
 import string
+from collections import Iterable
 
-
-class Minister:
-
-    def __init__(self, name, middle, surname, ministry):
-        self.name = name
-        self.surname = surname
-        self.ministry = ministry
-        self.middle = middle
-
-    def is_mentioned(self, s):
-        search_full = re.search(self.name + ' ' + self.surname, s)
-        if search_full is not None:
-            return search_full.span()
-        search_sur = re.search(self.surname, s)
-        if search_sur is not None:
-            return search_sur.span()
-        search_min = re.search(self.ministry, s)
-        if search_min is not None:
-            return search_min.span()
-
-    def __repr__(self):
-        return '{} {}'.format(self.name, self.surname)
 
 
 class Action:
@@ -110,8 +89,12 @@ wheres = ['Στο', 'στο', 'Στην', 'στην', 'στον', 'Στον']
 law_regex = r'(ν.|Ν.) [0-9][0-9][0-9][0-9]/[1-2][0-9][0-9][0-9]'
 legislative_decree_regex = r'(ν.δ.|Ν.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'
 presidential_decree_regex = r'(π.δ.|Π.Δ.) ([0-9]|[0-9][0-9]|[0-9][0-9][0-9])/[1-2][0-9][0-9][0-9]'
+date_regex = re.compile('(\
+([1-9]|0[1-9]|[12][0-9]|3[01])\
+[-/.\s+]\
+(1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)\
+(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)')
 legislative_act_regex = r'Πράξη(|ς) Νομοθετικού Περιεχομένου ([0-9]|[0-3][0-9]).[0-9][0-9].[1-2][0-9][0-9][0-9]'
-date = r'(([1-9]|0[1-9]|[12][0-9]|3[01])[-/.\s+](1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)'
 article_regex = ['άρθρο \d+', 'άρθρου \d+']
 paragraph_regex = [
     'παράγραφος \d+',
@@ -129,6 +112,201 @@ plural_suffixes = [
     'ους'
 ]
 
+conditions = ['Εκτός αν', ' αν ', 'προϋπόθεση', 'κατά περίπτωση', 'εφόσον', 'εάν',
+              'ανεξαρτήτως εάν', 'είναι δυνατόν να', 'τις προϋποθέσεις', 'μόνο εφόσον', 'μετά από', 'ενέχει']
+
+constraints = ['εν όλω', 'εν μέρει', 'αρκεί', 'εκτός από',
+               'πρέπει να', 'πλην', 'τουλάχιστον', 'μέχρι', 'το πολύ', 'εκτός', 'λιγότερο από']
+
+durations = ['επί', 'μέσα στον μήνα', 'μέσα σε', 'εντός ',
+             'μέχρι της ίδιας αυτής ημερομηνίας', 'προθεσμία',  'το αργότερο εντός']
+
+
+def flatten(items):
+    """Yield items from any nested iterable; see Reference."""
+    for x in items:
+        if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
+            for sub_x in flatten(x):
+                yield sub_x
+        else:
+            yield x
+
+def get_conditions(text):
+
+    # Conditions
+    cond = []
+    cond.append(re.findall('|'.join(x for x in conditions), text))
+
+    return(list(flatten(cond)))
+         
+def get_constraints(text):
+
+    # Constrains
+    const = []
+    const.append(re.findall('|'.join(x for x in constraints), text))
+
+    return(list(flatten(const)))
+         
+def get_durations(text):
+
+    # Durations
+    dur = []
+    dur.append(re.findall('|'.join(x for x in durations), text))
+
+    return(list(flatten(dur)))
+
+
+# URLS
+urls = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+
+# CPC codes
+cpc = r'CPC .+[0-9]'
+
+# CPV codes
+cpv = r'[0-9]{8}-[0-9]'
+
+# IBAN
+ibans = r'[A-Z]{2}[ ]?[0-9]{2}[- ]?[0-9]{4}[- ]?[0-9]{4}[- ]?[0-9]{4}[- ]?[0-9]{4}[- ]?[0-9]{4}[- ]?[0-9]{3}'
+
+# E-mail adresses
+e_mails = r'[\w\.-]+@[\w\.-]+'
+
+# ID numbers
+id_numbers = r'Α.?Δ.?Τ.?:? ([Α-Ωα-ω]{0,2}[- ]?[0-9]{6})'
+
+# Military personnel IDs
+military_personel_id = r'ΣΑ [0-9]{3}/[0-9]{3}/[0-9]{2}'
+
+# Scales
+scales = r'1:[0-9]{1,10}'
+
+# Natura 2000 regions
+natura_regions = r'GR[0-9]{7}'
+
+# Wildlife sanctuaries
+wildlife_sanctuaries = r'Καταφύγιο Άγριας Ζωής ([Α-ΩA-Z0-9]+)'
+
+# EU directives
+directives_eu = r'[Οο]δηγίας? ([0-9]+/[0-9]+/[Α-Ω]{2,4})'
+
+# EU regulations
+regulations_eu = r'[Κκ]ανονισμ[όούς]{1, 2}[Α-Ω)(]*[αριθ.] * ([0-9]{1, 5}/[0-9]{4})'
+
+# EU decisions
+decisions_eu = r'[Αα]πόφασης?[Α-Ω )(]*[ αριθ.]* ([1-9][0-9]{3}/[0-9]{1,5}/[Α-Ω]{2,3})'
+
+# Academic year
+ac_year = r'ακαδημαϊκό έτος ([1-9][0-9]{3}-[1-9][0-9]{3})'
+
+# Greek zip codes
+zip_codes = r'ΤΚ: ([0-9]{3} [0-9]{2})'
+
+# Act of deletion from the Public HR registry
+del_from_registry = r'Αριθ. βεβ. διαγραφής από το Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: ([0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})'
+
+# Act of inscription to the Public HR registry
+ins_to_registry = r'Αριθμ. βεβ. εγγραφής στο Μητρώο Ανθρώπινου Δυναμικού Ελληνικού Δημοσίου: ([0-9]{10}/[0-9]{2}.[0-9]{2}.[0-9]{4})'
+
+# ADA numbers for DIAUGEIA
+adas = r'Α.?Δ.?Α.?:? ([Α-Ω0-9]{4,10}-[Α-Ω0-9]{3})'
+
+# Ολοκληρωμένο Πληροφοριακό Σύστημα (ΟΠΣ) code
+ops = r'Ο.?Π.?Σ.?:? ([0-9]+)'
+
+# ISO and ELOT protocols
+protocols = r'πρότυπο ([Α-ΩA-Z]{2,4} [Α-ΩA-Z]{2,4} [0-9:-]+|[Α-ΩA-Z]{2,4} [0-9:-]+)'
+
+# Αριθμός Φορολογικού Μητρώου (Α.Φ.Μ.)- Tax Registry number
+afm = r'Α.?Φ.?Μ.?:? ([0-9]{9})'
+
+# NUTS regions
+nuts_reg = r'NUTS:? ([A-Z]{2}[0-9]{1,3})'
+
+# Exact times
+exact_times = r'[0-9]{2}:[0-9]{2} [πμ].μ.|[0-9]{2}:[0-9]{2}'
+
+# Ship tonnage in register tons
+tonnage = r'[-+]?[.]?[\d]+[-+]?[.]?[\d]+(?:,\d\d)* κόρ[οιωv]{2}'
+
+# KAEK Κωδικός Αριθμό Eθνικού Kτηματολογίου
+kaek = r'ΚΑΕΚ[- ]?[0-9/]{12}'
+
+# Number regex
+number_regex = r'[.\d]?[.]?[\d]+[.]?[\d]+(?:[,.]\d\d)*[ ]?'
+
+# Phone numbers
+phone_numbers = r'[+03]{0,4} 2[1-8][0-9][ -]?[0-9]{7}|[+03]{0,4} 2[1-8][0-9]{3}[ -]?[0-9]{6}'
+
+# HULL number - Ship ID
+hull = r'HULL No ([A-Z0-9]{1,17}|[A-Z]{1,2}[- ]?[A-Z0-9]{1,17})'
+
+# Ship flag
+flag = r'\W σημαία|σημαία \W'
+
+
+
+
+meters = r'm |μ\.?[ \.)]|μέτρ[ωνα]{1,2}'
+kilometers = r'km|χλμ.?|χιλι[όο]μ[εέ]τρ[ωνα]'
+liters = r'[Λλ]ίτρ[ωνα]{1,2}|[LIl]t|ml'
+surface = r'μ2|τετραγωνικών μέτρ[ωνα]{1,2}|τ[.]?μ[.]?|στρ[εέ]μμ[άα]τ[ωνα]{1,2}|στρ.?|τετρ. μέτρ[ωνα]{1,2}'
+power = r'[Kk][wW]'
+kgr = r'[Kk]g[r]?'
+
+class Unit:
+    units = [
+         meters,
+         kilometers,
+         liters,
+         surface,
+         power,
+         kgr
+    ]
+
+eur = r'[Εε]υρώ|€|EUR'
+dol = r'USD|$|[Δδ]ολ[άα]ρ[ιί][αών]{1,2}'
+pnd = r'GPK|£|[Λλ]ίρ[εςών]{2}'
+drm = r'[Δδ]ραχμ[ώνές]{2}|δρχ\.'
+class Currency:
+    currencies = [
+         eur,
+         dol,
+         pnd,
+         drm
+    ]
+
+def get_metrics(text):
+    """
+    Extracts all non-monetary amounts using the units class,
+    from plain text
+    """
+
+    pattern = '|'.join(item for item in Unit.units)
+    amounts_regex = re.compile(r'('+number_regex+'('+pattern+'))')
+    amounts =  amounts_regex.finditer(text)
+
+    result = []
+    for match in amounts:
+          if match.group(2) != '':
+              result.append(match.group(1))
+
+    return result
+
+def get_monetary_amounts(text):
+    """
+    Extracts all monetary amounts using the currencies class,
+    from plain text
+    """
+    pattern = '|'.join(item for item in Currency.currencies)
+    currency_regex = re.compile(r'('+number_regex+'('+pattern+'))')
+    currency =  currency_regex.finditer(text)
+
+    result = []
+    for match in currency:
+          if match.group(2) != '':
+              result.append(match.group(1))
+
+    return result
 
 class LegalEntities:
     entities = [

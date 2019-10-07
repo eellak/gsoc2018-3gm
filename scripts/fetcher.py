@@ -24,20 +24,38 @@ import os.path
 import datetime
 import platform
 import sys
+import logging
 sys.path.append('../3gm')
 from helpers import Helper
 
+
+logging.basicConfig(filename="fetch_daily.log",filemode = 'a',
+    format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 def handle_download(download_page, params):
 	"""Original function"""
 
 	global output_dir
-	print(params)
+	print(params)	
 
 	filename = archive_format(params) + ".pdf"
 	volumes = {
 		'Α' : 'A',
-		'Β' : 'B'
+		'Β' : 'B',
+		'Γ' : 'C',
+		'Δ' : 'D',
+		'Α.ΕΙ.Δ.' : 'A.EI.D',
+		'Α.Σ.Ε.Π.': 'A.S.E.P',
+		'Δ.Δ.Σ.': 'D.D.S',
+		'Α.Π.Σ.':  'A.P.S',
+		'Υ.Ο.Δ.Δ.': 'Y.O.D.D',
+		'Α.Α.Π.' : 'A.A.P',
+		'Ν.Π.Δ.Δ.': 'N.P.D.D',
+		'ΠΑΡΑΡΤΗΜΑ': 'APPENDIX', 
+		'Δ.Ε.Β.Ι.': 'D.E.B.I',
+		'ΑΕ-ΕΠΕ': 'AE-EPE',
+		'Ο.Π.Κ.': 'O.P.K',		
+
 	}
 	vol = volumes[params['issue_type']]
 	year = params['issue_date'].year
@@ -47,8 +65,9 @@ def handle_download(download_page, params):
 	outfile = '{}/{}/{}'.format(output_dir, dirs, filename)
 
 	if os.path.isfile(outfile):
-	   print('Already a file')
+	   logging.info('{} already a file'.format(filename))
 	   return
+	
 
 	try:
 		# First we get the redirect link from the download page
@@ -63,9 +82,11 @@ def handle_download(download_page, params):
 		meta = beautiful_soup.find("meta", {"http-equiv": "REFRESH"})
 		download_link = meta['content'].replace("0;url=", "")
 	except BaseException as e:
+		logging.error("Exception occurred while processing a link",exc_info=True)
 		print(e)
 		return None
 	print(filename)
+	logging.info('Downloaded {}'.format(filename))
 	Helper.download(download_link, filename, output_dir + '/' + dirs)
 	return outfile
 
@@ -74,7 +95,20 @@ def archive_format(params):
 	volumes = {
 		'Α' : '01',
 		'Β' : '02',
-		'B' : '02'
+		'Γ' : '03',
+		'Δ' : '04',
+		'Α.ΕΙ.Δ.' : '05',
+		'Α.Σ.Ε.Π.': '06',
+		'Δ.Δ.Σ.': '07',
+		'Α.Π.Σ.': '08',
+		'Υ.Ο.Δ.Δ.': '09',
+		'Α.Α.Π.' : '10',
+		'Ν.Π.Δ.Δ.': '11',
+		'ΠΑΡΑΡΤΗΜΑ': '12', 
+		'Δ.Ε.Β.Ι.': '13',
+		'ΑΕ-ΕΠΕ': '14',
+		'Ο.Π.Κ.': '15',		
+
 	}
 
 	num =  params['issue_number']
@@ -207,6 +241,7 @@ if __name__ == '__main__':
 			chromedriver_executable,
 			chrome_options=options)
 	except BaseException as e:
+		logging.error("Exception occurred:Could not find chromedriver",exc_info=True)
 		print('Could not find chromedriver. Exiting')
 		print(e)
 		exit()
@@ -214,6 +249,8 @@ if __name__ == '__main__':
 	driver.get('http://www.et.gr/idocs-nph/search/fekForm.html')
 
 	driver.find_element_by_name("showhide").click()
+	#add year to the respective dropdown option
+	driver.find_element_by_name("year").send_keys(date_from[6:10])
 
 	# Enter Details
 	driver.find_element_by_name("fekReleaseDateTo").clear()
@@ -244,20 +281,20 @@ if __name__ == '__main__':
 	try:
 		# By default we'll see the first page of results, well.. first
 		active_page = 1
-
+		
 		# Gets the pagination list items
 		pages = driver.find_elements_by_class_name("pagination_field")
 		# If there's no paginations then there's one page (max)
 		num_pages = len(pages) if len(pages) else 1
 
 		for current_page in range(0, num_pages):
-
+			
 			# Extract and handle download links.
 			filenames_ = extract_download_links(driver.page_source, args.type)
 
 			if args.upload:
 				filenames.extend(filenames_)
-
+			
 			# We have to re-find the pagination list because the DOM has been
 			# rebuilt.
 			pages = driver.find_elements_by_class_name("pagination_field")
@@ -267,6 +304,7 @@ if __name__ == '__main__':
 				time.sleep(1)
 
 	except AttributeError:
+		logging.error('Could not find results')
 		print('Could not find results')
 
 	finally:

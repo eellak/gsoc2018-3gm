@@ -8,6 +8,7 @@ import pparser as parser
 logger = logging.getLogger()
 logger.disabled = True
 
+
 def apply_links(identifier, rollback=True):
     """Apply all modifying links on a law
     :params identifier The identifier of the law
@@ -17,14 +18,16 @@ def apply_links(identifier, rollback=True):
         try:
             print('Rolling back...')
             init = codifier.codifier.db.rollback_laws(identifier)
-            codifier.codifier.laws[identifier] = parser.LawParser.from_serialized(init)
+            codifier.codifier.laws[identifier] = parser.LawParser.from_serialized(
+                init)
         except:
             print('No history on filesystem')
 
         # rollback links
         try:
             init = codifier.codifier.db.rollback_links(identifier=identifier)
-            codifier.codifier.links[identifier] = codifier.Link.from_serialized(init)
+            codifier.codifier.links[identifier] = codifier.Link.from_serialized(
+                init)
         except:
             print('No applied links found')
 
@@ -62,7 +65,8 @@ def apply_links(identifier, rollback=True):
 
                 # Detect amendment
                 try:
-                    d, a, law = law.apply_amendment(l['text'], is_removal=is_removal)
+                    d, a, law = law.apply_amendment(
+                        l['text'], is_removal=is_removal)
 
                     # Increase accuracy bits
                     detected += d
@@ -120,7 +124,6 @@ def apply_all_links(identifiers=None):
     query_accuracy = []
     total = len(identifiers)
 
-
     # apply all links
     for i, identifier in enumerate(identifiers):
 
@@ -133,25 +136,25 @@ def apply_all_links(identifiers=None):
             except:
                 print('MongoDB Error in storing Links')
 
-
             # Update accuracy metrics
             detection_accurracy.append(d)
             query_accuracy.append(q)
         except KeyError:
             # Law is never amended
             initial = codifier.codifier.laws[identifier].serialize()
-            initial_non_full = codifier.codifier.laws[identifier].serialize(full=False)
+            initial_non_full = codifier.codifier.laws[identifier].serialize(
+                full=False)
 
             initial['_version'] = 0
             final_serializable = {
-                '_id' : identifier,
-                'versions' : [initial]
+                '_id': identifier,
+                'versions': [initial]
             }
         finally:
             # Store current version to mongo
             latest = {
-                '_id' : identifier,
-                'versions' : [initial_non_full] # XXX NOT FIXED YET
+                '_id': identifier,
+                'versions': [initial_non_full]  # XXX NOT FIXED YET
             }
             try:
                 codifier.codifier.db.laws.save(latest)
@@ -160,7 +163,8 @@ def apply_all_links(identifiers=None):
 
             # Store versioning history to fs
             try:
-                codifier.codifier.db.save_json_to_fs(identifier, final_serializable)
+                codifier.codifier.db.save_json_to_fs(
+                    identifier, final_serializable)
             except:
                 print('GridFS Error in storing history')
 
@@ -175,10 +179,13 @@ def apply_all_links(identifiers=None):
         print('Mean Query accuracy: {}%. Std: {}%'.format(
             mean(query_accuracy), stdev(query_accuracy)))
 
+
 def apply_links_between(start, end):
     identifiers = list(codifier.codifier.laws.keys())
-    identifiers = list(filter(lambda x: start <= int(x[-4:]) <= end, identifiers))
+    identifiers = list(
+        filter(lambda x: start <= int(x[-4:]) <= end, identifiers))
     apply_all_links(list(identifiers))
+
 
 if __name__ == '__main__':
     apply_all_links()

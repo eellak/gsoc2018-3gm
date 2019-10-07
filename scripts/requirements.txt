@@ -4,3 +4,4 @@ Wand==0.4.4
 Pillow==5.2.0
 beautifulsoup4==4.6.0
 pyocr==0.5.2
+flask>=1.0.0

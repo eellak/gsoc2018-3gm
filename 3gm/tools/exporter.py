@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # Simple Exporter
 # usage: exporter.py --markdown < issue.txt > output.md
+import pparser as parser
 import sys
 sys.path.insert(0, '../')
-import pparser as parser
 
 export_type = sys.argv[1].strip('--')
 issue = parser.IssueParser(None, stdin=True)

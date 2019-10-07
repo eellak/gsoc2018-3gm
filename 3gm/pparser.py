@@ -31,12 +31,6 @@ logging.basicConfig(
 params = {'size': 200, 'iter': 20, 'window': 2, 'min_count': 15,
           'workers': max(1, multiprocessing.cpu_count() - 1), 'sample': 1E-3, }
 
-date_regex = re.compile('(\
-([1-9]|0[1-9]|[12][0-9]|3[01])\
-[-/.\s+]\
-(1[1-2]|0[1-9]|[1-9]|Ιανουαρίου|Φεβρουαρίου|Μαρτίου|Απριλίου|Μαΐου|Ιουνίου|Ιουλίου|Αυγούστου|Νοεμβρίου|Δεκεμβρίου|Σεπτεμβρίου|Οκτωβρίου|Ιαν|Φεβ|Μαρ|Απρ|Μαϊ|Ιουν|Ιουλ|Αυγ|Σεπτ|Οκτ|Νοε|Δεκ)\
-(?:[-/.\s+](1[0-9]\d\d|20[0-9][0-8]))?)')
-
 
 class IssueParser:
     """
@@ -68,6 +62,8 @@ class IssueParser:
 
         if not stdin:
             infile = open(filename, 'r')
+
+
 
         # remove ugly hyphenthation
         while True:
@@ -115,6 +111,8 @@ class IssueParser:
         self.find_articles()
         self.detect_statutes()
 
+
+
     def __str__(self):
         return self.name
 
@@ -161,6 +159,7 @@ class IssueParser:
 
         return self.statutes
 
+
     def __contains__(self, key):
         for article in self.articles.keys():
             if key in self.statutes[article]:
@@ -193,7 +192,7 @@ class IssueParser:
         now = datetime.now()
 
         for i, line in enumerate(self.lines):
-            result = date_regex.findall(line)
+            result = entities.date_regex.findall(line)
             if result != []:
                 self.dates.append((i, result))
 
@@ -512,6 +511,9 @@ class LawParser:
         self.amendee = None
 
         self.find_corpus(fix_paragraphs=False)
+        self.detect_entities()
+
+
 
     def __repr__(self):
         return self.identifier
@@ -650,8 +652,154 @@ class LawParser:
                     if government_gazette_issue:
                         break
 
+
+    def detect_entities(self):
+        """Detect all entities within the issue and stores them in a dictionary"""
+
+
+        # Creating entity dictionary and setting keys
+        self.entities = {}
+        self.entities["Urls"] = []
+        self.entities["CPC Codes"] = []
+        self.entities["CPV Codes"] = []
+        self.entities["IBANs"] = []
+        self.entities["E-mails"] = []
+        self.entities["Id Numbers"] = []
+        self.entities["Military Personel"] = []
+        self.entities["Natura 2000 Regions"] = []
+        self.entities["Scales"] = []
+        self.entities["EU Directives"] = []
+        self.entities["EU Regulations"] = []
+        self.entities["EU Decisions"] = []
+        self.entities["Phone Numbers"] = []
+        self.entities["Protocols"] = []
+        self.entities["AFM numbers"] = []
+        self.entities["NUTS Region Codes"] = []
+        self.entities["Exact times"] = []
+        self.entities["Ship Tonnage"] = []
+        self.entities["KAEK Codes"] = []
+        self.entities["Hull"] = []
+        self.entities["Flags"] = []
+        self.entities["Monetary Amounts"] = []
+        self.entities["Metrics"] = []
+        self.entities["Conditions"] = []
+        self.entities["Contraints"] = []
+        self.entities["Durations"] = []
+
+        # Iterating through lines
+        for i , line in enumerate(self.lines):
+
+                urls = re.findall(entities.urls,line)
+                cpc = re.findall(entities.cpc, line)
+                cpv = re.findall(entities.cpv,line)
+                ibans = re.findall(entities.ibans,line)
+                e_mails = re.findall(entities.e_mails,line)
+                id_numbers = re.findall(entities.id_numbers, line)
+                military_personel = re.findall(entities.military_personel_id, line)
+                natura_regions = re.findall(entities.natura_regions,line)
+                scales =  re.findall(entities.scales, line)
+                directives_eu =  re.findall(entities.directives_eu, line)
+                regulations_eu = re.findall(entities.regulations_eu, line)
+                decisions_eu = re.findall(entities.decisions_eu, line)
+                phone_numbers = re.findall(entities.phone_numbers, line)
+                protocols = re.findall(entities.protocols, line)
+                afm = re.findall(entities.afm, line)
+                nuts_reg = re.findall(entities.nuts_reg, line)
+                exact_times = re.findall(entities.exact_times, line)
+                tonnage = re.findall(entities.tonnage, line)
+                kaek = re.findall(entities.kaek, line)
+                hull = re.findall(entities.hull, line)
+                flag = re.findall(entities.flag, line)
+                money = entities.get_monetary_amounts(line)
+                metrics = entities.get_metrics(line)
+                conditions = entities.get_conditions(line)
+                constraints = entities.get_constraints(line)
+                durations = entities.get_durations(line)
+
+                if urls != []:
+                    self.entities["Urls"].append((i,urls))
+
+                if cpc != []:
+                    self.entities["CPC Codes"].append((i,cpc))
+
+                if cpv != []:
+                    self.entities["CPV Codes"].append((i,cpv))
+
+                if ibans != []:
+                    self.entities["IBANs"].append((i,ibans))
+
+                if e_mails != []:
+                    self.entities["E-mails"].append((i,e_mails))
+
+                if id_numbers != []:
+                    self.entities["Id Numbers"].append((i,id_numbers))
+
+                if military_personel != []:
+                    self.entities["Military Personel"].append((i,military_personel))
+
+                if natura_regions != []:
+                    self.entities["Natura 2000 Regions"].append((i,natura_regions))
+
+                if scales != []:
+                    self.entities["Scales"].append((i,scales))
+
+                if directives_eu != []:
+                    self.entities["EU Directives"].append((i,directives_eu))
+
+                if regulations_eu != []:
+                    self.entities["EU Regulations"].append((i,regulations_eu))
+
+                if decisions_eu != []:
+                    self.entities["EU Decisions"].append((i,decisions_eu))
+
+                if phone_numbers != []:
+                    self.entities["Phone Numbers"].append((i,phone_numbers))
+
+                if protocols != []:
+                    self.entities["Protocols"].append((i,protocols))
+
+                if afm != []:
+                    self.entities["AFM numbers"].append((i,afm))
+
+                if nuts_reg != []:
+                    self.entities["NUTS Region Codes"].append((i,nuts_reg))
+
+                if exact_times != []:
+                    self.entities["Exact times"].append((i,exact_times))
+
+                if tonnage != []:
+                    self.entities["Ship Tonnage"].append((i,tonnage))
+
+                if kaek != []:
+                    self.entities["KAEK Codes"].append((i,kaek))
+
+                if hull != []:
+                    self.entities["Hull"].append((i,hull))
+
+                if flag != []:
+                    self.entities["Flags"].append((i,flag))
+
+                if money != []:
+                    self.entities["Monetary Amounts"].append((i,money))
+
+                if metrics != []:
+                    self.entities["Metrics"].append((i,metrics))
+
+                if conditions != []:
+                    self.entities["Conditions"].append((i,conditions))
+
+                if constraints != []:
+                    self.entities["Contraints"].append((i,constraints))
+
+                if durations != []:
+                    self.entities["Durations"].append((i,durations))
+
+
+        return self.entities
+
     def __dict__(self):
         return self.serialize()
+
 
     def serialize(self, full=True):
         """Returns the object in database-friendly format
@@ -667,7 +815,8 @@ class LawParser:
             'thesaurus': self.thesaurus,
             'lemmas': self.lemmas,
             'titles': self.titles,
-            'amendee': self.amendee
+            'amendee': self.amendee,
+            'entities':self.entities
         }
 
         if full:
@@ -684,6 +833,7 @@ class LawParser:
         law.titles = x['titles']
         law.sentences = x['articles']
         law.amendee = x['amendee']
+        law.entities = x['entities']
         try:
             law.issue = x['issue']
         except BaseException:
@@ -1132,7 +1282,8 @@ class LawParser:
         if is_removal:
             trees, exc = syntax.ActionTreeGenerator.detect_removals(s)
         else:
-            trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(s)
+            trees = syntax.ActionTreeGenerator.generate_action_tree_from_string(
+                s)
         for t in trees:
             detected = 1
             try:
@@ -1169,7 +1320,8 @@ class LawParser:
 
             elif context in ['παράγραφος', 'παράγραφοι', 'paragraph']:
                 if not tree['paragraph']['_id'].isdigit():
-                    tree['article']['_id'] = self.get_next_paragraph(tree['article']['_id'])
+                    tree['article']['_id'] = self.get_next_paragraph(
+                        tree['article']['_id'])
                 return self.add_paragraph(
                     article=tree['article']['_id'],
                     paragraph=tree['paragraph']['_id'],
@@ -1347,7 +1499,6 @@ class LawParser:
         finally:
             return '. '.join(self.sentences[article][paragraph_id]).rstrip('.') + '.'
 
-
     def get_paragraphs(self, article):
         """Return Paragraphs via a generator
         :params article : The article number
@@ -1395,7 +1546,8 @@ class LawParser:
                 result = result + '### Άρθρο {} \n'.format(article)
                 if add_titles:
                     try:
-                        result = result + '#### {}\n'.format(self.titles[article])
+                        result = result + \
+                            '#### {}\n'.format(self.titles[article])
                     except:
                         pass
                 for i, paragraph in enumerate(self.get_paragraphs(article)):

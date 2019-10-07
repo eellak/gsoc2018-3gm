@@ -11,12 +11,10 @@ import string
 import phrase_fun
 import spacy
 
-try:
-    import el_small
-    nlp = el_small.load()
-except ImportError:
-    import el_core_web_sm
-    nlp = el_core_web_sm.load()
+
+import el_core_news_sm
+nlp = el_core_news_sm.load()
+
 
 class UncategorizedActionException(Exception):
     """This exception is raised whenever an action cannot be
@@ -198,13 +196,15 @@ class ActionTreeGenerator:
                             'διαγράφεται',
                             'διαγράφονται',
                             'αναριθμείται',
-                            'αναριθμούνται']:
+                                'αναριθμούνται']:
                             tree, max_depth = ActionTreeGenerator.get_content(
                                 tree, extract, s)
                         if action in ['αναριθμείται', 'αναριθμούνται']:
                             # get renumbering
-                            tree = ActionTreeGenerator.get_renumbering(tree, doc)
-                            subtrees = ActionTreeGenerator.split_renumbering_tree(tree)
+                            tree = ActionTreeGenerator.get_renumbering(
+                                tree, doc)
+                            subtrees = ActionTreeGenerator.split_renumbering_tree(
+                                tree)
 
                         # split to subtrees
                         if action not in ['αναριθμείται', 'αναριθμούνται']:
@@ -426,7 +426,8 @@ class ActionTreeGenerator:
 
         for i in range(start, len(doc)):
             if doc[i].text == 'σε':
-                tree['what']['to'] = list(helpers.ssconj_doc_iterator(doc, i, is_plural))
+                tree['what']['to'] = list(
+                    helpers.ssconj_doc_iterator(doc, i, is_plural))
                 break
 
         return tree
@@ -544,7 +545,8 @@ class ActionTreeGenerator:
                 except:
                     pass
 
-        subtrees = ActionTreeGenerator.split_dict_subkey(tree, smallest, subkey='_id')
+        subtrees = ActionTreeGenerator.split_dict_subkey(
+            tree, smallest, subkey='_id')
         return subtrees, smallest
 
     @staticmethod
@@ -571,12 +573,14 @@ class ActionTreeGenerator:
         tree['root']['action'] = 'διαγράφεται'
         if law == None:
             try:
-                tree['law']['_id'] = ActionTreeGenerator.detect_latest_statute(s)
+                tree['law']['_id'] = ActionTreeGenerator.detect_latest_statute(
+                    s)
             except:
                 return []
         else:
             tree['law']['_id'] = law
-        tree = ActionTreeGenerator.build_levels_helper(tmp, tree, list_iter=True, recursive=True)
+        tree = ActionTreeGenerator.build_levels_helper(
+            tmp, tree, list_iter=True, recursive=True)
 
         subtrees, smallest = ActionTreeGenerator.break_smallest(tree)
 
@@ -632,10 +636,12 @@ class ActionTreeGenerator:
         splitted = re.split(split_regex, q)
         for s in splitted:
             if re.search(exceptions_regex, s):
-                subtrees, smallest = ActionTreeGenerator.detect_removals_helper(s, law)
+                subtrees, smallest = ActionTreeGenerator.detect_removals_helper(
+                    s, law)
                 exceptions.extend(subtrees)
             else:
-                subtrees, smallest = ActionTreeGenerator.detect_removals_helper(s, law)
+                subtrees, smallest = ActionTreeGenerator.detect_removals_helper(
+                    s, law)
                 removals.extend(subtrees)
 
         for exc in exceptions:
