@@ -55,15 +55,15 @@ class Tokenizer:
         :params e : The exception to be added
         """
         self.exceptions.append(e)
-        hashmap[str(hash(e))] = e
+        self.hashmap[str(hash(e))] = e
 
-    def hash(q):
+    def hash(self, q):
         """Hash tokenizer exceptions"""
         for e in self.exceptions:
             q = q.replace(e, self.inv_hashmap[e])
         return q
 
-    def inverse_hash(q):
+    def inverse_hash(self, q):
         """Invert hashed text"""
         for h, e in self.hashmap.items():
             q = q.replace(h, e)
