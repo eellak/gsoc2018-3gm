@@ -65,7 +65,7 @@ class Helper:
             name = name.replace(char, replace_chars[char])
 
         # Remove characters that should not belong in the name
-        name = re.sub("[^Α-ΩΪΫ\s]+", "", name)
+        name = re.sub(r"[^Α-ΩΪΫ\s]+", "", name)
 
         return ' '.join(name.split())
 
@@ -126,7 +126,7 @@ class Helper:
     # Clears wikipedia annotations from a string
     @staticmethod
     def clear_annotations(text):
-        return re.sub('\[[0-9]+\]', '', text)
+        return re.sub(r'\[[0-9]+\]', '', text)
 
     # Converts a textual date to a unix timestamp
     @staticmethod
@@ -165,7 +165,7 @@ class Helper:
             return datetime.datetime(
                 year=int(
                     re.search(
-                        "^\d{4,4}",
+                        r"^\d{4,4}",
                         date).group(0)),
                 month=1,
                 day=1)
@@ -188,7 +188,7 @@ class Helper:
 
         if y < len(parts):
             # Remove non numeric elements from string
-            year = re.search("^\d{4,4}", parts[y]).group(0)
+            year = re.search(r"^\d{4,4}", parts[y]).group(0)
         else:
             return 0
 
@@ -203,7 +203,7 @@ class Helper:
 
         if year not in Helper.date_patterns:
             operator = str(year) if year != 0 else r"\d{4,4}"
-            date_pattern = "\w+,\s?\d{1,2}\s+?\w+\s+" + \
+            date_pattern = r"\w+,\s?\d{1,2}\s+?\w+\s+" + \
                 "{year}".format(year=operator)
             Helper.date_patterns[year] = re.compile(date_pattern)
 
@@ -361,7 +361,7 @@ def texify(s, outfile):
     for line in lines:
         f.write(line)
     f.write(s)
-    f.write('\end{document}')
+    f.write(r'\end{document}')
     f.close()
 
     os.system('xelatex {}'.format(outfile))
