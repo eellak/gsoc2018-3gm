@@ -2,7 +2,7 @@ import re
 import numpy as np
 from helpers import *
 import string
-from collections import Iterable
+from collections.abc import Iterable
 
 
 
